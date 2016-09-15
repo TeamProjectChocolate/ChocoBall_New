@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CRenderContext" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderContext.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="RENDER_DATA" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAQIAA=</HashCode>
+      <FileName>RenderContext.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

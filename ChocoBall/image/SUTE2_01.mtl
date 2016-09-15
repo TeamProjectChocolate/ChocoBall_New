@@ -1,0 +1,16 @@
+newmtl m0
+map_Kd image\Stex.png
+Ka 0 0 0
+Kd 0.8 0.8 0.8
+Ks 0 0 0
+Ns 5
+d 1
+
+newmtl m1
+map_Kd Stex.png
+Ka 0.512 0.512 0.512
+Kd 0.525 0.525 0.525
+Ks 0 0 0
+Ns 0
+d 1
+
