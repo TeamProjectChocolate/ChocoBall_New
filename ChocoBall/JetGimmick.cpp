@@ -77,11 +77,6 @@ void CJetGimmick::Update(){
 void CJetGimmick::Draw(){
 }
 
-void CJetGimmick::DrawDepth(const D3DXVECTOR2& FarNear, const D3DXVECTOR3& PintoPos, const D3DXMATRIX& PintoWorld){
-
-}
-
-
 void CJetGimmick::SoundPlay(){
 	if (m_IsPlay){
 		m_pAudio->PlayCue(m_SoundName, true,this);

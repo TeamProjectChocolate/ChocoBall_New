@@ -51,67 +51,12 @@ void CDofRender::Draw()
 
 		m_Primitive = SINSTANCE(CRenderContext)->GetPrimitive();
 
-		// 深度情報抽出
-		{
-			(*graphicsDevice()).SetRenderTarget(0, m_DepthSamplingTarget.GetSurface());
-			(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
-
-			D3DXVECTOR3 PintoPos;
-
-			if (m_UsePintoObject){
-				m_pPintoObject = SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("TEST3D"));
-
-				if (m_pPintoObject != nullptr){
-					CModel* model = m_pPintoObject->GetModel();
-					PintoPos = m_pPintoObject->GetPos();
-					// 平行移動成分のみにする
-					D3DXMATRIX work = model->m_World;
-					D3DXMatrixIdentity(&m_PintoWorld);
-					memcpy(&m_PintoWorld.m[3][0], &work.m[3][0], sizeof(float)* 4);
-				}
-			}
-			else{
-				m_pPintoObject = nullptr;
-				PintoPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				D3DXMatrixIdentity(&m_PintoWorld);
-				D3DXMatrixTranslation(&m_PintoWorld, PintoPos.x, PintoPos.y, PintoPos.z);
-			}
-
-			// 基本描画
-			vector<OBJECT_DATA*> Objects = SINSTANCE(CObjectManager)->GetObjectList();
-			int size = Objects.size();
-			for (PRIORTY priorty = PRIORTY::PLAYER; priorty < PRIORTY::PARTICLE; priorty = static_cast<PRIORTY>(priorty + 1)){	// 優先度の高いものから更新
-				for (int idx = 0; idx < size; idx++){
-					if (Objects[idx]->object->GetAlive()){
-						if (Objects[idx]->priority == priorty){
-							Objects[idx]->object->DrawDepth(m_FarNear,PintoPos,m_PintoWorld);
-						}
-					}
-				}
-			}
-			// 蓄積したデータでインスタンシング描画
-			vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::Instancing_Depth);
-			for (auto data : datas){
-				data->render->Draw(m_FarNear, PintoPos, m_PintoWorld);
-			}
-			// パーティクル描画
-			for (PRIORTY priorty = PRIORTY::PARTICLE; priorty < PRIORTY::OBJECT2D; priorty = static_cast<PRIORTY>(priorty + 1)){	// 優先度の高いものから更新
-				for (int idx = 0; idx < size; idx++){
-					if (Objects[idx]->object->GetAlive()){
-						if (Objects[idx]->priority == priorty){
-							Objects[idx]->object->DrawDepth(m_FarNear, PintoPos, m_PintoWorld);
-						}
-					}
-				}
-			}
-		}
 		int w = SINSTANCE(CRenderContext)->GetWindowWidth();
 		int h = SINSTANCE(CRenderContext)->GetWindowHeight();
 
 		//XBlur
 		{
 			(*graphicsDevice()).SetRenderTarget(0, m_BlurTarget[0].GetSurface());
-			//(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 			m_pEffect->SetTechnique("XBlur");
 			m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 			m_pEffect->BeginPass(0);
@@ -143,7 +88,6 @@ void CDofRender::Draw()
 		//YBlur
 		{
 			(*graphicsDevice()).SetRenderTarget(0, m_BlurTarget[1].GetSurface());
-			//(*graphicsDevice()).Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 			m_pEffect->SetTechnique("YBlur");
 			m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 			m_pEffect->BeginPass(0);
@@ -220,8 +164,31 @@ void CDofRender::Initialize()
 
 	m_pEffect = SINSTANCE(CEffect)->LoadEffect(_T("Shader/DepthOfField.hlsl"));
 
-	m_FarNear = D3DXVECTOR2(100.0f, 1.0f);
+	m_DepthFarNear = D3DXVECTOR2(100.0f, 1.0f);
 
 	m_isEnable = true;
 	m_UsePintoObject = true;
 };
+
+void CDofRender::MathPinto(){
+	D3DXVECTOR3 PintoPos;
+
+	if (m_UsePintoObject){
+		m_pPintoObject = SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("TEST3D"));
+
+		if (m_pPintoObject != nullptr){
+			CModel* model = m_pPintoObject->GetModel();
+			PintoPos = m_pPintoObject->GetPos();
+			// 平行移動成分のみにする
+			D3DXMATRIX work = model->m_World;
+			D3DXMatrixIdentity(&m_PintoWorld);
+			memcpy(&m_PintoWorld.m[3][0], &work.m[3][0], sizeof(float)* 4);
+		}
+	}
+	else{
+		m_pPintoObject = nullptr;
+		PintoPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXMatrixIdentity(&m_PintoWorld);
+		D3DXMatrixTranslation(&m_PintoWorld, PintoPos.x, PintoPos.y, PintoPos.z);
+	}
+}

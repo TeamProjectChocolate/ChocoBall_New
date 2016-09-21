@@ -33,6 +33,18 @@ public:
 	const D3DXMATRIX& GetWorldMatrix(){
 		return m_World;
 	}
+	void SetPintoWorld(const D3DXMATRIX& mat){
+		m_PintoWorld = mat;
+	}
+	const D3DXMATRIX& GetPintoWorld(){
+		return m_PintoWorld;
+	}
+	void SetPintoPos(const D3DXVECTOR3& pos){
+		m_PintoPos = pos;
+	}
+	const D3DXVECTOR3& GetPintoPos(){
+		return m_PintoPos;
+	}
 
 	// 3D用
 	virtual CAnimation* GetAnimation(){ return nullptr; }
@@ -59,5 +71,7 @@ public:
 	MODEL_TYPE m_Type;
 protected:
 	CHAR m_pFileName[MAX_FILENAME + 1];		// 読み込むファイルの名前を格納する
+	D3DXMATRIX m_PintoWorld;
+	D3DXVECTOR3 m_PintoPos;
 };
 

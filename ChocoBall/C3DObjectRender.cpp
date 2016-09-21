@@ -98,6 +98,11 @@ void C3DObjectRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D
 		m_pEffect->SetFloat(m_hnumBone, pMeshContainer->NumInfl);
 		m_pEffect->SetTexture(m_hTexture, pMeshContainer->ppTextures[pBoneComb[iattrib].AttribId]);
 
+		// 深度を書き込むのに必要
+		m_pEffect->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(m_pModel->GetPintoPos())));
+		m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
+		m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
+
 		m_pEffect->CommitChanges();
 		pMeshContainer->MeshData.pMesh->DrawSubset(iattrib);
 		m_pEffect->EndPass();
@@ -142,9 +147,6 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 
 	SINSTANCE(CShadowRender)->SetShadowCamera(m_pEffect);
-	//ここで固定描画と同じように、ローカル座標に設定された頂点群をデバイスに渡す。通常と同じ方法。
-	//	メッシュも同じく、マテリアルやテクスチャを設定
-	//DrawSubset()を呼び出して描画
 
 	// ワールドトランスフォーム(絶対座標変換)
 	// ワールド行列生成
@@ -155,6 +157,13 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 	m_pEffect->SetFloat(m_hAlpha, m_pModel->m_alpha);
 	m_pEffect->SetFloat(m_hluminance, m_pModel->m_luminance);
+
+	// 深度を書き込むのに必要
+	m_pEffect->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(m_pModel->GetPintoPos())));
+	m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
+	m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
+
+
 	for (DWORD i = 0; i < container->NumMaterials; i++){
 		m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
 		m_pEffect->SetTexture(m_hTexture, container->ppTextures[i]);	// テクスチャ情報をセット

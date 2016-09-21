@@ -11,6 +11,11 @@ float4x4 LightViewProj;		// ライトビュープロジェクション行列
 
 float2 g_FarNear;
 
+// 深度書き込み用
+float4 g_PintoPoint;	// どの位置にピントを合わせるか(行列変換後の値)
+float4x4 g_PintoWorld; // ピント用のワールド行列
+float2 g_DepthFarNear;
+
 float Alpha;		// 透明度
 
 #define DIFFUSE_LIGHT_NUM 4		// ディフューズライトの数
@@ -26,8 +31,6 @@ float g_numBone;		// 骨の数
 float4x4 g_CameraRotaInverse;	// カメラの回転行列の逆行列
 
 float g_luminance;	// 輝度の光の量を調整するための変数
-
-// インスタンシング用
 
 
 //int g_MaxInstance;
@@ -116,6 +119,8 @@ struct VS_OUTPUT{
 #if !defined(ENABLE_NORMAL_MAP)
 	float3  tangent :  TEXCOORD4;	// 接ベクトル
 #endif
+	float4 pos2:TEXCOORD5;
+	float4 PintoPoint:TEXCOORD6;
 };
 
 struct PS_OUTPUT{
@@ -142,6 +147,13 @@ VS_OUTPUT BasicTransform(VS_INPUT In /*頂点情報(ローカル座標*/)
 #if !defined(ENABLE_NORMAL_MAP)
 	Screen.tangent = mul(In.tangent, Rota);		// 接ベクトルを回す
 #endif
+	Screen.pos2 = Screen.pos;
+
+	float3 PintoPoint = g_PintoPoint.xyz;
+	PintoPoint = mul(PintoPoint, g_PintoWorld);
+	Screen.PintoPoint = mul(float4(PintoPoint, 1.0f), View);
+	Screen.PintoPoint = mul(Screen.PintoPoint, Proj);
+
 	return Screen;	// 頂点情報(スクリーン座標)←スクリーン座標を返さなければエラーとなってしまう。
 }
 
@@ -172,10 +184,16 @@ VS_OUTPUT VSMainInstancing(VS_INPUT_INSTANCING In, uniform bool UseBorn)
 		Out.uv = In.base.uv;
 		Out.normal = mul(In.base.normal, rotationMat);	//法線を回す。
 		Out.tangent = mul(In.base.tangent, rotationMat);		// 接ベクトルを回す
+		Out.pos2 = Out.pos;
 	//}
 	//else{
 
 	//}
+	float3 PintoPoint = g_PintoPoint.xyz;
+	PintoPoint = mul(PintoPoint, g_PintoWorld);
+	Out.PintoPoint = mul(float4(PintoPoint, 1.0f), View);
+	Out.PintoPoint = mul(Out.PintoPoint, Proj);
+
 	return Out;
 }
 
@@ -196,24 +214,15 @@ VS_OUTPUT ShadowVertex(VS_INPUT In){
 #if !defined(ENABLE_NORMAL_MAP)
 	Out.tangent = mul(In.tangent, Rota);
 #endif
+	Out.pos2 = Out.pos;
+
+	float3 PintoPoint = g_PintoPoint.xyz;
+	PintoPoint = mul(PintoPoint, g_PintoWorld);
+	Out.PintoPoint = mul(float4(PintoPoint, 1.0f), View);
+	Out.PintoPoint = mul(Out.PintoPoint, Proj);
+
 	return Out;
 }
-
-//VS_OUTPUT InstancingVertex(VS_INPUT In,int Index:TEXCOORD5){
-//	VS_OUTPUT Out = (VS_OUTPUT)0;
-//	float4 pos;
-//	pos = mul(In.pos, g_InstancingWorlds[Index]);
-//	Out.WorldPos = pos;
-//	Out.ShadowPos = mul(pos, LightViewProj);
-//	pos = mul(pos, View);
-//	pos = mul(pos, Proj);
-//	Out.pos = pos;
-//	Out.color = In.color;
-//	Out.uv = In.uv;
-//	Out.normal = mul(In.normal, Rota);
-//	Out.tangent = mul(In.tangent, Rota);
-//	return Out;
-//}
 
 VS_OUTPUT AnimationVertex(VS_INPUT In){
 	VS_OUTPUT Out = (VS_OUTPUT)0;
@@ -244,6 +253,13 @@ VS_OUTPUT AnimationVertex(VS_INPUT In){
 	Out.color = In.color;
 #endif
 	Out.uv = In.uv;
+	Out.pos2 = Out.pos;
+
+	float3 PintoPoint = g_PintoPoint.xyz;
+	PintoPoint = mul(PintoPoint, g_PintoWorld);
+	Out.PintoPoint = mul(float4(PintoPoint, 1.0f), View);
+	Out.PintoPoint = mul(Out.PintoPoint, Proj);
+
 	return Out;
 }
 
@@ -285,8 +301,27 @@ float CalcLuminance(float3 color)
 	return luminance;
 }
 
+float vsm(float4 ShadowPos,float3 normal){
+	// 影の描画
+	float2 shadowMapUV = float2(0.5f, -0.5f) * ShadowPos.xy / ShadowPos.w + float2(0.5f, 0.5f);
+	float4 shadow_val = float4(1.0f,1.0f,1.0f,1.0f);
+	if (shadowMapUV.x <= 1.0f && shadowMapUV.x >= 0.0f){
+		if (shadowMapUV.y <= 1.0f && shadowMapUV.y >= 0.0f){
+			if (dot(float3(0.0f, 1.0f, 0.0f), normal) >= 0.1f){
+				shadow_val = tex2D(g_ShadowMapSampler, shadowMapUV);
+			}
+		}
+	}
+	float depth = (ShadowPos.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
 
-float4 ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZMask ,uniform bool isIluminance) :	COLOR{
+	// VSM(分散シャドウマップ)
+	float Variance = shadow_val.y - (shadow_val.x * shadow_val.x);
+	return max(shadow_val.x >= depth,Variance + (depth - shadow_val.x));
+}
+
+PS_OUTPUT ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZMask ,uniform bool isIluminance){
+
+	// 基本描画
 	float3 normal;		// 法線マップに書き込まれている法線
 #if !defined(ENABLE_NORMAL_MAP)
 	if (hasNormalMap){
@@ -332,23 +367,15 @@ float4 ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZMas
 
 	color *= light;	// テクスチャのカラーとライトを乗算
 
-	// 影の描画
-	float4 ShadowPos = In.ShadowPos;
-	float2 shadowMapUV = float2(0.5f, -0.5f) * ShadowPos.xy / ShadowPos.w + float2(0.5f, 0.5f);
-	float4 shadow_val = float4(1.0f,1.0f,1.0f,1.0f);
-	if (shadowMapUV.x <= 1.0f && shadowMapUV.x >= 0.0f){
-		if (shadowMapUV.y <= 1.0f && shadowMapUV.y >= 0.0f){
-			if (dot(float3(0.0f, 1.0f, 0.0f), normal) >= 0.1f){
-				shadow_val = tex2D(g_ShadowMapSampler, shadowMapUV);
-			}
-		}
-	}
-	float depth = (ShadowPos.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
+	float shadow = vsm(In.ShadowPos, normal);
+	color.xyz = (1.0f - shadow) * shadow + shadow * color.xyz;
+	//color.xyz *= vsm(In.ShadowPos,normal);
 
-	if (depth > shadow_val.z){
-		// 影になっている
-		color.xyz *= shadow_val.xyz;	// 影を書き込む
-	}
+	//if ((shadow_val.z >= depth) <= ((Variance + (depth - shadow_val.z)) / Variance))
+	//if (depth > shadow_val.z){
+	//	// 影になっている
+	//	color.xyz *= shadow_val.xyz;	// 影を書き込む
+	//}
 
 	if (isIluminance){
 		// αに輝度を埋め込む
@@ -357,11 +384,53 @@ float4 ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZMas
 	else{
 		color.w = Alpha;
 	}
-	return color;
+
+	// 深度の書き込み
+	float4 OutDepth;
+	{
+		if (hasZMask){
+			float4 work;
+			work.xyz = In.pos2.xyz / In.pos2.w;
+			work.xy *= float2(0.5f, -0.5f);			//-0.5～0.5の範囲にする
+			work.xy += 0.5f;						//0.0～1.0の範囲する。
+			float4 zmask = tex2D(g_ZMaskSampler, work.xy);
+			clip(work.z - zmask.z);	// ZMaskテクスチャから深度を受け取って、書き込まれた深度よりも奥のピクセルならそのピクセルを破棄する
+		}
+
+		// ピントを合わせる位置を計算
+		float pinto = /*0.5f*/(In.PintoPoint.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		float offset = 0.5f - pinto;
+
+		// 頂点の座標がFarNearのどの位置にあるか計算
+		float linerDepth = (In.pos2.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		// ピントを合わせた場所を中心(0.5f)とし、ピントが合うように調整
+		float Depth = clamp(linerDepth + offset, 0.0f, 1.0f);
+
+		// 鮮明に映る範囲を広げるために深度値を調整する処理
+		if (Depth > 0.6f){
+			Depth = 2.5f * (1.0f - Depth);
+		}
+		else if (Depth <= 0.6f && Depth >= 0.4f){
+			Depth = 1.0f;
+		}
+		else{
+			Depth = 2.5f * Depth;
+		}
+		// 手前側は急激にぼかす(ピントが0.1等の小さい値の際、手前側がぼけなくなるため)
+		if (linerDepth < pinto){
+			Depth = Depth * (linerDepth / pinto);
+		}
+		OutDepth = float4(Depth, Depth, Depth, 1.0f);
+	}
+
+	PS_OUTPUT Out = (PS_OUTPUT)0;
+	Out.color = color;
+	Out.depth = OutDepth;
+	return Out;
 }
 
 // ピクセルシェーダ
-float4 TextureShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasIluminance) : COLOR{
+PS_OUTPUT TextureShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasIluminance){
 	float3 normal;		// 法線マップに書き込まれている法線
 #if !defined(ENABLE_NORMAL_MAP)
 	if (hasNormalMap){
@@ -401,10 +470,43 @@ float4 TextureShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasIlu
 	else{
 		color.w = Alpha;
 	}
-	return color;
+
+	// 深度の書き込み
+	float4 OutDepth;
+	{
+		// ピントを合わせる位置を計算
+		float pinto = /*0.5f*/(In.PintoPoint.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		float offset = 0.5f - pinto;
+
+		// 頂点の座標がFarNearのどの位置にあるか計算
+		float linerDepth = (In.pos2.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		// ピントを合わせた場所を中心(0.5f)とし、ピントが合うように調整
+		float Depth = clamp(linerDepth + offset, 0.0f, 1.0f);
+
+		// 鮮明に映る範囲を広げるために深度値を調整する処理
+		if (Depth > 0.6f){
+			Depth = 2.5f * (1.0f - Depth);
+		}
+		else if (Depth <= 0.6f && Depth >= 0.4f){
+			Depth = 1.0f;
+		}
+		else{
+			Depth = 2.5f * Depth;
+		}
+		// 手前側は急激にぼかす(ピントが0.1等の小さい値の際、手前側がぼけなくなるため)
+		if (linerDepth < pinto){
+			Depth = Depth * (linerDepth / pinto);
+		}
+		OutDepth = float4(Depth, Depth, Depth, 1.0f);
+	}
+
+	PS_OUTPUT Out = (PS_OUTPUT)0;
+	Out.color = color;
+	Out.depth = OutDepth;
+	return Out;
 }
 
-float4 NoWorkingPixelShader(VS_OUTPUT In, uniform bool hasNormalMap) :COLOR{
+PS_OUTPUT NoWorkingPixelShader(VS_OUTPUT In, uniform bool hasNormalMap){
 	float3 normal;		// 法線マップに書き込まれている法線
 #if !defined(ENABLE_NORMAL_MAP)
 	if (hasNormalMap){
@@ -443,10 +545,44 @@ float4 NoWorkingPixelShader(VS_OUTPUT In, uniform bool hasNormalMap) :COLOR{
 #endif
 	color *= light;	// テクスチャのカラーとライトを乗算
 	color.w = Alpha;
-	return color;
+
+
+	// 深度の書き込み
+	float4 OutDepth;
+	{
+		// ピントを合わせる位置を計算
+		float pinto = /*0.5f*/(In.PintoPoint.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		float offset = 0.5f - pinto;
+
+		// 頂点の座標がFarNearのどの位置にあるか計算
+		float linerDepth = (In.pos2.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		// ピントを合わせた場所を中心(0.5f)とし、ピントが合うように調整
+		float Depth = clamp(linerDepth + offset, 0.0f, 1.0f);
+
+		// 鮮明に映る範囲を広げるために深度値を調整する処理
+		if (Depth > 0.6f){
+			Depth = 2.5f * (1.0f - Depth);
+		}
+		else if (Depth <= 0.6f && Depth >= 0.4f){
+			Depth = 1.0f;
+		}
+		else{
+			Depth = 2.5f * Depth;
+		}
+		// 手前側は急激にぼかす(ピントが0.1等の小さい値の際、手前側がぼけなくなるため)
+		if (linerDepth < pinto){
+			Depth = Depth * (linerDepth / pinto);
+		}
+		OutDepth = float4(Depth, Depth, Depth, 1.0f);
+	}
+
+	PS_OUTPUT Out = (PS_OUTPUT)0;
+	Out.color = color;
+	Out.depth = OutDepth;
+	return Out;
 }
 
-float4 FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasShadow,uniform bool hasluminance) :COLOR{
+PS_OUTPUT FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasShadow,uniform bool hasluminance){
 	float3 normal;		// 法線マップに書き込まれている法線
 #if !defined(ENABLE_NORMAL_MAP)
 	if (hasNormalMap){
@@ -490,22 +626,25 @@ float4 FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasSha
 	float4 shadow_val = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (hasShadow){
-		// 影の描画
-		float4 ShadowPos = In.ShadowPos;
-		float2 shadowMapUV = float2(0.5f, -0.5f) * ShadowPos.xy / ShadowPos.w + float2(0.5f, 0.5f);
-		if (shadowMapUV.x <= 1.0f && shadowMapUV.x >= 0.0f){
-			if (shadowMapUV.y <= 1.0f && shadowMapUV.y >= 0.0f){
-				if (dot(float3(0.0f, 1.0f, 0.0f), normal) >= 0.1f){
-					shadow_val = tex2D(g_ShadowMapSampler, shadowMapUV);
-				}
-			}
-		}
-		float depth = (ShadowPos.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
+		//// 影の描画
+		//float4 ShadowPos = In.ShadowPos;
+		//float2 shadowMapUV = float2(0.5f, -0.5f) * ShadowPos.xy / ShadowPos.w + float2(0.5f, 0.5f);
+		//if (shadowMapUV.x <= 1.0f && shadowMapUV.x >= 0.0f){
+		//	if (shadowMapUV.y <= 1.0f && shadowMapUV.y >= 0.0f){
+		//		if (dot(float3(0.0f, 1.0f, 0.0f), normal) >= 0.1f){
+		//			shadow_val = tex2D(g_ShadowMapSampler, shadowMapUV);
+		//		}
+		//	}
+		//}
+		//float depth = (ShadowPos.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
 
-		if (depth > shadow_val.z){
-			// 影になっている
-			color.xyz *= shadow_val.xyz;
-		}
+		//if (depth > shadow_val.z){
+		//	// 影になっている
+		//	color.xyz *= shadow_val.xyz;
+		//}
+		float shadow = vsm(In.ShadowPos, normal);
+		color.xyz = (1.0f - shadow) * shadow + shadow * color.xyz;
+		//color.xyz *= vsm(In.ShadowPos,normal);
 	}
 	
 	if (hasluminance){
@@ -515,10 +654,43 @@ float4 FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool hasSha
 	else{
 		color.w = Alpha;
 	}
-	return color;
+
+	// 深度の書き込み
+	float4 OutDepth;
+	{
+		// ピントを合わせる位置を計算
+		float pinto = /*0.5f*/(In.PintoPoint.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		float offset = 0.5f - pinto;
+
+		// 頂点の座標がFarNearのどの位置にあるか計算
+		float linerDepth = (In.pos2.z - g_DepthFarNear.y) / (g_DepthFarNear.x - g_DepthFarNear.y);
+		// ピントを合わせた場所を中心(0.5f)とし、ピントが合うように調整
+		float Depth = clamp(linerDepth + offset, 0.0f, 1.0f);
+
+		// 鮮明に映る範囲を広げるために深度値を調整する処理
+		if (Depth > 0.6f){
+			Depth = 2.5f * (1.0f - Depth);
+		}
+		else if (Depth <= 0.6f && Depth >= 0.4f){
+			Depth = 1.0f;
+		}
+		else{
+			Depth = 2.5f * Depth;
+		}
+		// 手前側は急激にぼかす(ピントが0.1等の小さい値の際、手前側がぼけなくなるため)
+		if (linerDepth < pinto){
+			Depth = Depth * (linerDepth / pinto);
+		}
+		OutDepth = float4(Depth, Depth, Depth, 1.0f);
+	}
+
+	PS_OUTPUT Out = (PS_OUTPUT)0;
+	Out.color = color;
+	Out.depth = OutDepth;
+	return Out;
 }
 
-float4 ZMaskPsShader(VS_OUTPUT In) : COLOR {
+float4 ZMaskPsShader(VS_OUTPUT In) : COLOR0 {
 	float4 screenPos = In.WorldPos;
 	screenPos = mul(screenPos, View);			// ビュー座標に変換
 	screenPos = mul(screenPos, Proj);			// プロジェクション座標に変換

@@ -45,7 +45,6 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 
 	if (m_IsInstancing){
 		static_cast<CInstancingRender*>(m_pRender)->CreateMatrixBuffer(m_BBManagerNum * BUILD_H * BUILD_W);
-		static_cast<CInstancingRender_D*>(m_pDepthRender)->CreateMatrixBuffer(m_BBManagerNum * BUILD_H * BUILD_W);
 	}
 
 	m_pModel->m_alpha = 1.0f;
@@ -108,28 +107,6 @@ void CBuildBlock::Draw()
 		}
 		if (isBeginDraw){
 			m_blocks[beginDrawBlockNo_h][beginDrawBlockNo_w].EndDraw();
-		}
-	}
-}
-
-void CBuildBlock::DrawDepth(const D3DXVECTOR2& FarNear,const D3DXVECTOR3& PintoPos,const D3DXMATRIX& PintoWorld){
-	if (m_IsInstancing){
-		m_pDepthRender->SetModelData(m_pModel);
-		for (int row = 0; row < BUILD_H; row++){
-			for (int col = 0; col < BUILD_W; col++){
-				if (m_blocks[row][col].GetAlive()){
-					static_cast<CInstancingRender_D*>(m_pDepthRender)->AddWorldMatrix(m_blocks[row][col].GetModel()->GetWorldMatrix());
-				}
-			}
-		}
-	}
-	else{
-		for (int i = 0; i < BUILD_H; i++){
-			for (int j = 0; j < BUILD_W; j++){
-				if (m_blocks[i][j].GetAlive()){
-					m_blocks[i][j].DrawDepth(FarNear, PintoPos, PintoWorld);
-				}
-			}
 		}
 	}
 }

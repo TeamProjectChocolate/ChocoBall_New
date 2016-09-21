@@ -26,7 +26,6 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&, const D3DXVECTOR3&, const D3DXMATRIX&)override;
 	void SetupMatrices();
 	void InitParticle(CRandom&, CCamera&, const SParticleEmitParameter*, const D3DXVECTOR3&,D3DXVECTOR3);
 	// パーティクルに力を加える関数

@@ -6,11 +6,14 @@ class CInstancingRender:public CRender
 public:
 	CInstancingRender();
 	~CInstancingRender();
-	void CreateMatrixBuffer(int);	// 考え得る最大数分のワールド行列格納用バッファを定義する関数
+	void CreateMatrixBuffer(unsigned int);	// 考え得る最大数分のワールド行列格納用バッファを定義する関数
 	void AddWorldMatrix(const D3DXMATRIX&);
 	void AddRotationMatrix(const D3DXMATRIX&);
 	void Initialize()override;
 	void Draw()override;
+	IDirect3DVertexBuffer9* GetWorldMatrixBuffer(){
+		return m_WorldMatrixBuffer;
+	}
 private:
 	/*!
 	*@brief	ワールド行列を頂点バッファにコピー。
@@ -29,6 +32,7 @@ private:
 	vector<D3DXMATRIX> m_worldMatrix;	// ワールド行列の配列
 	IDirect3DVertexBuffer9* m_RotationMatrixBuffer = nullptr;
 	vector<D3DXMATRIX> m_RotationMatrix;
+	unsigned int m_MaxNum;	// バッファーのサイズ(この数を超えるバッファーサイズが必要になった場合、バッファーを作り直す);
 	// シェーダーに値をセットするためのハンドル群
 	D3DXHANDLE m_hEyePosition;
 	D3DXHANDLE m_hWorldMatrixArray;

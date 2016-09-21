@@ -18,10 +18,6 @@ public:
 
 	}
 
-	void SetDepthRenderState()override{
-
-	}
-
 	void OnDestroy();
 
 	//現時点と目的地を渡すとベクトルをセットします。

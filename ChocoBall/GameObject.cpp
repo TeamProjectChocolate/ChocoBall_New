@@ -15,8 +15,6 @@ void CGameObject::Initialize(){
 	m_pModel->Initialize();
 	SetRenderState();
 	m_pRender = SINSTANCE(CRenderContext)->SelectRender(m_RenderingState,m_pRenderName,false,m_pModel);
-	SetDepthRenderState();
-	m_pDepthRender = SINSTANCE(CRenderContext)->SelectRender(m_DepthRenderingState, m_pRenderName, false, m_pModel);
 }
 
 void CGameObject::Update(){
@@ -27,16 +25,6 @@ void CGameObject::Draw(){
 	SetUpTechnique();
 	m_pRender->SetModelData(m_pModel);
 	m_pRender->Draw();
-}
-
-void CGameObject::DrawSimple(){
-	m_pRender->SetModelData(m_pModel);
-	m_pRender->Draw();
-}
-
-void CGameObject::DrawDepth(const D3DXVECTOR2& FarNear,const D3DXVECTOR3& PintoPos,const D3DXMATRIX& PintoWorld){
-	m_pDepthRender->SetModelData(m_pModel);
-	m_pDepthRender->Draw(FarNear,PintoPos,PintoWorld);
 }
 
 void CGameObject::DrawShadow(CCamera* camera){

@@ -14,7 +14,6 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&, const D3DXVECTOR3&, const D3DXMATRIX&)override;
 	void DeleteAll();
 	CEnemyManager()
 	{
@@ -75,6 +74,16 @@ public:
 
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;
+	}
+	void SetPintoPos(const D3DXVECTOR3& pos)override{
+		for (int idx = 0; idx < numEnemy; idx++){
+			Enemy[idx]->SetPintoPos(pos);
+		}
+	}
+	void SetPintoWorld(const D3DXMATRIX& mat)override{
+		for (int idx = 0; idx < numEnemy; idx++){
+			Enemy[idx]->SetPintoWorld(mat);
+		}
 	}
 private:
 	int		numEnemy;	//ìGÇÃêîÅB

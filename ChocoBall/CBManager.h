@@ -35,7 +35,6 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&, const D3DXVECTOR3&, const D3DXMATRIX&)override;
 	void DrawShadow(CCamera*)override;
 	void SetRenderState()override{
 		if (m_IsInstancing){
@@ -44,9 +43,6 @@ public:
 		else{
 			return;
 		}
-	}
-	void SetDepthRenderState()override{
-		m_DepthRenderingState = RENDER_STATE::Instancing_Depth;
 	}
 	void SetShadowRenderState()override{
 		m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample_I;

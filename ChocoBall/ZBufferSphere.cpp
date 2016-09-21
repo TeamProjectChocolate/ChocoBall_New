@@ -58,6 +58,12 @@ void CZBufferSphere::Draw()
 	IDirect3DSurface9* pOldBackBuffer;
 	IDirect3DSurface9* pOldZBuffer;
 
+	// 深度を書き込むターゲットは必要ないので取り出して保存
+	LPDIRECT3DSURFACE9 pOldDepthBuffer;
+	(*graphicsDevice()).GetRenderTarget(1, &pOldDepthBuffer);
+	// 無効化
+	(*graphicsDevice()).SetRenderTarget(1, nullptr);
+
 	(*graphicsDevice()).GetRenderTarget(0, &pOldBackBuffer);
 	(*graphicsDevice()).GetDepthStencilSurface(&pOldZBuffer);
 
@@ -75,9 +81,6 @@ void CZBufferSphere::Draw()
 	// レンダリングターゲットを元に戻す
 	(*graphicsDevice()).SetRenderTarget(0, pOldBackBuffer);
 	(*graphicsDevice()).SetDepthStencilSurface(pOldZBuffer);
-
-}
-
-void CZBufferSphere::DrawDepth(const D3DXVECTOR2& FarNear, const D3DXVECTOR3& PintoPos, const D3DXMATRIX& PintoWorld){
+	(*graphicsDevice()).SetRenderTarget(1, pOldDepthBuffer);
 
 }

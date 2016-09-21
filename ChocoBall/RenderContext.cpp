@@ -96,11 +96,21 @@ void CRenderContext::RenderingStart(){
 	// レンダリングターゲットの変更
 	(*graphicsDevice()).SetRenderTarget(0, m_RenderTarget.GetSurface());
 	(*graphicsDevice()).SetDepthStencilSurface(m_RenderTarget.GetZMap());
-
+	(*graphicsDevice()).SetRenderTarget(1, m_DofRender->GetSurface());
 	(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+
+	// 深度を書き込むときに参照するピントを計算
+	m_DofRender->MathPinto();
+
+	for (auto renders : m_Renders){
+		for (auto render : renders){
+			render->render->SetDepthFarNear(m_DofRender->GetDepthFarNear());
+		}
+	}
 }
 
 void CRenderContext::RenderingEnd(){
+	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 	m_BloomRender->Draw();
 	m_DofRender->Draw();
 }

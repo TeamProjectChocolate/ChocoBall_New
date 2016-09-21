@@ -11,8 +11,6 @@
 #include "C3DObjectRender_S.h"
 #include "InstancingRender.h"
 #include "C2DRender.h"
-#include "C3DRender_D.h"
-#include "InstancingRender_D.h"
 #include "ShadowSamplingRender.h"
 #include "ShadowSamplingRender_I.h"
 #include "RenderTarget.h"
@@ -39,8 +37,6 @@ public:
 			return CreateRender<C3DObjectRender>(state, name, IsCommon);
 		case RENDER_STATE::_3D_Simple:
 			return CreateRender<C3DObjectRender_S>(state, name, IsCommon);
-		case RENDER_STATE::_3D_Depth:
-			return CreateRender<C3DRender_D>(state, name, IsCommon);
 		case RENDER_STATE::_3D_ShadowSample:
 			return CreateRender<CShadowSamplingRender>(state, name, IsCommon);
 		case RENDER_STATE::_3D_ShadowSample_I:
@@ -51,8 +47,6 @@ public:
 			return CreateRender<CDofRender>(state, name, IsCommon);
 		case RENDER_STATE::Instancing:
 			return CreateRender<CInstancingRender>(state, name, IsCommon,pModel);
-		case RENDER_STATE::Instancing_Depth:
-			return CreateRender<CInstancingRender_D>(state, name, IsCommon, pModel);
 		case RENDER_STATE::Max:
 			MessageBox(nullptr, _T("そのレンダーステートはあかんでぇ～"), _T("Message"), MB_OK);
 			abort();

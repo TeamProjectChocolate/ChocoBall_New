@@ -102,33 +102,36 @@ VS_OUTPUT VS_ShadowMain_I(VS_INPUT_INSTANCING In, uniform bool isBone){
 
 float4 PS_ShadowMain(VS_OUTPUT In)	: COLOR{
 	float z = (In.depth.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
-	return float4(z,z,z,z);
+	float dx = ddx(z);
+	float dy = ddy(z);
+	float Depth_Depth = (z * z) + (0.25f * (dx * dx + dy * dy));
+	return float4(z,Depth_Depth,0.0f,1.0f);
 }
 
 technique BonelessShadowMapping{
 	pass p0{
-		VertexShader = compile vs_2_0 VS_ShadowMain(false);
-		PixelShader = compile ps_2_0 PS_ShadowMain();
+		VertexShader = compile vs_3_0 VS_ShadowMain(false);
+		PixelShader = compile ps_3_0 PS_ShadowMain();
 	}
 };
 
 technique BoneShadowMapping{
 	pass p0{
-		VertexShader = compile vs_2_0 VS_ShadowMain(true);
-		PixelShader = compile ps_2_0 PS_ShadowMain();
+		VertexShader = compile vs_3_0 VS_ShadowMain(true);
+		PixelShader = compile ps_3_0 PS_ShadowMain();
 	}
 };
 
 technique BonelessShadowMapping_I{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_ShadowMain_I(false);
-		PixelShader = compile ps_2_0 PS_ShadowMain();
+		PixelShader = compile ps_3_0 PS_ShadowMain();
 	}
 }
 
 technique BoneShadowMapping_I{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_ShadowMain_I(true);
-		PixelShader = compile ps_2_0 PS_ShadowMain();
+		PixelShader = compile ps_3_0 PS_ShadowMain();
 	}
 }

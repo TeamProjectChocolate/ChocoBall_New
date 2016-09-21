@@ -40,6 +40,14 @@ void CParticle::Draw(){
 	SetupMatrices();
 
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+
+	// アルファテストを有効化
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	// アルファの値が一定値より大きければ合格とし、描画する。小さければピクセルが破棄される
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	// アルファテストの境界値
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, 0x1);
+
 	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, true);
 	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, false);
 
@@ -90,6 +98,12 @@ void CParticle::Draw(){
 	work->SetTexture("g_Texture", m_pModel->GetImage_2D()->pTex);
 	work->SetFloat("g_brightness", m_brightness);
 	work->SetFloat("Alpha", m_pModel->m_alpha);
+
+	// 深度を書き込むのに必要
+	work->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(m_pModel->GetPintoPos())));
+	work->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetDofRender()->GetDepthFarNear())));
+	work->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
+
 	work->CommitChanges();				//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
 
 	(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -97,64 +111,15 @@ void CParticle::Draw(){
 	work->EndPass();
 	work->End();
 
-
+	// アルファテスト、オフ
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 	(*graphicsDevice()).SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, false);
 
-
-
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, true);
-}
-
-void CParticle::DrawDepth(const D3DXVECTOR2& FarNear, const D3DXVECTOR3& PintoPos, const D3DXMATRIX& PintoWorld){
-	LPD3DXEFFECT effect = SINSTANCE(CRenderContext)->FindRender<CDofRender>(RENDER_STATE::Dof, "")->GetEffect();
-
-	effect->SetTechnique("DepthSampling_Primitive");
-	effect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
-	effect->BeginPass(0);
-
-	// アルファテストを有効化
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	// アルファの値が一定値より大きければ合格とし、描画する。小さければピクセルが破棄される
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-	// アルファテストの境界値
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, 0x1);
-
-	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
-	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
-	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
-
-	D3DXVECTOR2 split = m_pModel->GetSplit();
-	effect->SetInt("Split_X", split.x);
-	effect->SetInt("Split_Y", split.y);
-	D3DXVECTOR2 now = m_pModel->GetNow();
-	effect->SetInt("NowCol", now.x);
-	effect->SetInt("NowRow", now.y);
-	float ratio_X = m_pModel->GetImage_2D()->RealSize.x / m_pModel->GetImage_2D()->UnRealSize.x;
-	float ratio_Y = m_pModel->GetImage_2D()->RealSize.y / m_pModel->GetImage_2D()->UnRealSize.y;
-	effect->SetFloat("Ratio_X", ratio_X);
-	effect->SetFloat("Ratio_Y", ratio_Y);
-	effect->SetTexture("g_PrimTex", m_pModel->GetImage_2D()->pTex);
-	effect->SetTexture("g_DepthSample", SINSTANCE(CRenderContext)->GetDofRender()->GetDepthTex());
-
-	effect->SetVector("g_FarNear", &(static_cast<D3DXVECTOR4>(FarNear)));
-
-	effect->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(PintoPos)));
-	effect->SetMatrix("g_Proj", &(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetProj()));
-	effect->SetMatrix("g_View", &(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetView()));
-	effect->SetMatrix("g_PintoWorld", &PintoWorld);// ピントを合わせるポイントを行列変換するためのワールド行列
-	effect->SetMatrix("g_World", &mWorldViewProj/*設定したい行列へのポインタ*/);
-
-	effect->CommitChanges();						//この関数を呼び出すことで、データの転送が確定する。
-	(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-	effect->EndPass();
-	effect->End();
-
-	// アルファテスト、オフ
-	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 void CParticle::SetupMatrices(){

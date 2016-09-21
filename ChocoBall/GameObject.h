@@ -14,7 +14,6 @@ public:
 		m_alive = false;
 		m_pRender = nullptr;
 		m_RenderingState = RENDER_STATE::None;
-		m_DepthRenderingState = RENDER_STATE::None;
 		strcpy(m_pRenderName, "");
 	};
 	virtual ~CGameObject();
@@ -27,8 +26,6 @@ public:
 
 	virtual void Update();
 	virtual void Draw();
-	virtual void DrawSimple();
-	virtual void DrawDepth(const D3DXVECTOR2&,const D3DXVECTOR3&,const D3DXMATRIX&);
 	virtual void DrawShadow(CCamera*);
 
 	virtual inline void SetFileName(LPCSTR name){
@@ -43,17 +40,6 @@ public:
 				break;
 			case MODEL_TYPE::T_3D:
 				m_RenderingState = RENDER_STATE::_3D;
-				break;
-			}
-		}
-	}
-	inline virtual void SetDepthRenderState(){
-		if (m_pModel){
-			switch (m_pModel->m_Type){
-			case MODEL_TYPE::T_2D:
-				return;
-			case MODEL_TYPE::T_3D:
-				m_DepthRenderingState = RENDER_STATE::_3D_Depth;
 				break;
 			}
 		}
@@ -144,13 +130,21 @@ public:
 	bool GetCommon(){
 		return m_common;
 	}
+	virtual void SetPintoWorld(const D3DXMATRIX& mat){
+		if (m_UseModel){
+			m_pModel->SetPintoWorld(mat);
+		}
+	}
+	virtual void SetPintoPos(const D3DXVECTOR3& pos){
+		if (m_UseModel){
+			m_pModel->SetPintoPos(pos);
+		}
+	}
 protected:
 	CModel* m_pModel;
 	CRender* m_pRender;
-	CRender* m_pDepthRender;
 	CRender* m_pShadowRender;
 	RENDER_STATE m_RenderingState;	// ‚Ç‚ÌƒŒƒ“ƒ_[‚ğg‚¤‚©
-	RENDER_STATE m_DepthRenderingState;
 	RENDER_STATE m_ShadowRenderingState;
 	D3DXVECTOR3 m_moveSpeed;
 	TRANSFORM m_transform;

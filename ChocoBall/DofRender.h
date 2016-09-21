@@ -19,6 +19,11 @@ public:
 	* @brief	çÏê¨ÅB
 	*/
 	void Initialize()override;
+	void MathPinto();
+
+	LPDIRECT3DSURFACE9 GetSurface(){
+		return m_DepthSamplingTarget.GetSurface();
+	}
 	LPDIRECT3DTEXTURE9 GetDepthTex(){
 		return m_DepthSamplingTarget.GetTexture();
 	}
@@ -27,6 +32,9 @@ public:
 	}
 	CGameObject* GetPintoObject(){
 		return m_pPintoObject;
+	}
+	const D3DXMATRIX& GetPintWorld(){
+		return m_PintoWorld;
 	}
 private:
 	/*!

@@ -13,7 +13,6 @@ public:
 	virtual void Initialize()override;
 	virtual void Update()override;
 	virtual void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&, const D3DXVECTOR3&, const D3DXMATRIX&)override;
 	void SoundPlay();
 	void SetAudio(CAudio* audio){
 		m_pAudio = audio;

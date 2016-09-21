@@ -19,7 +19,6 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&, const D3DXVECTOR3&, const D3DXMATRIX&)override;
 	void SetUpTechnique()override{
 		m_pRender->SetUpTechnique("ShadowMaskTec");
 	}

@@ -79,7 +79,7 @@ struct SShapeVertex_PT {
 	float		uv[2];
 };
 
-enum RENDER_STATE{ None = 0, _2D, _3D,_3D_Simple,_3D_Depth,_3D_ShadowSample,_3D_ShadowSample_I, Bloom, Dof, Instancing ,Instancing_Depth,Max};
+enum RENDER_STATE{ None = 0, _2D, _3D,_3D_Simple,_3D_ShadowSample,_3D_ShadowSample_I, Bloom, Dof, Instancing ,Max};
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540

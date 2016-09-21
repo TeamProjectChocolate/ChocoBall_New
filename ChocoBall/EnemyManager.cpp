@@ -39,13 +39,6 @@ void CEnemyManager::Draw()
 	}
 }
 
-void CEnemyManager::DrawDepth( const D3DXVECTOR2& FarNear, const D3DXVECTOR3& PintoPos, const D3DXMATRIX& PintoWorld){
-	for (short i = 0; i < numEnemy; i++)
-	{
-		Enemy[i]->DrawDepth(FarNear,PintoPos,PintoWorld);
-	}
-}
-
 void CEnemyManager::DeleteAll(){
 	//for (int i = 0; i < ENEMY_MAX; i++){
 	//	if (Enemy[i] != nullptr){

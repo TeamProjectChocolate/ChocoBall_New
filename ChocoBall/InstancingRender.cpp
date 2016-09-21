@@ -9,11 +9,14 @@ CInstancingRender::CInstancingRender()
 	m_worldMatrix.clear();
 	m_RotationMatrix.clear();
 	m_IsFirst = true;
+	m_MaxNum = 0;
 }
 
 
 CInstancingRender::~CInstancingRender()
 {
+	m_worldMatrix.clear();
+	m_RotationMatrix.clear();
 	SAFE_DELETE(m_WorldMatrixBuffer); 
 	SAFE_DELETE(m_RotationMatrixBuffer);
 	SAFE_DELETE(m_VertexDecl);
@@ -107,13 +110,12 @@ void CInstancingRender::Initialize(){
 	}
 }
 
-void CInstancingRender::CreateMatrixBuffer(int MaxNum){
+void CInstancingRender::CreateMatrixBuffer(unsigned int MaxNum){
 	//ワールド行列用のバッファの作成。
-	if (m_WorldMatrixBuffer == nullptr){
+	if (m_MaxNum < MaxNum){
 		(*graphicsDevice()).CreateVertexBuffer(sizeof(D3DXMATRIX)* MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
-	}
-	if (m_RotationMatrixBuffer == nullptr){
 		(*graphicsDevice()).CreateVertexBuffer(sizeof(D3DXMATRIX)* MaxNum, 0, 0, D3DPOOL_MANAGED, &m_RotationMatrixBuffer, 0);
+		m_MaxNum = MaxNum;
 	}
 }
 
@@ -256,6 +258,11 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
 
 	m_pEffect->SetTexture(m_hTexture, container->ppTextures[0]);	// テクスチャ情報をセット
+
+	// 深度を書き込むのに必要
+	m_pEffect->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(m_pModel->GetPintoPos())));
+	m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
+	m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
 
 	// インスタンシング描画
 	{

@@ -6,7 +6,7 @@ class CShadowSamplingRender_I :
 public:
 	CShadowSamplingRender_I();
 	~CShadowSamplingRender_I();
-	void CreateMatrixBuffer(int);	// 考え得る最大数分のワールド行列格納用バッファを定義する関数
+	void CreateMatrixBuffer(unsigned int);	// 考え得る最大数分のワールド行列格納用バッファを定義する関数
 	void AddWorldMatrix(const D3DXMATRIX&);
 	void Initialize()override;
 	void Draw()override;
@@ -30,5 +30,6 @@ private:
 	IDirect3DVertexDeclaration9* m_VertexDecl = nullptr;			//頂点定義。
 	vector<D3DXMATRIX> m_worldMatrix;	// ワールド行列の配列
 	CCamera* m_pShadowCamera;
+	unsigned int m_MaxNum;
 };
 

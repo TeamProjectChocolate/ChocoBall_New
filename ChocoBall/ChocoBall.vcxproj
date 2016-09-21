@@ -109,7 +109,6 @@
     <ClInclude Include="C3DImage.h" />
     <ClInclude Include="C3DObjectRender.h" />
     <ClInclude Include="C3DObjectRender_S.h" />
-    <ClInclude Include="C3DRender_D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CBManager.h" />
     <ClInclude Include="collisionInfo.h" />
@@ -136,7 +135,6 @@
     <ClInclude Include="GamePad.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="InstancingRender.h" />
-    <ClInclude Include="InstancingRender_D.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="islntersect.h" />
     <ClInclude Include="JetGimmick.h" />
@@ -216,7 +214,6 @@
     <ClCompile Include="C3DImage.cpp" />
     <ClCompile Include="C3DObjectRender.cpp" />
     <ClCompile Include="C3DObjectRender_S.cpp" />
-    <ClCompile Include="C3DRender_D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CBManager.cpp" />
     <ClCompile Include="ChocoBall.cpp" />
@@ -248,7 +245,6 @@
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InstancingRender.cpp" />
-    <ClCompile Include="InstancingRender_D.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="islntersect.cpp" />
     <ClCompile Include="JetGimmick.cpp" />

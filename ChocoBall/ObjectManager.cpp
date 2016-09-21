@@ -145,6 +145,8 @@ void CObjectManager::Draw(){
 
 				if (m_GameObjects[idx]->object->GetAlive()){	// ¶‘¶‚µ‚Ä‚¢‚é‚à‚Ì‚Ì‚Ý•`‰æ
 					if (m_GameObjects[idx]->priority == priorty){	// Œ»Ý‚Ì—Dæ“x‚Æˆê’v‚·‚é‚à‚Ì‚ð•`‰æ
+						m_GameObjects[idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
+						m_GameObjects[idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
 						m_GameObjects[idx]->object->Draw();
 					}
 				}
@@ -161,6 +163,8 @@ void CObjectManager::Draw(){
 
 				if (m_GameObjects[idx]->object->GetAlive()){	// ¶‘¶‚µ‚Ä‚¢‚é‚à‚Ì‚Ì‚Ý•`‰æ
 					if (m_GameObjects[idx]->priority == priorty){	// Œ»Ý‚Ì—Dæ“x‚Æˆê’v‚·‚é‚à‚Ì‚ð•`‰æ
+						m_GameObjects[idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
+						m_GameObjects[idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
 						m_GameObjects[idx]->object->Draw();
 					}
 				}

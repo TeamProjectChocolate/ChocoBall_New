@@ -22,7 +22,6 @@ public:
 	}
 	void Update()override;
 	void Draw()override;
-	void DrawDepth(const D3DXVECTOR2&,const D3DXVECTOR3&,const D3DXMATRIX&)override;
 	void Initialize(D3DVECTOR pos, D3DXQUATERNION rot);
 	void SetRenderState()override{
 		if (m_IsInstancing){
@@ -31,9 +30,6 @@ public:
 		else{
 			return;
 		}
-	}
-	void SetDepthRenderState()override{
-		m_DepthRenderingState = RENDER_STATE::Instancing_Depth;
 	}
 	void SetUpTechnique()override{
 		m_pRender->SetUpTechnique("NonAnimationInstancing_Fresnel");

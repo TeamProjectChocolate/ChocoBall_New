@@ -106,7 +106,6 @@ void CBlock::Update()
 
 void CBlock::Draw()
 {
-	CGameObject::DrawSimple();
 }
 
 void CBlock::BeginDraw()

@@ -13,6 +13,7 @@ CShadowSamplingRender_I::CShadowSamplingRender_I()
 
 CShadowSamplingRender_I::~CShadowSamplingRender_I()
 {
+	m_worldMatrix.clear();
 	SAFE_DELETE(m_WorldMatrixBuffer);
 	SAFE_DELETE(m_VertexDecl);
 }
@@ -71,10 +72,11 @@ void CShadowSamplingRender_I::Initialize(){
 	}
 }
 
-void CShadowSamplingRender_I::CreateMatrixBuffer(int MaxNum){
+void CShadowSamplingRender_I::CreateMatrixBuffer(unsigned int MaxNum){
 	//ワールド行列用のバッファの作成。
-	if (m_WorldMatrixBuffer == nullptr){
+	if (m_MaxNum < MaxNum){
 		(*graphicsDevice()).CreateVertexBuffer(sizeof(D3DXMATRIX)* MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
+		m_MaxNum = MaxNum;
 	}
 }
 

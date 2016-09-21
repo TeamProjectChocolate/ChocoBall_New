@@ -35,10 +35,21 @@ public:
 		m_pSampleTexture = tex;
 	}
 	inline virtual void SetShadowCamera(CCamera* camera){};
+	inline virtual void SetDepthFarNear(const D3DXVECTOR2& FarNear){
+		m_DepthFarNear = FarNear;
+	}
+	inline virtual void SetDepthFarNear(float Far,float Near){
+		m_DepthFarNear.x = Far;
+		m_DepthFarNear.y = Near;
+	}
+	inline const D3DXVECTOR2& GetDepthFarNear(){
+		return m_DepthFarNear;
+	}
 protected:
 	LPD3DXEFFECT m_pEffect;
 	CHAR m_pTechniqueName[MAX_FILENAME + 1];
 	CModel* m_pModel;
 	LPDIRECT3DTEXTURE9 m_pSampleTexture;	// 描画する前に最初に受け取るテクスチャ
+	D3DXVECTOR2 m_DepthFarNear;
 };
 
