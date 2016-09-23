@@ -7,6 +7,7 @@
 #include "RenderContext.h"
 #include "Camera.h"
 #include "C3DImage.h"
+#include "ShadowRender.h"
 
 CField::~CField()
 {
@@ -51,6 +52,7 @@ void CField::Initialize(){
 	UseModel<C3DImage>();
 	m_pModel->SetFileName(FieldNameArray[m_StageID]);
 	CGameObject::Initialize();
+	SINSTANCE(CShadowRender)->Entry(this);
 }
 
 void CField::Update(){

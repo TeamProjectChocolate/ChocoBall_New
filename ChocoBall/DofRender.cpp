@@ -158,8 +158,14 @@ void CDofRender::Initialize()
 	//深度情報抽出用
 	m_DepthSamplingTarget.CreateRenderingTarget(w, h, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
 	//ブラー用(横用と縦用)
-	for (short i = 0; i < 2; i++){
-		m_BlurTarget[i].CreateRenderingTarget(w, h, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
+	for (short i = 0, w_num = 0, h_num = 0; i < 4; i++){
+		if (i % 2 == 0){
+			w_num++;
+		}
+		else{
+			h_num++;
+		}
+		m_BlurTarget[i].CreateRenderingTarget(w >> w_num, h >> h_num, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
 	}
 
 	m_pEffect = SINSTANCE(CEffect)->LoadEffect(_T("Shader/DepthOfField.hlsl"));

@@ -314,9 +314,20 @@ float vsm(float4 ShadowPos,float3 normal){
 	}
 	float depth = (ShadowPos.z - g_FarNear.y) / (g_FarNear.x - g_FarNear.y);
 
+	// テスト
+	if (shadow_val.x > depth){
+		return 1.0f;
+	}
+	else{
+		return 0.5f;
+	}
 	// VSM(分散シャドウマップ)
+	// 分散を算出
 	float Variance = shadow_val.y - (shadow_val.x * shadow_val.x);
-	return max(shadow_val.x >= depth,Variance + (depth - shadow_val.x));
+	Variance = max(Variance, 0.00002f);
+	float d = depth - shadow_val.x;
+	Variance = Variance / (Variance + d * d);
+	return max(shadow_val.x >= depth,Variance/* + (depth - shadow_val.x)*/);
 }
 
 PS_OUTPUT ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZMask ,uniform bool isIluminance){
@@ -365,11 +376,9 @@ PS_OUTPUT ShadowPixel(VS_OUTPUT In, uniform bool hasNormalMap, uniform bool hasZ
 	// アンビエントライトを加算
 	light.xyz += ambientLight;
 
-	color *= light;	// テクスチャのカラーとライトを乗算
+	light.xyz *= vsm(In.ShadowPos, normal);
 
-	float shadow = vsm(In.ShadowPos, normal);
-	color.xyz = (1.0f - shadow) * shadow + shadow * color.xyz;
-	//color.xyz *= vsm(In.ShadowPos,normal);
+	color *= light;	// テクスチャのカラーとライトを乗算
 
 	//if ((shadow_val.z >= depth) <= ((Variance + (depth - shadow_val.z)) / Variance))
 	//if (depth > shadow_val.z){
@@ -620,9 +629,8 @@ PS_OUTPUT FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool has
 	float3 normalInCamera = mul(normal, g_CameraRotaInverse);
 	float fresnel = 1.0f - abs(dot(normalInCamera, float3(0.0f, 0.0f, 1.0f)));
 	fresnel *= fresnel;// pow(fresnel, 1.5f);
+	light += fresnel;
 	float4 color = tex2D(g_TextureSampler, In.uv);	// テクスチャを貼り付ける
-	color *= light;	// テクスチャのカラーとライトを乗算
-	color += fresnel;
 	float4 shadow_val = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (hasShadow){
@@ -642,11 +650,11 @@ PS_OUTPUT FresnelShader(VS_OUTPUT In, uniform bool hasNormalMap,uniform bool has
 		//	// 影になっている
 		//	color.xyz *= shadow_val.xyz;
 		//}
-		float shadow = vsm(In.ShadowPos, normal);
-		color.xyz = (1.0f - shadow) * shadow + shadow * color.xyz;
-		//color.xyz *= vsm(In.ShadowPos,normal);
+		light.xyz *= vsm(In.ShadowPos, normal);
 	}
 	
+	color *= light;	// テクスチャのカラーとライトを乗算
+
 	if (hasluminance){
 		// αに輝度を埋め込む
 		color.a = CalcLuminance(color.xyz);

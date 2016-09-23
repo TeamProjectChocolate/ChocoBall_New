@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "C3DImage.h"
 #include "Camera.h"
+#include "RenderTarget.h"
 
 class CShadowRender
 {
@@ -15,6 +16,7 @@ public:
 	void Entry(CGameObject*);
 	void Initialize();
 	void Update();
+	void UpdateWeight(float);
 	void Draw();
 	void BeginDraw();
 	void EndDraw();
@@ -28,7 +30,9 @@ public:
 		m_ShadowLightDirection = dir;
 	}
 	LPDIRECT3DTEXTURE9 GetTexture(){
-		return m_pShadow;
+		//return m_RenderTarget.GetTexture();
+		// 最終的な影のテクスチャを返却
+		return m_BlurTarget[1].GetTexture();
 	}
 	void SetShadowCamera(LPD3DXEFFECT effect){
 		effect->SetMatrix("LightViewProj", &(m_camera.GetView() * m_camera.GetProj()));
@@ -39,9 +43,8 @@ public:
 	void CleanManager();
 	void ExcuteDeleteObjects();
 private:
-	LPDIRECT3DSURFACE9 m_pMapZ = nullptr;			// 深度バッファ
-	LPDIRECT3DTEXTURE9 m_pShadow = nullptr;		// 影を落とすためのテクスチャ
-	LPDIRECT3DSURFACE9 m_pOriginalSurf = nullptr;	// サーフェス
+	CRenderTarget m_RenderTarget;
+	CRenderTarget m_BlurTarget[2];
 	vector<CGameObject*> m_ShadowObjects;	// 影を生成したいオブジェクトの配列
 	vector<CGameObject*> m_DeleteObjects;
 	D3DXVECTOR3 m_target;		// 影を生成したいオブジェクトのポジション
@@ -51,6 +54,9 @@ private:
 	D3DXMATRIX m_View;					// ライトのビュー行列
 	D3DXMATRIX m_Proj;					// ライトのプロジェクション行列
 	void DeleteAll();
-	RenderState m_RenderState;
+	static const int NUM_WEIGHTS = 8;
+	float	m_weights[NUM_WEIGHTS];
+	LPD3DXEFFECT m_pEffect;
+	CPrimitive* m_Primitive;
 };
 

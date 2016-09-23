@@ -1,8 +1,22 @@
-﻿2016/09/21 12:10:13 にビルドを開始しました。
+﻿2016/09/23 12:26:16 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\GitHub\ChocoBall_New\ChocoBall\ChocoBall.vcxproj" (Build ターゲット)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\ChocoBall.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /FIstdafx.h /analyze- /errorReport:prompt Block.cpp BloomRender.cpp BuildBlock.cpp Bullet.cpp BulletPhysics.cpp C2DImage.cpp C3DImage.cpp C3DObjectRender.cpp C3DObjectRender_S.cpp CBManager.cpp Camera.cpp ChocoBall.cpp ClearText.cpp CourceCamera.cpp Debri.cpp DirectX.cpp DofRender.cpp Enemy.cpp EnemyBase.cpp EnemyBullet.cpp EnemyFB.cpp EnemyLR.cpp EnemyManager.cpp Enemyjamp.cpp FallFloor.cpp Field.cpp FireJet.cpp GameCamera.cpp GameManager.cpp GameObject.cpp GameOver.cpp Icon.cpp InstancingRender.cpp JetGimmick.cpp LevelBuilder.cpp LockOn.cpp MainScene.cpp Model.cpp MoveFloor.cpp Number.cpp ObjectManager.cpp Particle.cpp ParticleEmitter.cpp Player.cpp PlayerBullet.cpp Primitive.cpp RenderContext.cpp Result.cpp ResultBack.cpp ResultCursor.cpp ResultSelect.cpp Rigidbody.cpp Scene.cpp SceneResult.cpp SceneTitle.cpp Score.cpp ShadowRender.cpp ShadowSamplingRender.cpp ShadowSamplingRender_I.cpp Skybox.cpp SmokeJet.cpp Stage.cpp StageManager.cpp TestInstancing.cpp TestObject2D.cpp TitleBack.cpp TitleCursor.cpp TitleSelect.cpp Tunr.cpp UpFloor.cpp ZBufferSphere.cpp islntersect.cpp
-         CBManager.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\ChocoBall.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /FIstdafx.h /analyze- /errorReport:prompt Block.cpp BuildBlock.cpp C3DImage.cpp C3DObjectRender.cpp C3DObjectRender_S.cpp CBManager.cpp ChocoBall.cpp CourceCamera.cpp DirectX.cpp Enemy.cpp EnemyBase.cpp EnemyBullet.cpp EnemyFB.cpp EnemyLR.cpp EnemyManager.cpp Enemyjamp.cpp FallFloor.cpp Field.cpp FireJet.cpp GameCamera.cpp GameManager.cpp InstancingRender.cpp JetGimmick.cpp LevelBuilder.cpp LockOn.cpp MainScene.cpp MoveFloor.cpp ObjectManager.cpp Particle.cpp ParticleEmitter.cpp Player.cpp PlayerBullet.cpp Primitive.cpp SceneResult.cpp SceneTitle.cpp Score.cpp ShadowRender.cpp SmokeJet.cpp Stage.cpp StageManager.cpp TestInstancing.cpp TitleCursor.cpp UpFloor.cpp ZBufferSphere.cpp islntersect.cpp
+         Block.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(55): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(62): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
+         コードを生成中...
+         コンパイル中...
+         TestInstancing.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
@@ -90,9 +104,19 @@
      1>c:\github\chocoball_new\chocoball\bullet.h(34): warning C4927: 変換が正しくありません。複数のユーザー定義の変換が暗黙的に適用されています。
                  コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
                  c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.h(166) : 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください。
-         コードを生成中...
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-         コンパイル中...
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(39): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(103): warning C4244: '初期化中' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(104): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(105): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(106): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(107): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(108): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(144): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(145): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(147): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(148): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(150): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\github\chocoball_new\chocoball\testinstancing.cpp(151): warning C4244: '=' : 'double' から 'float' への変換です。データが失われる可能性があります。
          InstancingRender.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -106,50 +130,53 @@
      1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\instancingrender.cpp(32): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
      1>c:\github\chocoball_new\chocoball\instancingrender.cpp(43): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
+         C3DObjectRender_S.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(55): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(62): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+         C3DObjectRender.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(55): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(62): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\c3dobjectrender.cpp(98): warning C4244: '引数' : 'DWORD' から 'FLOAT' への変換です。データが失われる可能性があります。
          コードを生成中...
          スキップ中... (関連する変更は検出されませんでした)
          islntersect.cpp
          ZBufferSphere.cpp
          UpFloor.cpp
-         Tunr.cpp
-         TitleSelect.cpp
          TitleCursor.cpp
-         TitleBack.cpp
-         TestObject2D.cpp
-         TestInstancing.cpp
          StageManager.cpp
          Stage.cpp
          SmokeJet.cpp
-         Skybox.cpp
-         ShadowSamplingRender_I.cpp
-         ShadowSamplingRender.cpp
          ShadowRender.cpp
          Score.cpp
          SceneTitle.cpp
          SceneResult.cpp
-         Scene.cpp
-         Rigidbody.cpp
-         ResultSelect.cpp
-         ResultCursor.cpp
-         ResultBack.cpp
-         Result.cpp
-         RenderContext.cpp
          Primitive.cpp
          PlayerBullet.cpp
          Player.cpp
          ParticleEmitter.cpp
          Particle.cpp
          ObjectManager.cpp
-         Number.cpp
          MoveFloor.cpp
-         Model.cpp
          MainScene.cpp
          LockOn.cpp
          LevelBuilder.cpp
          JetGimmick.cpp
-         Icon.cpp
-         GameOver.cpp
-         GameObject.cpp
          GameManager.cpp
          GameCamera.cpp
          FireJet.cpp
@@ -162,22 +189,12 @@
          EnemyBullet.cpp
          EnemyBase.cpp
          Enemy.cpp
-         DofRender.cpp
          DirectX.cpp
-         Debri.cpp
          CourceCamera.cpp
-         ClearText.cpp
          ChocoBall.cpp
-         Camera.cpp
-         C3DObjectRender_S.cpp
-         C3DObjectRender.cpp
+         CBManager.cpp
          C3DImage.cpp
-         C2DImage.cpp
-         BulletPhysics.cpp
-         Bullet.cpp
          BuildBlock.cpp
-         BloomRender.cpp
-         Block.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.exe" /INCREMENTAL /NOLOGO BulletCollision_Debug.lib BulletDynamics_Debug.lib BulletSoftBody_Debug.lib LinearMath_Debug.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.lib" /MACHINE:X86 Debug\DirectX.res
          Debug\AllocateHierarchy.obj
@@ -279,4 +296,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:07.21
+経過時間 00:00:04.12
