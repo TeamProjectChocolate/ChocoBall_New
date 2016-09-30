@@ -49,6 +49,7 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 
 	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = 0.34f;
 
 	SetAlive(true);
 }

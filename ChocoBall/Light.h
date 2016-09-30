@@ -10,10 +10,10 @@ public:
 	// 各種初期化(ゴミデータが紛れ込まないように)
 	CLight(){
 		for (int i = 0; i < NUM_DIFFUSE_LIGHT; i++){
-			m_diffuseLightDirection[i] = D3DXVECTOR4(0.0f, 0.0f, 0.0f,0.0f);
+			m_diffuseLightDirection[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			m_diffuseLightColor[i] = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
 		}
-		m_ambientLight = D3DXVECTOR4(0.1f, 0.1f, 0.1f,1.0f);
+		m_ambientLight = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 	};
 	~CLight(){};
 
@@ -21,16 +21,16 @@ public:
 	//引き数: int型 どのライトの向きを設定するか
 	//	　　: D3DXVECTOR3型 設定する向きの値(正規化されたベクトル、最大値1、最小値-1)
 	//返り値: なし
-	void SetDiffuseLightDirection(int lightNum, D3DXVECTOR4 dir){
+	void SetDiffuseLightDirection(int lightNum, D3DXVECTOR3 dir){
 		CH_ASSERT(lightNum < NUM_DIFFUSE_LIGHT);
-		D3DXVec4Normalize(&dir,&dir);
+		D3DXVec3Normalize(&dir,&dir);
 		m_diffuseLightDirection[lightNum] = dir;
 	}
 
 	//ディフューズライトの向きを取得する関数
 	//引き数: なし
 	//返り値: D3DXVECTOR3*型 各ディフューズライトの向きを格納した配列の先頭アドレス
-	D3DXVECTOR4* GetDiffuseLightDirection(){
+	D3DXVECTOR3* GetDiffuseLightDirection(){
 		return m_diffuseLightDirection;
 	}
 
@@ -53,21 +53,52 @@ public:
 	//環境光を設定する関数
 	//引き数: D3DXVECTOR3型 環境光？
 	//返り値: なし
-	void SetAmbientLight(D3DXVECTOR4 ambient){
+	void SetAmbientLight(D3DXVECTOR3 ambient){
 		m_ambientLight = ambient;
 	}
 
 	//環境光を取得する関数
 	//引き数: なし
 	//返り値: D3DXVECTOR3&型 環境光
-	D3DXVECTOR4& GetAmbientLight(){
+	D3DXVECTOR3& GetAmbientLight(){
 		return m_ambientLight;
+	}
+
+	/*!
+	*@brief	リムライトの方向を設定。
+	*/
+	void SetLimLightDirection(const D3DXVECTOR3& dir)
+	{
+		m_limLightDir = dir;
+	}
+	/*!
+	*@brief	リムライトの方向を取得。
+	*/
+	const D3DXVECTOR3& GetLimLightDirection() const
+	{
+		return m_limLightDir;
+	}
+	/*!
+	*@brief	リムライトの色を設定。
+	*/
+	void SetLimLightColor(const D3DXVECTOR4& color)
+	{
+		m_limLightColor = color;
+	}
+	/*!
+	*@brief	リムライトの色を取得。
+	*/
+	const D3DXVECTOR4& GetLimLightColor() const
+	{
+		return m_limLightColor;
 	}
 
 	void SetLight(LPD3DXEFFECT);
 private:
-	D3DXVECTOR4 m_diffuseLightDirection[NUM_DIFFUSE_LIGHT];		// ディフューズライトの向き
+	D3DXVECTOR3 m_diffuseLightDirection[NUM_DIFFUSE_LIGHT];		// ディフューズライトの向き
 	D3DXVECTOR4 m_diffuseLightColor[NUM_DIFFUSE_LIGHT];			// ディフューズライトのカラー
-	D3DXVECTOR4 m_ambientLight;									// 環境光
+	D3DXVECTOR3	m_limLightDir;									//!<リムライトの方向。
+	D3DXVECTOR4	m_limLightColor;								//!<リムライトの色。
+	D3DXVECTOR3 m_ambientLight;									// 環境光
 };
 

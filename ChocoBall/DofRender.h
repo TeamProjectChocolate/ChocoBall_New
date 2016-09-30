@@ -45,6 +45,7 @@ private:
 	static const int NUM_WEIGHTS = 8;
 	CRenderTarget m_DepthSamplingTarget;	// 深度情報抽出用レンダリングターゲット
 	CRenderTarget	m_BlurTarget[2];	//!<ぼかすためのレンダリングターゲット。
+	D3DXVECTOR2 m_size[2];	// 描画サイズ	
 	bool			m_isEnable;						//!<有効？
 	float				m_weights[NUM_WEIGHTS];
 	CPrimitive* m_Primitive;

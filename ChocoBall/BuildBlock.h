@@ -32,7 +32,8 @@ public:
 		}
 	}
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("NonAnimationInstancing_Fresnel");
+		//m_pRender->SetUpTechnique("IBoneless_Tex_Fresnel");
+		m_pRender->SetUpTechnique("IBoneless_Tex_Lim");
 	}
 
 

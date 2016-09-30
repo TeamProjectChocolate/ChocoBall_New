@@ -55,6 +55,7 @@ void CCBManager::Initialize()
 
 	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = 0.34f;
 }
 
 void CCBManager::ActivateShadowRender(){

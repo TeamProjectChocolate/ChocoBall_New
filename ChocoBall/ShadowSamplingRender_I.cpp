@@ -194,7 +194,6 @@ void CShadowSamplingRender_I::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->BeginPass(0);
 
 	m_pShadowCamera->SetCamera(m_pEffect);
-	m_pShadowCamera->SetFarNear(m_pEffect);
 	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
 
 	{

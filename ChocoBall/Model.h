@@ -14,6 +14,7 @@ public:
 	CModel(){
 		m_alpha = 1.0f;
 		m_luminance = 0.0f;
+		m_Refractive = 1.000293f;/*地球の大気の屈折率*/
 	};
 	~CModel(){};
 	virtual void Initialize();
@@ -69,6 +70,7 @@ public:
 	float m_alpha;
 	float m_luminance;	// 輝度
 	MODEL_TYPE m_Type;
+	float m_Refractive;	// 屈折率
 protected:
 	CHAR m_pFileName[MAX_FILENAME + 1];		// 読み込むファイルの名前を格納する
 	D3DXMATRIX m_PintoWorld;

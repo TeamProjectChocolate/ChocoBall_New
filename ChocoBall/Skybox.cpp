@@ -5,7 +5,7 @@
 #include "C3DImage.h"
 
 Skybox::Skybox(){
-	light.SetAmbientLight(D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	light.SetAmbientLight(D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 }
 
 Skybox::~Skybox(){}

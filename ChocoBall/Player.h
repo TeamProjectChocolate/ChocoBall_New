@@ -35,10 +35,10 @@ public:
 	void Update()override;
 	void Draw()override;
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("NotNormalMapAnimationFresnelTec");
+		m_pRender->SetUpTechnique("Skin_Tex_Lim");
 	}
 	void ConfigLight();
-	void ReflectionLight(D3DXVECTOR4);
+	void ReflectionLight(D3DXVECTOR3);
 	void SetUpLight();
 	void Move();
 	void LockOn();

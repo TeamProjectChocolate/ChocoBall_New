@@ -83,3 +83,10 @@ enum RENDER_STATE{ None = 0, _2D, _3D,_3D_Simple,_3D_ShadowSample,_3D_ShadowSamp
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
+
+
+// グラフィックテクニックのスイッチ。
+
+//#define NOT_VSM // 定義でソフトシャドウをオフ。
+//#define NOT_BLOOM	// 定義でブルームをオフ。
+//#define NOT_DOF	// 定義で被写界深度をオフ。

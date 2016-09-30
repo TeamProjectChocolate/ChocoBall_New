@@ -52,7 +52,10 @@ void CField::Initialize(){
 	UseModel<C3DImage>();
 	m_pModel->SetFileName(FieldNameArray[m_StageID]);
 	CGameObject::Initialize();
+#ifdef NOT_VSM
+#else
 	SINSTANCE(CShadowRender)->Entry(this);
+#endif
 }
 
 void CField::Update(){

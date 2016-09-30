@@ -73,7 +73,6 @@ void CShadowSamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContai
 		m_pEffect->BeginPass(0);
 
 		m_pShadowCamera->SetCamera(m_pEffect);
-		m_pShadowCamera->SetFarNear(m_pEffect);
 
 		m_pEffect->SetMatrixArray("g_WorldMatrixArray", g_pBoneMatrices, pMeshContainer->NumPaletteEntries);
 
@@ -93,7 +92,6 @@ void CShadowSamplingRender::NonAnimationDraw(){
 	m_pEffect->BeginPass(0);
 
 	m_pShadowCamera->SetCamera(m_pEffect);
-	m_pShadowCamera->SetFarNear(m_pEffect);
 	m_pEffect->SetMatrix("World"/*エフェクトファイル内の変数名*/, &(m_pModel->m_World)/*設定したい行列へのポインタ*/);
 	// 頂点フォーマットをセット
 

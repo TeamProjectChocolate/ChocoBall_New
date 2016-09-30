@@ -39,7 +39,9 @@ void CDofRender::UpdateWeight(float dispersion)
 */
 void CDofRender::Draw()
 {
-
+#ifdef NOT_DOF
+	m_isEnable = false;
+#endif
 	if (m_isEnable) {
 		UpdateWeight(200.0f);
 		LPDIRECT3DSURFACE9 RenderingTarget;
@@ -61,11 +63,11 @@ void CDofRender::Draw()
 			m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 			m_pEffect->BeginPass(0);
 			float size[2] = {
-				static_cast<float>(w),
-				static_cast<float>(h)
+				static_cast<float>(m_size[0].x),
+				static_cast<float>(m_size[0].y)
 			};
 			float offset[] = {
-				16.0f / static_cast<float>(w),
+				16.0f / static_cast<float>(m_size[0].x),
 				0.0f
 			};
 			m_pEffect->SetValue("g_TexSize", size, sizeof(size));
@@ -92,12 +94,12 @@ void CDofRender::Draw()
 			m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 			m_pEffect->BeginPass(0);
 			float size[2] = {
-				static_cast<float>(w),
-				static_cast<float>(h)
+				static_cast<float>(m_size[1].x),
+				static_cast<float>(m_size[1].y)
 			};
 			float offset[] = {
 				0.0f,
-				16.0f / static_cast<float>(h)
+				16.0f / static_cast<float>(m_size[1].y)
 			};
 			m_pEffect->SetValue("g_TexSize", size, sizeof(size));
 			m_pEffect->SetValue("g_offset", offset, sizeof(offset));
@@ -158,13 +160,14 @@ void CDofRender::Initialize()
 	//深度情報抽出用
 	m_DepthSamplingTarget.CreateRenderingTarget(w, h, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
 	//ブラー用(横用と縦用)
-	for (short i = 0, w_num = 0, h_num = 0; i < 4; i++){
+	for (short i = 0, w_num = 0, h_num = 0; i < 2; i++){
 		if (i % 2 == 0){
 			w_num++;
 		}
 		else{
 			h_num++;
 		}
+		m_size[i] = D3DXVECTOR2(w >> w_num,h >> h_num);
 		m_BlurTarget[i].CreateRenderingTarget(w >> w_num, h >> h_num, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
 	}
 

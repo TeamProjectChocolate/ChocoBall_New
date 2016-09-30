@@ -51,7 +51,7 @@ void CInstancingRender::CopyMatrixToVertexBuffer()
 void CInstancingRender::Initialize(){
 	if(m_IsFirst){
 		m_pEffect = SINSTANCE(CEffect)->SetEffect(_T("Shader/ModelShader.hlsl"));	// 使用するshaderファイルを指定(デフォルト)
-		m_hEyePosition = m_pEffect->GetParameterByName(nullptr, "EyePosition");
+		m_hEyePosition = m_pEffect->GetParameterByName(nullptr, "g_EyePosition");
 		m_hWorldMatrixArray = m_pEffect->GetParameterByName(nullptr, "g_WorldMatrixArray");
 		m_hluminance = m_pEffect->GetParameterByName(nullptr, "g_luminance");
 		m_hnumBone = m_pEffect->GetParameterByName(nullptr, "g_numBone");
@@ -249,12 +249,15 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
 	// 視点をシェーダーに転送
 	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
 
 
 	SINSTANCE(CShadowRender)->SetShadowCamera(m_pEffect);
 
 	m_pEffect->SetFloat(m_hAlpha, m_pModel->m_alpha);
 	m_pEffect->SetFloat(m_hluminance, m_pModel->m_luminance);
+	m_pEffect->SetFloat("g_Refractive", m_pModel->m_Refractive);
+
 	m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
 
 	m_pEffect->SetTexture(m_hTexture, container->ppTextures[0]);	// テクスチャ情報をセット

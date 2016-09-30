@@ -3,7 +3,7 @@
 #include "C3DImage.h"
 #include "Player.h"
 #include "Audio.h"
-
+#include "Infomation.h"
 
 class MoveFloor : public CGameObject{
 public:
@@ -13,7 +13,11 @@ public:
 	void Update()override;
 	void Draw()override;
 	virtual void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("NotNormalMapNonAnimationFresnelShadowTec");
+#ifdef NOT_VSM
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_Fresnel");
+#else
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_Fresnel");
+#endif
 	}
 	void Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos);
 	void SetPos(D3DXVECTOR3 pos){

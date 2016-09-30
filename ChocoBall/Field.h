@@ -3,6 +3,7 @@
 #include "BulletPhysics.h"
 #include "StageTable.h"
 #include "C3DObjectRender.h"
+#include "Infomation.h"
 
 class CZBufferSphere;
 
@@ -20,7 +21,11 @@ public:
 	void Update()override;
 	void Draw()override;
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("ShadowMaskTec");
+#ifdef NOT_VSM
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_ZMask");
+#else
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_ZMask");
+#endif
 	}
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;

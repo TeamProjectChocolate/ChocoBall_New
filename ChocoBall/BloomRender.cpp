@@ -45,7 +45,9 @@ void CBloomRender::UpdateWeight(float dispersion)
 */
 void CBloomRender::Draw()
 {
-
+#ifdef NOT_BLOOM
+	m_isEnable = false;
+#endif
 	if (m_isEnable) {
 		UpdateWeight(5.0f);
 		LPDIRECT3DSURFACE9 RenderingTarget;

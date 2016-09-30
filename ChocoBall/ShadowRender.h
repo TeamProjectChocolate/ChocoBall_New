@@ -4,6 +4,7 @@
 #include "C3DImage.h"
 #include "Camera.h"
 #include "RenderTarget.h"
+#include "Infomation.h"
 
 class CShadowRender
 {
@@ -30,13 +31,15 @@ public:
 		m_ShadowLightDirection = dir;
 	}
 	LPDIRECT3DTEXTURE9 GetTexture(){
-		//return m_RenderTarget.GetTexture();
+#ifdef NOT_VSM
+		return m_RenderTarget.GetTexture();
+#else
 		// 最終的な影のテクスチャを返却
 		return m_BlurTarget[1].GetTexture();
+#endif
 	}
 	void SetShadowCamera(LPD3DXEFFECT effect){
 		effect->SetMatrix("LightViewProj", &(m_camera.GetView() * m_camera.GetProj()));
-		m_camera.SetFarNear(effect);
 	}
 	void DeleteObject(CGameObject*);
 	void DeleteObjectImidieit(CGameObject*);
@@ -45,6 +48,7 @@ public:
 private:
 	CRenderTarget m_RenderTarget;
 	CRenderTarget m_BlurTarget[2];
+	D3DXVECTOR2 m_size[2];
 	vector<CGameObject*> m_ShadowObjects;	// 影を生成したいオブジェクトの配列
 	vector<CGameObject*> m_DeleteObjects;
 	D3DXVECTOR3 m_target;		// 影を生成したいオブジェクトのポジション

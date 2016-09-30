@@ -2,7 +2,6 @@
 * @brief	ブルーム
 */
 
-
 //#define USE_LOW_QUALITY_BLOOM		//定義で低クォリティのブルーム処理が有効になる。品質は劣化する。
 
 texture g_scene;	//シーンテクスチャ。

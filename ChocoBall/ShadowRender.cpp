@@ -17,20 +17,29 @@ void CShadowRender::Entry(CGameObject* Obj){
 
 void CShadowRender::Initialize(){
 	// レンダリングターゲット生成
-	m_RenderTarget.CreateRenderingTarget(WINDOW_WIDTH, WINDOW_HEIGHT, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
-	m_BlurTarget[0].CreateRenderingTarget(WINDOW_WIDTH >> 1, WINDOW_HEIGHT, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
-	m_BlurTarget[1].CreateRenderingTarget(WINDOW_WIDTH >> 1, WINDOW_HEIGHT >> 1, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT);
-
+	int TexSize = 512;
+	m_RenderTarget.CreateRenderingTarget(/*WINDOW_WIDTH*/TexSize, TexSize /*WINDOW_HEIGHT*/, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
+	for (short i = 0, w_num = 0, h_num = 0; i < 2; i++){
+		if (i % 2 == 0){
+			w_num++;
+		}
+		else{
+			h_num++;
+		}
+		m_size[i] = D3DXVECTOR2(WINDOW_WIDTH >> w_num, WINDOW_HEIGHT >> h_num);
+		m_BlurTarget[i].CreateRenderingTarget(/*WINDOW_WIDTH*/TexSize >> w_num, /*WINDOW_HEIGHT*/TexSize >> h_num, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
+	}
 	m_camera.Initialize();
 
 	// 影描画用プロジェクション行列生成用の値をセット
 	m_camera.SetUpdateType(EUpdateType::enUpdateTypeTarget);
 	m_camera.SetNear(1.0f);
-	m_camera.SetFar(20.0f);
+	m_camera.SetFar(30.0f);
 	m_camera.SetAspect(WINDOW_WIDTH / WINDOW_HEIGHT);
 	m_camera.SetViewAngle(D3DXToRadian(60));
-
-	m_pEffect = SINSTANCE(CEffect)->SetEffect(_T("Shader/ShadowTex.hlsl"));
+	m_camera.SetIsOrtho(true);	// 平行投影モード
+	m_camera.SetViewVolume(D3DXVECTOR2(20.0f, 20.0f));
+	m_pEffect = SINSTANCE(CEffect)->SetEffect(_T("Shader/TransformedShader.hlsl"));
 }
 
 void CShadowRender::Update(){
@@ -39,28 +48,7 @@ void CShadowRender::Update(){
 	m_camera.Update();
 }
 
-void CShadowRender::UpdateWeight(float dispersion)
-{
-	float total = 0;
-	for (int i = 0; i<NUM_WEIGHTS; i++) {
-		m_weights[i] = expf(-0.5f*(float)(i*i) / dispersion);
-		if (0 == i) {
-			total += m_weights[i];
-		}
-		else {
-			// 中心以外は、２回同じ係数を使うので２倍
-			total += 2.0f*m_weights[i];
-		}
-	}
-	// 規格化
-	for (int i = 0; i < NUM_WEIGHTS; i++) {
-		m_weights[i] /= total;
-	}
-};
-
 void CShadowRender::Draw(){
-	this->UpdateWeight(200.0f);
-
 	// もとのレンダリングターゲットを保存
 	IDirect3DSurface9* pOldBackBuffer;
 	IDirect3DSurface9* pOldZBuffer;
@@ -90,28 +78,20 @@ void CShadowRender::Draw(){
 			data->render->Draw();
 	}
 
-	// ブラーをかける
+	// ブラーをかける(5点ブラー)
 	m_Primitive = SINSTANCE(CRenderContext)->GetPrimitive();
 	{
+		// Xブラー
 		(*graphicsDevice()).SetRenderTarget(0, m_BlurTarget[0].GetSurface());
 		(*graphicsDevice()).SetDepthStencilSurface(m_BlurTarget[0].GetZMap());
-		m_pEffect->SetTechnique("XBlur");
+		(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+
+		m_pEffect->SetTechnique("TransformedPrimBlurX");
 		m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 		m_pEffect->BeginPass(0);
 
-		float size[2] = {
-			static_cast<float>(WINDOW_WIDTH),
-			static_cast<float>(WINDOW_HEIGHT)
-		};
-		float offset[] = {
-			16.0f / static_cast<float>(WINDOW_WIDTH),
-			0.0f
-		};
-		m_pEffect->SetValue("g_TexSize", size, sizeof(size));
-		m_pEffect->SetValue("g_offset", offset, sizeof(offset));
-		m_pEffect->SetValue("g_weight", m_weights, sizeof(m_weights));
-
-		m_pEffect->SetTexture("g_blur", m_RenderTarget.GetTexture());
+		m_pEffect->SetVector("g_TexSize", &static_cast<D3DXVECTOR4>(m_size[0]));
+		m_pEffect->SetTexture("g_tex", m_RenderTarget.GetTexture());
 		m_pEffect->CommitChanges();
 
 		(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
@@ -124,25 +104,20 @@ void CShadowRender::Draw(){
 		m_pEffect->End();
 	}
 	{
-		//YBlur
+		// Yブラー
 		(*graphicsDevice()).SetRenderTarget(0, m_BlurTarget[1].GetSurface());
 		(*graphicsDevice()).SetDepthStencilSurface(m_BlurTarget[1].GetZMap());
-		m_pEffect->SetTechnique("YBlur");
+		(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+
+		m_pEffect->SetTechnique("TransformedPrimBlurY");
 		m_pEffect->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
 		m_pEffect->BeginPass(0);
-		float size[2] = {
-			static_cast<float>(WINDOW_WIDTH),
-			static_cast<float>(WINDOW_HEIGHT)
-		};
 		float offset[] = {
 			0.0f,
-			16.0f / static_cast<float>(WINDOW_HEIGHT)
+			16.0f / static_cast<float>(m_size[1].y)
 		};
-		m_pEffect->SetValue("g_TexSize", size, sizeof(size));
-		m_pEffect->SetValue("g_offset", offset, sizeof(offset));
-		m_pEffect->SetValue("g_weight", m_weights, sizeof(m_weights));
-
-		m_pEffect->SetTexture("g_blur", m_BlurTarget[0].GetTexture());
+		m_pEffect->SetValue("g_TexSize", m_size[1], sizeof(m_size[1]));
+		m_pEffect->SetTexture("g_tex", m_BlurTarget[0].GetTexture());
 		m_pEffect->CommitChanges();
 
 		(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());

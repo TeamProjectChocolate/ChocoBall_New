@@ -15,7 +15,7 @@ public:
 	void PlayerBulletHit(D3DXVECTOR3);
 	void RollingEnemy();
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("NotNormalMapNonAnimationFresnelTec");
+		m_pRender->SetUpTechnique("Boneless_Tex_Fresnel");
 	}
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;

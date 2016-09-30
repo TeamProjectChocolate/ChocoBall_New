@@ -297,14 +297,14 @@ void CPlayer::Update()
 			//ゲームオーバー状態でのチョコボールに流される処理
 			RollingPlayer();
 		}
-		if (m_GameState!=GAMEEND_ID::CLEAR)
+		if (m_GameState != GAMEEND_ID::CLEAR)
 		{
 			CGameObject::Update();
 		}
 	}
 
 	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
-	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2*/12.0f/*30.0f*/, 0.0f));
+	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2.0f*/10.0f, 0.0f));
 
 	int size = m_bullets.size();
 	for (int idx = 0; idx < size; idx++){
@@ -339,32 +339,33 @@ void CPlayer::ConfigLight(){
 	m_lightDir[3] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 
 	// ディフューズライト(キャラライト)の色設定(ライト1～4)
-	m_lightColor[0] = D3DXVECTOR4(0.4f, 0.4f, 0.4f, 1.0f);
-	m_lightColor[1] = D3DXVECTOR4(0.4f, 0.4f, 0.4f, 1.0f);
-	m_lightColor[2] = D3DXVECTOR4(0.4f, 0.4f, 0.4f, 1.0f);
-	m_lightColor[3] = D3DXVECTOR4(0.4f, 0.4f, 0.4f, 1.0f);
+	m_lightColor[0] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
+	m_lightColor[1] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
+	m_lightColor[2] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
+	m_lightColor[3] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
 
 
 	// アンビエントライト(環境光)の強さ設定
-	D3DXVECTOR4 ambientLight;
-	ambientLight = D3DXVECTOR4(0.4f, 0.4f, 0.4f, 1.0f);
+	D3DXVECTOR3 ambientLight;
+	ambientLight = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 
 	// ライトの設定を反映
 	ReflectionLight(ambientLight);
 }
 
-void CPlayer::ReflectionLight(D3DXVECTOR4 ambient){
+void CPlayer::ReflectionLight(D3DXVECTOR3 ambient){
 	this->SetUpLight();
 	m_light.SetAmbientLight(ambient);
+	m_light.SetLimLightColor(D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	m_light.SetLimLightDirection(D3DXVECTOR3(0.0f, 0.0f, -1.0f));
 }
 
 void CPlayer::SetUpLight(){
 	for (short num = 0; num < NUM_DIFFUSE_LIGHT; num++){
-		D3DXVECTOR4 dir;
+		D3DXVECTOR3 dir;
 		dir.x = m_lightDir[num].x;
 		dir.y = m_lightDir[num].y;
 		dir.z = m_lightDir[num].z;
-		dir.w = 1.0f;
 		m_light.SetDiffuseLightDirection(num, dir);
 		m_light.SetDiffuseLightColor(num, m_lightColor[num]);
 	}

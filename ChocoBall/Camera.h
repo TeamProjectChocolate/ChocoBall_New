@@ -13,12 +13,15 @@ public:
 	void Initialize();
 	void Update();
 	void SetCamera(LPD3DXEFFECT);
-	void SetFarNear(LPD3DXEFFECT);
+	//void SetFarNear(LPD3DXEFFECT);
 	inline void SetPos(D3DXVECTOR3 pos){
 		m_position = pos;
 	}
 	inline D3DXVECTOR3 GetPos(){
 		return m_position;
+	}
+	inline D3DXVECTOR3 GetDir(){
+		return m_direction;
 	}
 	inline void SetTarget(D3DXVECTOR3 target){
 		m_target = target;
@@ -70,6 +73,12 @@ public:
 	{
 		return m_target;
 	}
+	void SetIsOrtho(bool flg){
+		m_IsOrtho = flg;
+	}
+	void SetViewVolume(const D3DXVECTOR2 volume){
+		m_viewVolume = volume;
+	}
 private:
 	D3DXVECTOR3 m_position;
 	D3DXVECTOR3 m_target;
@@ -85,5 +94,7 @@ private:
 	D3DXVECTOR3 m_Axis;	// ‰ñ“]²
 	D3DXMATRIX m_Rota;	// ƒJƒƒ‰‚Ì‰ñ“]s—ñ
 	D3DXMATRIX m_RotaInv;	// ƒJƒƒ‰‚Ì‰ñ“]s—ñ‚Ì‹ts—ñ
+	bool m_IsOrtho;
+	D3DXVECTOR2 m_viewVolume;
 };
 

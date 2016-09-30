@@ -29,18 +29,28 @@ void CCamera::Initialize(){
 	m_Far = 1000.0f;					// どこまで描画するか
 	m_updateType = enUpdateTypeTarget;
 	m_Axis = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	m_IsOrtho = false;
 }
 
 void CCamera::Update(){
 	// 射影マトリックスの設定
 	D3DXMatrixIdentity(&m_Proj);			// 行列初期化
-	D3DXMatrixPerspectiveFovLH(
-		&m_Proj,							// 射影マトリックス
-		m_ViewAngle,						// 画角
-		m_aspect,							// アスペクト比
-		m_Near,								// Nearプレーン
-		m_Far);								// Farプレーン
-
+	if (!m_IsOrtho){
+		D3DXMatrixPerspectiveFovLH(
+			&m_Proj,							// 射影マトリックス
+			m_ViewAngle,						// 画角
+			m_aspect,							// アスペクト比
+			m_Near,								// Nearプレーン
+			m_Far);								// Farプレーン
+	}
+	else{
+		D3DXMatrixOrthoLH(
+			&m_Proj,
+			m_viewVolume.x,
+			m_viewVolume.y,
+			m_Near,
+			m_Far);
+	}
 	// ビュートランスフォーム(視点座標変換)
 	D3DXMatrixIdentity(&m_View);									// 行列初期化
 	D3DXVECTOR3 vEye(m_position.x, m_position.y, m_position.z);		// カメラ位置
@@ -86,8 +96,4 @@ void CCamera::SetCamera(LPD3DXEFFECT effect){
 	effect->SetMatrix("Proj"/*エフェクトファイル内の変数名*/, &m_Proj/*設定したい行列へのポインタ*/);
 	effect->SetMatrix("View"/*エフェクトファイル内の変数名*/, &m_View/*設定したい行列へのポインタ*/);
 	effect->SetMatrix("g_CameraRotaInverse", &m_RotaInv);
-}
-
-void CCamera::SetFarNear(LPD3DXEFFECT effect){
-	effect->SetVector("g_FarNear", reinterpret_cast<D3DXVECTOR4*>(&(D3DXVECTOR2(m_Far, m_Near))));
 }

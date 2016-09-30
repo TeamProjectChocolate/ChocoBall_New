@@ -6,6 +6,7 @@
 void EnemyBase::Build(){
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 	m_IsHit = false;
+	m_pModel->m_Refractive = 0.34f;
 }
 
 void EnemyBase::Update(){

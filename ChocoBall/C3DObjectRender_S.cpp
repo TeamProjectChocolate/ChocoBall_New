@@ -15,7 +15,7 @@ C3DObjectRender_S::~C3DObjectRender_S()
 
 void C3DObjectRender_S::Initialize(){
 	m_pEffect = SINSTANCE(CEffect)->SetEffect(_T("Shader/ModelShader.hlsl"));	// 使用するshaderファイルを指定(デフォルト)
-	m_hEyePosition = m_pEffect->GetParameterByName(nullptr, "EyePosition");
+	m_hEyePosition = m_pEffect->GetParameterByName(nullptr, "g_EyePosition");
 	m_hWorldMatrixArray = m_pEffect->GetParameterByName(nullptr, "g_WorldMatrixArray");
 	m_hluminance = m_pEffect->GetParameterByName(nullptr, "g_luminance");
 	m_hnumBone = m_pEffect->GetParameterByName(nullptr, "g_numBone");
@@ -83,8 +83,13 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->SetMatrix(m_hRota, &(m_pModel->GetRotation()));
 	m_pEffect->SetMatrix(m_hWorld/*エフェクトファイル内の変数名*/, &World/*設定したい行列へのポインタ*/);
 
+	// 視点をシェーダーに転送
+	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
+
 	m_pEffect->SetFloat(m_hAlpha, m_pModel->m_alpha);
 	m_pEffect->SetFloat(m_hluminance, m_pModel->m_luminance);
+	m_pEffect->SetFloat("g_Refractive", m_pModel->m_Refractive);
 
 	// 深度を書き込むのに必要
 	m_pEffect->SetVector("g_PintoPoint", &(static_cast<D3DXVECTOR4>(m_pModel->GetPintoPos())));
