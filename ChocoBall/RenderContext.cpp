@@ -59,13 +59,16 @@ void CRenderContext::CreateRenderingTerget(){
 	m_bufferSize_Width = WINDOW_WIDTH * 2;
 	m_bufferSize_Height = WINDOW_HEIGHT * 2;
 
-	// 被写界深度描画用クラス
+	// 被写界深度描画用クラス。
 	m_DofRender = CreateRender<CDofRender>(RENDER_STATE::Dof, _T(""),true);
 
-	// ブルーム描画用クラス
+	// ブルーム描画用クラス。
 	m_BloomRender = CreateRender<CBloomRender>(RENDER_STATE::Bloom,_T(""),true);
 	
-	// レンダリングターゲット生成
+	// 環境マップ描画用クラス。
+	m_EMRender = CreateRender<CEM_Render>(RENDER_STATE::EM, _T(""), true);
+
+	// レンダリングターゲット生成。
 	STargetParam param = {
 		m_bufferSize_Width,
 		m_bufferSize_Height,
@@ -112,6 +115,7 @@ void CRenderContext::RenderingStart(){
 void CRenderContext::RenderingEnd(){
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 	m_BloomRender->Draw();
+	m_EMRender->Draw();
 	m_DofRender->Draw();
 }
 
@@ -141,6 +145,11 @@ void CRenderContext::SetRenderingBuffer(){
 
 	m_pEffect->EndPass();
 	m_pEffect->End();
+}
+
+void CRenderContext::ChangeScenedProcess(){
+	this->DeleteRenders();	// 前のシーンで使用したレンダーを削除し、改めて必要なレンダーだけ次のInitializeで生成する
+	m_EMRender->SetEnable(true);
 }
 
 void CRenderContext::DeleteRenders(){

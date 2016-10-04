@@ -113,6 +113,7 @@
     <ClInclude Include="CBManager.h" />
     <ClInclude Include="collisionInfo.h" />
     <ClInclude Include="DofRender.h" />
+    <ClInclude Include="EM_Render.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemyGimmickInfoStage1.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="DofRender.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="EM_Render.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />

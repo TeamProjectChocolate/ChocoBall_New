@@ -5,8 +5,6 @@ c:\github\chocoball_new\chocoball\debug\stdafx.obj
 c:\github\chocoball_new\chocoball\debug\scenetitle.obj
 c:\github\chocoball_new\chocoball\debug\score.obj
 c:\github\chocoball_new\chocoball\debug\shadowrender.obj
-c:\github\chocoball_new\chocoball\debug\shadowsamplingrender.obj
-c:\github\chocoball_new\chocoball\debug\shadowsamplingrender_i.obj
 c:\github\chocoball_new\chocoball\debug\skinmodeldata.obj
 c:\github\chocoball_new\chocoball\debug\skybox.obj
 c:\github\chocoball_new\chocoball\debug\smokejet.obj
@@ -62,7 +60,6 @@ c:\github\chocoball_new\chocoball\debug\light.obj
 c:\github\chocoball_new\chocoball\debug\lockon.obj
 c:\github\chocoball_new\chocoball\debug\mainscene.obj
 c:\github\chocoball_new\chocoball\debug\model.obj
-c:\github\chocoball_new\chocoball\debug\camera.obj
 c:\github\chocoball_new\chocoball\debug\cbmanager.obj
 c:\github\chocoball_new\chocoball\debug\chocoball.obj
 c:\github\chocoball_new\chocoball\debug\cleartext.obj
@@ -95,6 +92,9 @@ c:\github\chocoball_new\chocoball\debug\c2drender.obj
 c:\github\chocoball_new\chocoball\debug\c3dimage.obj
 c:\github\chocoball_new\chocoball\debug\c3dobjectrender.obj
 c:\github\chocoball_new\chocoball\debug\c3dobjectrender_s.obj
+c:\github\chocoball_new\chocoball\debug\camera.obj
+c:\github\chocoball_new\chocoball\debug\shadowsamplingrender.obj
+c:\github\chocoball_new\chocoball\debug\shadowsamplingrender_i.obj
 c:\github\chocoball_new\debug\chocoball.ilk
 c:\github\chocoball_new\debug\chocoball.exe
 c:\github\chocoball_new\debug\chocoball.pdb

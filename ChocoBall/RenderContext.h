@@ -13,6 +13,7 @@
 #include "C2DRender.h"
 #include "ShadowSamplingRender.h"
 #include "ShadowSamplingRender_I.h"
+#include "EM_Render.h"
 #include "RenderTarget.h"
 
 class CCamera;
@@ -45,6 +46,8 @@ public:
 			return CreateRender<CBloomRender>(state, name, IsCommon);
 		case RENDER_STATE::Dof:
 			return CreateRender<CDofRender>(state, name, IsCommon);
+		case RENDER_STATE::EM:
+			return CreateRender<CEM_Render>(state, name, IsCommon);
 		case RENDER_STATE::Instancing:
 			return CreateRender<CInstancingRender>(state, name, IsCommon,pModel);
 		case RENDER_STATE::Max:
@@ -104,6 +107,8 @@ public:
 	void RenderingStart();
 	void RenderingEnd();
 	void SetRenderingBuffer();
+	// シーン切り替え発生時に呼び出される処理。
+	void ChangeScenedProcess();
 
 	void DeleteRenders();
 
@@ -173,6 +178,7 @@ private:
 	CLight* m_pLight = nullptr;
 	CBloomRender* m_BloomRender;
 	CDofRender* m_DofRender;
+	CEM_Render* m_EMRender;
 	void DeleteAll();
 private:
 	vector<vector<RENDER_DATA*>> m_Renders;	// 使用するレンダーの名前が同じならば新しく作らず、既存のものを使いまわす(新しく生成する場合は配列に積んでいく)

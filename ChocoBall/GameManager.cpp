@@ -47,7 +47,7 @@ void CGameManager::SetNextScene(){
 	SINSTANCE(CObjectManager)->CleanManager();
 	SINSTANCE(CShadowRender)->ExcuteDeleteObjects();
 	SINSTANCE(CObjectManager)->ExcuteDeleteObjects();
-	SINSTANCE(CRenderContext)->DeleteRenders();	// 前のシーンで使用したレンダーを削除し、改めて必要なレンダーだけ次のInitializeで生成する
+	SINSTANCE(CRenderContext)->ChangeScenedProcess();
 	m_NowScene = FindScene(m_NextSceneName);
 	if (m_NowScene == nullptr){
 		MessageBox(nullptr, _T("シーンが登録されていません"), _T("error"), MB_OK);

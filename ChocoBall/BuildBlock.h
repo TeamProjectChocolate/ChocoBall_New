@@ -22,6 +22,7 @@ public:
 	}
 	void Update()override;
 	void Draw()override;
+	void DrawShadow(CCamera*)override;
 	void Initialize(D3DVECTOR pos, D3DXQUATERNION rot);
 	void SetRenderState()override{
 		if (m_IsInstancing){
@@ -31,6 +32,12 @@ public:
 			return;
 		}
 	}
+	void SetShadowRenderState()override{
+		m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample_I;
+	}
+
+	void ActivateShadowRender()override;
+
 	void SetUpTechnique()override{
 		//m_pRender->SetUpTechnique("IBoneless_Tex_Fresnel");
 		m_pRender->SetUpTechnique("IBoneless_Tex_Lim");

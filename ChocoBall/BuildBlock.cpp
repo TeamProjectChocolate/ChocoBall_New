@@ -45,6 +45,7 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 
 	if (m_IsInstancing){
 		static_cast<CInstancingRender*>(m_pRender)->CreateMatrixBuffer(m_BBManagerNum * BUILD_H * BUILD_W);
+		SINSTANCE(CShadowRender)->Entry(this);
 	}
 
 	m_pModel->m_alpha = 1.0f;
@@ -52,6 +53,11 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 	m_pModel->m_Refractive = 0.34f;
 
 	SetAlive(true);
+}
+
+void CBuildBlock::ActivateShadowRender(){
+	CGameObject::ActivateShadowRender();
+	static_cast<CShadowSamplingRender_I*>(m_pShadowRender)->CreateMatrixBuffer(m_BBManagerNum * BUILD_H * BUILD_W);
 }
 
 void CBuildBlock::Update()
@@ -108,6 +114,18 @@ void CBuildBlock::Draw()
 		}
 		if (isBeginDraw){
 			m_blocks[beginDrawBlockNo_h][beginDrawBlockNo_w].EndDraw();
+		}
+	}
+}
+
+void CBuildBlock::DrawShadow(CCamera* camera){
+	m_pShadowRender->SetModelData(m_pModel);
+	m_pShadowRender->SetShadowCamera(camera);
+	for (int row = 0; row < BUILD_H; row++){
+		for (int col = 0; col < BUILD_W; col++){
+			if (m_blocks[row][col].GetAlive()){
+				static_cast<CShadowSamplingRender_I*>(m_pShadowRender)->AddWorldMatrix(m_blocks[row][col].GetModel()->GetWorldMatrix());
+			}
 		}
 	}
 }

@@ -1,7 +1,45 @@
-﻿2016/09/30 10:00:12 にビルドを開始しました。
+﻿2016/10/04 11:11:54 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\GitHub\ChocoBall_New\ChocoBall\ChocoBall.vcxproj" (Build ターゲット)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\ChocoBall.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /FIstdafx.h /analyze- /errorReport:prompt Block.cpp BloomRender.cpp BuildBlock.cpp Bullet.cpp BulletPhysics.cpp C2DImage.cpp C2DRender.cpp C3DImage.cpp C3DObjectRender.cpp C3DObjectRender_S.cpp CBManager.cpp Camera.cpp ChocoBall.cpp ClearText.cpp CourceCamera.cpp CourceDef.cpp Debri.cpp DirectX.cpp DofRender.cpp Effect.cpp Enemy.cpp EnemyBase.cpp EnemyBullet.cpp EnemyFB.cpp EnemyLR.cpp EnemyManager.cpp Enemyjamp.cpp FallFloor.cpp Field.cpp FireJet.cpp GameCamera.cpp GameManager.cpp GameObject.cpp GameOver.cpp Icon.cpp ImageManager.cpp InstancingRender.cpp JetGimmick.cpp LevelBuilder.cpp Light.cpp LockOn.cpp MainScene.cpp Model.cpp MoveFloor.cpp Number.cpp ObjectManager.cpp Particle.cpp ParticleEmitter.cpp Player.cpp PlayerBullet.cpp Primitive.cpp Render.cpp RenderContext.cpp Result.cpp ResultBack.cpp ResultCursor.cpp ResultSelect.cpp Rigidbody.cpp Scene.cpp SceneResult.cpp SceneTitle.cpp Score.cpp ShadowRender.cpp ShadowSamplingRender.cpp ShadowSamplingRender_I.cpp SkinModelData.cpp Skybox.cpp SmokeJet.cpp Stage.cpp StageManager.cpp TestInstancing.cpp TestObject2D.cpp TitleBack.cpp TitleCursor.cpp TitleSelect.cpp Tunr.cpp UpFloor.cpp Vibration.cpp ZBufferSphere.cpp islntersect.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\ChocoBall.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /FIstdafx.h /analyze- /errorReport:prompt AllocateHierarchy.cpp Block.cpp BloomRender.cpp BuildBlock.cpp Bullet.cpp BulletPhysics.cpp C2DImage.cpp C2DRender.cpp C3DImage.cpp C3DObjectRender.cpp C3DObjectRender_S.cpp CBManager.cpp Camera.cpp ChocoBall.cpp ClearText.cpp CourceCamera.cpp CourceDef.cpp Debri.cpp DirectX.cpp DofRender.cpp EM_Render.cpp Effect.cpp Enemy.cpp EnemyBase.cpp EnemyBullet.cpp EnemyFB.cpp EnemyLR.cpp EnemyManager.cpp Enemyjamp.cpp FallFloor.cpp Field.cpp FireJet.cpp GameCamera.cpp GameManager.cpp GameObject.cpp GameOver.cpp Icon.cpp ImageManager.cpp InstancingRender.cpp JetGimmick.cpp LevelBuilder.cpp Light.cpp LockOn.cpp MainScene.cpp Model.cpp MoveFloor.cpp Number.cpp ObjectManager.cpp Particle.cpp ParticleEmitter.cpp Player.cpp PlayerBullet.cpp Primitive.cpp Render.cpp RenderContext.cpp Result.cpp ResultBack.cpp ResultCursor.cpp ResultSelect.cpp Rigidbody.cpp Scene.cpp SceneResult.cpp SceneTitle.cpp Score.cpp ShadowRender.cpp ShadowSamplingRender.cpp ShadowSamplingRender_I.cpp SkinModelData.cpp Skybox.cpp SmokeJet.cpp Stage.cpp StageManager.cpp TestInstancing.cpp TestObject2D.cpp TitleBack.cpp TitleCursor.cpp TitleSelect.cpp Tunr.cpp UpFloor.cpp Vibration.cpp ZBufferSphere.cpp islntersect.cpp
+         RenderContext.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.cpp(156): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
+     1>c:\github\chocoball_new\chocoball\rendercontext.cpp(171): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
+         GameManager.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
+         EM_Render.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+     1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
+         コードを生成中...
+         コンパイル中...
          islntersect.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -12,7 +50,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -100,7 +138,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -266,7 +304,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -354,7 +392,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          TitleSelect.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -365,7 +403,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
          TitleCursor.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -377,7 +415,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -465,7 +503,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          TestObject2D.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -476,7 +514,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          TestInstancing.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -487,7 +525,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -589,7 +627,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -677,7 +715,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -765,7 +803,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -854,7 +892,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          SkinModelData.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -871,7 +909,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\shadowsamplingrender_i.cpp(28): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
          ShadowSamplingRender.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -883,7 +921,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\shadowsamplingrender.cpp(80): warning C4244: '引数' : 'DWORD' から 'FLOAT' への変換です。データが失われる可能性があります。
          ShadowRender.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -895,7 +933,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\shadowrender.cpp(29): warning C4244: '引数' : 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
          Score.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -907,7 +945,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -995,7 +1033,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1075,14 +1113,14 @@
                  コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
                  c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.h(166) : 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください。
          コードを生成中...
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
          コンパイル中...
          SceneResult.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -1094,7 +1132,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1182,7 +1220,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          Rigidbody.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1193,7 +1231,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          ResultSelect.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1204,7 +1242,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
          ResultCursor.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -1216,7 +1254,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
          ResultBack.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -1228,7 +1266,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          Result.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1239,20 +1277,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
-         RenderContext.cpp
-     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-     1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.cpp(147): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
-     1>c:\github\chocoball_new\chocoball\rendercontext.cpp(162): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          Render.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1268,7 +1293,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1357,7 +1382,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1446,7 +1471,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1535,7 +1560,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1625,7 +1650,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1718,7 +1743,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1806,7 +1831,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          MoveFloor.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1817,7 +1842,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -1905,7 +1930,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          MainScene.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -1916,7 +1941,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2004,7 +2029,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2082,24 +2107,24 @@
      1>c:\github\chocoball_new\chocoball\bullet.h(34): warning C4927: 変換が正しくありません。複数のユーザー定義の変換が暗黙的に適用されています。
                  コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
                  c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.h(166) : 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください。
-         コードを生成中...
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-         コンパイル中...
          Light.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+         コードを生成中...
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+         コンパイル中...
          LevelBuilder.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -2110,7 +2135,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2199,7 +2224,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2288,7 +2313,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\instancingrender.cpp(32): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
      1>c:\github\chocoball_new\chocoball\instancingrender.cpp(43): warning C4018: '<' : signed と unsigned の数値を比較しようとしました。
          ImageManager.cpp
@@ -2312,7 +2337,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          GameOver.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -2323,7 +2348,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          GameObject.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -2334,19 +2359,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
-         GameManager.cpp
-     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-     1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
-     1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          GameCamera.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -2357,7 +2370,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2445,7 +2458,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2534,7 +2547,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2617,7 +2630,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2705,7 +2718,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2793,7 +2806,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2881,7 +2894,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -2969,7 +2982,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3058,7 +3071,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3146,7 +3159,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3235,7 +3248,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3313,21 +3326,6 @@
      1>c:\github\chocoball_new\chocoball\bullet.h(34): warning C4927: 変換が正しくありません。複数のユーザー定義の変換が暗黙的に適用されています。
                  コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
                  c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.h(166) : 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください。
-         コードを生成中...
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-         コンパイル中...
          Effect.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3339,12 +3337,27 @@
      1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
      1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\dofrender.cpp(170): warning C4244: '引数' : 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
+         コードを生成中...
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+         コンパイル中...
          DirectX.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3355,7 +3368,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3443,7 +3456,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
          CourceDef.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -3533,7 +3546,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3622,7 +3635,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          ChocoBall.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3633,7 +3646,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
          Camera.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -3645,7 +3658,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          CBManager.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3656,7 +3669,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3744,14 +3757,14 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          C3DObjectRender.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\animation.h(54): warning C4800: 'ID3DXAnimationController *const ' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
      1>c:\github\chocoball_new\chocoball\model.h(56): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
@@ -3767,7 +3780,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          C2DRender.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3787,7 +3800,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          BulletPhysics.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3798,7 +3811,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          Bullet.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3809,7 +3822,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3896,7 +3909,7 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
      1>c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数' : 'double' から 'FLOAT' へ切り詰めます。
@@ -3976,7 +3989,7 @@
      1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
          Block.cpp
      1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -3987,13 +4000,19 @@
      1>c:\github\chocoball_new\chocoball\model.h(61): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\model.h(63): warning C4172: ローカル変数またはテンポラリのアドレスを返します。
      1>c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'int2' の左辺を無視します。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(24): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(25): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
      1>c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
+         AllocateHierarchy.cpp
+     1>c:\github\chocoball_new\chocoball\infomation.h(31): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(52): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(67): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\infomation.h(75): warning C4091: 'typedef ' : 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+     1>c:\github\chocoball_new\chocoball\allocatehierarchy.cpp(18): warning C4316: 'D3DXFRAME_DERIVED' : ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
          コードを生成中...
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
-     1>c:\github\chocoball_new\chocoball\rendercontext.h(54): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
+     1>c:\github\chocoball_new\chocoball\rendercontext.h(57): warning C4715: 'CRenderContext::SelectRender' : 値を返さないコントロール パスがあります。
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.exe" /INCREMENTAL /NOLOGO BulletCollision_Debug.lib BulletDynamics_Debug.lib BulletSoftBody_Debug.lib LinearMath_Debug.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\GitHub\ChocoBall_New\Debug\ChocoBall.lib" /MACHINE:X86 Debug\DirectX.res
          Debug\AllocateHierarchy.obj
@@ -4020,6 +4039,7 @@
          Debug\DirectX.obj
          Debug\DofRender.obj
          Debug\Effect.obj
+         Debug\EM_Render.obj
          Debug\Enemy.obj
          Debug\EnemyBase.obj
          Debug\EnemyBullet.obj
@@ -4095,4 +4115,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:59.85
+経過時間 00:00:48.89

@@ -10,7 +10,6 @@ void CBlock::OnDestroy(){
 	if (m_child){
 		m_child->OnDestroyParent();
 	}
-	this->SetAlive(false);
 	m_isDead = true;
 }
 

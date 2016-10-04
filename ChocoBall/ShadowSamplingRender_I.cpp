@@ -86,6 +86,10 @@ void CShadowSamplingRender_I::AddWorldMatrix(const D3DXMATRIX& mat){
 
 void CShadowSamplingRender_I::Draw(){
 	if (m_pModel){
+		if (m_worldMatrix.size() <= 0){
+			// 描画するオブジェクトが一つも存在しなければ描画しない。これをしないと必ず一つ描画されてしまう。
+			return;
+		}
 		DrawFrame(m_pModel->GetImage_3D()->pModel->GetFrameRoot());
 	}
 }
