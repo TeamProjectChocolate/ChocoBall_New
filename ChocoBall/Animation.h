@@ -22,14 +22,23 @@ public:
 	void Initialize(ID3DXAnimationController*);
 	void Update(float);
 
-	// アニメーション再生関数
+	// 繰り返しアニメーション再生関数
 	// 引き数: int型 再生したいアニメーションのインデックス
 	void PlayAnimation(int);
 
-	// アニメーション再生関数
+	// 繰り返しアニメーション再生関数
 	// 引き数: int型 再生したいアニメーションのインデックス
 	//		　 float型 補完時間
 	void PlayAnimation(int, float);
+
+	// 一周分のみアニメーション再生関数
+	// 引き数: int型 再生したいアニメーションのインデックス
+	void PlayAnimation_Once(int);
+
+	// 一周分のみアニメーション再生関数
+	// 引き数: int型 再生したいアニメーションのインデックス
+	//		　 float型 補完時間
+	void PlayAnimation_Once(int, float);
 
 	// アニメーション再生速度を設定
 	void SetAnimSpeed(float speed);
@@ -69,5 +78,6 @@ private:
 	float m_interpolateTime;		// 補間時間
 	unique_ptr<double[]> m_animationEndTime;	// アニメーションの終了タイム。デフォルト値は-1。指定しない場合はID3DXAnimationSetのアニメーション終了タイムが優先される。
 	float m_localAnimationTime;	// ローカルアニメーションタイム
+	bool m_IsPlayOnce;	// 一周分の再生か。
 };
 

@@ -19,7 +19,7 @@ public:
 	void Draw();
 private:
 	CPlayer* m_Player;
-	EnemyBase m_Enemy;	//“G‚Ì•Ï”B
+	EnemyBase* m_Enemy;	//“G‚Ì•Ï”B
 	Bullet m_Bullet;
 	GAMEEND_ID m_GameState = GAMEEND_ID::CONTINUE;
 	bool m_isGameContinue = true;

@@ -5,8 +5,6 @@
 #include "RenderContext.h"
 #include "ShadowSamplingRender_I.h"
 
-extern UINT                        g_NumBoneMatricesMax;
-extern D3DXMATRIXA16*              g_pBoneMatrices;
 
 CShadowRender* CShadowRender::m_instance = nullptr;
 
@@ -19,6 +17,8 @@ void CShadowRender::Initialize(){
 	// レンダリングターゲット生成
 	int TexSize = 512;
 	m_RenderTarget.CreateRenderingTarget(/*WINDOW_WIDTH*/TexSize, TexSize /*WINDOW_HEIGHT*/, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
+#ifdef NOT_VSM
+#else
 	for (short i = 0, w_num = 0, h_num = 0; i < 2; i++){
 		if (i % 2 == 0){
 			w_num++;
@@ -29,6 +29,7 @@ void CShadowRender::Initialize(){
 		m_size[i] = D3DXVECTOR2(WINDOW_WIDTH >> w_num, WINDOW_HEIGHT >> h_num);
 		m_BlurTarget[i].CreateRenderingTarget(/*WINDOW_WIDTH*/TexSize >> w_num, /*WINDOW_HEIGHT*/TexSize >> h_num, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
 	}
+#endif
 	m_camera.Initialize();
 
 	// 影描画用プロジェクション行列生成用の値をセット
@@ -62,22 +63,41 @@ void CShadowRender::Draw(){
 
 	(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
 
-	for (int idx = 0, size = m_ShadowObjects.size(); idx < size; idx++){
-		if (m_ShadowObjects[idx] != nullptr){
-			if (m_ShadowObjects[idx]->GetAlive()){
-				m_ShadowObjects[idx]->DrawShadow(&m_camera);
+	for (auto itr = m_ShadowObjects.begin(); itr != m_ShadowObjects.end();){
+		if (*itr != nullptr){
+			if ((*itr)->GetAlive()){
+				(*itr)->DrawShadow(&m_camera);
+				itr++;
+			}
+			else{
+				itr = m_ShadowObjects.erase(itr);
 			}
 		}
 		else{
-			DeleteObject(m_ShadowObjects[idx]);
+			itr = m_ShadowObjects.erase(itr);
 		}
 	}
+	//for (int idx = 0, size = m_ShadowObjects.size(); idx < size; idx++){
+	//	if (m_ShadowObjects[idx] != nullptr){
+	//		if (m_ShadowObjects[idx]->GetAlive()){
+	//			m_ShadowObjects[idx]->DrawShadow(&m_camera);
+	//		}
+	//		else{
+	//			DeleteObject(m_ShadowObjects[idx]);
+	//		}
+	//	}
+	//	else{
+	//		DeleteObject(m_ShadowObjects[idx]);
+	//	}
+	//}
 	// インスタンシング
 	vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::_3D_ShadowSample_I);
 	for (auto data : datas){
 			data->render->Draw();
 	}
 
+#ifdef NOT_VSM
+#else
 	// ブラーをかける(5点ブラー)
 	m_Primitive = SINSTANCE(CRenderContext)->GetPrimitive();
 	{
@@ -129,7 +149,7 @@ void CShadowRender::Draw(){
 		m_pEffect->EndPass();
 		m_pEffect->End();
 	}
-
+#endif
 	// レンダリングターゲットを元に戻す
 	(*graphicsDevice()).SetRenderTarget(0, pOldBackBuffer);
 	(*graphicsDevice()).SetDepthStencilSurface(pOldZBuffer);

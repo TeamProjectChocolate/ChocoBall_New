@@ -42,18 +42,6 @@
 },
 //GimmickTrigger
 {
-	D3DXVECTOR3(-52.10f, 20.24f, 83.97f),             //平行移動
-	D3DXQUATERNION(0.01, 0.60f, 0.00f, 0.80f ),    //回転
-	D3DXVECTOR3(0.94f, 1.93f, 1.02f ),            //拡大
-},
-//GimmickTrigger
-{
-	D3DXVECTOR3(-47.00f, 22.64f, 84.93f),             //平行移動
-	D3DXQUATERNION(0.01, 0.60f, 0.00f, 0.80f ),    //回転
-	D3DXVECTOR3(7.80f, 10.44f, 1.00f ),            //拡大
-},
-//GimmickTrigger
-{
 	D3DXVECTOR3(-32.43f, 24.69f, 54.84f),             //平行移動
 	D3DXQUATERNION(0.08, 0.46f, -0.07f, 0.88f ),    //回転
 	D3DXVECTOR3(7.80f, 5.77f, 1.00f ),            //拡大
@@ -66,13 +54,49 @@
 },
 //GimmickTrigger
 {
-	D3DXVECTOR3(-52.10f, 20.24f, 83.97f),             //平行移動
-	D3DXQUATERNION(0.01, 0.60f, 0.00f, 0.80f ),    //回転
+	D3DXVECTOR3(-59.22f, 16.98f, 96.48f),             //平行移動
+	D3DXQUATERNION(0.01, -0.22f, 0.01f, 0.98f ),    //回転
+	D3DXVECTOR3(7.80f, 10.44f, 1.00f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-16.33f, 31.36f, 7.60f),             //平行移動
+	D3DXQUATERNION(0.01, 0.76f, -0.61f, 0.25f ),    //回転
+	D3DXVECTOR3(7.80f, 8.78f, 2.29f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-59.22f, 16.98f, 96.48f),             //平行移動
+	D3DXQUATERNION(0.01, -0.22f, 0.01f, 0.98f ),    //回転
+	D3DXVECTOR3(7.80f, 10.44f, 1.00f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-59.22f, 16.98f, 96.48f),             //平行移動
+	D3DXQUATERNION(0.01, -0.22f, 0.01f, 0.98f ),    //回転
+	D3DXVECTOR3(7.80f, 10.44f, 1.00f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-32.22f, 35.08f, 30.94f),             //平行移動
+	D3DXQUATERNION(0.01, -0.26f, 0.00f, 0.97f ),    //回転
 	D3DXVECTOR3(0.94f, 1.93f, 1.02f ),            //拡大
 },
 //GimmickTrigger
 {
-	D3DXVECTOR3(-52.10f, 20.24f, 83.97f),             //平行移動
-	D3DXQUATERNION(0.01, 0.60f, 0.00f, 0.80f ),    //回転
+	D3DXVECTOR3(-34.20f, 35.73f, 35.61f),             //平行移動
+	D3DXQUATERNION(0.01, -0.26f, 0.00f, 0.97f ),    //回転
+	D3DXVECTOR3(7.80f, 10.44f, 1.00f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-32.22f, 35.07f, 30.94f),             //平行移動
+	D3DXQUATERNION(0.01, -0.26f, 0.00f, 0.97f ),    //回転
+	D3DXVECTOR3(0.94f, 1.93f, 1.02f ),            //拡大
+},
+//GimmickTrigger
+{
+	D3DXVECTOR3(-32.21f, 35.11f, 30.93f),             //平行移動
+	D3DXQUATERNION(0.01, -0.26f, 0.00f, 0.97f ),    //回転
 	D3DXVECTOR3(0.94f, 1.93f, 1.02f ),            //拡大
 },

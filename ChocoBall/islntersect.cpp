@@ -199,6 +199,31 @@ struct SweepResultGround_Camera : public btCollisionWorld::ConvexResultCallback
 	}
 };
 
+struct SweepResultCeiling_Camera : public btCollisionWorld::ConvexResultCallback {
+	bool isHit;
+	D3DXVECTOR3 hitPos;
+	D3DXVECTOR3 startPos;
+	float fMin;
+
+	SweepResultCeiling_Camera()
+	{
+		isHit = false;
+		fMin = FLT_MAX;
+	}
+
+	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
+	{
+		if (convexResult.m_hitCollisionObject->getUserIndex() != CollisionType_Map)
+		{
+			//ñ≥éãÅB
+			return 0.0f;
+		}
+
+
+		return 0.0f;
+	}
+};
+
 CIsIntersect::CIsIntersect()
 {
 	m_isHitGround = false;
@@ -356,7 +381,6 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 			m_isHitGround = true;
 #ifdef ORIGIN_CENTER
 			addPos.y += offset;
-			
 #endif
 		}
 		
@@ -474,7 +498,6 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			D3DXVECTOR3 Circle;
 			float x = 0.0f;
 			float offset = 0.0f;	//âüÇµñﬂÇ∑ó ÅB
-			Circle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 			Circle = *position;
 			Circle.y = callback.hitPos.y;//â~ÇÃíÜêS

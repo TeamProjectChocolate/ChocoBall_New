@@ -8,10 +8,6 @@ class C3DObjectRender :
 public:
 	C3DObjectRender();
 	~C3DObjectRender();
-	void SetUpTechniqueAnimation(){
-		m_pEffect->SetTechnique("NotNormalMapAnimationFresnelTec");
-	}
-
 	void Initialize()override;
 	void Draw()override;
 private:

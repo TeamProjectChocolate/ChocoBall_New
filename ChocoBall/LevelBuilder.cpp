@@ -53,7 +53,6 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			enemy->SetInitPosition(info.pos);
 			enemy->Build();
 			enemyMgr->AddEnemy(enemy);
-			SINSTANCE(CShadowRender)->Entry(enemy);
 		}
 		else if (info.enemyType == EnemyType::EnemyType_FB){
 			//敵を生成。
@@ -65,7 +64,6 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			enemyfb->SetInitPosition(info.pos);	
 			enemyfb->Build();
 			enemyMgr->AddEnemy(enemyfb);
-			SINSTANCE(CShadowRender)->Entry(enemyfb);
 		}
 		else if (info.enemyType == EnemyType::EnemyType_JUMP){
 			//敵を生成。
@@ -77,7 +75,6 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			enemyjamp->SetInitPosition(info.pos);
 			enemyjamp->Build();
 			enemyMgr->AddEnemy(enemyjamp);
-			SINSTANCE(CShadowRender)->Entry(enemyjamp);
 		}
 		else if (info.enemyType == EnemyType::EnemyType_BULLET){
 			//敵を生成。
@@ -89,7 +86,6 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			enemy->SetInitPosition(info.pos);
 			enemy->Build();
 			enemyMgr->AddEnemy(enemy);
-			SINSTANCE(CShadowRender)->Entry(enemy);
 		}
 		else if (info.gimmickType == GimmickType_Chocoball){
 			//チョコボールを生成。

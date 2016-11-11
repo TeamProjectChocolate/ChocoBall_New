@@ -12,13 +12,12 @@ CLockOn::~CLockOn()
 {
 }
 
-float CLockOn::LockOnRotation(float _X, D3DXVECTOR3 position, int lockonEnemyIndex)
+float CLockOn::LockOnRotation(float _X, D3DXVECTOR3 position,EnemyBase* enemy)
 {
 	static float fHALF_PI = fPI / 2.0f;
 	CEnemyManager* EnemyManager = (SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager")));
-	EnemyBase* Enemy = EnemyManager->GetEnemy(lockonEnemyIndex);
 	D3DXVECTOR3 dist;
-	dist = Enemy->GetPos() - position;
+	dist = enemy->GetPos() - position;
 	//“G‚æ‚èŽè‘O‚ÌŽž‚Ì‰ñ“]Šp“x‚ÌŒvŽZ
 	_X = fabsf(atan(dist.z / dist.x));
 	if (dist.x >= 0.0f){
@@ -40,33 +39,32 @@ float CLockOn::LockOnRotation(float _X, D3DXVECTOR3 position, int lockonEnemyInd
 	return _X;
 }
 
-int CLockOn::FindNearEnemy(D3DXVECTOR3 position)
+EnemyBase* CLockOn::FindNearEnemy(D3DXVECTOR3 position)
 {
 	float Min;
 
 	CEnemyManager* EnemyManager = (SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager")));
-	EnemyBase* Enemy = nullptr;
+	vector<EnemyBase*> Enemys = EnemyManager->GetEnemys();
+	m_NearEnemy = nullptr;
 	m_lockonEnemyIndex = -1;
-	int NumEnemy = EnemyManager->GetNumEnemy();
 	Min = 99999;	//”Ô•º
 	//“G20‘Ì•ª‚Ì‹——£‚ÌŽæ“¾
-	for (int K = 0; K < NumEnemy; K++)
+	for (auto enemy : Enemys)
 	{
-		Enemy = EnemyManager->GetEnemy(K);
 		D3DXVECTOR3 dist;
 		//ƒvƒŒƒCƒ„[‚Æ“G‚Ì‹——£ŒvŽZ
-		dist = Enemy->GetPos() - position;
+		dist = enemy->GetPos() - position;
 		float len = D3DXVec3Length(&dist);
 		
 		if (len < Min)
 		{
 			//ˆê”Ô‹ß‚¢“G‚ðŠm•Û
-			m_lockonEnemyIndex = K;
+			m_NearEnemy = enemy;
 			Min = len;//ˆê”Ô’Z‚¢’·‚³
 		}
 	}
 
-	return m_lockonEnemyIndex;
+	return m_NearEnemy;
 }
 
 //float CLockOn::LockOnRotation2(float _X, D3DXVECTOR3 position, int lockonBlockIndexW, int lockonBlockIndexH)

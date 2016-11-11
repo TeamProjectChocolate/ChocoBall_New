@@ -5,8 +5,6 @@
 #include "GraphicsDevice.h"
 #include "ShadowRender.h"
 
-extern UINT                        g_NumBoneMatricesMax;
-extern D3DXMATRIXA16*              g_pBoneMatrices;
 
 C3DObjectRender::C3DObjectRender()
 {
@@ -33,7 +31,9 @@ void C3DObjectRender::Initialize(){
 }
 
 void C3DObjectRender::Draw(){
-	DrawFrame(m_pModel->GetImage_3D()->pModel->GetFrameRoot());
+	DrawFrame(m_pModel->GetImage_3D()->GetFrameRoot());
+	// レンダーは基本的に使いまわすため、専用ライトは描画終了後に削除。
+	m_pLight = nullptr;
 }
 
 void C3DObjectRender::DrawFrame(LPD3DXFRAME pFrame){
@@ -71,14 +71,20 @@ void C3DObjectRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, 
 void C3DObjectRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D3DXFRAME_DERIVED* pFrame){
 
 	LPD3DXBONECOMBINATION pBoneComb;
-	SetUpTechniqueAnimation();
+	m_pEffect->SetTechnique(m_pTechniqueName);
+
+	// 透明度有効化
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	pBoneComb = reinterpret_cast<LPD3DXBONECOMBINATION>(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
 	for (unsigned int iattrib = 0; iattrib < pMeshContainer->NumAttributeGroups; iattrib++){
 		for (DWORD iPaletteEntry = 0; iPaletteEntry < pMeshContainer->NumPaletteEntries; ++iPaletteEntry){
 			DWORD iMatrixIndex = pBoneComb[iattrib].BoneId[iPaletteEntry];
 			if (iMatrixIndex != UINT_MAX){
 				D3DXMatrixMultiply(
-					&g_pBoneMatrices[iPaletteEntry],
+					&m_pModel->m_pBoneMatrices[iPaletteEntry],
 					&pMeshContainer->pBoneOffsetMatrices[iMatrixIndex],
 					pMeshContainer->ppBoneMatrixPtrs[iMatrixIndex]
 					);
@@ -88,8 +94,14 @@ void C3DObjectRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D
 		m_pEffect->BeginPass(0);
 
 		SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pEffect);
-		SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
-		m_pEffect->SetMatrixArray(m_hWorldMatrixArray, g_pBoneMatrices, pMeshContainer->NumPaletteEntries);
+		if (m_pLight) {
+			// 専用ライトがあればそちらを使用。
+			m_pLight->SetLight(m_pEffect);
+		}
+		else {
+			SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
+		}
+		m_pEffect->SetMatrixArray(m_hWorldMatrixArray, m_pModel->m_pBoneMatrices, pMeshContainer->NumPaletteEntries);
 
 		// 視点をシェーダーに転送
 		m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
@@ -110,11 +122,18 @@ void C3DObjectRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D
 		m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
 		m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
 
+		// 環境マップをシェーダーに渡す。
+		m_pEffect->SetTexture("g_CubeTex", SINSTANCE(CRenderContext)->GetEMRender()->GetCubeTex());
+
 		m_pEffect->CommitChanges();
 		pMeshContainer->MeshData.pMesh->DrawSubset(iattrib);
 		m_pEffect->EndPass();
 		m_pEffect->End();
 	}
+
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
 
@@ -130,7 +149,7 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 		}
 	}
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 	if (container->ppTextures == nullptr){
 		m_pEffect->SetTechnique("NotNormalMapBasicTec");
 	}
@@ -148,7 +167,13 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 	// 現在のプロジェクション行列とビュー行列をシェーダーに転送
 	SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pEffect);
-	SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
+	if (m_pLight) {
+		// 専用ライトがあればそちらを使用。
+		m_pLight->SetLight(m_pEffect);
+	}
+	else {
+		SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
+	}
 	// 視点をシェーダーに転送
 	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
 	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
@@ -167,6 +192,8 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
 	m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
 
+	// 環境マップをシェーダーに渡す。
+	m_pEffect->SetTexture("g_CubeTex", SINSTANCE(CRenderContext)->GetEMRender()->GetCubeTex());
 
 	for (DWORD i = 0; i < container->NumMaterials; i++){
 		m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
@@ -177,4 +204,9 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	}
 	m_pEffect->EndPass();
 	m_pEffect->End();
+
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
 }

@@ -3,9 +3,6 @@
 #include "GraphicsDevice.h"
 
 
-UINT                        g_NumBoneMatricesMax = 0;
-D3DXMATRIXA16*              g_pBoneMatrices = NULL;
-
 CAllocateHierarchy::CAllocateHierarchy(){}
 
 CAllocateHierarchy::~CAllocateHierarchy(){}
@@ -295,17 +292,6 @@ HRESULT CAllocateHierarchy::GenerateSkinnedMesh(LPDIRECT3DDEVICE9 Device, D3DXME
 	hr = pMeshContainer->MeshData.pMesh->UpdateSemantics(pDecl);
 	if (FAILED(hr)){
 		goto e_Exit;
-	}
-
-	if (g_NumBoneMatricesMax < pMeshContainer->pSkinInfo->GetNumBones()){
-		g_NumBoneMatricesMax = pMeshContainer->pSkinInfo->GetNumBones();
-
-		delete[] g_pBoneMatrices;
-		g_pBoneMatrices = new D3DXMATRIXA16[g_NumBoneMatricesMax];
-		if (g_pBoneMatrices == nullptr){
-			hr = SP_OUTOFMEMORY;
-			goto e_Exit;
-		}
 	}
 e_Exit:
 	return hr;

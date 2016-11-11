@@ -49,26 +49,33 @@ void CImageManager::Add3D(LPCSTR pFileName,CSkinModelData* ModelData)
 	image = new IMAGE3D;
 	strcpy(image->pFileName,pFileName);
 	image->pModel = ModelData;
-	m_ModelList.push_back(image);		// IMAGE3D情報配列に追加
+	m_OriginalMeshDataList.push_back(image);		// IMAGE3D情報配列に追加
 }
 
+void CImageManager::Push_CloneModelData(CSkinModelData* Clone){
+	m_CloneModelDatas.push_back(Clone);
+}
 
-IMAGE3D* CImageManager::Find3DImage(LPCSTR pFileName){
-	int size = m_ModelList.size();
+CSkinModelData* CImageManager::Find3DImage(LPCSTR pFileName){
+	int size = m_OriginalMeshDataList.size();
 	// すでに使用するXファイルがあればそれを返す
 	for (int idx = 0; idx < size; idx++){
-		if (!strcmp(m_ModelList[idx]->pFileName,pFileName)){
-			return m_ModelList[idx];
+		if (!strcmp(m_OriginalMeshDataList[idx]->pFileName,pFileName)){
+			return m_OriginalMeshDataList[idx]->pModel;
 		}
 	}
 	return nullptr;
 }
 
 void CImageManager::DeleteAll(){
-	for (int idx = 0,size = m_ModelList.size(); idx < size; idx++){
-		SAFE_DELETE(m_ModelList[idx]->pModel);
+	for (CSkinModelData* data : m_CloneModelDatas){
+		SAFE_DELETE(data);
 	}
-	m_ModelList.clear();
+	m_CloneModelDatas.clear();
+	for (int idx = 0,size = m_OriginalMeshDataList.size(); idx < size; idx++){
+		SAFE_DELETE(m_OriginalMeshDataList[idx]->pModel);
+	}
+	m_OriginalMeshDataList.clear();
 	for (int idx = 0, size = m_ImageList.size(); idx < size; idx++){
 		SAFE_DELETE(m_ImageList[idx]->pTex);
 		SAFE_DELETE(m_ImageList[idx]);

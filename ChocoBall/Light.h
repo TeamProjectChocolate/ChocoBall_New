@@ -9,11 +9,13 @@ class CLight
 public:
 	// 各種初期化(ゴミデータが紛れ込まないように)
 	CLight(){
-		for (int i = 0; i < NUM_DIFFUSE_LIGHT; i++){
-			m_diffuseLightDirection[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			m_diffuseLightColor[i] = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
+		for (short idx = 0; idx < NUM_DIFFUSE_LIGHT; idx++) {
+			this->SetDiffuseLightColor(idx, D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f));
+			this->SetDiffuseLightDirection(idx, D3DXVECTOR3(0.0f, -1.0f, 0.0f));
 		}
-		m_ambientLight = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+		this->SetAmbientLight(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		this->SetLimLightDirection(D3DXVECTOR3(0.0f, -1.0f, 0.0f));
+		this->SetLimLightColor(D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f));
 	};
 	~CLight(){};
 

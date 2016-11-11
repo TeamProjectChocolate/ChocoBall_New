@@ -6,6 +6,9 @@
 #include "Render.h"
 #include "Animation.h"
 
+
+#define BoneMatrixMax 128
+
 enum MODEL_TYPE{ T_2D = 0,T_3D };
 
 class CModel
@@ -54,7 +57,7 @@ public:
 	virtual void SetCurrentAnimNo(int){};
 	virtual int GetCurrentAnimNo(){ return 0; }
 	virtual const D3DXMATRIX& GetRotation(){ return D3DXMATRIX(); }
-	virtual IMAGE3D* GetImage_3D(){ return nullptr; }
+	virtual CSkinModelData* GetImage_3D(){ return nullptr; }
 
 	// 2D用
 	virtual void SetSplit(const D3DXVECTOR2&){}
@@ -71,6 +74,9 @@ public:
 	float m_luminance;	// 輝度
 	MODEL_TYPE m_Type;
 	float m_Refractive;	// 屈折率
+	// アニメーション関連。
+	UINT m_NumBoneMatricesMax = 0;
+	D3DXMATRIXA16 m_pBoneMatrices[BoneMatrixMax];
 protected:
 	CHAR m_pFileName[MAX_FILENAME + 1];		// 読み込むファイルの名前を格納する
 	D3DXMATRIX m_PintoWorld;

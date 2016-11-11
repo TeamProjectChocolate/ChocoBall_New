@@ -4,14 +4,24 @@
 #include "AllocateHierarchy.h"
 #include "Assert.h"
 
+HRESULT AllocateName(LPCSTR Name, LPSTR* pNewName);
 
 CSkinModelData::CSkinModelData()
 {
+	m_isClone = false;
+	m_pAnimController = nullptr;
+	m_pMeshContainer = nullptr;
 }
 
 
 CSkinModelData::~CSkinModelData()
 {
+	if (m_isClone){
+		DeleteCloneSkeleton(m_frameRoot);
+	}
+	else{
+		DeleteSkeleton(m_frameRoot);
+	}
 	SAFE_RELEASE(m_pAnimController);
 }
 
@@ -32,7 +42,7 @@ void CSkinModelData::LoadModelData(LPCSTR pFileName,CAnimation* anim){
 
 	CH_ASSERT(!FAILED(hr));
 	SetUpBoneMatrixPointers(m_frameRoot, m_frameRoot);
-	if (m_pAnimController != nullptr){
+	if (anim && m_pAnimController != nullptr){
 		anim->Initialize(m_pAnimController);
 	}
 }
@@ -41,7 +51,7 @@ void CSkinModelData::SetUpBoneMatrixPointers(LPD3DXFRAME pFrame, LPD3DXFRAME pRo
 	// ボーンのツリー構造のいずれかのノードが持っているメッシュ情報を探索
 
 	if (pFrame->pMeshContainer != nullptr){
-		// メッシュ情報があればそれを(不明)する関数を呼び出す
+		// メッシュ情報があればボーンに関連付ける関数を呼び出す
 		SetUpBoneMatrixPointersOnMesh(pFrame->pMeshContainer, pRootFrame);
 	}
 	// ノードに兄弟がいれば探索を続行する
@@ -102,4 +112,178 @@ void CSkinModelData::UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRI
 		// ボーンに子供がいればそれも更新
 		UpdateFrameMatrices(pFrame->pFrameFirstChild, &pFrame->CombinedTransformationMatrix);
 	}
+}
+
+void CSkinModelData::CloneModelData(const CSkinModelData& modelData, CAnimation* anim)
+{
+	//スケルトンの複製を作成。。
+	m_isClone = true;
+	m_frameRoot = new D3DXFRAME_DERIVED;
+	m_frameRoot->pFrameFirstChild = nullptr;
+	m_frameRoot->pFrameSibling = nullptr;
+	m_frameRoot->pMeshContainer = nullptr;
+	CloneSkeleton(m_frameRoot, modelData.m_frameRoot);
+	//アニメーションコントローラを作成して、スケルトンと関連付けを行う。
+	if (modelData.m_pAnimController) {
+		modelData.m_pAnimController->CloneAnimationController(
+			modelData.m_pAnimController->GetMaxNumAnimationOutputs(),
+			modelData.m_pAnimController->GetMaxNumAnimationSets(),
+			modelData.m_pAnimController->GetMaxNumTracks(),
+			modelData.m_pAnimController->GetMaxNumEvents(),
+			&m_pAnimController
+			);
+
+		SetUpOutputAnimationRegist(m_frameRoot, m_pAnimController);
+
+		if (anim && m_pAnimController) {
+			anim->Initialize(m_pAnimController);
+		}
+	}
+	SetUpBoneMatrixPointers(m_frameRoot, m_frameRoot);
+}
+
+void CSkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
+{
+	//名前と行列をコピー。
+	dstFrame->TransformationMatrix = srcFrame->TransformationMatrix;
+	//メッシュコンテナをコピー。メッシュは使いまわす。
+	if (srcFrame->pMeshContainer) {
+		dstFrame->pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
+		memcpy(dstFrame->pMeshContainer, srcFrame->pMeshContainer, sizeof(D3DXMESHCONTAINER_DERIVED));
+	}
+	else {
+		dstFrame->pMeshContainer = NULL;
+	}
+	AllocateName(srcFrame->Name, &dstFrame->Name);
+
+	if (srcFrame->pFrameSibling != nullptr) {
+		//兄弟がいるので、兄弟のためのメモリを確保。
+		dstFrame->pFrameSibling = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameSibling->pFrameFirstChild = nullptr;
+		dstFrame->pFrameSibling->pFrameSibling = nullptr;
+		dstFrame->pFrameSibling->pMeshContainer = nullptr;
+		CloneSkeleton(dstFrame->pFrameSibling, srcFrame->pFrameSibling);
+	}
+	if (srcFrame->pFrameFirstChild != nullptr)
+	{
+		//子供がいるので、子供のためのメモリを確保。
+		dstFrame->pFrameFirstChild = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameFirstChild->pFrameFirstChild = nullptr;
+		dstFrame->pFrameFirstChild->pFrameSibling = nullptr;
+		dstFrame->pFrameFirstChild->pMeshContainer = nullptr;
+
+		CloneSkeleton(dstFrame->pFrameFirstChild, srcFrame->pFrameFirstChild);
+	}
+}
+
+void CSkinModelData::SetUpOutputAnimationRegist(LPD3DXFRAME frame, ID3DXAnimationController* animCtr)
+{
+	if (animCtr == nullptr) {
+		return;
+	}
+	HRESULT hr = animCtr->RegisterAnimationOutput(frame->Name, &frame->TransformationMatrix, nullptr, nullptr, nullptr);
+	if (frame->pFrameSibling != nullptr) {
+		SetUpOutputAnimationRegist(frame->pFrameSibling, animCtr);
+	}
+	if (frame->pFrameFirstChild != nullptr)
+	{
+		SetUpOutputAnimationRegist(frame->pFrameFirstChild, animCtr);
+	}
+}
+
+void CSkinModelData::DeleteCloneSkeleton(LPD3DXFRAME frame)
+{
+
+	if (frame->pFrameSibling != nullptr) {
+		//兄弟
+		DeleteCloneSkeleton(frame->pFrameSibling);
+	}
+	if (frame->pFrameFirstChild != nullptr)
+	{
+		//子供。
+		DeleteCloneSkeleton(frame->pFrameFirstChild);
+	}
+	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)(frame->pMeshContainer);
+	if (pMeshContainer) {
+		SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
+		SAFE_DELETE(pMeshContainer);
+	}
+	SAFE_DELETE_ARRAY(frame->Name);
+	SAFE_DELETE(frame);
+}
+
+void CSkinModelData::DeleteSkeleton(LPD3DXFRAME frame)
+{
+	if (!frame) {
+		return;
+	}
+	if (frame->pMeshContainer != NULL)
+	{
+		//メッシュコンテナがある。
+		InnerDestroyMeshContainer(frame->pMeshContainer);
+	}
+
+	if (frame->pFrameSibling != NULL)
+	{
+		//兄弟がいる。
+		DeleteSkeleton(frame->pFrameSibling);
+	}
+
+	if (frame->pFrameFirstChild != NULL)
+	{
+		//子供がいる。
+		DeleteSkeleton(frame->pFrameFirstChild);
+	}
+	SAFE_DELETE_ARRAY(frame->Name);
+	SAFE_DELETE(frame);
+}
+
+void CSkinModelData::InnerDestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
+{
+	UINT iMaterial;
+	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
+
+	SAFE_DELETE_ARRAY(pMeshContainer->pAttributeTable);
+	SAFE_DELETE_ARRAY(pMeshContainer->Name);
+	SAFE_DELETE_ARRAY(pMeshContainer->pAdjacency);
+	SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);
+	SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
+
+	// release all the allocated textures
+	if (pMeshContainer->ppTextures != NULL)
+	{
+		for (iMaterial = 0; iMaterial < pMeshContainer->NumMaterials; iMaterial++)
+		{
+			SAFE_RELEASE(pMeshContainer->ppTextures[iMaterial]);
+		}
+	}
+
+	SAFE_DELETE_ARRAY(pMeshContainer->ppTextures);
+	SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
+	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
+	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
+	SAFE_RELEASE(pMeshContainer->pSkinInfo);
+	SAFE_RELEASE(pMeshContainer->pOrigMesh);
+	SAFE_DELETE(pMeshContainer);
+}
+
+
+HRESULT AllocateName(LPCSTR Name, LPSTR* pNewName)
+{
+	UINT cbLength;
+
+	if (Name != NULL)
+	{
+		cbLength = (UINT)strlen(Name) + 1;
+		*pNewName = new CHAR[cbLength];
+		if (*pNewName == NULL)
+			return E_OUTOFMEMORY;
+		memcpy(*pNewName, Name, cbLength * sizeof(CHAR));
+	}
+	else
+	{
+		*pNewName = NULL;
+	}
+
+	return S_OK;
 }

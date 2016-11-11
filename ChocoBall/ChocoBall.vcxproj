@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -95,6 +95,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActreLight.h" />
     <ClInclude Include="AllocateHierarchy.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Assert.h" />
@@ -114,6 +115,8 @@
     <ClInclude Include="collisionInfo.h" />
     <ClInclude Include="DofRender.h" />
     <ClInclude Include="EM_Render.h" />
+    <ClInclude Include="EM_SamplingRender.h" />
+    <ClInclude Include="EM_SamplingRender_I.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemyGimmickInfoStage1.h" />
@@ -124,7 +127,6 @@
     <ClInclude Include="CollisionType.h" />
     <ClInclude Include="CourceCamera.h" />
     <ClInclude Include="CourceDef.h" />
-    <ClInclude Include="Debri.h" />
     <ClInclude Include="EnemyLR.h" />
     <ClInclude Include="EnemyFB.h" />
     <ClInclude Include="EnemyManager.h" />
@@ -149,7 +151,6 @@
     <ClInclude Include="ParticleParameterTable.h" />
     <ClInclude Include="PlayerAnimationContoller.h" />
     <ClInclude Include="PlayerBullet.h" />
-    <ClInclude Include="PlayerParam.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Render.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="ZBufferSphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActreLight.cpp" />
     <ClCompile Include="AllocateHierarchy.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
@@ -221,12 +223,13 @@
     <ClCompile Include="ClearText.cpp" />
     <ClCompile Include="CourceCamera.cpp" />
     <ClCompile Include="CourceDef.cpp" />
-    <ClCompile Include="Debri.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="DofRender.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EM_Render.cpp" />
+    <ClCompile Include="EM_SamplingRender.cpp" />
+    <ClCompile Include="EM_SamplingRender_I.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />

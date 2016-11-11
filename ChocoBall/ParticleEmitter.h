@@ -29,6 +29,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void ApplyForce(const D3DXVECTOR3&);
 	void SetCamera(CCamera* camera){
 		m_camera = camera;

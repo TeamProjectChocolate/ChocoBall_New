@@ -65,6 +65,9 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	m_CLevelBuilder->Build(pAudio);
 
 	SINSTANCE(CShadowRender)->Entry(m_pPlayer);
+
+	// 共通ライト設定。
+	this->ConfigLight();
 	m_pAudio = pAudio;
 
 	m_pAudio->PlayCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽再生
@@ -152,4 +155,28 @@ void CStage::ActivateObjects(){
 			SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T(ObjectDataArray[idx]), PRIORTY::OBJECT2D_ALPHA, false);
 		}
 	}
+}
+
+void CStage::ConfigLight() {
+	// ディフューズライトの向き設定(ライト1～4)
+	m_Light.SetDiffuseLightDirection(0, D3DXVECTOR3(0.707f, 0.707f, 0.0f));
+	m_Light.SetDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 1.0f, 0.0f));
+	m_Light.SetDiffuseLightDirection(2, D3DXVECTOR3(1.0f, -1.0f, 0.5f));
+	m_Light.SetDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+
+	// ディフューズライトの色設定(ライト1～4)
+	m_Light.SetDiffuseLightColor(0, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+	m_Light.SetDiffuseLightColor(1, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+	m_Light.SetDiffuseLightColor(2, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+	m_Light.SetDiffuseLightColor(3, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+
+	// アンビエントライト(環境光)の強さ設定
+	m_Light.SetAmbientLight(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
+
+	// リムライトの色と向き設定。
+	m_Light.SetLimLightColor(D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	m_Light.SetLimLightDirection(D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+
+	// 共通ライトに設定。
+	SINSTANCE(CRenderContext)->SetCurrentLight(&m_Light);
 }

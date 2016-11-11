@@ -13,6 +13,7 @@ public:
 	virtual void Initialize()override;
 	virtual void Update()override;
 	virtual void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void SoundPlay();
 	void SetAudio(CAudio* audio){
 		m_pAudio = audio;

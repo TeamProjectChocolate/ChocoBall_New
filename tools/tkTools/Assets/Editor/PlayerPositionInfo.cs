@@ -23,7 +23,7 @@ public class PlayerPositionInfo : MonoBehaviour
             headerTxt += "},\n";
         }
 
-        StreamWriter sw = new StreamWriter("C:/Github/GameChocoBall/ChocoBall/PlayerPositionInfo"+mystring3+".h", false, Encoding.UTF8);
+        StreamWriter sw = new StreamWriter("../../ChocoBall/PlayerPositionInfo" + mystring3+".h", false, Encoding.UTF8);
         sw.Write(headerTxt);
         sw.Close();
     }

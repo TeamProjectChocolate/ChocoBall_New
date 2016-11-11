@@ -29,7 +29,7 @@ texture g_Texture;			// テクスチャ
 sampler g_TextureSampler = 
 sampler_state{
 	Texture = <g_Texture>;
-	MipFilter = NONE;
+	MipFilter = LINEAR;
 	MinFilter = NONE;
 	MagFilter = NONE;
 	AddressU = Wrap;
@@ -215,6 +215,8 @@ struct Flags{
 #define TEX_FRESNEL 11
 #define TEX_BLOOM 12
 #define TEX_SHADOW_VSM_FRESNEL 13
+#define TEX_SHADOW_VSM 14
+#define TEX_SHADOW 15
 
 static Flags g_FlagsType[] = {
 	{ false, false, false, false, false, false, false, false },	// ライトのみを当てた描画。
@@ -231,6 +233,8 @@ static Flags g_FlagsType[] = {
 	{ true, false, false, false, false, true, false, false },//テクスチャ、フレネル反射。
 	{ true, false, false, false, false, false, true, false },//テクスチャ、ブルーム。
 	{ true, true, true, false, false, true, false, false },//テクスチャ、ソフトシャドウ、フレネル反射。
+	{ true, true, true, false, false, false, false, false },//テクスチャ、ソフトシャドウ。
+	{ true, true, false, false, false, false, false, false },//テクスチャ、シャドウ。
 };
 
 // ピクセルシェーダ
@@ -289,14 +293,10 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 	// スペキュラライトを計算
 	light += CalcSpeculerLight(normal, In.WorldPos);
 
-	// フレネル反射率計算
-	if (flags.Fresnel){
-		light.xyz += CalcFresnel(normal, In.WorldPos, 1.000293f/*地球の大気の屈折率*/, g_Refractive);
-	}
+	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	float4 color = float4(0.0f,0.0f,0.0f,1.0f);
 	if (flags.Tex){
-		color = tex2D(g_TextureSampler, In.uv);	// テクスチャを貼り付ける
+		color += tex2D(g_TextureSampler, In.uv);	// テクスチャを貼り付ける
 	}
 	else{
 		color.xyz = In.color.xyz;
@@ -304,13 +304,11 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 
 	if (flags.Shadow){
 		// 環境光は残してディフューズライトとスペキュラライトに影フィルタをかける
-		light.xyz *= vsm(In.ShadowPos, normal, /*IsVSM*/flags.VSM);
+		light.xyz *= vsm(In.ShadowPos, normal, flags.VSM);
 	}
 
 	// アンビエントライトを加算
 	light.xyz += g_light.ambient;
-
-	color *= light;	// テクスチャのカラーとライトを乗算
 
 	if (flags.Bloom){
 		// αに輝度を埋め込む
@@ -319,6 +317,33 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 	else{
 		color.w = Alpha;
 	}
+
+	if (flags.Fresnel){
+		float alpha = color.a;
+		// 視線の反射ベクトル算出。
+		float3 vReflect = reflect(mul(g_EyeDir, World), normal);
+		float4 work1 = texCUBE(cubeTexSampler, vReflect);
+		work1.a = 1.0f;
+		// 視線の屈折ベクトル算出。
+		float3 vRefract = refract(mul(g_EyeDir, World), normal, g_Refractive);
+		float4 work2 = texCUBE(cubeTexSampler, vRefract);
+		work2.a = 1.0f;
+		// フレネル反射率計算。
+		float fresnel = CalcFresnel(normal, In.WorldPos, 1.000293f/*地球の大気の屈折率。*/, g_Refractive);
+		// 求めた反射率でブレンディング。
+		color.xyz *= (1.0f - fresnel) * alpha;
+		color.xyz += work1.xyz * fresnel * alpha;
+		color.xyz += work2.xyz * (1.0f - alpha)/* * fresnel*/;
+		color.a = /*1.0f*/alpha;
+		//color += lerp(work1, work2, fresnel);
+		//color.a = fresnel*0.5 + 0.5;
+		//color.xyz += (work1.xyz * fresnel)/* + (work2 * (1.0f - fresnel))*/;
+		//color.a = fresnel;
+		//color.xyz += (1.0f - color.a) * work2.xyz;
+		//color.a += (1.0f - fresnel);
+	}
+
+	color.xyz *= light;	// テクスチャのカラーとライトを乗算
 
 	// 深度の書き込み
 	float4 OutDepth;
@@ -362,6 +387,12 @@ float4 ZMaskPsShader(VS_OUTPUT In) : COLOR0 {
 	return screenPos.z / screenPos.w;
 }
 
+technique Boneless{
+	pass p0{
+		VertexShader = compile vs_3_0 VS_Main(false);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[BASIC]);
+	}
+};
 
 technique Boneless_Tex{
 	pass p0{
@@ -369,13 +400,6 @@ technique Boneless_Tex{
 		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX]);		// ピクセルシェーダ
 	}
 };
-
-//technique Boneless{
-//	pass p0{
-//		VertexShader = compile vs_3_0 VS_Main(false);
-//		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[BASIC]);
-//	}
-//};
 
 technique Skin_Tex_Fresnel{
 	pass p0{
@@ -405,6 +429,20 @@ technique Boneless_Tex_Shadow_ZMask{
 	}
 };
 
+technique Boneless_Tex_Shadow_VSM{
+	pass p0{
+		VertexShader = compile vs_3_0 VS_Main(false);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_VSM]);
+	}
+};
+
+technique Boneless_Tex_Shadow{
+	pass p0{
+		VertexShader = compile vs_3_0 VS_Main(false);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW]);
+	}
+};
+
 technique Boneless_Tex_Shadow_VSM_Fresnel/*NotNormalMapNonAnimationFresnelShadowTec*/{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(false);
@@ -422,6 +460,13 @@ technique Bonelsee_Tex_Bloom/*NotNormalMapNonAnimationBloomTec*/{
 technique Skin_Tex_Lim{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(true);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_LIM]);
+	}
+};
+
+technique Boneless_Tex_Lim{
+	pass p0{
+		VertexShader = compile vs_3_0 VS_Main(false);
 		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_LIM]);
 	}
 };

@@ -20,6 +20,17 @@ namespace{
 		linearVelocity = vel;
 		vOut = currentPos + linearVelocity;
 	}
+	void FloatSmoothDamp(
+		float& fOut,
+		const float& current,
+		const float& target,
+		float& linear,
+		int smoothTime){
+		float dist = target - current;
+		float interpolation = dist /= smoothTime;
+		linear = interpolation;
+		fOut = current + linear;
+	}
 }
 void CCourceCamera::Initialize(){
 	m_courceDef.SetStageID(m_StageID);
@@ -75,11 +86,21 @@ void CCourceCamera::Update(){
 				m_cameraPosSpeed,
 				10);
 			m_Isintersect.IntersectCamera(&m_NowPos, &(m_NowPos - m_transform.position));
+			FloatSmoothDamp(
+				m_NowViewAngle,
+				m_NowViewAngle,
+				m_TargetViewAngle,
+				m_CameraZoomSpeed,
+				10);
+			m_camera.SetViewAngle(m_NowViewAngle);
 		}
 		else{
 			m_NowPos = m_TargetPos;
 			m_transform.position = m_NowPos;
 			m_Isintersect.CollisitionInitialize(&m_NowPos, 2.8f,CollisionType_Camera);
+			m_TargetViewAngle = D3DXToRadian(30.0f);
+			m_NowViewAngle = m_TargetViewAngle;
+			m_camera.SetViewAngle(m_NowViewAngle);
 			m_isFirst = false;
 		}
 		m_camera.SetPos(m_NowPos);

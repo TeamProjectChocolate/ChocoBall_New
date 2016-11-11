@@ -26,6 +26,9 @@ public:
 	void SetIsTarget(bool flg){
 		m_IsTarget = flg;
 	}
+	void SetTargetViewAngle(float TV){
+		m_TargetViewAngle = TV;
+	}
 private:
 	CCourceDef m_courceDef;
 	COURCE_BLOCK m_PrevCource;	// プレイヤーがワンフレーム前にいたブロック
@@ -33,6 +36,9 @@ private:
 	bool m_CompCamera;			// カメラの補完処理	
 	D3DXVECTOR3 m_NowPos;		// 現在のカメラの位置
 	D3DXVECTOR3 m_cameraPosSpeed;	//カメラの移動速度。
+	float m_NowViewAngle;		// 現在の画角。
+	float m_TargetViewAngle;	// 目標画角。
+	float m_CameraZoomSpeed;	// カメラのズーム速度。
 	bool m_isFirst;
 	STAGE_ID m_StageID;
 	bool m_TurnFlg;

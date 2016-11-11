@@ -11,6 +11,7 @@
 
 CField::~CField()
 {
+	m_Horizon.clear();
 }
 
 void CField::Initialize(){
@@ -56,6 +57,36 @@ void CField::Initialize(){
 #else
 	SINSTANCE(CShadowRender)->Entry(this);
 #endif
+
+	m_CourceDef.SetStageID(m_StageID);
+	m_CourceDef.Initialize();
+	{
+		LPDIRECT3DVERTEXBUFFER9 vb;
+		m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetVertexBuffer(&vb);
+		D3DVERTEXBUFFER_DESC desc;
+		vb->GetDesc(&desc);
+		D3DXVECTOR3* pPosition;
+		vb->Lock(0, desc.Size,(void**)&pPosition, D3DLOCK_DISCARD);
+
+		// 1頂点のバイト単位でのサイズを取得。
+		int stride = desc.Size / m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices();
+		for (int idx = 0; idx < m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices(); idx++) {
+			COURCE_BLOCK work;
+			work = m_CourceDef.FindCource(*pPosition);
+			D3DXVECTOR3 CourceVec = work.endPosition - work.startPosition;
+			D3DXVECTOR3 WorkVec = *pPosition - work.startPosition;
+			D3DXVec3Normalize(&CourceVec, &CourceVec);
+			// 頂点の座標をコース定義の線分に射影し、y成分を境界線にする。
+			float WorkLength = D3DXVec3Dot(&WorkVec, &CourceVec);
+			D3DXVECTOR3 HorizonVec = work.startPosition + CourceVec * WorkLength;
+			m_Horizon.push_back(HorizonVec.y);
+			// D3DXVECTOR3*型は1バイトではないので1バイト単位であるchar*型に変換してポインタを進める。
+			char* OneByte = reinterpret_cast<char*>(pPosition);
+			OneByte += stride;
+			pPosition = reinterpret_cast<D3DXVECTOR3*>(OneByte);
+		}
+		vb->Unlock();
+	}
 }
 
 void CField::Update(){
@@ -70,4 +101,9 @@ void CField::Draw(){
 		m_pRender->GetEffect()->SetTexture("g_ZMask", m_czbuffersphere->GetTexture());
 	}
 	CGameObject::Draw();
+}
+
+void CField::Is_DrawShadow_Use_Horizon() {
+	static_cast<CShadowSamplingRender*>(m_pShadowRender)->SetIsHorizon(true);
+	static_cast<CShadowSamplingRender*>(m_pShadowRender)->CopyHorizon(m_Horizon);
 }

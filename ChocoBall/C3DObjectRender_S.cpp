@@ -28,7 +28,8 @@ void C3DObjectRender_S::Initialize(){
 
 void C3DObjectRender_S::Draw()
 {
-	DrawFrameSimple(m_pModel->GetImage_3D()->pModel->GetFrameRoot());
+	DrawFrameSimple(m_pModel->GetImage_3D()->GetFrameRoot());
+	m_pLight = nullptr;
 }
 
 void C3DObjectRender_S::DrawFrameSimple(LPD3DXFRAME pFrame){
@@ -67,7 +68,7 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 		}
 	}
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 
 
@@ -78,6 +79,11 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 
 	// ワールドトランスフォーム(絶対座標変換)
 	// ワールド行列生成
+
+	// 透明度有効化
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 
 	m_pEffect->SetMatrix(m_hRota, &(m_pModel->GetRotation()));
@@ -96,6 +102,9 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->SetVector("g_DepthFarNear", &(static_cast<D3DXVECTOR4>(m_DepthFarNear)));
 	m_pEffect->SetMatrix("g_PintoWorld", &m_pModel->GetPintoWorld());// ピントを合わせるポイントを行列変換するためのワールド行列
 
+	// 環境マップをシェーダーに渡す。
+	m_pEffect->SetTexture("g_CubeTex", SINSTANCE(CRenderContext)->GetEMRender()->GetCubeTex());
+
 	for (DWORD i = 0; i < container->NumMaterials; i++){
 		m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
 		m_pEffect->SetTexture(m_hTexture, container->ppTextures[i]);	// テクスチャ情報をセット
@@ -103,4 +112,9 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 		m_pEffect->CommitChanges();						//この関数を呼び出すことで、データの転送が確定する。
 		container->MeshData.pMesh->DrawSubset(i);						// メッシュを描画
 	}
+
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
 }

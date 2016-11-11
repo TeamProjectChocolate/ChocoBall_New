@@ -6,15 +6,12 @@
 #include "GameObject.h"
 #include "ObjectManager.h"
 #include "EnemyManager.h"
-#include "PlayerParam.h"
 #include "ParticleEmitter.h"
 #include "MoveFloor.h"
 #include "StageTable.h"
 #include "FireJet.h"
 
 CPlayer* g_player = NULL;
-bool CPlayer::m_testFlg = false;
-
 
 CPlayer::~CPlayer(){ 
 	int bulletMax = m_bullets.size();
@@ -26,15 +23,12 @@ CPlayer::~CPlayer(){
 
 	m_CBManager.clear();
 	m_DeleteChocoBall.clear();
-	char text[256];
-	sprintf(text, "プレイヤーのデストラクタ\n");
-	OutputDebugString(text);
-	m_testFlg = true;
 }
 
 void CPlayer::Initialize()
 
 {
+	m_ActiveKeyState = true;
 	parent = NULL;
 	g_player = this;
 	UseModel<C3DImage>();
@@ -68,8 +62,7 @@ void CPlayer::Initialize()
 	m_pModel->m_alpha = 1.0f;
 	
 	LockOnflag = false;
-	Shotflag = false;
-	Jumpflag = false;
+	m_ShotFlg = false;
 	m_PreviousJumpFlag = false;
 	ChocoBall = false;
 	
@@ -102,10 +95,6 @@ void CPlayer::Initialize()
 	m_IsIntersect.SetAudio(m_pAudio);
 	
 	deadTimer = 0.0f;
-	m_lockonEnemyIndex = 0;	
-	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++){
-		m_pModel->GetAnimation()->SetAnimationEndtime(idx, AnimationTime[idx]);
-	}
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
 	CParticleEmitter::EmitterCreate(
 		_T("ParticleEmitterStart"),
@@ -136,16 +125,23 @@ void CPlayer::Initialize()
 		);*/
 
 	m_pModel->SetUseBorn(true);
-	m_MoveFlg = true;
 	m_vibration.Initialize();
+	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++){
+		m_pModel->GetAnimation()->SetAnimationEndtime(idx, AnimationTime[idx]);
+	}
 	m_pModel->GetAnimation()->PlayAnimation(-1,0.0f);
+	m_State = MOVE_STATE::Wait;
+	m_VibrationCounter = 0.0f;
+	m_VibrationInterval = 0.5f;
+
+	m_JumpState = JUMP_STATE::J_NULL;
+	m_JumpEndCounter = 0.0f;
+	m_JumpEndInterval = 0.25f;
 }
 
 void CPlayer::SetParent(MoveFloor* parent)
 {
 	//親が設定されたので、ワールド座標を求めるために。一旦Updateを呼び出す。
-
-	
 	if (parent != NULL){
 		Update();
 		
@@ -173,142 +169,83 @@ void CPlayer::SetParent(MoveFloor* parent)
 
 void CPlayer::Update()
 {
+	// 毎フレームの初期化。
+	{
+		m_ShotFlg = false;
+		m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	}
+
+	//親がいるときの処理。
+	if (parent)
+	{
+		D3DXMATRIX mParentWorld = parent->GetModel()->m_World;
+		//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する。
+
+		D3DXVECTOR4 pos;
+		D3DXVec3Transform(&pos, &localPosition, &mParentWorld);
+		m_transform.position.x = pos.x;
+		m_transform.position.y = pos.y;
+		m_transform.position.z = pos.z;
+	}
+
 	if (m_GameState == GAMEEND_ID::CONTINUE)
 	{
-		//1フレームでのカウンターの加算処理
-		m_JumpParticleTimer += 1.0f / 60.0f;
-
-		//ジャンプ＆着地時パーティクルの発生時間よりカウンターが超えたらパーティクルを消す＆カウンターも初期化
-		if (m_JumpParticleTimer >= m_JumpParticleTime)
-		{
-			m_pEmitter->SetEmitFlg(false);
-			m_JumpParticleTimer = 0.0f;
-		}
-		//銃発射のパーティクル発生時間
-		/*if (m_GunParticleTimer >= m_GunParticleTime)
-		{
-			m_pEmitter2->SetEmitFlg(false);
-			m_GunParticleTimer = 0.0f;
-		}*/
-
-		//親がいるときの処理
-		if (parent)
-		{
-			D3DXMATRIX mParentWorld = parent->GetModel()->m_World;
-			//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する
-
-			D3DXVECTOR4 pos;
-			D3DXVec3Transform(&pos, &localPosition, &mParentWorld);
-			m_transform.position.x = pos.x;
-			m_transform.position.y = pos.y;
-			m_transform.position.z = pos.z;
-		}
-		
-		// デバイスが切り替わった場合は自動で切り替える
-		SINSTANCE(CInputManager)->IsInputChanged(&m_pInput);
-
-		m_pModel->SetCurrentAnimNo(Wait);		
-
-		// ライトの更新
-		this->UpdateLight();
-
-		// メインシーンの状態を管理する処理
+		// メインシーンの状態を管理する処理。
 		StateManaged();
 
-		//ゲームパッドでのプレイヤーの移動。
-		if (m_MoveFlg){
-			Move();
+		// 当たり判定。
+		Collisions();
+
+		// キー判定。
+		if (m_ActiveKeyState){
+			KeyState();
 		}
 
-		// アニメーション再生関数を呼び出す
-		m_pModel->GetAnimation()->PlayAnimation(m_pModel->GetCurrentAnimNo(), 0.1f);
-
-		//プレイヤーの挙動をコース定義に沿ったものに補正する処理
-		BehaviorCorrection();
+		// キー判定の結果と現在のフラグ状況から行動を選択。
+		MoveStateManaged();
 
 		//ロックオン処理
-		if (m_MoveFlg){
-			//ロックオン距離が調整できるまでは米アウト
-			//LockOn();
-		}
+		//if (m_MoveFlg){
+		//ロックオン距離が調整できるまでは米アウト
+		//LockOn();
+		//}
 
-		for (auto itr : m_CBManager){
-			if (itr != NULL)
-			{
-				//チョコボールに当たっているかの処理
-				if (m_HitFlag = itr->IsHit(m_transform.position, m_size))
-				{
-					//チョコボールに当たったらの処理
-					ChocoHit();
-				}
-			}
-			if (m_NowCourceNo != -1){
-				if (m_NowCourceNo - itr->GetCourceNo() >= 5){
-					DeleteChocoBall(itr);
-				}
-			}
-		}
-
-		if (GamaOverFlag==false)//ゲームオーバーになっていない時の処理
-		{
-			
-			m_vibration.Update();
-			// 振動処理実行後、振動が終了しているか
-			if (!m_vibration.GetIsVibration()){
-				m_MoveFlg = true;
-				m_pCamera->SetIsTarget(true);
-			}
-
-
-			//プレイヤーの処理の最後になるべく書いて
-			m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, Jumpflag);
-
-			//着地しているのでフラグはfalse
-			if (m_IsIntersect.IsHitGround())
-			{
-				//着地時の煙を出す処理
-				if (m_PreviousJumpFlag!=Jumpflag)
-				{
-					m_pEmitter->SetEmitFlg(true);
-					// 自分の周囲にパーティクル発生
-					//Setすると常にプレイヤーの場所にパーティクルの発生する
-					D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
-					pos.y = pos.y - 0.7f;
-					m_pEmitter->SetEmitPos(pos);
-					m_PreviousJumpFlag = Jumpflag;
-					m_pAudio->PlayCue("Landing", true,this);
-				}
-				Jumpflag = false;
-			}
-			else
-			{
-				Jumpflag = true;
-				//m_currentAnimNo = Jump;
-
-			}
-			// 弾発射処理
+		if (m_ShotFlg){
 			BulletShot();
-
-			//回転行列
-			SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
-		}
-		else if (GamaOverFlag == true)//ゲームオーバー状態での処理
-		{
-			//ゲームオーバー状態でのチョコボールに流される処理
-			RollingPlayer();
-		}
-		if (m_GameState != GAMEEND_ID::CLEAR)
-		{
-			CGameObject::Update();
 		}
 	}
 
-	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
-	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2.0f*/10.0f, 0.0f));
+	if (m_State != MOVE_STATE::Flow && m_State != MOVE_STATE::Fly){
+		// 上下移動処理。
+		UpDownMove();
+		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
+		bool IsJump = false;
+		if (m_JumpState != JUMP_STATE::J_NULL) {
+			IsJump = true;
+		}
+		//プレイヤーの位置情報更新。
+		m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, IsJump);
+	}
 
+	// アニメーション再生関数を呼び出す
+	m_pModel->SetCurrentAnimNo(m_AnimState);
+	m_pModel->GetAnimation()->PlayAnimation(m_pModel->GetCurrentAnimNo(), 0.1f);
+
+	// 影カメラのポジションをプレイヤーの真上に指定。
+	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
+	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2.0f*/5.0f, 0.0f));
+
+	// ライトの更新
+	static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);
+
+	// 弾の更新および削除。
 	int size = m_bullets.size();
 	for (int idx = 0; idx < size; idx++){
 		if (m_bullets[idx]->Update()){
+			DeleteBullet(m_bullets[idx]);
+		}
+		else if (BULLET_LENG < D3DXVec3Length(&(m_bullets[idx]->GetPos() - m_transform.position))){
+			//プレイヤーと弾の距離が一定値になると弾が自動でDeleteする。
 			DeleteBullet(m_bullets[idx]);
 		}
 	}
@@ -324,74 +261,96 @@ void CPlayer::Draw(){
 
 	// 絶対にここで呼べよ！　絶対だぞっ！？
 	ExcuteDeleteBullets();
-	ExcuteDeleteChocoBall();
-}
-
-void CPlayer::UpdateLight(){
-	this->SetUpLight();
+	//ExcuteDeleteChocoBall();
 }
 
 void CPlayer::ConfigLight(){
+	if (!m_pLight) {
+		m_pLight = new CActreLight;
+	}
+
 	// ディフューズライト(キャラライト)の向き設定(ライト1～4)
-	m_lightDir[0] = D3DXVECTOR3(0.707f, 0.707f, 0.0f);
-	m_lightDir[1] = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
-	m_lightDir[2] = D3DXVECTOR3(1.0f, -1.0f, 0.5f);
-	m_lightDir[3] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(0.707f, 0.707f, 0.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 1.0f, 0.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(1.0f, -1.0f, 0.5f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
 
 	// ディフューズライト(キャラライト)の色設定(ライト1～4)
-	m_lightColor[0] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
-	m_lightColor[1] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
-	m_lightColor[2] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
-	m_lightColor[3] = D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f);
-
+	m_pLight->SetDiffuseLightColor(0, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+	m_pLight->SetDiffuseLightColor(1, D3DXVECTOR4(0.75f, 0.75f,0.75f, 1.0f));
+	m_pLight->SetDiffuseLightColor(2, D3DXVECTOR4(0.75f, 0.75f,0.75f, 1.0f));
+	m_pLight->SetDiffuseLightColor(3, D3DXVECTOR4(0.75f,0.75f, 0.75f, 1.0f));
 
 	// アンビエントライト(環境光)の強さ設定
-	D3DXVECTOR3 ambientLight;
-	ambientLight = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	m_pLight->SetAmbientLight(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
 
-	// ライトの設定を反映
-	ReflectionLight(ambientLight);
+	// リムライトの色と向き設定。
+	m_pLight->SetLimLightColor(D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pLight->SetLimLightDirection(D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+
+	CGameObject::ConfigLight();
+
+	//// 現在共通のライトに設定。
+	//SINSTANCE(CRenderContext)->SetCurrentLight(&m_light);
 }
 
-void CPlayer::ReflectionLight(D3DXVECTOR3 ambient){
-	this->SetUpLight();
-	m_light.SetAmbientLight(ambient);
-	m_light.SetLimLightColor(D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
-	m_light.SetLimLightDirection(D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-}
-
-void CPlayer::SetUpLight(){
-	for (short num = 0; num < NUM_DIFFUSE_LIGHT; num++){
-		D3DXVECTOR3 dir;
-		dir.x = m_lightDir[num].x;
-		dir.y = m_lightDir[num].y;
-		dir.z = m_lightDir[num].z;
-		m_light.SetDiffuseLightDirection(num, dir);
-		m_light.SetDiffuseLightColor(num, m_lightColor[num]);
+void CPlayer::MoveStateManaged(){
+	switch (m_State){
+	case MOVE_STATE::Wait:
+		m_pCamera->SetTargetViewAngle(D3DXToRadian(30.0f));
+		m_AnimState = ANIMATION_STATE::WAIT;
+		m_ActiveKeyState = true;
+		break;
+	case MOVE_STATE::Walk:
+		m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
+		Move();
+		m_AnimState = ANIMATION_STATE::WALK;
+		m_ActiveKeyState = true;
+		m_State = MOVE_STATE::Wait;
+		break;
+	case MOVE_STATE::Dash:
+		m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
+		Move();
+		m_ActiveKeyState = true;
+		m_State = MOVE_STATE::Wait;
+		break;
+	case MOVE_STATE::Vibration:
+		m_vibration.Update();
+		m_VibrationCounter = 0.0f;
+		// 振動処理実行後、振動が終了しているか
+		if (!m_vibration.GetIsVibration()){
+			m_State = MOVE_STATE::Wait;
+			m_ActiveKeyState = true;
+			m_pCamera->SetIsTarget(true);
+		}
+		else{
+			m_AnimState = ANIMATION_STATE::DAMAGE;
+			m_ActiveKeyState = false;
+		}
+		break;
+	case MOVE_STATE::Flow:
+		m_pCamera->SetIsTarget(true);
+		m_pCamera->GetCamera()->SetTarget(m_transform.position);
+		m_AnimState = ANIMATION_STATE::WAIT;
+		m_ActiveKeyState = false;
+		m_JumpState = JUMP_STATE::J_NULL;
+		//m_transform.position.y = 0.0f;
+		RollingPlayer();
+		break;
+	case MOVE_STATE::Fly:
+		m_pCamera->SetIsTarget(true);
+		m_pCamera->GetCamera()->SetTarget(m_transform.position);
+		m_AnimState = ANIMATION_STATE::WAIT;
+		m_JumpState = JUMP_STATE::J_NULL;
+		m_ActiveKeyState = false;
+		RollingPlayer();
+		break;
 	}
-	SINSTANCE(CRenderContext)->SetCurrentLight(&m_light);
 }
 
 void CPlayer::Move()
 {
 	isTurn = false;
-
-
-	//ジャンプ関連の処理
-	if (m_pInput->IsTriggerSpace() && Jumpflag == false)
-	{
-		m_pAudio->PlayCue("Jump", true,this);//ジャンプSE
-		m_moveSpeed.y = PLAYER_JUMP_POWER;
-		Jumpflag = true;
-		m_pEmitter->SetEmitFlg(true);
-		// 自分の周囲にパーティクル発生
-		//Setすると常にプレイヤーの場所にパーティクルの発生する
-		D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
-		pos.y = pos.y - 0.5f;
-		m_pEmitter->SetEmitPos(pos);
-		m_PreviousJumpFlag = Jumpflag;
-		m_pModel->SetCurrentAnimNo(Jump);
-	}
 
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -402,10 +361,8 @@ void CPlayer::Move()
 	//前後の動き
 	if (fabs(Y) > 0.0f)
 	{
-
 		m_moveSpeed.z = Y * MOVE_SPEED;
 		isTurn = true;
-		m_pModel->SetCurrentAnimNo(Walk);
 	}
 
 	//左右の動き
@@ -413,11 +370,70 @@ void CPlayer::Move()
 	{
 		m_moveSpeed.x = X * MOVE_SPEED;
 		isTurn = true;
-		m_pModel->SetCurrentAnimNo(Walk);
 	}
+
+	//プレイヤーの挙動をコース定義に沿ったものに補正する処理
+	BehaviorCorrection();
+
 	//D3DXToRadianの値は各自で設定する。 例　正面D3DXToRadian(0.0f)
 	//isTurnはUpdateの最初でfalseにして、回転させたい時にtrueにする。
 	m_currentAngleY = m_Turn.Update(isTurn, m_targetAngleY);
+}
+
+void CPlayer::UpDownMove(){
+
+	switch (m_JumpState) {
+	case JUMP_STATE::J_NULL:
+		if (!m_IsIntersect.IsHitGround()) {
+			m_JumpState = JUMP_STATE::J_EINS;
+			m_NowJumpPower = PLAYER_JUMP_POWER / 2;
+		}
+		break;
+	case JUMP_STATE::J_EINS:
+		m_AnimState = ANIMATION_STATE::JUMP_START;
+		if (m_IsIntersect.IsHitGround()){
+			m_JumpState = JUMP_STATE::J_ZWEI;
+			m_NowJumpPower = PLAYER_JUMP_POWER;
+		}
+		break;
+	case JUMP_STATE::J_ZWEI:
+		m_AnimState = ANIMATION_STATE::JUMP_NOW;
+		//着地しているか判定(着地時はtrue,そうでなければfalse)。
+		if (m_IsIntersect.IsHitGround())
+		{
+			// 着地した瞬間。
+			m_JumpState = JUMP_STATE::J_DREI;
+			m_pEmitter->SetEmitFlg(true);
+			m_pAudio->PlayCue("Landing", true, this);
+			m_JumpEndCounter = 0.0f;
+		}
+		break;
+	case JUMP_STATE::J_DREI:
+		m_AnimState = ANIMATION_STATE::JUMP_END;
+		// 自分の周囲にパーティクル発生
+		// Setすると常にプレイヤーの場所にパーティクルの発生する
+		D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
+		pos.y = pos.y - 0.7f;
+		m_pEmitter->SetEmitPos(pos);
+		m_NowJumpPower = 0.0f;
+		m_JumpEndCounter += 1.0f / 60.0f;
+		if (m_JumpEndCounter >= m_JumpEndInterval) {
+			m_JumpState = JUMP_STATE::J_NULL;
+		}
+		break;
+	}
+	m_moveSpeed.y = m_NowJumpPower;
+	m_NowJumpPower -= GRAVITY;
+
+	//1フレームでのカウンターの加算処理
+	m_JumpParticleTimer += 1.0f / 60.0f;
+
+	//ジャンプ＆着地時パーティクルの発生時間よりカウンターが超えたらパーティクルを消す＆カウンターも初期化
+	if (m_JumpParticleTimer >= m_JumpParticleTime)
+	{
+		m_pEmitter->SetEmitFlg(false);
+		m_JumpParticleTimer = 0.0f;
+	}
 }
 
 void CPlayer::LockOn()
@@ -427,8 +443,8 @@ void CPlayer::LockOn()
 	//ロックオン状態にする。
 	if (m_pInput->IsTriggerLeftShift() && LockOnflag == false)
 	{
-		m_lockonEnemyIndex = m_LockOn.FindNearEnemy(m_transform.position);
-		if (m_lockonEnemyIndex != -1){
+		m_LockOnEnemy = m_LockOn.FindNearEnemy(m_transform.position);
+		if (m_LockOnEnemy){
 			LockOnflag = true;
 		}
 		
@@ -441,17 +457,17 @@ void CPlayer::LockOn()
 	//ロックオン状態中の回転の計算
 	if (LockOnflag)
 	{
-		if (m_lockonEnemyIndex == -1){
+		if (!m_LockOnEnemy){
 			LockOnflag = false;
 		}
 		else{
-			_X = m_LockOn.LockOnRotation(_X, m_transform.position, m_lockonEnemyIndex);
+			_X = m_LockOn.LockOnRotation(_X, m_transform.position,m_LockOnEnemy);
 		}
 	}
-	//ロックオン状態の時に常にプレイヤーを敵に向かせる
-	if (LockOnflag){
-		m_targetAngleY = _X;
-	}
+	////ロックオン状態の時に常にプレイヤーを敵に向かせる
+	//if (LockOnflag){
+	//	m_targetAngleY = _X;
+	//}
 
 }
 
@@ -499,7 +515,7 @@ void CPlayer::BehaviorCorrection()
 	{
 		D3DXVec3Normalize(&NV2, &moveXZ);
 		D3DXVec3Cross(&NV3, &NV2, &Back);
-		cos = D3DXVec3Dot(&NV2, &Back);///2つの3Dベクトルの上方向の内積を求める→V1とV2のなす角のcosθが見つかる。
+		cos = D3DXVec3Dot(&NV2, &Back);//2つの3Dベクトルの上方向の内積を求める→V1とV2のなす角のcosθが見つかる。
 		m_targetAngleY = acos(cos);
 		if (NV3.y > 0)
 		{
@@ -509,9 +525,115 @@ void CPlayer::BehaviorCorrection()
 
 }
 
+void CPlayer::KeyState(){
+	// デバイスが切り替わった場合は自動で切り替える
+	SINSTANCE(CInputManager)->IsInputChanged(&m_pInput);
+
+	if (m_JumpState == JUMP_STATE::J_NULL && m_pInput->IsTriggerSpace()){
+		m_JumpState = JUMP_STATE::J_EINS;
+		m_pAudio->PlayCue("Jump", true, this);//ジャンプSE
+		m_JumpParticleTimer = 0.0f;
+		m_NowJumpPower = PLAYER_JUMP_POWER;
+		m_pEmitter->SetEmitFlg(true);
+		D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
+		pos.y -= 0.5f;
+		m_pEmitter->SetEmitPos(pos);
+	}
+	bool IsActive_X = static_cast<bool>(fabsf(m_pInput->GetStickL_XFloat()));
+	bool IsActive_Y = static_cast<bool>(fabsf(m_pInput->GetStickL_YFloat()));
+	if (IsActive_X || IsActive_Y){
+		m_State = MOVE_STATE::Walk;
+	}
+	if (m_pInput->IsPressRightShift())
+	{
+		m_ShotFlg = true;
+	}
+}
+
+void CPlayer::Collisions(){
+	if (m_VibrationCounter > m_VibrationInterval){
+		if (!m_vibration.GetIsVibration()){
+			// エネミーとの当たり判定。
+			CEnemyManager* EnemyManager = (SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager")));
+			m_NearEnemy = m_LockOn.FindNearEnemy(m_transform.position);
+			if (m_NearEnemy){
+				D3DXVECTOR3 dist;
+				dist = m_NearEnemy->GetPos() - m_transform.position;
+				float R;
+				R = D3DXVec3Length(&dist);//ベクトルの長さを計算。
+
+				if (R <= 1)
+				{
+					m_State = MOVE_STATE::Vibration;
+					m_ActiveKeyState = false;
+					// プレイヤーを追いかけ続けていると画面が振動してしまう。
+					m_pCamera->SetIsTarget(false);
+					m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 0.5f, 0.01f);
+					m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					m_pAudio->PlayCue("ta_ge_denki01", true, this);
+					//return;
+				}
+			}
+
+			// 炎のギミックとの当たり判定。
+			for (int idx = 0;; idx++){
+				string str = "firejet";
+				char num[100];
+				_itoa(idx, num, 10);
+				str += num;
+				CFireJet* firejet = SINSTANCE(CObjectManager)->FindGameObject<CFireJet>(_T(str.c_str()));
+				if (firejet == nullptr){
+					break;
+					//return;
+				}
+				if (firejet->IsCollision(m_transform.position, 1.0f)){
+					// プレイヤーを追いかけ続けていると画面が振動してしまう。
+					m_State = MOVE_STATE::Vibration;
+					m_ActiveKeyState = false;
+					m_pCamera->SetIsTarget(false);
+					m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 1.2f, 0.01f);
+					m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					//return;
+				}
+			}
+		}
+	}
+
+	m_VibrationCounter += 1.0f / 60.0f;
+
+	// チョコボールとの当たり判定。
+	for (auto itr = m_CBManager.begin(); itr != m_CBManager.end();){
+		if (*itr != NULL)
+		{
+			if (m_State != MOVE_STATE::Flow){
+				//チョコボールに当たっているかの処理
+				if ((*itr)->IsHit(m_transform.position, m_size))
+				{
+					//チョコボールに当たったらの処理
+					ChocoHit();
+				}
+			}
+		}
+		if (m_NowCourceNo != -1){
+			if (m_NowCourceNo - (*itr)->GetCourceNo() >= 5){
+				(*itr)->NonActivate();
+				SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
+				itr = m_CBManager.erase(itr);
+				continue;
+			}
+		}
+		itr++;
+	}
+}
+
 void CPlayer::StateManaged()
 {
-	//ゲームオーバー処理
+	if (m_GameState != GAMEEND_ID::CLEAR)
+	{
+		CGameObject::Update();
+	}
+
+	//落下死ゲームオーバー処理。
 	if (m_transform.position.y <= -15.0f)
 	{
 		m_GameState = GAMEEND_ID::OVER;
@@ -530,108 +652,35 @@ void CPlayer::StateManaged()
 		float Kyori = D3DXVec3Dot(&GoalToPlayerVec, &LoadVec);
 		if (Kyori < 0.001f)
 		{
-			if (GamaOverFlag = true)
-			{
-				m_GameState = GAMEEND_ID::CLEAR;
-				return;
-			}	
-		}
-	}
-
-	if (!m_vibration.GetIsVibration()){
-		CEnemyManager* EnemyManager = (SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager")));
-		m_lockonEnemyIndex = m_LockOn.FindNearEnemy(m_transform.position);
-		if (m_lockonEnemyIndex != -1){
-			EnemyBase* Enemy = EnemyManager->GetEnemy(m_lockonEnemyIndex);
-			D3DXVECTOR3 dist;
-			dist = Enemy->GetPos() - m_transform.position;
-			float R;
-			R = D3DXVec3Length(&dist);//ベクトルの長さを計算
-
-			if (R <= 1)
-			{
-				m_MoveFlg = false;
-				m_pCamera->SetIsTarget(false);
-				m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 0.5f, 0.01f);
-				m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				m_pAudio->PlayCue("ta_ge_denki01", true, this);
-				//m_GameState = GAMEEND_ID::OVER;
-				return;
-			}
-		}
-
-		// 炎のギミックとの当たり判定
-		for (int idx = 0;; idx++){
-			string str = "firejet";
-			char num[100];
-			_itoa(idx, num, 10);
-			str += num;
-			CFireJet* firejet = SINSTANCE(CObjectManager)->FindGameObject<CFireJet>(_T(str.c_str()));
-			if (firejet == nullptr){
-				return;
-			}
-			if (firejet->IsCollision(m_transform.position, 1.0f)){
-				m_MoveFlg = false;
-				m_pCamera->SetIsTarget(false);
-				m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 1.2f, 0.01f);
-				m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				//m_GameState = GAMEEND_ID::OVER;
-				return;
-			}
+			m_GameState = GAMEEND_ID::CLEAR;
+			return;
 		}
 	}
 }
+
 bool CPlayer::IsVibration() 
 {
 	return m_vibration.GetIsVibration();
 }
+
 void CPlayer::BulletShot()
 {
-	if (m_MoveFlg){
-		BulletShotInterval++;
-		if (BulletShotInterval % 5 == 0){
+	BulletShotInterval++;
+	if (BulletShotInterval % 5 == 0){
 
-			if (m_pInput->IsPressRightShift())
-			{
-				//プレイヤーの向いているベクトルを計算
-				D3DXVec3Normalize(&RV0, &RV0);
-				D3DXMatrixRotationY(&Rot, m_currentAngleY);
-				D3DXVec3Transform(&RV1, &RV0, &Rot);
+		//プレイヤーの向いているベクトルを計算
+		D3DXVec3Normalize(&RV0, &RV0);
+		D3DXMatrixRotationY(&Rot, m_currentAngleY);
+		D3DXVec3Transform(&RV1, &RV0, &Rot);
 
-				//D3DXVECTOR3 pos = m_transform.position;
-				//pos.y += 0.3f;
-				//プレイヤーの向きに合わせてパーティクルの発生場所をずらしている
-				//pos = RV0*1.0f;
-				//m_pEmitter2->SetEmitFlg(true);
-				//m_pEmitter2->SetEmitPos(pos);
-
-				CPlayerBullet* bullet = new CPlayerBullet;
-				bullet->Initialize();
-				bullet->SetPos(m_transform.position);
-				bullet->SetDir(RV1);
-				bullet->SetBulletSpeed(0.5f);
-				bullet->SetAudio(m_pAudio);
-				m_bullets.push_back(bullet);
-				m_pAudio->PlayCue("Laser", true,this);
-			}
-		}
-	}
-
-	//プレイヤーと弾の距離が20mになると弾が自動でDeleteする。
-	int size = m_bullets.size();
-	for (int idx = 0; idx < size; idx++){
-		D3DXVECTOR3 V5;
-		if (m_testFlg){
-			char text[256];
-			sprintf(text, "BreakPoint\n");
-			OutputDebugString(text);
-		}
-		V5 = m_bullets[idx]->GetPos() - m_transform.position;
-		float length = D3DXVec3Length(&V5);
-		if (length > BULLET_LENG)
-		{
-			DeleteBullet(m_bullets[idx]);
-		}
+		CPlayerBullet* bullet = new CPlayerBullet;
+		bullet->Initialize();
+		bullet->SetPos(m_transform.position);
+		bullet->SetDir(RV1);
+		bullet->SetBulletSpeed(0.5f);
+		bullet->SetAudio(m_pAudio);
+		m_bullets.push_back(bullet);
+		m_pAudio->PlayCue("Laser", true, this);
 	}
 }
 
@@ -660,19 +709,22 @@ void CPlayer::ExcuteDeleteBullets(){
 
 void CPlayer::ChocoHit()
 {
-	GamaOverFlag = true;
+	m_State = MOVE_STATE::Flow;
+	m_ActiveKeyState = false;
+	m_pEmitter->SetEmitFlg(false);
+	m_AnimState = ANIMATION_STATE::WAIT;
 	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
 	m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
-	rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f));//第一引数は質量、第二引数は回転のしやすさ
-	//rb->applyForce(btVector3(0.0f, 100.0f, 0.0f), btVector3(1.0f, 1.0f, 1.0f));//チョコボールに当たって吹っ飛ぶ力を設定
+	rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f)/*btVector3(0.1f, 0.1f, 0.1f)*/);//第一引数は質量、第二引数は回転のしやすさ
 	m_pModel->GetAnimation()->SetAnimSpeed(1.0f);//アニメーション再生速度を設定
 }
 void CPlayer::EnemyBulletHit( D3DXVECTOR3 moveDir )
 {
+	m_State = MOVE_STATE::Fly;
+	m_AnimState = ANIMATION_STATE::WAIT;
+	m_ActiveKeyState = false;
 	m_pAudio->PlayCue("スポッ１", false, this);
-	GamaOverFlag = true;
 	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
-	//m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
 	rb->setMassProps(1.0f, btVector3(0.01f, 0.01f, 0.01f));//第一引数は質量、第二引数は回転のしやすさ
 	moveDir *= 750.0f;
 	rb->applyForce(btVector3(moveDir.x, moveDir.y + 1000.0f, moveDir.z), btVector3(1.0f, 1.0f, 1.0f));//チョコボールに当たって吹っ飛ぶ力を設定
@@ -708,17 +760,17 @@ void CPlayer::DeleteChocoBall(CCBManager* mgr){
 }
 
 void CPlayer::ExcuteDeleteChocoBall(){
-	for (auto itr2 : m_DeleteChocoBall){
-		for (list<CCBManager*>::iterator itr = m_CBManager.begin(); itr != m_CBManager.end();){
-			if (*itr == itr2){
-				(*itr)->NonActivate();
-				SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
-				itr = m_CBManager.erase(itr);
-			}
-			else{
-				itr++;
-			}
-		}
-	}
-	m_DeleteChocoBall.clear();
+	//for (auto itr2 : m_DeleteChocoBall){
+	//	for (list<CCBManager*>::iterator itr = m_CBManager.begin(); itr != m_CBManager.end();){
+	//		if (*itr == itr2){
+	//			(*itr)->NonActivate();
+	//			SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
+	//			itr = m_CBManager.erase(itr);
+	//		}
+	//		else{
+	//			itr++;
+	//		}
+	//	}
+	//}
+	//m_DeleteChocoBall.clear();
 }

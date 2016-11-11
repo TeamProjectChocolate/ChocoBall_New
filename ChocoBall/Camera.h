@@ -62,6 +62,9 @@ public:
 	{
 		return m_View;
 	}
+	D3DXMATRIX* GetViewPointer(){
+		return &m_View;
+	}
 	D3DXMATRIX GetProj()
 	{
 		return m_Proj;
@@ -78,6 +81,9 @@ public:
 	}
 	void SetViewVolume(const D3DXVECTOR2 volume){
 		m_viewVolume = volume;
+	}
+	void SetNotWorkOutFlg(bool flg){
+		m_NotWorkOut_Of_Up_and_Target = flg;
 	}
 private:
 	D3DXVECTOR3 m_position;
@@ -96,5 +102,6 @@ private:
 	D3DXMATRIX m_RotaInv;	// カメラの回転行列の逆行列
 	bool m_IsOrtho;
 	D3DXVECTOR2 m_viewVolume;
+	bool m_NotWorkOut_Of_Up_and_Target;	// 上方向と注視点を自動計算しない場合はtrue。
 };
 

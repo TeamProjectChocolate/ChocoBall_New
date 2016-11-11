@@ -63,7 +63,7 @@ void CInstancingRender::Initialize(){
 
 		//インスタンシング描画用の初期化。
 		D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 		// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 		container->MeshData.pMesh->GetDeclaration(declElement);
 		// 頂点の宣言の終端を探索
@@ -81,7 +81,7 @@ void CInstancingRender::Initialize(){
 						D3DDECLTYPE_FLOAT4,	// 頂点情報をどの肩を使用して宣言するか(行列はfloat4の要素を四つ使用して構成する)
 						D3DDECLMETHOD_DEFAULT, // テッセレーション(ポリゴン分割)の方法を指定。普通テッセレーションはあまり使わないため、デフォルト設(D3DDECLMETHOD_DEFAULT)で十分
 						D3DDECLUSAGE_TEXCOORD,	// usage要素
-						num + 1 /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
+						static_cast<BYTE>(num + 1) /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
 					};
 					offset += sizeof(float)* 4;
 					elementIndex++;
@@ -94,7 +94,7 @@ void CInstancingRender::Initialize(){
 						D3DDECLTYPE_FLOAT4,
 						D3DDECLMETHOD_DEFAULT,
 						D3DDECLUSAGE_TEXCOORD,
-						4 + num + 1
+						static_cast<BYTE>(4 + num + 1)
 					};
 					offset2 += sizeof(float)* 4;
 					elementIndex++;
@@ -133,8 +133,9 @@ void CInstancingRender::Draw(){
 			// 描画するオブジェクトが一つも存在しなければ描画しない。これをしないと必ず一つ描画されてしまう。
 			return;
 		}
-		DrawFrame(m_pModel->GetImage_3D()->pModel->GetFrameRoot());
+		DrawFrame(m_pModel->GetImage_3D()->GetFrameRoot());
 	}
+	m_pLight = nullptr;
 }
 
 void CInstancingRender::DrawFrame(LPD3DXFRAME pFrame){
@@ -237,7 +238,7 @@ void CInstancingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer,
 
 void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 	// 透明度有効化
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -250,7 +251,13 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 	// 現在のプロジェクション行列とビュー行列をシェーダーに転送
 	SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pEffect);
-	SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
+	if (m_pLight) {
+		// 専用ライトがあればそちらを使用。
+		m_pLight->SetLight(m_pEffect);
+	}
+	else {
+		SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
+	}
 	// 視点をシェーダーに転送
 	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
 	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
@@ -304,6 +311,10 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 	m_pEffect->EndPass();
 	m_pEffect->End();
+
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
 	//(*graphicsDevice()).SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);
 

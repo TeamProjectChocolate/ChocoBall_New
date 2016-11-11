@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Infomation.h"
 #include "Camera.h"
+#include "Light.h"
 
 class CModel;
 class CRender
@@ -45,10 +46,14 @@ public:
 	inline const D3DXVECTOR2& GetDepthFarNear(){
 		return m_DepthFarNear;
 	}
+	inline void SetMyLight(CLight* pLight) {
+		m_pLight = pLight;
+	}
 protected:
 	LPD3DXEFFECT m_pEffect;
 	CHAR m_pTechniqueName[MAX_FILENAME + 1];
 	CModel* m_pModel;
+	CLight* m_pLight = nullptr;
 	LPDIRECT3DTEXTURE9 m_pSampleTexture;	// 描画する前に最初に受け取るテクスチャ
 	D3DXVECTOR2 m_DepthFarNear;
 };

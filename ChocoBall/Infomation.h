@@ -7,10 +7,13 @@ class CSkinModelData;
 
 #define NUM_DIFFUSE_LIGHT 4		// 使用するディフューズライトの数
 
+#define GRAVITY 0.6f// 地球の重力加速度。
 
-enum PRIORTY{ CONFIG = 0, EMITTER, PLAYER, BULLET, ENEMY, OBJECT3D, OBJECT3D_ALPHA, PARTICLE,PARTICLE_ALPHA, OBJECT2D, OBJECT2D_ALPHA, MAX_PRIORTY };
+enum PRIORTY{ CONFIG = 0, EMITTER, PLAYER, ENEMY, OBJECT3D, OBJECT3D_ALPHA, PARTICLE,PARTICLE_ALPHA, OBJECT2D, OBJECT2D_ALPHA, MAX_PRIORTY };
 
 enum GAMEEND_ID{ CONTINUE = 0,CLEAR, OVER };
+
+enum MOVE_STATE{ Wait = 0, Walk, Dash, Vibration, Flow, Fly ,RockOn};
 
 // シェーダファイル格納用構造体
 typedef struct EFFECT_DATA{
@@ -79,15 +82,25 @@ struct SShapeVertex_PT {
 	float		uv[2];
 };
 
-enum RENDER_STATE{ None = 0, _2D, _3D, _3D_Simple, _3D_ShadowSample, _3D_ShadowSample_I, Bloom, Dof, EM, Instancing ,Max};
+enum RENDER_STATE{ None = 0, _2D, _3D, _3D_Simple, _3D_ShadowSample, _3D_ShadowSample_I, Bloom, Dof, EM,EM_Sampling ,EM_Sampling_I, Instancing ,Max};
 
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
+enum PLAYING_STATE{ONCE = 0,REPEAT};
+
+enum REFRACTIVES{EARTH = 0,CHOCOLATE,GOLD,GLASS};
+
+static float g_RefractivesTable[] = {
+	1.000293f,
+	1.457f,
+	0.34f,
+	1.51f,
+};
 
 // グラフィックテクニックのスイッチ。
-
 //#define NOT_VSM // 定義でソフトシャドウをオフ。
 //#define NOT_BLOOM	// 定義でブルームをオフ。
 //#define NOT_DOF	// 定義で被写界深度をオフ。
-//#define NOT_EM		// 定義で環境マップオフ。	
+//#define NOT_EM		// 定義で環境マップオフ。
+#define NOT_INSTANCING	// 定義でインスタンシング描画オフ。

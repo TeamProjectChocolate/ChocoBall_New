@@ -246,6 +246,8 @@ void CBloomRender::Draw()
 */
 void CBloomRender::Initialize()
 {
+#ifdef NOT_BLOOM
+#else
 	int w = SINSTANCE(CRenderContext)->GetWindowWidth();
 	int h = SINSTANCE(CRenderContext)->GetWindowHeight();
 	//輝度抽出用のレンダリングターゲットを作成。
@@ -267,4 +269,5 @@ void CBloomRender::Initialize()
 
 	m_pEffect = SINSTANCE(CEffect)->LoadEffect(_T("Shader/Bloom.hlsl"));
 	m_isEnable = true;
+#endif
 };

@@ -14,6 +14,8 @@
 #include "ShadowSamplingRender.h"
 #include "ShadowSamplingRender_I.h"
 #include "EM_Render.h"
+#include "EM_SamplingRender.h"
+#include "EM_SamplingRender_I.h"
 #include "RenderTarget.h"
 
 class CCamera;
@@ -48,6 +50,10 @@ public:
 			return CreateRender<CDofRender>(state, name, IsCommon);
 		case RENDER_STATE::EM:
 			return CreateRender<CEM_Render>(state, name, IsCommon);
+		case RENDER_STATE::EM_Sampling:
+			return CreateRender<CEM_SamplingRender>(state, name, IsCommon);
+		case RENDER_STATE::EM_Sampling_I:
+			return CreateRender<CEM_SamplingRender_I>(state, name, IsCommon,pModel);
 		case RENDER_STATE::Instancing:
 			return CreateRender<CInstancingRender>(state, name, IsCommon,pModel);
 		case RENDER_STATE::Max:
@@ -165,6 +171,12 @@ public:
 	}
 	CDofRender* GetDofRender(){
 		return m_DofRender;
+	}
+	CBloomRender* GetBloomRender(){
+		return m_BloomRender;
+	}
+	CEM_Render* GetEMRender(){
+		return m_EMRender;
 	}
 private:
 	CRenderTarget m_RenderTarget;

@@ -26,7 +26,14 @@ public:
 	void EndDraw();
 
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("NotNormalMapNonAnimationFresnelTec");
+#ifdef NOT_EM
+		m_pRender->SetUpTechnique("Boneless_Tex_Lim");
+#else
+		m_pRender->SetUpTechnique("Boneless_Tex_Fresnel");
+#endif
+	}
+	void EM_SetUpTechnique()override{
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Lim");
 	}
 
 	void SetRenderState()override{

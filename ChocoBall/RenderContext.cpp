@@ -92,6 +92,9 @@ void CRenderContext::CreateRenderingTerget(){
 }
 
 void CRenderContext::RenderingStart(){
+	// 環境マップ描画
+	m_EMRender->Draw();
+
 	// もとのレンダリングターゲットを保存
 	(*graphicsDevice()).GetRenderTarget(0, &m_SavedBuffer);
 	(*graphicsDevice()).GetDepthStencilSurface(&m_SavedMapZ);

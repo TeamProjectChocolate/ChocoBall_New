@@ -58,11 +58,14 @@ void CZBufferSphere::Draw()
 	IDirect3DSurface9* pOldBackBuffer;
 	IDirect3DSurface9* pOldZBuffer;
 
+#ifdef NOT_DOF
+#else
 	// 深度を書き込むターゲットは必要ないので取り出して保存
 	LPDIRECT3DSURFACE9 pOldDepthBuffer;
 	(*graphicsDevice()).GetRenderTarget(1, &pOldDepthBuffer);
 	// 無効化
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
+#endif
 
 	(*graphicsDevice()).GetRenderTarget(0, &pOldBackBuffer);
 	(*graphicsDevice()).GetDepthStencilSurface(&pOldZBuffer);
@@ -81,6 +84,12 @@ void CZBufferSphere::Draw()
 	// レンダリングターゲットを元に戻す
 	(*graphicsDevice()).SetRenderTarget(0, pOldBackBuffer);
 	(*graphicsDevice()).SetDepthStencilSurface(pOldZBuffer);
+#ifdef NOT_DOF
+#else
 	(*graphicsDevice()).SetRenderTarget(1, pOldDepthBuffer);
+#endif
+}
+
+void CZBufferSphere::Draw_EM(CCamera*){
 
 }

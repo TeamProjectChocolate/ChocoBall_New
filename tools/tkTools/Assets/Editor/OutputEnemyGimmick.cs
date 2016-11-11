@@ -28,7 +28,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
                 headerTxt += "},\n";
             }
         }
-        StreamWriter sw = new StreamWriter("C:/Github/GameChocoBall/ChocoBall/GimmickTriggerInfo"+mystring2+".h", false, Encoding.UTF8);
+        StreamWriter sw = new StreamWriter("../../ChocoBall/GimmickTriggerInfo"+mystring2+".h", false, Encoding.UTF8);
         sw.Write(headerTxt);
         sw.Close();
         headerTxt = "";
@@ -53,7 +53,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
            
         }
 
-        sw = new StreamWriter("C:/Github/GameChocoBall/ChocoBall/EnemyGimmickInfo"+mystring2+".h", false, Encoding.UTF8);
+        sw = new StreamWriter("../../ChocoBall/EnemyGimmickInfo" + mystring2+".h", false, Encoding.UTF8);
         sw.Write(headerTxt);
         sw.Close();
     }

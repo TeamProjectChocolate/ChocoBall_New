@@ -14,9 +14,11 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void SetUpTechnique()override{
 		m_pRender->SetUpTechnique("ZMask");
 	};
+
 	LPDIRECT3DTEXTURE9 GetTexture(){
 		return m_pZBufferSphereShadow;
 	}

@@ -15,7 +15,7 @@ CEnemyBullet::~CEnemyBullet()
 }
 
 void CEnemyBullet::Initialize(){
-	m_enemybullet = SINSTANCE(CObjectManager)->GenerationObject<Bullet>(_T("EnemyBullet"), PRIORTY::BULLET, false);
+	m_enemybullet = SINSTANCE(CObjectManager)->GenerationObject<Bullet>(_T("EnemyBullet"), PRIORTY::OBJECT3D_ALPHA, false);
 	m_enemybullet->Initialize();
 	m_Range = 20.0f;
 }

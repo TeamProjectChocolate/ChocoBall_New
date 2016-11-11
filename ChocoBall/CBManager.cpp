@@ -4,6 +4,7 @@
 #include "ShadowRender.h"
 #include "InstancingRender.h"
 #include "ShadowSamplingRender_I.h"
+#include "EM_SamplingRender_I.h"
 
 int CCBManager::m_CBManagerNum = 0;
 
@@ -41,26 +42,27 @@ void CCBManager::Initialize()
 	//
 	//(*graphicsDevice()).CreateVertexBuffer(6 * sizeof(SInstancingVertex), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pVertexBuffer, NULL);
 
-	m_IsInstancing = true;
+#ifdef NOT_INSTANCING
+#else
 	// モデルデータは一つでいいため、個々のチョコ粒で読み込まず、ここで読み込む
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/ball.x");
 	CGameObject::Initialize();
-	if (m_IsInstancing){
-		if (static_cast<CInstancingRender*>(m_pRender)->GetWorldMatrixBuffer() == nullptr){
-			static_cast<CInstancingRender*>(m_pRender)->CreateMatrixBuffer(m_CBManagerNum * CHOCO_NUM);
-		}
+		InitInstancing(m_CBManagerNum * CHOCO_NUM,true);
 		SINSTANCE(CShadowRender)->Entry(this);	// チョコボールはインスタンシング描画のため自身を登録する
-	}
+		m_pModel->m_alpha = 1.0f;
+		m_pModel->m_luminance = 0.0f;
+		m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+#endif
 
-	m_pModel->m_alpha = 1.0f;
-	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = 0.34f;
 }
 
 void CCBManager::ActivateShadowRender(){
+#ifdef NOT_INSTANCING
+#else
 	CGameObject::ActivateShadowRender();
 	static_cast<CShadowSamplingRender_I*>(m_pShadowRender)->CreateMatrixBuffer(m_CBManagerNum * CHOCO_NUM);
+#endif
 }
 
 void CCBManager::Update()
@@ -88,9 +90,9 @@ void CCBManager::Update()
 			Epos.z += fabsf(rate);
 			Epos.y += rate;
 			m_Choco[m_numCreate].Initialize(pos, Epos);
-			if (!m_IsInstancing){
-				SINSTANCE(CShadowRender)->Entry(&m_Choco[m_numCreate]);
-			}
+#ifdef NOT_INSTANCING
+			SINSTANCE(CShadowRender)->Entry(&m_Choco[m_numCreate]);
+#endif
 			createCount++;
 			m_numCreate++;
 		}
@@ -103,7 +105,22 @@ void CCBManager::Update()
 
 void CCBManager::Draw()
 {
-	if (m_IsInstancing){
+#ifdef NOT_INSTANCING
+	bool isBeginDraw = false;
+
+	for (int i = 0; i < m_numCreate; i++){
+		if (m_Choco[i].GetAlive()){
+			if (!isBeginDraw){
+				m_Choco[i].BeginDraw();
+				isBeginDraw = true;
+			}
+			m_Choco[i].Draw();
+		}
+	}
+	if (isBeginDraw){
+		m_Choco[m_numCreate - 1].EndDraw();
+	}
+#else
 		// ObjectManagerからDraw関数が呼ばれたら、インスタンシング用のレンダーに行列データを蓄積していく
 		m_pRender->SetModelData(m_pModel);
 		SetUpTechnique();
@@ -114,25 +131,42 @@ void CCBManager::Draw()
 				static_cast<CInstancingRender*>(m_pRender)->AddRotationMatrix(m_Choco[i].GetModel()->GetRotation());
 			}
 		}
-	}
-	else{
-	}
+#endif
 }
 
 void CCBManager::DrawShadow(CCamera* camera){
-	if (m_IsInstancing){
-		m_pShadowRender->SetModelData(m_pModel);
-		m_pShadowRender->SetShadowCamera(camera);
-		for (int i = 0; i < m_numCreate; i++)
-		{
-			if (m_Choco[i].GetAlive()){
-				static_cast<CShadowSamplingRender_I*>(m_pShadowRender)->AddWorldMatrix(m_Choco[i].GetModel()->GetWorldMatrix());
-			}
+#ifdef NOT_INSTANCING
+#else
+	m_pShadowRender->SetModelData(m_pModel);
+	m_pShadowRender->SetShadowCamera(camera);
+	for (int i = 0; i < m_numCreate; i++)
+	{
+		if (m_Choco[i].GetAlive()){
+			static_cast<CShadowSamplingRender_I*>(m_pShadowRender)->AddWorldMatrix(m_Choco[i].GetModel()->GetWorldMatrix());
 		}
 	}
-	else{
+#endif
+}
 
+void CCBManager::Draw_EM(CCamera* camera){
+#ifdef NOT_INSTANCING
+	for (int i = 0; i < m_numCreate; i++){
+		if (m_Choco[i].GetAlive()){
+			m_Choco[i].Draw_EM(camera);
+		}
 	}
+#else
+	static_cast<CEM_SamplingRender_I*>(m_pEMSamplingRender)->SetCamera(camera);
+	m_pEMSamplingRender->SetModelData(m_pModel);
+	EM_SetUpTechnique();
+	for (int i = 0; i < m_numCreate; i++)
+	{
+		if (m_Choco[i].GetAlive()){
+			static_cast<CEM_SamplingRender_I*>(m_pEMSamplingRender)->AddWorldMatrix(m_Choco[i].GetModel()->GetWorldMatrix());
+			static_cast<CEM_SamplingRender_I*>(m_pEMSamplingRender)->AddRotationMatrix(m_Choco[i].GetModel()->GetRotation());
+		}
+	}
+#endif
 }
 
 bool CCBManager::IsHit(D3DXVECTOR3 pos,D3DXVECTOR3 size)
@@ -173,8 +207,14 @@ void CCBManager::FindCource(){
 }
 
 void CCBManager::NonActivate(){
-	if (m_numCreate <= 0){
-		SetAlive(false);
-		SINSTANCE(CShadowRender)->DeleteObject(this);
+#ifdef NOT_INSTANCING
+	for (auto& choco : m_Choco){
+		choco.OnDestroy();
+		choco.SetAlive(false);
+		SINSTANCE(CShadowRender)->DeleteObjectImidieit(&choco);
 	}
+#else
+	SINSTANCE(CShadowRender)->DeleteObject(this);
+#endif
+	SetAlive(false);
 }

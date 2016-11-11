@@ -29,30 +29,38 @@ public:
 		strcpy(m_pRenderName, "Choco");
 	};
 	~CCBManager(){
+#ifdef NOT_INSTANCING
+#else
 		SINSTANCE(CShadowRender)->DeleteObjectImidieit(this);
 		m_CBManagerNum--;
+#endif
 	};
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 	void DrawShadow(CCamera*)override;
+	void Draw_EM(CCamera*)override;
 	void SetRenderState()override{
-		if (m_IsInstancing){
-			m_RenderingState = RENDER_STATE::Instancing;
-		}
-		else{
-			return;
-		}
+		m_RenderingState = RENDER_STATE::Instancing;
 	}
 	void SetShadowRenderState()override{
 		m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample_I;
+	}
+	void EM_SetRenderState()override{
+		m_EMRenderingState = RENDER_STATE::EM_Sampling_I;
 	}
 
 	void ActivateShadowRender()override;
 
 	void SetUpTechnique()override{
-		//m_pRender->SetUpTechnique("IBoneless_Tex_Fresnel");
+#ifdef NOT_EM
 		m_pRender->SetUpTechnique("IBoneless_Tex_Lim");
+#else
+		m_pRender->SetUpTechnique("IBoneless_Tex_Fresnel");
+#endif
+	}
+	void EM_SetUpTechnique()override{
+		m_pEMSamplingRender->SetUpTechnique("IBoneless_Tex_Lim");
 	}
 
 	void FindCource();
@@ -96,6 +104,17 @@ public:
 	}
 	int GetCourceNo(){
 		return m_InitPosOfCourceNo;
+	}
+
+	void SetPintoWorld(const D3DXMATRIX& mat)override{
+		for (short idx = 0; idx < CHOCO_NUM; idx++) {
+			m_Choco[idx].SetPintoWorld(mat);
+		}
+	}
+	void SetPintoPos(const D3DXVECTOR3& pos)override{
+		for (short idx = 0; idx < CHOCO_NUM; idx++) {
+			m_Choco[idx].SetPintoPos(pos);
+		}
 	}
 private:
 	D3DXVECTOR3			m_pos;			//生成される場所のポジション。

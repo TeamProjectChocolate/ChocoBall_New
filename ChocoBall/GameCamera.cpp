@@ -27,3 +27,7 @@ void CGameCamera::Update(){
 void CGameCamera::Draw(){
 	SINSTANCE(CRenderContext)->SetCurrentCamera(&m_camera);
 }
+
+void CGameCamera::Draw_EM(CCamera* camera){
+
+}

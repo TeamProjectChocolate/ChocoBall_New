@@ -12,6 +12,7 @@ public:
 	virtual void Initialize()override;
 	virtual void Update()override;
 	virtual void Draw()override;
+	virtual void Draw_EM(CCamera*)override;
 	D3DXMATRIX GetCameraRotation(){
 		return m_camera.GetCameraRotation();
 	}

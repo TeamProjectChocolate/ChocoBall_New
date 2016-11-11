@@ -6,88 +6,72 @@
 #include "GameObject.h"
 #include "ShadowRender.h"
 
-#define ENEMY_MAX 100
-
 class CEnemyManager:public CGameObject
 {
 public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void DeleteAll();
-	CEnemyManager()
-	{
-		numEnemy = 0;
-		for (int idx = 0; idx < ENEMY_MAX; idx++){
-			Enemy[idx] = nullptr;
-		}
-	}
+	CEnemyManager(){}
 	virtual ~CEnemyManager(){
 		this->DeleteAll();
 	}
 
+	void ConfigLight()override;
 	void AddEnemy(EnemyBase* enemy)
 	{
-		Enemy[numEnemy] = enemy;
-		numEnemy++;
+		enemy->SetLight(m_pLight);
+		m_Enemys.push_back(enemy);
 	}
 	void DeleteEnemy(EnemyBase* enemy)
 	{
 		enemy->OnDestroy();
-		int enemyIndex = -1;
-		for (int i = 0; i < numEnemy; i++){
-			if (enemy == Enemy[i]){
-				enemyIndex = i;
-				break;
-			}
-		}
-		if (enemyIndex == -1){
-			return;
-		}
-		else{
-			m_DeleteObjects.push_back(Enemy[enemyIndex]);
-			SINSTANCE(CShadowRender)->DeleteObject(Enemy[enemyIndex]);
-			Enemy[enemyIndex] = nullptr;
-		}
-		for (int i = enemyIndex; i < numEnemy - 1; i++){
-			Enemy[i] = Enemy[i + 1];
-		}
-		Enemy[numEnemy - 1] = nullptr;
-		numEnemy--;
+		m_DeleteObjects.push_back(enemy);
 	}
 
 	void ExcuteDeleteObjects(){
 		int size = m_DeleteObjects.size();
-		for (int idx = 0; idx < size;idx++){
-			SAFE_DELETE(m_DeleteObjects[idx]);
+		for (int idx = 0; idx < size; idx++){
+			for (auto itr = m_Enemys.begin(); itr != m_Enemys.end();){
+				if (m_DeleteObjects[idx] == *itr){
+					SAFE_DELETE(*itr);
+					itr = m_Enemys.erase(itr);
+					break;
+				}
+				else{
+					itr++;
+				}
+			}
 		}
 		m_DeleteObjects.clear();
 	}
 
+	const vector<EnemyBase*>& GetEnemys(){
+		return m_Enemys;
+	}
+
 	int GetNumEnemy()
 	{
-		return numEnemy;	//エネミーの数を返す
-	}
-	EnemyBase* GetEnemy(short num){
-		return Enemy[num];
+		return m_Enemys.size();	//エネミーの数を返す
 	}
 
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;
 	}
 	void SetPintoPos(const D3DXVECTOR3& pos)override{
-		for (int idx = 0; idx < numEnemy; idx++){
-			Enemy[idx]->SetPintoPos(pos);
+		for (auto enemy : m_Enemys){
+			enemy->SetPintoPos(pos);
 		}
 	}
 	void SetPintoWorld(const D3DXMATRIX& mat)override{
-		for (int idx = 0; idx < numEnemy; idx++){
-			Enemy[idx]->SetPintoWorld(mat);
+		for (auto enemy : m_Enemys){
+			enemy->SetPintoWorld(mat);
 		}
 	}
 private:
-	int		numEnemy;	//敵の数。
-	EnemyBase* Enemy[ENEMY_MAX];
+	vector<EnemyBase*> m_Enemys;
 	STAGE_ID m_StageID;
 	vector<EnemyBase*> m_DeleteObjects;
 };

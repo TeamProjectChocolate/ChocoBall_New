@@ -10,9 +10,14 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void SetUpTechnique()override
 	{
-		m_pRender->SetUpTechnique("NotNormalMapNonAnimationBloomTec");
+		m_pRender->SetUpTechnique("Boneless_Tex_Bloom");
+	}
+	void EM_SetUpTechnique()override
+	{
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Bloom");
 	}
 private:
 

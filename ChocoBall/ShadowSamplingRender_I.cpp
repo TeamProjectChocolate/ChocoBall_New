@@ -38,7 +38,7 @@ void CShadowSamplingRender_I::Initialize(){
 
 		//インスタンシング描画用の初期化。
 		D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 		// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 		container->MeshData.pMesh->GetDeclaration(declElement);
 		// 頂点の宣言の終端を探索
@@ -56,7 +56,7 @@ void CShadowSamplingRender_I::Initialize(){
 						D3DDECLTYPE_FLOAT4,	// 頂点情報をどの肩を使用して宣言するか(行列はfloat4の要素を四つ使用して構成する)
 						D3DDECLMETHOD_DEFAULT, // テッセレーション(ポリゴン分割)の方法を指定。普通テッセレーションはあまり使わないため、デフォルト設(D3DDECLMETHOD_DEFAULT)で十分
 						D3DDECLUSAGE_TEXCOORD,	// usage要素
-						num + 1 /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
+						static_cast<BYTE>(num + 1) /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
 					};
 					offset += sizeof(float)* 4;
 					elementIndex++;
@@ -90,7 +90,7 @@ void CShadowSamplingRender_I::Draw(){
 			// 描画するオブジェクトが一つも存在しなければ描画しない。これをしないと必ず一つ描画されてしまう。
 			return;
 		}
-		DrawFrame(m_pModel->GetImage_3D()->pModel->GetFrameRoot());
+		DrawFrame(m_pModel->GetImage_3D()->GetFrameRoot());
 	}
 }
 
@@ -198,7 +198,7 @@ void CShadowSamplingRender_I::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	m_pEffect->BeginPass(0);
 
 	m_pShadowCamera->SetCamera(m_pEffect);
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 	{
 		//DrawSubsetを使用するとインスタンシング描画が行えないので

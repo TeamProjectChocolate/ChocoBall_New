@@ -122,6 +122,87 @@ void CParticle::Draw(){
 	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, true);
 }
 
+void CParticle::Draw_EM(CCamera* camera){
+	SetupMatrices();
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+
+	// アルファテストを有効化
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	// アルファの値が一定値より大きければ合格とし、描画する。小さければピクセルが破棄される
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	// アルファテストの境界値
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHAREF, 0x1);
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, true);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, false);
+
+
+	switch (m_alphaBlendMode){
+	case 0:
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		break;
+	case 1:
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, true);
+		(*graphicsDevice()).SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+		(*graphicsDevice()).SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
+		break;
+	}
+
+
+	//SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pEffect);
+	//ここで固定描画と同じように、ローカル座標に設定された頂点群をデバイスに渡す。通常と同じ方法。
+	//	メッシュも同じく、マテリアルやテクスチャを設定
+	//DrawSubset()を呼び出して描画
+
+	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
+	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
+
+	static_cast<CEM_SamplingRender*>(m_pEMSamplingRender)->SetCamera(camera);
+	EM_SetUpTechnique();
+	m_pRender->GetEffect()->Begin(NULL, D3DXFX_DONOTSAVESHADERSTATE);
+	LPD3DXEFFECT work = m_pEMSamplingRender->GetEffect();
+	work->BeginPass(0);	//パスの番号を指定してどのパスを使用するか指定
+
+	work->SetMatrix("World", &mWorldViewProj);
+	D3DXVECTOR2 split = m_pModel->GetSplit();
+	work->SetInt("Split_X", split.x);
+	work->SetInt("Split_Y", split.y);
+	D3DXVECTOR2 now = m_pModel->GetNow();
+	work->SetInt("NowCol", now.x);
+	work->SetInt("NowRow", now.y);
+	float ratio_X = m_pModel->GetImage_2D()->RealSize.x / m_pModel->GetImage_2D()->UnRealSize.x;
+	float ratio_Y = m_pModel->GetImage_2D()->RealSize.y / m_pModel->GetImage_2D()->UnRealSize.y;
+
+	work->SetFloat("Ratio_X", ratio_X);
+	work->SetFloat("Ratio_Y", ratio_Y);
+
+	work->SetTexture("g_Texture", m_pModel->GetImage_2D()->pTex);
+	work->SetFloat("g_brightness", m_brightness);
+	work->SetFloat("Alpha", m_pModel->m_alpha);
+
+	work->CommitChanges();				//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
+
+	(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+	work->EndPass();
+	work->End();
+
+	// アルファテスト、オフ
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	(*graphicsDevice()).SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, false);
+
+	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	(*graphicsDevice()).SetRenderState(D3DRS_ZWRITEENABLE, true);
+}
+
 void CParticle::SetupMatrices(){
 	D3DXMATRIX Trans;
 	D3DXMatrixIdentity(&(m_pModel->m_World));
@@ -177,6 +258,8 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	UseModel<C2DImage>();
 	m_pModel->SetFileName(param->texturePath);
 	m_pRender = SINSTANCE(CRenderContext)->SelectRender(RENDER_STATE::_2D,_T(""),false,m_pModel);
+	m_pEMSamplingRender = SINSTANCE(CRenderContext)->SelectRender(RENDER_STATE::EM_Sampling, _T(""), false, m_pModel);
+
 
 	if (param->size_randMax < param->size_randMin){
 		MessageBox(nullptr, _T("MaxとMinの数字が逆転しています"), _T("警告"), MB_OK);

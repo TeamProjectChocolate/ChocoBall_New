@@ -79,6 +79,10 @@ void CParticleEmitter::Draw(){
 
 }
 
+void CParticleEmitter::Draw_EM(CCamera* camera){
+
+}
+
 void CParticleEmitter::ApplyForce(const D3DXVECTOR3& applyForce){
 	for (auto itr : m_ParticleList){
 		itr->ApplyFource(applyForce);

@@ -77,6 +77,10 @@ void CJetGimmick::Update(){
 void CJetGimmick::Draw(){
 }
 
+void CJetGimmick::Draw_EM(CCamera* camera){
+
+}
+
 void CJetGimmick::SoundPlay(){
 	if (m_IsPlay){
 		m_pAudio->PlayCue(m_SoundName, true,this);

@@ -35,3 +35,14 @@ void Skybox::Draw()
 	CGameObject::Draw();
 	SINSTANCE(CRenderContext)->SetCurrentLight(plight);
 }
+
+void Skybox::Draw_EM(CCamera* camera)
+{
+	m_pModel->m_luminance = 1.0f;
+	CLight* plight;
+	EM_SetUpTechnique();
+	plight = SINSTANCE(CRenderContext)->GetCurrentLight();
+	SINSTANCE(CRenderContext)->SetCurrentLight(&light);
+	CGameObject::Draw_EM(camera);
+	SINSTANCE(CRenderContext)->SetCurrentLight(plight);
+}

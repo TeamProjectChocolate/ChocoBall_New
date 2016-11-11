@@ -26,8 +26,8 @@ public class OutputCollitionInfo : EditorWindow
             headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f ),            //拡大\n", tr.lossyScale.x, tr.lossyScale.y, tr.lossyScale.z);
             headerTxt += "},\n";
         }
-      
-        StreamWriter sw = new StreamWriter("C:/Github/GameChocoBall/ChocoBall/collisionInfo"+mystring+".h", false, Encoding.UTF8);
+        
+        StreamWriter sw = new StreamWriter("../../ChocoBall/collisionInfo" + mystring+".h", false, Encoding.UTF8);
         sw.Write(headerTxt);
         sw.Close();
     }

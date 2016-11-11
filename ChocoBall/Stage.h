@@ -28,10 +28,13 @@ public:
 			return m_pAudio;
 		}
 	}
+private:
+	void ConfigLight();
 protected:
 	CAudio* m_pAudio;
 	STAGE_ID m_Stage_ID = STAGE_ID::STAGE_NONE;
 private:
+	CLight m_Light;
 	CPlayer* m_pPlayer;
 	CParticleEmitter* m_pEmitter;
 	CLevelBuilder* m_CLevelBuilder;

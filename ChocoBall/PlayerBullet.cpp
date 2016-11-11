@@ -16,7 +16,7 @@ CPlayerBullet::~CPlayerBullet()
 }
 
 void CPlayerBullet::Initialize(){
-	m_bullet = SINSTANCE(CObjectManager)->GenerationObject<Bullet>(_T("PlayerBullet"), PRIORTY::BULLET, false);
+	m_bullet = SINSTANCE(CObjectManager)->GenerationObject<Bullet>(_T("PlayerBullet"), PRIORTY::OBJECT3D_ALPHA, false);
 	m_bullet->Initialize();
 
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
@@ -50,21 +50,20 @@ void CPlayerBullet::Build(){
 }
 
 bool CPlayerBullet::BulletEnemyCollision(){
-	m_lockonEnemyIndex = m_LockOn.FindNearEnemy(m_bullet->GetPos());
-	if (m_lockonEnemyIndex != -1){
-		EnemyBase* Enemy = m_pEnemyManager->GetEnemy(m_lockonEnemyIndex);
+	EnemyBase* NearEnemy = m_LockOn.FindNearEnemy(m_bullet->GetPos());
+	if (NearEnemy){
 		D3DXVECTOR3 dist;
-		dist = Enemy->GetPos() - m_bullet->GetPos();
+		dist = NearEnemy->GetPos() - m_bullet->GetPos();
 		float L;
 		L = D3DXVec3Length(&dist);//ベクトルの長さを計算
 		
 
 		if (L <= 1)
 		{
-			if (!Enemy->GetIsHit()){
+			if (NearEnemy->GetMoveState() != MOVE_STATE::Fly){
 				EnemyDownNum++;
 			}
-			Enemy->PlayerBulletHit(m_bullet->GetDirection());
+			NearEnemy->PlayerBulletHit(m_bullet->GetDirection());
 			return true;
 		}
 	}

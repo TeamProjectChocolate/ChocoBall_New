@@ -28,7 +28,6 @@ void CNumber::Update(){
 void CNumber::Draw(){
 	string value = to_string(m_value);
 	if (m_pModel->GetImage_2D()->pTex != NULL){
-
 		m_pModel->SetNow(D3DXVECTOR2(0.0f,0.0f));
 		D3DXVECTOR2 Now = m_pModel->GetNow();
 		for (int idx = value.length() - 1, offset = 0; idx >= 0; idx--, offset++){

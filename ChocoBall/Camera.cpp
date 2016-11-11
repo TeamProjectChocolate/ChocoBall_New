@@ -23,13 +23,14 @@ void CCamera::Initialize(){
 	m_up.x = 0.0f;
 	m_up.y = 1.0f;
 	m_up.z = 0.0f;
-	m_ViewAngle = D3DXToRadian(45);		// 45度をラジアンに変換して格納
+	m_ViewAngle = D3DXToRadian(45.0f);		// 45度をラジアンに変換して格納
 	m_aspect = 1.0f / 1.0f;				// アスペクト比に計算
 	m_Near = 1.0f;						// どこから
 	m_Far = 1000.0f;					// どこまで描画するか
 	m_updateType = enUpdateTypeTarget;
 	m_Axis = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_IsOrtho = false;
+	m_NotWorkOut_Of_Up_and_Target = false;
 }
 
 void CCamera::Update(){
@@ -53,20 +54,21 @@ void CCamera::Update(){
 	}
 	// ビュートランスフォーム(視点座標変換)
 	D3DXMatrixIdentity(&m_View);									// 行列初期化
-	D3DXVECTOR3 vEye(m_position.x, m_position.y, m_position.z);		// カメラ位置
 
 	if (m_updateType == enUpdateTypeTarget){
 		m_direction = m_target - m_position;
-		D3DXVec3Normalize(&m_direction,&m_direction);
-		float t = fabsf(D3DXVec3Dot(&m_direction, &D3DXVECTOR3(0.0f, 1.0f, 0.0f)));
-		if (fabsf((t - 1.0f)) < 0.00001f) {
-			//ライトの方向がほぼY軸と並行。
-			m_up = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+		D3DXVec3Normalize(&m_direction, &m_direction);
+		if (!m_NotWorkOut_Of_Up_and_Target){
+			float t = fabsf(D3DXVec3Dot(&m_direction, &D3DXVECTOR3(0.0f, 1.0f, 0.0f)));
+			if (fabsf((t - 1.0f)) < 0.00001f) {
+				//ライトの方向がほぼY軸と並行。
+				m_up = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+			}
+			else {
+				m_up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+			}
 		}
-		else {
-			m_up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		}
-		D3DXMatrixLookAtLH(&m_View, &vEye, &m_target, &m_up);			// ビューマトリックス設定
+		D3DXMatrixLookAtLH(&m_View, &m_position, &m_target, &m_up);			// ビューマトリックス設定
 	}
 	else if (m_updateType == enUpdateTypeDirection){
 		float t = fabsf(D3DXVec3Dot(&m_direction, &m_Axis));
@@ -77,8 +79,9 @@ void CCamera::Update(){
 		else {
 			m_up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		}
-		D3DXVECTOR3 target = vEye + m_direction;
-		D3DXMatrixLookAtLH(&m_View, &vEye, &target, &m_up);
+		D3DXVECTOR3 target = m_position + m_direction;
+		m_target = target;
+		D3DXMatrixLookAtLH(&m_View, &m_position, &m_target, &m_up);
 	}
 	// カメラの回転行列の算出
 	D3DXMatrixIdentity(&m_Rota);

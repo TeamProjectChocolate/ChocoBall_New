@@ -47,25 +47,28 @@ void C3DImage::Initialize(){
 }
 
 void C3DImage::SetImage(){
-	m_pImage = SINSTANCE(CImageManager)->Find3DImage(m_pFileName);
-	if (m_pImage != nullptr){
-		if (m_pImage->pModel->GetAnimationController() != nullptr){
-			m_animation.Initialize(m_pImage->pModel->GetAnimationController());
-		}
+	CSkinModelData* pModel = SINSTANCE(CImageManager)->Find3DImage(m_pFileName);
+	if (pModel){
+		CSkinModelData* NewModelData = new CSkinModelData;
+		NewModelData->CloneModelData(*pModel, &m_animation);
+		m_pData = new CSkinModelData;
+		m_pData = NewModelData;
+		SINSTANCE(CImageManager)->Push_CloneModelData(NewModelData);
+		//if (m_pImage->pModel->GetAnimationController() != nullptr){
+		//	m_animation.Initialize(m_pImage->pModel->GetAnimationController());
+		//}
 	}
 	else{
 		LoadXFile();
 	}
-	m_currentAnimNo = 0;
-	m_animation.PlayAnimation(m_currentAnimNo, 1.0f);
+	//m_currentAnimNo = 0;
+	//m_animation.PlayAnimation(m_currentAnimNo, 1.0f);
 }
 
 HRESULT C3DImage::LoadXFile(){
-	CSkinModelData* pSkinModelData = new CSkinModelData;
-	pSkinModelData->LoadModelData(m_pFileName,&m_animation);
-	m_pImage = new IMAGE3D;
-	m_pImage->pModel = pSkinModelData;
-	SINSTANCE(CImageManager)->Add3D(m_pFileName, pSkinModelData);
+	m_pData = new CSkinModelData;
+	m_pData->LoadModelData(m_pFileName, &m_animation);
+	SINSTANCE(CImageManager)->Add3D(m_pFileName, m_pData);
 	return S_OK;
 }
 
@@ -111,7 +114,7 @@ void C3DImage::AnimationUpdate(const TRANSFORM& transform){
 //	D3DXMatrixMultiply(&m_World, &m_World, &Trans);
 
 	
-	if (m_pImage->pModel){
-		m_pImage->pModel->UpdateBoneMatrix(&m_World);	//ボーン行列を更新。
+	if (m_pData){
+		m_pData->UpdateBoneMatrix(&m_World);	//ボーン行列を更新。
 	}
 }

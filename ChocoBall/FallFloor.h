@@ -17,13 +17,21 @@ public:
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale);
 	void Update()override;
 	void Draw()override;
-	virtual void SetUpTechnique()override{
+	void SetUpTechnique()override{
 #ifdef NOT_VSM
-		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_Fresnel");
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow");
 #else
-		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_Fresnel");
+		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM");
 #endif
 	}
+	void EM_SetUpTechnique()override{
+#ifdef NOT_VSM
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Shadow");
+#else
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Shadow_VSM");
+#endif
+	}
+
 	void Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos);
 	void SetPos(D3DXVECTOR3 pos){
 		position = pos;
@@ -53,6 +61,7 @@ private:
 	btDefaultMotionState* m_myMotionState;
 	CPlayer*			m_player;
 	float m_MaxMove;
+	float m_MaxSpeed;
 	CAudio* m_pAudio;
 	bool m_IamFlgKeeper;
 	static bool m_IsPlayCue;

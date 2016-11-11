@@ -19,6 +19,7 @@ public:
 	virtual ~CGameObject();
 	virtual void OnDestroy(){};		// ObjectManagerクラスのDeleteGameObject関数が呼ばれたときに呼び出される関数
 	virtual void Initialize();
+	void InitInstancing(int,bool);
 	virtual void ActivateShadowRender(){
 		SetShadowRenderState();
 		m_pShadowRender = SINSTANCE(CRenderContext)->SelectRender(m_ShadowRenderingState, m_pRenderName, false, m_pModel);
@@ -27,6 +28,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual void DrawShadow(CCamera*);
+	virtual void Draw_EM(CCamera*);
 
 	virtual inline void SetFileName(LPCSTR name){
 		m_pModel->SetFileName(name);
@@ -55,8 +57,19 @@ public:
 			}
 		}
 	}
+	inline virtual void EM_SetRenderState(){
+		if (m_pModel){
+			switch (m_pModel->m_Type){
+			case MODEL_TYPE::T_2D:
+				return;
+			case MODEL_TYPE::T_3D:
+				m_EMRenderingState = RENDER_STATE::EM_Sampling;
+				break;
+			}
+		}
+	}
 
-
+	virtual void Is_DrawShadow_Use_Horizon();
 
 	template<class T>
 	void UseModel();
@@ -74,11 +87,28 @@ public:
 		m_UseModel = true;
 	}
 
-
 	// モデルクラスのテクニックの名前を設定
 	// (デフォルトは設定済み、独自のテクニックを使用する場合は継承先でオーバーライド！)
 	virtual inline void SetUpTechnique(){
-		m_pRender->SetUpTechnique("BasicTec");
+		if (m_RenderingState == RENDER_STATE::_3D){
+			m_pRender->SetUpTechnique("Boneless");
+		}
+		else if (m_RenderingState == RENDER_STATE::_2D){
+			m_pRender->SetUpTechnique("BasicTec");
+		}
+	}
+	virtual inline void EM_SetUpTechnique(){
+		m_pEMSamplingRender->SetUpTechnique("Boneless");
+	}
+
+	virtual inline void SetUpShadowTechnique() {
+		m_pShadowRender->SetUpTechnique("BonelessShadowMapping");
+	}
+
+
+	virtual void ConfigLight() {
+		// 専用ライトを使用することを明示する。
+		m_HasMyLight = true;
 	}
 
 	CModel* GetModel(){
@@ -120,7 +150,7 @@ public:
 		D3DXQuaternionRotationAxis(&(m_transform.angle), &axis, rota);
 	}
 
-	D3DXVECTOR3 GetmoveSpeed()
+	float GetmoveSpeed()
 	{
 		return m_moveSpeed;
 	}
@@ -140,17 +170,25 @@ public:
 			m_pModel->SetPintoPos(pos);
 		}
 	}
+
+	inline void SetLight(CLight* pLight) {
+		m_pLight = pLight;
+	}
+
 protected:
 	CModel* m_pModel;
 	CRender* m_pRender;
+	CLight* m_pLight = nullptr;
 	CRender* m_pShadowRender;
+	CRender* m_pEMSamplingRender;
 	RENDER_STATE m_RenderingState;	// どのレンダーを使うか
 	RENDER_STATE m_ShadowRenderingState;
-	D3DXVECTOR3 m_moveSpeed;
+	RENDER_STATE m_EMRenderingState;
+	D3DXVECTOR3 m_Direction;
+	float m_moveSpeed;
 	TRANSFORM m_transform;
 	CHAR m_pFileName[MAX_FILENAME + 1];	// モデルファイルの名前(継承先で指定)
 	CHAR m_pRenderName[MAX_FILENAME + 1];	// レンダーの識別名(デフォルトでは共通レンダーを使いまわすようになっている)
-	bool m_IsInstancing;	// インスタンシング描画をするかどうかのフラグ
 // オーバーロード初期化フラグ
 // (継承先のクラスでInitialize関数のオーバーロードを使用した場合は、このフラグをそのクラス内で必ずtrueにしてください)
 	bool m_OriginalInit;
@@ -159,5 +197,6 @@ private:
 	bool m_alive;			// 生存フラグ(trueなら生存、falseなら死亡)
 	bool m_common;			// 常駐フラグ(trueならシーン切り替えで削除されない)
 	bool m_UseModel;		// 変数m_pModelをnewしているか
+	bool m_HasMyLight;		// 自分専用のライトを使用するか。
 };
 

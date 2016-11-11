@@ -49,6 +49,16 @@ float3 CalcLimLight(float3 normal)
 	return g_light.limLightColor.xyz * lim;
 }
 
+// ここからフレネル関連
+
+textureCUBE g_CubeTex;
+samplerCUBE cubeTexSampler =
+sampler_state{
+	Texture = <g_CubeTex>;
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	MipFilter = LINEAR;
+};
 
 float CalcFresnel(
 	float3 normal,		//ワールド座標系での法線。

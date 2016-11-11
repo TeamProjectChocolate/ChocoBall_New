@@ -14,10 +14,23 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	void SetRenderState()override{
-
+	void SetUpTechnique()override{
+#ifdef NOT_EM
+		m_pRender->SetUpTechnique("Boneless_Tex_Lim");
+#else
+		m_pRender->SetUpTechnique("Boneless_Tex_Fresnel");
+#endif
+	}
+	void EM_SetUpTechnique()override{
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Lim");
 	}
 
+	void SetRenderState()override{
+		m_RenderingState = RENDER_STATE::_3D_Simple;
+	}
+
+	void BeginDraw();
+	void EndDraw();
 	void OnDestroy();
 
 	//現時点と目的地を渡すとベクトルをセットします。

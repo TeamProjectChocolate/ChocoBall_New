@@ -13,7 +13,7 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 	StartPos = m_transform.position;
 	m_transform.scale = scale;
 	m_transform.angle = rot;
-
+	m_MaxSpeed = 0.1f;
 	this->Build(D3DXVECTOR3(1.5f*scale.x, 0.3f*scale.y, 1.5f*scale.z), m_transform.position);
 
 	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
@@ -34,17 +34,20 @@ void FallingFloor::Update()
 
 	CGameObject::Update();
 
-	IsHitPlayer(m_transform.position, 1.0f);
 	if (IsHitPlayer(m_transform.position,1.0f))
 	{
+		m_moveSpeed += 0.02f;
+		if (m_MaxSpeed <= m_moveSpeed){
+			m_moveSpeed = m_MaxSpeed;
+		}
 		if (m_MaxMove == -1 || m_transform.position.y > StartPos.y - m_MaxMove){
 			if (!m_IsPlayCue){
  				m_pAudio->PlayCue("Lift", false,this);//ƒŠƒtƒgAudio
 				m_IsPlayCue = true;
 				m_IamFlgKeeper = true;
 			}
-			m_transform.position.y -= 0.1f;
-			PlayerPos.y -= 0.1f;
+			m_transform.position.y -= m_moveSpeed;
+			PlayerPos.y -= m_moveSpeed;
 			m_player->SetPos(PlayerPos);
 		}
 		else{
@@ -63,6 +66,7 @@ void FallingFloor::Update()
 			m_IamFlgKeeper = false;
 		}
 		m_transform.position.y += 0.05f;
+		m_moveSpeed = 0.0f;
 	}
 	
 }

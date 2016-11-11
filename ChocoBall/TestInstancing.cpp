@@ -63,7 +63,7 @@ void CTestInstancing::Initialize(){
 
 	//インスタンシング描画用の初期化。
 	D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
 	// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 	container->MeshData.pMesh->GetDeclaration(declElement);
 	// 頂点の宣言の終端を探索
@@ -73,7 +73,8 @@ void CTestInstancing::Initialize(){
 			//終端を発見。
 			//ここからインスタンシング用の頂点レイアウトを埋め込む。
 			WORD offset = 0;
-			for (short num = 0; num < 4; num++){
+			
+			for (BYTE num = 0; num < 4; num++){
 				// WORLD行列はfloat4x4なので、1行ずつfloat4で定義していく
 				declElement[elementIndex] = {
 					1,	// ストリーム番号
@@ -81,7 +82,7 @@ void CTestInstancing::Initialize(){
 					D3DDECLTYPE_FLOAT4,	// 頂点情報をどの肩を使用して宣言するか(行列はfloat4の要素を四つ使用して構成する)
 					D3DDECLMETHOD_DEFAULT, // テッセレーション(ポリゴン分割)の方法を指定。普通テッセレーションはあまり使わないため、デフォルト設(D3DDECLMETHOD_DEFAULT)で十分
 					D3DDECLUSAGE_TEXCOORD,	// usage要素
-					num + 1 /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
+					static_cast<BYTE>(num + 1) /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
 				};
 				offset += sizeof(float)* 4;
 				elementIndex++;
@@ -172,7 +173,7 @@ void CTestInstancing::Update(){
 
 
 void CTestInstancing::Draw(){
-	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->pModel->GetContainer();
+	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
 
 	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pEffect->SetTechnique("NonAnimationInstancing_SFresnel");

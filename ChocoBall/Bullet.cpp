@@ -16,9 +16,9 @@ void Bullet::Initialize()
 	SetRotation(D3DXVECTOR3(0, 0, 1), 0.0f);//’e‚ªZŽ²‰ñ“]‚·‚é
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	SetAlive(true);
-	m_pModel->m_alpha = 1.0f;//“§–¾“x
-	//Shotflag = false;
-	//m_Hitflag = false;
+	m_pModel->m_alpha = 0.75f;//“§–¾“x
+	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::GOLD];
 	m_radius = 1.0f;
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -40,8 +40,6 @@ void Bullet::Update()
 }
 void Bullet::Draw()
 {
-	m_pModel->m_luminance = 12.5f;
-	SetUpTechnique();
 	CGameObject::Draw();
 }
 

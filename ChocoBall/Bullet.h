@@ -23,8 +23,15 @@ public:
 	void Draw()override;
 	void SetUpTechnique()override
 	{
-		m_pRender->SetUpTechnique("NotNormalMapNonAnimationFresnelBloomTec");
+#ifdef NOT_EM
+		m_pRender->SetUpTechnique("Boneless_Tex_Lim");
+#else
+		m_pRender->SetUpTechnique("Boneless_Tex_Fresnel");
+#endif
 	};
+	void EM_SetUpTechnique()override{
+		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Lim");
+	}
 	void OnDestroy();
 	void Build();
 	void SetDir(D3DXVECTOR4 dir){

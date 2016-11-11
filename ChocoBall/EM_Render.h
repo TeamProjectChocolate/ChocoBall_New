@@ -16,11 +16,33 @@ public:
 	inline void SetEnable(bool flg){
 		m_isEnable = flg;
 	}
+	LPDIRECT3DCUBETEXTURE9 GetCubeTex(){
+		return m_pCubeTex;
+	}
 private:
 	CRenderTarget m_RenderTarget;
 	LPDIRECT3DCUBETEXTURE9 m_pCubeTex;
+	LPDIRECT3DSURFACE9 m_pZMap;
 	LPDIRECT3DSURFACE9 m_pCubeSurfaces[HEXA];
 	CCamera m_Cameras[HEXA];
 	bool m_isEnable;
 };
 
+// òZñ ëÃÇªÇÍÇºÇÍÇÃñ Çï`âÊÇ∑ÇÈç€ÇÃÉJÉÅÉâÇÃå¸Ç´ÅB
+static D3DXVECTOR3 lookAt[6] = {
+	D3DXVECTOR3(1.0f, 0.0f, 0.0f), // +X
+	D3DXVECTOR3(-1.0f, 0.0f, 0.0f), // -X
+	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +Y
+	D3DXVECTOR3(0.0f, -1.0f, 0.0f), // -Y
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f), // +Z
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f) // -Z
+};
+// òZñ ëÃÇÃÇªÇÍÇºÇÍÇÃñ Çï`âÊÇ∑ÇÈç€ÇÃè„ï˚å¸(è„ñ Ç∆â∫ñ ÇÃï`âÊÇÕì¡Ç…íçà”)ÅB
+static D3DXVECTOR3 up[6] = {
+	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +X(Up = +Y)
+	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // -X(Up = +Y)
+	D3DXVECTOR3(0.0f, 0.0f, -1.0f), // +Y(Up = -Z)
+	D3DXVECTOR3(0.0f, 0.0f, 1.0f), // -X(Up = +Z)
+	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +Z(Up = +Y)
+	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // -Z(Up = +Y)
+};

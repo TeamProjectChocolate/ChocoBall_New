@@ -3,11 +3,16 @@
 #include "Effect.h"
 #include "RenderContext.h"
 #include "Camera.h"
+#include "EM_SamplingRender.h"
+#include "EM_SamplingRender_I.h"
 
 CGameObject::~CGameObject()
 {
 	if (m_UseModel){
 		SAFE_DELETE(m_pModel);
+	}
+	if (m_HasMyLight) {
+		SAFE_DELETE(m_pLight);
 	}
 }
 
@@ -15,6 +20,27 @@ void CGameObject::Initialize(){
 	m_pModel->Initialize();
 	SetRenderState();
 	m_pRender = SINSTANCE(CRenderContext)->SelectRender(m_RenderingState,m_pRenderName,false,m_pModel);
+#ifdef NOT_EM
+#else
+	EM_SetRenderState();
+	m_pEMSamplingRender = SINSTANCE(CRenderContext)->SelectRender(m_EMRenderingState, m_pRenderName, false, m_pModel);
+#endif
+}
+
+void CGameObject::InitInstancing(int num,bool isNull){
+	if (isNull){
+		if (static_cast<CInstancingRender*>(m_pRender)->GetWorldMatrixBuffer() == nullptr){
+			static_cast<CInstancingRender*>(m_pRender)->CreateMatrixBuffer(num);
+		}
+	}
+	else{
+		static_cast<CInstancingRender*>(m_pRender)->CreateMatrixBuffer(num);
+	}
+#ifdef NOT_EM
+#else
+	static_cast<CEM_SamplingRender_I*>(m_pEMSamplingRender)->CreateMatrixBuffer(num);
+#endif
+
 }
 
 void CGameObject::Update(){
@@ -24,11 +50,28 @@ void CGameObject::Update(){
 void CGameObject::Draw(){
 	SetUpTechnique();
 	m_pRender->SetModelData(m_pModel);
+	m_pRender->SetMyLight(m_pLight);
 	m_pRender->Draw();
 }
 
 void CGameObject::DrawShadow(CCamera* camera){
+	SetUpShadowTechnique();
 	m_pShadowRender->SetShadowCamera(camera);
 	m_pShadowRender->SetModelData(m_pModel);
+	Is_DrawShadow_Use_Horizon();
 	m_pShadowRender->Draw();
+}
+
+void CGameObject::Draw_EM(CCamera* camera){
+#ifdef NOT_EM
+#else
+	EM_SetUpTechnique();
+	static_cast<CEM_SamplingRender*>(m_pEMSamplingRender)->SetCamera(camera);
+	m_pEMSamplingRender->SetModelData(m_pModel);
+	m_pEMSamplingRender->Draw();
+#endif
+}
+
+void CGameObject::Is_DrawShadow_Use_Horizon(){
+	static_cast<CShadowSamplingRender*>(m_pShadowRender)->SetIsHorizon(false);
 }

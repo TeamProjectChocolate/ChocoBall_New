@@ -10,6 +10,11 @@ void CChocoBall::Initialize(D3DXVECTOR3 Spos, D3DXVECTOR3 Epos)
 	m_pModel->SetFileName("image/ball.x");
 	CGameObject::Initialize();
 
+#ifdef NOT_INSTANCING
+ 	m_pModel->m_alpha = 1.0f;
+	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+#endif
 	m_transform.position = Spos; //D3DXVECTOR3(0.0f, 3.0f, 0.0f);
 	SetVector(m_transform.position, Epos);
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
@@ -61,8 +66,32 @@ void CChocoBall::Update()
 	CGameObject::Update();
 }
 
+void CChocoBall::BeginDraw()
+{
+	SetUpTechnique();
+	UINT numPass;
+	m_pRender->GetEffect()->Begin(&numPass/*テクニック内に定義されているパスの数が返却される*/, 0);
+	m_pRender->GetEffect()->BeginPass(0);	//パスの番号を指定してどのパスを使用するか指定
+
+	// 現在のプロジェクション行列とビュー行列をシェーダーに転送
+	SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pRender->GetEffect());
+	SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pRender->GetEffect());
+	// 視点をシェーダーに転送
+	m_pRender->GetEffect()->SetVector("EyePosition", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+
+
+	SINSTANCE(CShadowRender)->SetShadowCamera(m_pRender->GetEffect());
+}
+void CChocoBall::EndDraw()
+{
+	m_pRender->GetEffect()->EndPass();
+	m_pRender->GetEffect()->End();
+}
+
 void CChocoBall::Draw()
 {
+	m_pRender->SetModelData(m_pModel);
+	m_pRender->Draw();
 }
 
 void CChocoBall::OnDestroy()

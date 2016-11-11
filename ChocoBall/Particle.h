@@ -22,10 +22,20 @@ public:
 			m_pRender->SetUpTechnique("ColorTexPrimAdd");
 		}
 	}
+	void EM_SetUpTechnique()override{
+		if (m_alphaBlendMode == 0){
+			m_pEMSamplingRender->SetUpTechnique("BasicTec");
+		}
+		else{
+			m_pEMSamplingRender->SetUpTechnique("ColorTexPrimAdd");
+		}
+	}
+
 
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Draw_EM(CCamera*)override;
 	void SetupMatrices();
 	void InitParticle(CRandom&, CCamera&, const SParticleEmitParameter*, const D3DXVECTOR3&,D3DXVECTOR3);
 	// パーティクルに力を加える関数

@@ -16,6 +16,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Move()override;
 	void Setradius(float radius);
 	void SetInitPosition(D3DXVECTOR3 pos);
 	void EnemyBulletShot();
@@ -30,20 +31,13 @@ public:
 private:
 	CInterface*	m_pInput;
 	float			m_radius;
-	D3DXVECTOR3		m_moveSpeed;		//移動速度。
 	D3DXVECTOR3		m_initPosition;		//初期座標。
-	float			m_eCurrentAngleY;	//現在の方向
-	float			m_eTargetAngleY;		//向きたい方向
 	float			m_eTurnSpeed;		//回転速度
-	bool			isTurn;				//回転フラグ
 	//CRigidbody		m_Rigidbody;
-	bool			flg;
 	bool			m_Hitflag;
 	bool			Enemyshotflag;			//弾が発射されているのかのフラグ
-	float			m_currentAngleY;	//現在の方向
 	int				time;
 
-	CTurn			m_Turn;				//CTurnのインスタンス
 	CCourceDef		m_Courcedef;
 	vector<CEnemyBullet*> m_bullets;
 	vector<CEnemyBullet*> m_Deletebullets;	// 削除リスト
@@ -51,16 +45,7 @@ private:
 	D3DXMATRIX Rot;
 	D3DXVECTOR4 RV1;
 
+	D3DXVECTOR3 m_EnemyToPlayerVec;
+
 	CPlayer* m_pPlayer;
-
-
-	D3DXVECTOR3		m_V0;
-	float V0;
-	D3DXVECTOR3		V1;
-	D3DXVECTOR3 m_V1;
-	D3DXVECTOR3		V2;
-	D3DXVECTOR3		m_V2;
-	D3DXVECTOR3 m_V3;
-	float V3;
-	D3DXVECTOR3 m_Up;
 };

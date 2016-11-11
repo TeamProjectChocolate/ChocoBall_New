@@ -10,9 +10,11 @@ public:
 	IMAGE2D* LoadTextureFile(LPCSTR);
 	void Add3D(LPCSTR,CSkinModelData*);
 	IMAGE2D* Find2DImage(LPCSTR);
-	IMAGE3D* Find3DImage(LPCSTR);
+	CSkinModelData* Find3DImage(LPCSTR);
+	void Push_CloneModelData(CSkinModelData*);
 private:
-	vector<IMAGE3D*> m_ModelList;
+	vector<IMAGE3D*> m_OriginalMeshDataList;
+	vector<CSkinModelData*> m_CloneModelDatas;
 	vector<IMAGE2D*> m_ImageList;
 
 	//vector‚É“o˜^‚³‚ê‚½—v‘f‚ğ‚·‚×‚Äíœ‚·‚éŠÖ”

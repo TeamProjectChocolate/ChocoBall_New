@@ -34,8 +34,12 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 {
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/BR.x");
-	SetRenderState();
 	CGameObject::Initialize();
+#ifdef NOT_INSTANCING
+	m_pModel->m_alpha = 1.0f;
+	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+#endif
 	m_transform.position = pos; //D3DXVECTOR3(0.0f, 3.0f, 0.0f);
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
@@ -54,6 +58,9 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 
 	SetAlive(true);
 
+#ifdef NOT_INSTANCING
+	SINSTANCE(CShadowRender)->Entry(this);
+#endif
 	//SetAlpha(1.0f);
 	//m_IsIntersect.CollisitionInitialize(&m_transform.position, m_radius);
 	//m_hShaderTecnique = m_pEffect->GetTechniqueByName("NotNormalMapNonAnimationFresnelTec");
@@ -105,6 +112,8 @@ void CBlock::Update()
 
 void CBlock::Draw()
 {
+	m_pRender->SetModelData(m_pModel);
+	m_pRender->Draw();
 }
 
 void CBlock::BeginDraw()

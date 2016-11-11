@@ -153,6 +153,8 @@ void CDofRender::Draw()
 */
 void CDofRender::Initialize()
 {
+#ifdef NOT_DOF
+#else
 	int w = SINSTANCE(CRenderContext)->GetWindowWidth();
 	int h = SINSTANCE(CRenderContext)->GetWindowHeight();
 
@@ -177,6 +179,7 @@ void CDofRender::Initialize()
 
 	m_isEnable = true;
 	m_UsePintoObject = true;
+#endif
 };
 
 void CDofRender::MathPinto(){
