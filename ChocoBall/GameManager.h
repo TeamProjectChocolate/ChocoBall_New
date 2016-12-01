@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "Scene.h"
-
+#include "tkStopwatch.h"
 #include "Assert.h"
 
 #define SCENENAME_MAX 255
@@ -79,7 +79,7 @@ private:
 	char m_NowSceneName[SCENENAME_MAX + 1];
 	char m_NextSceneName[SCENENAME_MAX + 1];
 	CAudio* m_pAudio;
-
+private:
 	//vectorに登録された要素をすべて削除する関数
 	//※デストラクタにて呼び出される
 	void DeleteAll();

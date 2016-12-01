@@ -51,9 +51,9 @@ public:
 	{
 		::QueryPerformanceFrequency( (LARGE_INTEGER*)&freq );
 	    ::QueryPerformanceCounter( (LARGE_INTEGER*)&end );
-	    elapsedMicro = double(end - begin) / freq;
+	    elapsed = double(end - begin) / freq;
 	    elapsedMill = elapsedMicro * 1000.0;
-	    elapsed = elapsedMill * 1000.0;
+	    elapsedMicro = elapsedMill * 1000.0;
 	}
 	/*!
 	 *@brief	Œo‰ßŽžŠÔ‚ðŽæ“¾(’PˆÊ:•b)

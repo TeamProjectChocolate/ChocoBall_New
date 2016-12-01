@@ -6,6 +6,13 @@
 
 CObjectManager* CObjectManager::m_instance = nullptr;
 
+void CObjectManager::OnCreate() {
+	// óDêÊìxÇÃêîÇæÇØîzóÒÇê∂ê¨ÅB
+	for (int idx = 0; idx < PRIORTY::MAX_PRIORTY; idx++) {
+		m_GameObjects.push_back(vector<OBJECT_DATA*>());
+	}
+}
+
 void CObjectManager::AddObject(CGameObject* Object, LPCSTR ObjectName, PRIORTY priorty,bool common){
 	if (priorty > PRIORTY::MAX_PRIORTY){
 		priorty = PRIORTY::MAX_PRIORTY;
@@ -26,17 +33,19 @@ void CObjectManager::Add(CGameObject* GameObject,LPCSTR ObjectName, PRIORTY prio
 	CH_ASSERT(strlen(ObjectName) < OBJECTNAME_MAX);
 	strcpy(Obj->objectname, ObjectName);		// ÉRÉsÅ[ÇπÇ∏Ç…ÉAÉhÉåÉXÇï€éùÇ≥ÇπÇÈÇ∆ÅAÉçÅ[ÉJÉãïœêîÇ™ìnÇ≥ÇÍÇΩç€Ç…ÉNÉâÉbÉVÉÖÇ∑ÇÈ
 	Obj->object = GameObject;
-	Obj->priority = priority;
-	m_GameObjects.push_back(Obj);
+	m_GameObjects[priority].push_back(Obj);
 }
 
 void CObjectManager::DeleteGameObject(LPCSTR ObjectName){
 	int size = m_GameObjects.size();
 	for (int idx = 0; idx < size; idx++){
-		if (!strcmp(m_GameObjects[idx]->objectname, ObjectName)){
-			m_GameObjects[idx]->object->OnDestroy();
-			m_DeleteObjects.push_back(m_GameObjects[idx]->object);
-			return;
+		int size2 = m_GameObjects[idx].size();
+		for(int idx2 = 0;idx2 < size2;idx2++){
+			if (!strcmp(m_GameObjects[idx][idx2]->objectname, ObjectName)) {
+				m_GameObjects[idx][idx2]->object->OnDestroy();
+				m_DeleteObjects.push_back(m_GameObjects[idx][idx2]->object);
+				return;
+			}
 		}
 	}
 	MessageBox(NULL, "ÉIÉuÉWÉFÉNÉgÇ™ìoò^Ç≥ÇÍÇƒÇ¢Ç‹ÇπÇÒ", 0, 0);
@@ -52,81 +61,81 @@ void CObjectManager::DeleteGameObjectImmediate(CGameObject* pObject)
 {
 	pObject->OnDestroy();
 	vector<OBJECT_DATA*>::iterator itr;
-	for (itr = m_GameObjects.begin(); itr != m_GameObjects.end(); itr++){
-		if (pObject == (*itr)->object){
-			if ((*itr)->object->GetManagerNewFlg()){
-				SAFE_DELETE(pObject);
+	int size = m_GameObjects.size();
+	for(int idx = 0;idx < size;idx++){
+		for (itr = m_GameObjects[idx].begin(); itr != m_GameObjects[idx].end(); itr++) {
+			if (pObject == (*itr)->object) {
+				if ((*itr)->object->GetManagerNewFlg()) {
+					SAFE_DELETE(pObject);
+				}
+				itr = m_GameObjects[idx].erase(itr);
+				break;
 			}
-			itr = m_GameObjects.erase(itr);
-			break;
 		}
 	}
 }
 void CObjectManager::CleanManager(){
 	int size = m_GameObjects.size();
 	for (int idx = 0; idx < size; idx++){
-		if (!m_GameObjects[idx]->object->GetCommon()){
-			m_GameObjects[idx]->object->OnDestroy();
-			m_DeleteObjects.push_back(m_GameObjects[idx]->object);
+		int size2 = m_GameObjects[idx].size();
+		for (int idx2 = 0; idx2 < size2; idx2++) {
+			if (!m_GameObjects[idx][idx2]->object->GetCommon()) {
+				m_GameObjects[idx][idx2]->object->OnDestroy();
+				m_DeleteObjects.push_back(m_GameObjects[idx][idx2]->object);
+			}
 		}
 	}
 }
 
 void CObjectManager::ExcuteDeleteObjects(){
-	vector<OBJECT_DATA*>::iterator itr;
-	vector<CGameObject*>::iterator itr2;
-	for (int priorty = PRIORTY::MAX_PRIORTY; priorty >= 0; priorty--){
-		for (itr = m_GameObjects.begin(); itr != m_GameObjects.end();){
-			bool inclimentFlg = true;
-			if (priorty == (*itr)->priority){
-				for (itr2 = m_DeleteObjects.begin(); itr2 != m_DeleteObjects.end();){
-					if ((*itr2) == (*itr)->object){
-						if ((*itr)->object->GetManagerNewFlg()){
+		vector<OBJECT_DATA*>::iterator itr;
+		vector<CGameObject*>::iterator itr2;
+		for (int priorty = PRIORTY::MAX_PRIORTY - 1; priorty >= 0; priorty--) {
+			for (itr = m_GameObjects[priorty].begin(); itr != m_GameObjects[priorty].end();) {
+				bool inclimentFlg = true;
+				for (itr2 = m_DeleteObjects.begin(); itr2 != m_DeleteObjects.end();) {
+					if ((*itr2) == (*itr)->object) {
+						if ((*itr)->object->GetManagerNewFlg()) {
 							SAFE_DELETE((*itr)->object);
 							SAFE_DELETE((*itr));
 						}
-						itr = m_GameObjects.erase(itr);
+						itr = m_GameObjects[priorty].erase(itr);
 						itr2 = m_DeleteObjects.erase(itr2);
 						inclimentFlg = false;
 						break;
 					}
-					else{
+					else {
 						itr2++;
 					}
 				}
-			}
-			int size = m_DeleteObjects.size();
-			if (size == 0){
-				return;
-			}
-			if (inclimentFlg){
-				itr++;
+				int size = m_DeleteObjects.size();
+				if (size == 0) {
+					return;
+				}
+				if (inclimentFlg) {
+					itr++;
+				}
 			}
 		}
 	}
-}
 
 void CObjectManager::Intialize(){
-	int size = m_GameObjects.size();
-	for (int priorty = 0; priorty <= PRIORTY::MAX_PRIORTY; priorty++){
+	for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++){
+		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
-			if (m_GameObjects[idx]->priority == priorty){
-				if (!(m_GameObjects[idx]->object->GetOriginal())){
-					m_GameObjects[idx]->object->Initialize();
+				if (!(m_GameObjects[priorty][idx]->object->GetOriginal())){
+					m_GameObjects[priorty][idx]->object->Initialize();
 				}
-			}
 		}
 	}
 }
 
 void CObjectManager::Update(){
-	int size = m_GameObjects.size();
-	for (short priorty = 0; priorty <= PRIORTY::MAX_PRIORTY;priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+	for (short priorty = 0; priorty < PRIORTY::MAX_PRIORTY;priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
-			if (m_GameObjects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›çXêV
-				if (m_GameObjects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇçXêV
-					m_GameObjects[idx]->object->Update();
-				}
+			if (m_GameObjects[priorty][idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›çXêV
+					m_GameObjects[priorty][idx]->object->Update();
 			}
 		}
 	}
@@ -135,23 +144,19 @@ void CObjectManager::Update(){
 void CObjectManager::Draw(){
 	SINSTANCE(CRenderContext)->RenderingStart();
 
-	int size = m_GameObjects.size();
-
 	// 3DÇÃï`âÊ
 	{
 		// äÓñ{ï`âÊ
 		for (short priorty = 0; priorty < PRIORTY::PARTICLE; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+			int size = m_GameObjects[priorty].size();
 			for (int idx = 0; idx < size; idx++){
-
-				if (m_GameObjects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
-					if (m_GameObjects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇï`âÊ
+				if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
 #ifdef NOT_DOF
 #else
-						m_GameObjects[idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
-						m_GameObjects[idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
+					m_GameObjects[priorty][idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
+					m_GameObjects[priorty][idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
 #endif
-						m_GameObjects[idx]->object->Draw();
-					}
+					m_GameObjects[priorty][idx]->object->Draw();
 				}
 			}
 		}
@@ -162,17 +167,16 @@ void CObjectManager::Draw(){
 		}
 		// ÉpÅ[ÉeÉBÉNÉãï`âÊ
 		for (short priorty = PRIORTY::PARTICLE; priorty < PRIORTY::OBJECT2D; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+			int size = m_GameObjects[priorty].size();
 			for (int idx = 0; idx < size; idx++){
 
-				if (m_GameObjects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
-					if (m_GameObjects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇï`âÊ
+				if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
 #ifdef NOT_DOF
 #else
-						m_GameObjects[idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
-						m_GameObjects[idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
+					m_GameObjects[priorty][idx]->object->SetPintoWorld(SINSTANCE(CRenderContext)->GetDofRender()->GetPintWorld());
+					m_GameObjects[priorty][idx]->object->SetPintoPos(SINSTANCE(CRenderContext)->GetDofRender()->GetPintoObject()->GetPos());
 #endif
-						m_GameObjects[idx]->object->Draw();
-					}
+					m_GameObjects[priorty][idx]->object->Draw();
 				}
 			}
 		}
@@ -183,22 +187,23 @@ void CObjectManager::Draw(){
 	SINSTANCE(CRenderContext)->SetRenderingBuffer();
 
 	// 2DÇÃï`âÊ
-	for (short priorty = PRIORTY::OBJECT2D; priorty <= PRIORTY::MAX_PRIORTY; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+	for (short priorty = PRIORTY::OBJECT2D; priorty < PRIORTY::MAX_PRIORTY; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
-
-			if (m_GameObjects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
-				if (m_GameObjects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇï`âÊ
-					m_GameObjects[idx]->object->Draw();
-				}
+			if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
+				m_GameObjects[priorty][idx]->object->Draw();
 			}
 		}
 	}
 }
 
 void CObjectManager::DeleteAll(){
-	for (int idx = 0, size = m_GameObjects.size(); idx < size; idx++){
-		SAFE_DELETE(m_GameObjects[idx]->object);
-		SAFE_DELETE(m_GameObjects[idx]);
+	for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++) {
+		for (int idx = 0, size = m_GameObjects.size(); idx < size; idx++) {
+			SAFE_DELETE(m_GameObjects[priorty][idx]->object);
+			SAFE_DELETE(m_GameObjects[priorty][idx]);
+		}
+		m_GameObjects[priorty].clear();
 	}
 	m_GameObjects.clear();
 }

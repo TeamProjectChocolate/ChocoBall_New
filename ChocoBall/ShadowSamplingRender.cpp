@@ -170,6 +170,8 @@ void CShadowSamplingRender::DrawHorizon() {
 	LPDIRECT3DINDEXBUFFER9 ib;
 	container->MeshData.pMesh->GetIndexBuffer(&ib);
 
+	m_pEffect->SetFloat("g_PlayerHorizon", SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("TEST3D"))->GetPos().y - 0.5f);
+
 	// ストライドを取得。
 	// ※ストライドは1頂点のサイズを示す。
 	// ※FVFは本来、固定機能描画を使用する際に必要となるが、ここではストライドを求めるために使用する。
@@ -181,16 +183,18 @@ void CShadowSamplingRender::DrawHorizon() {
 	//(*graphicsDevice()).SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 
 	(*graphicsDevice()).SetVertexDeclaration(m_VertexDecl_Override);
-	(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);
-	(*graphicsDevice()).SetStreamSource(1, m_pHorizonBuffer, 0,sizeof(float));
+	//(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);
+	//(*graphicsDevice()).SetStreamSource(1, m_pHorizonBuffer, 0,sizeof(float));
 
 	// 境界線用のバッファーに値をコピー。
-	this->CopyBuffer();
+	//this->CopyBuffer();
 
 	// インデックスバッファをセット。
 	(*graphicsDevice()).SetIndices(ib);
 
 	m_pEffect->CommitChanges();
+	int vert = container->MeshData.pMesh->GetNumVertices();
+	int numFace = container->MeshData.pMesh->GetNumFaces();
 	(*graphicsDevice()).DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, container->MeshData.pMesh->GetNumVertices(), 0, container->MeshData.pMesh->GetNumFaces());
 
 	// ここでバッファーを削除しないとメモリリークが発生する。
@@ -218,7 +222,7 @@ void CShadowSamplingRender::ActivateHorizon() {
 				// 頂点宣言を拡張。
 				// ※stream要素はコースラインの高さ用のバッファを使用するため1番。
 				// ※UsageIndex要素はTEXCOORD0は既に使用されているため1を使用する。
-				DeclElement[ElementIdx] = { 1,sizeof(float),D3DDECLTYPE_FLOAT1,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,1 };
+				DeclElement[ElementIdx] = { 1,0,D3DDECLTYPE_FLOAT1,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,1 };
 				DeclElement[ElementIdx + 1] = D3DDECL_END();	// 頂点宣言の終端(番兵)を設定(正確には、頂点宣言の最後の要素を初期化している)。
 				break;
 			}

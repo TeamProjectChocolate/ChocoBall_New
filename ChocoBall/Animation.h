@@ -62,6 +62,9 @@ public:
 	{
 		return m_pAnimController;
 	}
+	bool GetIsInterpolate() {
+		return m_isInterpolate;
+	}
 private:
 	// アニメーション用メンバ変数
 	ID3DXAnimationController* m_pAnimController;	// アニメーションコントローラ

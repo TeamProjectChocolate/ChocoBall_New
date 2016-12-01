@@ -18,6 +18,7 @@
 #include "StageManager.h"
 #include "tkStopwatch.h"
 #include "Icon.h"
+#include "DirectFont.h"
 
 #define MAX_LOADSTRING 100
 
@@ -242,12 +243,15 @@ void Initialize()
 	CShadowRender::CreateInstance();		// シングルトンクラス:影生成するオブジェクト管理クラスのインスタンスを生成
 	SINSTANCE(CShadowRender)->Initialize();
 	CObjectManager::CreateInstance();		// シングルトンクラス:オブジェクト管理クラスのインスタンスを生成
+	SINSTANCE(CObjectManager)->OnCreate();	// オブジェクトマネージャー初期化。
 	CInputManager::CreateInstance();		// シングルトンクラス:入力インタフェース管理クラスのインスタンスを生成
 	CRenderContext::CreateInstance();		// シングルトンクラス:現在設定中カメラの管理クラスのインスタンスを生成
 	SINSTANCE(CRenderContext)->CreateRenderingTerget();
 	CStageManager::CreateInstance();		// シングルトンクラス:ステージ管理クラスのインスタンスを生成
   	SINSTANCE(CInputManager)->DI_Init();
 	SINSTANCE(CInputManager)->CreateInput(g_hWnd);
+	CDirectFont::CreateInstance();		// シングルトンクラス:文字出力クラスのインスタンスを生成。
+	SINSTANCE(CDirectFont)->Initialize();
 	CAudio* pAudio = new CAudio;
 	pAudio->Initialize("Audio/Audio.xgs", "Audio/Audio.xwb", "Audio/Audio.xsb");
 	SINSTANCE(CStageManager)->SetAudio(pAudio);
@@ -259,8 +263,12 @@ void Initialize()
 	SINSTANCE(CGameManager)->SetNextScene();
 }
 
+CStopwatch g_Watch;
+string g_text;
+
 void Update()
 {
+	g_Watch.Start();
 	SINSTANCE(CInputManager)->Update();
 	SINSTANCE(CGameManager)->Update();		//シーン更新
 }
@@ -274,8 +282,15 @@ void Draw()
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, true);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 		SINSTANCE(CGameManager)->Draw();		// シーン描画
+		SINSTANCE(CDirectFont)->Draw(g_text.c_str(), 730, 20);
 		(*graphicsDevice()).EndScene();
 	}
-	
+
 	(*graphicsDevice()).Present(NULL, NULL, NULL, NULL);
+
+	g_Watch.Stop();
+	double counter = g_Watch.GetElapsed();
+	counter = 1.0 / counter;
+	g_text = "FPS = ";
+	g_text = g_text + to_string(counter);
 }

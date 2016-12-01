@@ -36,6 +36,7 @@
 #include <vector>
 #include <list>
 #include <memory>
+#include <locale.h>
 
 
 #define SAFE_RELEASE(p)			{ if(p) { (p)->Release(); (p) = NULL; } }	//インスタンスリリース

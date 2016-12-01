@@ -12,14 +12,17 @@ void GenelateChocoBall(CCBManager* mgr, btGhostObject* m_hitCollisionObject,CAud
 struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 {
 	bool isHit;
-	D3DXVECTOR3 hitPos;
+	D3DXVECTOR3 hitPos = D3DXVECTOR3(0.0f, -FLT_MAX, 0.0f);
+	D3DXVECTOR3 hitNormal = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	D3DXVECTOR3 startPos;
-	float fMin;
+	//float fMin;
+	float dist = FLT_MAX;
+	CAudio* m_pAudio;
 
 	SweepResultGround()
 	{
 		isHit = false;
-		fMin = FLT_MAX;
+		//fMin = FLT_MAX;
 	}
 
 	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
@@ -45,34 +48,51 @@ struct SweepResultGround : public btCollisionWorld::ConvexResultCallback
 			return 0.0f;
 		}
 
-		D3DXVECTOR3 hitPointNormal;
-		hitPointNormal.x = convexResult.m_hitNormalLocal.x();
-		hitPointNormal.y = convexResult.m_hitNormalLocal.y();
-		hitPointNormal.z = convexResult.m_hitNormalLocal.z();
-		float d = D3DXVec3Dot(&hitPointNormal, &CVec3Up);
-		if (d < 0.0f) {
-			//当たってない。
-			return 0.0f;
+		// 衝突店の法線を引っ張ってくる。
+		D3DXVECTOR3 hitPointNormal = convexResult.m_hitNormalLocal;
+		// 上方向と法線のなす角度を算出。
+		float angle = D3DXVec3Dot(&hitPointNormal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+		angle = fabsf(acosf(angle));
+		if (angle < fPI * 0.3f) {	// 地面の傾斜が54度より小さい場合地面とみなす。
+			// 衝突している。
+			isHit = true;
+			D3DXVECTOR3 hitPosTmp = convexResult.m_hitPointLocal;
+			// 衝突点の距離を求める。
+			D3DXVECTOR3 vDist;
+			vDist = hitPosTmp - startPos;
+			float fDistTmp = D3DXVec3Length(&vDist);
+			if (dist > fDistTmp) {
+				// この衝突点のほうが近いので、最も近い衝突点を更新する。
+				hitPos = hitPosTmp;
+				hitNormal = static_cast<D3DXVECTOR3>(convexResult.m_hitNormalLocal);
+				dist = fDistTmp;
+			}
 		}
-		if (acosf(d) > fPI * 0.2) {
-			//ホントは地面かどうかとかの属性を見るのがベストなんだけど、今回は角度で。
-			return 0.0f;
-		}
-		isHit = true;
-		D3DXVECTOR3 hitPosTmp;
-		hitPosTmp.x = convexResult.m_hitPointLocal.x();
-		hitPosTmp.y = convexResult.m_hitPointLocal.y();
-		hitPosTmp.z = convexResult.m_hitPointLocal.z();
-		D3DXVECTOR3 diff;
-		diff = hitPosTmp - startPos;
-		float len = D3DXVec3Length(&diff);
-		if (len < fMin){
-			hitPos = hitPosTmp;
-			fMin = len;
-		}
-		return 0.0f;
+		return 0;
+
+	//	float d = D3DXVec3Dot(&hitPointNormal, &CVec3Up);
+	//	if (d < 0.0f) {
+	//		//当たってない。
+	//		return 0.0f;
+	//	}
+	//	if (acosf(d) > fPI * 0.2) {
+	//		//ホントは地面かどうかとかの属性を見るのがベストなんだけど、今回は角度で。
+	//		return 0.0f;
+	//	}
+	//	isHit = true;
+	//	D3DXVECTOR3 hitPosTmp;
+	//	hitPosTmp.x = convexResult.m_hitPointLocal.x();
+	//	hitPosTmp.y = convexResult.m_hitPointLocal.y();
+	//	hitPosTmp.z = convexResult.m_hitPointLocal.z();
+	//	D3DXVECTOR3 diff;
+	//	diff = hitPosTmp - startPos;
+	//	float len = D3DXVec3Length(&diff);
+	//	if (len < fMin){
+	//		hitPos = hitPosTmp;
+	//		fMin = len;
+	//	}
+	//	return 0.0f;
 	}
-	CAudio* m_pAudio;
 };
 struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
 {
@@ -336,27 +356,39 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 #else
 		start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
 #endif
-		D3DXVECTOR3 newPos;
+		D3DXVECTOR3 endPos;
 		SweepResultGround callback;
 		callback.m_pAudio = m_pAudio;
 		callback.startPos = *position;
 		if (fabsf(addPos.y) > 0.0001f) {
-			newPos = *position;
+			endPos = *position;
 #ifdef ORIGIN_CENTER
-			newPos.y += addPos.y;
+			endPos.y += addPos.y;
 #else
 			newPos.y += addPos.y + m_radius;
 #endif
 			if (m_Jumpflag)
 			{
 				//ジャンプ中
-				end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
+				if (addPos.y > 0.0f) {
+					// 上昇中。
+					// 上昇中でもXZに移動した結果めり込んでいる可能性があるので下を調べる。
+					endPos.y -= addPos.y * 0.01f;
+				}
+				else {
+					// 落下している場合はそのまま下を調べる。
+					endPos.y += addPos.y;
+				}
+				//end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
 			}
 			else
 			{
-				//ジャンプ中以外は地面にプレイヤーをくっ付ける
-				end.setOrigin(btVector3(newPos.x, newPos.y - 1.0f, newPos.z));
+				// 地面上にいない場合は1m下を見る。
+				endPos.y -= 1.0f;
+				////ジャンプ中以外は地面にプレイヤーをくっ付ける
+				//end.setOrigin(btVector3(newPos.x, newPos.y - 1.0f, newPos.z));
 			}
+			end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 
 			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(m_collisionShape, start, end, callback);
 		}

@@ -4,6 +4,7 @@
 #include "ShadowRender.h"
 #include "RenderContext.h"
 #include "Audio.h"
+#include "DirectFont.h"
 
 CGameManager* CGameManager::m_instance = nullptr;
 

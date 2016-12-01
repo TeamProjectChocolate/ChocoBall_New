@@ -66,18 +66,26 @@ public:
 		return BLOCK_W;
 	}
 	void SetPintoWorld(const D3DXMATRIX& mat)override{
+#ifdef NOT_DOF
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
 				m_blocks[row][col].SetPintoWorld(mat);
 			}
 		}
+#else
+		m_pModel->SetPintoWorld(mat);
+#endif
 	}
 	void SetPintoPos(const D3DXVECTOR3& pos)override{
+#ifdef NOT_DOF
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
 				m_blocks[row][col].SetPintoPos(pos);
 			}
 		}
+#else
+		m_pModel->SetPintoPos(pos);
+#endif
 	}
 private:
 	CBlock	m_blocks[BUILD_H][BUILD_W];	//•Ç‚Ì”z—ñ

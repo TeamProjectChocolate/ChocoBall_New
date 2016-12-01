@@ -44,7 +44,7 @@ private:
 	CCamera* m_pCamera;
 	float m_IntervalCounter;
 protected:
-	CParticleEmitter* m_pEmitter;
+	CParticleEmitter* m_pEmitter = nullptr;
 	float m_JetTime;
 	PARTICLE_TYPE m_ParticleType;
 	char m_SoundName[FILENAME_MAX];

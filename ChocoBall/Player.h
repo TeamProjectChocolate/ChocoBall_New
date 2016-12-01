@@ -120,6 +120,7 @@ private:
 	// プレイヤー制御関連。
 	MOVE_STATE m_State;
 	ANIMATION_STATE m_AnimState;
+	float m_AnimInterpolation;	// アニメーションの補間時間。
 	bool			m_ShotFlg;			//弾が発射されているのかのフラグ
 	// プレイヤーアクション制御関連。
 	float m_NowJumpPower;	// ジャンプ力。
@@ -142,6 +143,12 @@ private:
 	JUMP_STATE m_JumpState;
 	float m_JumpEndInterval;
 	float m_JumpEndCounter;
+	float m_JumpStartInterval;
+	float m_JumpStartCounter;
+	float m_RunningCounter;
+	float m_RunningRange;
+	bool m_IsActive_X;
+	bool m_IsActive_Y;
 	// 当たり判定関連。
 	EnemyBase* m_NearEnemy = nullptr;
 	bool            LockOnflag;			//ロックオンフラグ

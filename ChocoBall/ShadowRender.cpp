@@ -4,6 +4,7 @@
 #include "GraphicsDevice.h"
 #include "RenderContext.h"
 #include "ShadowSamplingRender_I.h"
+#include "PixTag.h"
 
 
 CShadowRender* CShadowRender::m_instance = nullptr;
@@ -26,8 +27,8 @@ void CShadowRender::Initialize(){
 		else{
 			h_num++;
 		}
-		m_size[i] = D3DXVECTOR2(WINDOW_WIDTH >> w_num, WINDOW_HEIGHT >> h_num);
-		m_BlurTarget[i].CreateRenderingTarget(/*WINDOW_WIDTH*/TexSize >> w_num, /*WINDOW_HEIGHT*/TexSize >> h_num, D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
+		m_size[i] = D3DXVECTOR2(TexSize >> w_num, TexSize >> h_num);
+		m_BlurTarget[i].CreateRenderingTarget(static_cast<int>(m_size[i].x), static_cast<int>(m_size[i].y), D3DFMT_D16, D3DMULTISAMPLE_NONE, 0, TRUE, 1, D3DUSAGE_RENDERTARGET, D3DFMT_G16R16F, D3DPOOL_DEFAULT);
 	}
 #endif
 	m_camera.Initialize();
@@ -99,6 +100,10 @@ void CShadowRender::Draw(){
 #ifdef NOT_VSM
 #else
 	// ブラーをかける(5点ブラー)
+	CPixTag tag;
+	LPCWSTR name = L"VSMBlur";
+	tag.Start(name);
+
 	m_Primitive = SINSTANCE(CRenderContext)->GetPrimitive();
 	{
 		// Xブラー
@@ -149,6 +154,7 @@ void CShadowRender::Draw(){
 		m_pEffect->EndPass();
 		m_pEffect->End();
 	}
+	tag.End();
 #endif
 	// レンダリングターゲットを元に戻す
 	(*graphicsDevice()).SetRenderTarget(0, pOldBackBuffer);

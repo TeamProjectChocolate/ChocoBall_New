@@ -12,6 +12,7 @@ CJetGimmick::~CJetGimmick()
 {
 	m_pAudio->StopCue(m_SoundEndName,true,this);
 	m_pAudio->StopCue(m_SoundName,true,this);
+	SAFE_DELETE(m_pEmitter);
 }
 
 
@@ -19,7 +20,7 @@ void CJetGimmick::Initialize(){
 	SetAlive(true);
 	CCourceCamera* camera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
 	m_pCamera = camera->GetCamera();
-	m_pEmitter = CParticleEmitter::EmitterCreate(m_pFileName, m_ParticleType, m_transform.position, m_pCamera,m_Stage_ID, false);
+	m_pEmitter = CParticleEmitter::EmitterCreate(m_pFileName, m_ParticleType, m_transform.position, m_pCamera,m_Stage_ID, false,false);
 	m_IntervalCounter = 0.0f;
 	m_JetCounter = 0.0f;
 	m_IsPlay = true;

@@ -355,3 +355,120 @@ static int collisionInfoTableSizeArray[] = {
 	ARRAYSIZE(collisionInfoTable_Final)
 };
 
+static D3DXVECTOR4 LightColorTable_1[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_2[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_3[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_4[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_5[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_6[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4 LightColorTable_Final[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+static D3DXVECTOR4* LightColorTableArray[] = {
+	LightColorTable_1,
+	LightColorTable_2,
+	LightColorTable_3,
+	LightColorTable_4,
+	LightColorTable_5,
+	LightColorTable_6,
+	LightColorTable_Final
+};
+
+static D3DXVECTOR3 LightDirectionTable_1[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_2[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_3[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_4[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_5[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_6[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3 LightDirectionTable_Final[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+static D3DXVECTOR3* LightDirectionTableArray[] = {
+	LightDirectionTable_1,
+	LightDirectionTable_2,
+	LightDirectionTable_3,
+	LightDirectionTable_4,
+	LightDirectionTable_5,
+	LightDirectionTable_6,
+	LightDirectionTable_Final
+};

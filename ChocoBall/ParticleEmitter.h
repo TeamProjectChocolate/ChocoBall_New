@@ -12,8 +12,14 @@
 class CParticleEmitter:public CGameObject
 {
 public:
-	static CParticleEmitter* EmitterCreate(LPCSTR EmitterName, PARTICLE_TYPE type,D3DXVECTOR3 pos,CCamera* pcamera,STAGE_ID Id,bool flg){
-		CParticleEmitter* pEmitter = SINSTANCE(CObjectManager)->GenerationObject<CParticleEmitter>(EmitterName, PRIORTY::EMITTER, false);
+	static CParticleEmitter* EmitterCreate(LPCSTR EmitterName, PARTICLE_TYPE type,D3DXVECTOR3 pos,CCamera* pcamera,STAGE_ID Id,bool flg,bool IsManagerGeneration){
+		CParticleEmitter* pEmitter = nullptr;
+		if (IsManagerGeneration) {
+			pEmitter = SINSTANCE(CObjectManager)->GenerationObject<CParticleEmitter>(EmitterName, PRIORTY::EMITTER, false);
+		}
+		else {
+			pEmitter = new CParticleEmitter;
+		}
 		pEmitter->SetCamera(pcamera);
 		pEmitter->SetEmitParameter(reinterpret_cast<SParticleEmitParameter*>(ParticleParamPT_Array[type]));
 		pEmitter->SetEmitterName(EmitterName);

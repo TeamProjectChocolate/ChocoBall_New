@@ -113,6 +113,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CBManager.h" />
     <ClInclude Include="collisionInfo.h" />
+    <ClInclude Include="DirectFont.h" />
     <ClInclude Include="DofRender.h" />
     <ClInclude Include="EM_Render.h" />
     <ClInclude Include="EM_SamplingRender.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleParameterTable.h" />
+    <ClInclude Include="PixTag.h" />
     <ClInclude Include="PlayerAnimationContoller.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="Primitive.h" />
@@ -223,6 +225,7 @@
     <ClCompile Include="ClearText.cpp" />
     <ClCompile Include="CourceCamera.cpp" />
     <ClCompile Include="CourceDef.cpp" />
+    <ClCompile Include="DirectFont.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="DofRender.cpp" />
@@ -264,6 +267,7 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="PixTag.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAnimationContoller.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />

@@ -98,7 +98,7 @@ void CCourceCamera::Update(){
 			m_NowPos = m_TargetPos;
 			m_transform.position = m_NowPos;
 			m_Isintersect.CollisitionInitialize(&m_NowPos, 2.8f,CollisionType_Camera);
-			m_TargetViewAngle = D3DXToRadian(30.0f);
+			m_TargetViewAngle = D3DXToRadian(45.0f);
 			m_NowViewAngle = m_TargetViewAngle;
 			m_camera.SetViewAngle(m_NowViewAngle);
 			m_isFirst = false;

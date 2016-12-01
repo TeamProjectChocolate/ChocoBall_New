@@ -2,6 +2,7 @@
 #include "BloomRender.h"
 #include "GraphicsDevice.h"
 #include "RenderContext.h"
+#include "PixTag.h"
 
 
 namespace{
@@ -49,6 +50,10 @@ void CBloomRender::Draw()
 	m_isEnable = false;
 #endif
 	if (m_isEnable) {
+		CPixTag tag;
+		LPCWSTR name = L"Bloom";
+		tag.Start(name);
+
 		UpdateWeight(5.0f);
 		LPDIRECT3DSURFACE9 RenderingTarget;
 		LPDIRECT3DSURFACE9 m_SavedMapZ;
@@ -237,8 +242,8 @@ void CBloomRender::Draw()
 			(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		}
+		tag.End();
 	}
-
 };
 
 /*!

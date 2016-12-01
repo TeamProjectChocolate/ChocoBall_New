@@ -10,13 +10,14 @@
 typedef struct OBJECT_DATA{
 	CHAR objectname[OBJECTNAME_MAX + 1];	// 生成するオブジェクト名
 	CGameObject* object;	// ゲームオブジェクトのポインタ
-	short priority;			// 実行優先度(数字が小さいほど優先度が高い　最小値：0)
 }OBJECT_DATA;
 
 class CObjectManager
 {
 	SINGLETON_DECL(CObjectManager)
 public:
+	// 最初に一度だけ呼ばれる関数。
+	void OnCreate();
 
 	template<class T>
 	//指定したオブジェクトを自動生成する関数(優先度を指定したい場合)
@@ -92,10 +93,12 @@ public:
 	//※関数が重いため多用しないこと
 	T* FindGameObject(LPCSTR ObjectName)
 	{
-		int size = m_GameObjects.size();
-		for (int idx = 0; idx < size; idx++){
-			if (!strcmp(m_GameObjects[idx]->objectname,ObjectName)){
-				return (T*)m_GameObjects[idx]->object;
+		for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++) {
+			int size = m_GameObjects[priorty].size();
+			for (int idx = 0; idx < size; idx++) {
+				if (!strcmp(m_GameObjects[priorty][idx]->objectname, ObjectName)) {
+					return (T*)m_GameObjects[priorty][idx]->object;
+				}
 			}
 		}
 		//MessageBox(NULL, "オブジェクトが登録されていません", 0, 0);
@@ -143,12 +146,12 @@ public:
 	void Intialize();
 	void Update();
 	void Draw();
-	const vector<OBJECT_DATA*>& GetObjectList(){
+	const vector<vector<OBJECT_DATA*>>& GetObjectList(){
 		return m_GameObjects;
 	}
 private:
 	void Add(CGameObject*,LPCSTR, PRIORTY);
-	vector<OBJECT_DATA*> m_GameObjects;	// GameObject*のリスト
+	vector<vector<OBJECT_DATA*>> m_GameObjects;	// GameObject*のリスト
 	vector<CGameObject*> m_DeleteObjects;	// 削除リスト
 
 	//vectorに登録された要素をすべて削除する関数

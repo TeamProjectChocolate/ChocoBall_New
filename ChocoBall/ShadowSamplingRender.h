@@ -12,9 +12,9 @@ public:
 		m_pShadowCamera = camera;
 	}
 	void CopyHorizon(const vector<float>& horizon) {
-		for (float work : horizon) {
-			m_Horizon.push_back(work);
-		}
+		//for (float work : horizon) {
+		//	m_Horizon.push_back(work);
+		//}
 	}
 	void SetIsHorizon(bool flg) {
 		m_IsHorizon = flg;

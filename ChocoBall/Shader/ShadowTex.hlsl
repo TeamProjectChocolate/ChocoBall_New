@@ -7,7 +7,7 @@ float4x4 Proj;
 float4x3 g_WorldMatrixArray[MAX_MATRICES]:WORLDMATRIXARRAY;
 float g_numBone;		// 骨の数
 
-//float g_Horizon;	// シャドウマップに書き込むかの境界線。
+float g_PlayerHorizon;	// シャドウマップに書き込むかの境界線。
 
 struct VS_INPUT{
 	float4	pos		: POSITION;
@@ -44,7 +44,6 @@ VS_OUTPUT VS_ShadowMain(VS_INPUT In, uniform bool isBone){
 	float4x4 LightViewProj;	// ライトから見たときのビュープロジェクション行列
 	LightViewProj = mul(View, Proj);
 	VS_OUTPUT Out = (VS_OUTPUT)0;
-
 	if (isBone){
 		float4 pos = 0.0f;
 		// ブレンドするボーンのインデックス
@@ -115,7 +114,6 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 	float4x4 LightViewProj;	// ライトから見たときのビュープロジェクション行列
 	LightViewProj = mul(View, Proj);
 	VS_OUTPUT Out = (VS_OUTPUT)0;
-
 	if (isBone) {
 		float4 pos = 0.0f;
 		// ブレンドするボーンのインデックス
@@ -137,10 +135,15 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 	else {
 		Out.pos = mul(In.base.pos, World);
 	}
-
+	
 	// 境界線用処理。
 	{
-		Out.Horizon = In.Horizon;
+		if (In.Horizon <= g_PlayerHorizon) {
+			Out.Horizon = In.Horizon;
+		}
+		else {
+			Out.Horizon = g_PlayerHorizon;
+		}
 		Out.wPos = Out.pos; 
 	}
 	Out.pos = mul(Out.pos, LightViewProj);
@@ -149,7 +152,7 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 }
 
 float4 PS_ShadowMain(VS_OUTPUT In,uniform bool isHorizon)	: COLOR{
-
+	return 0.0f;
 	//if (isNotDraw) {
 	//	if (g_Horizon - In.worldPos.y < 0.0f) {
 	//		clip(-1.0f);

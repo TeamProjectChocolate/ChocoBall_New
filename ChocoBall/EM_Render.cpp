@@ -4,6 +4,7 @@
 #include "GraphicsDevice.h"
 #include "RenderContext.h"
 #include "ObjectManager.h"
+#include "PixTag.h"
 
 CEM_Render::CEM_Render()
 {
@@ -27,6 +28,10 @@ void CEM_Render::Draw()
 	m_isEnable = false;
 #endif
 	if (m_isEnable) {
+		CPixTag tag;
+		LPCWSTR name = L"EM";
+		tag.Start(name);
+
 		LPDIRECT3DSURFACE9 RenderingTarget;
 		LPDIRECT3DSURFACE9 m_SavedMapZ;
 
@@ -34,21 +39,19 @@ void CEM_Render::Draw()
 		(*graphicsDevice()).GetRenderTarget(0, &RenderingTarget);
 		(*graphicsDevice()).GetDepthStencilSurface(&m_SavedMapZ);
 
-		vector<OBJECT_DATA*> Objects = SINSTANCE(CObjectManager)->GetObjectList();
+		vector<vector<OBJECT_DATA*>> Objects = SINSTANCE(CObjectManager)->GetObjectList();
 		for (short hexa_idx = 0; hexa_idx < HEXA; hexa_idx++){
 			(*graphicsDevice()).SetRenderTarget(0,m_pCubeSurfaces[hexa_idx]);
 			(*graphicsDevice()).SetDepthStencilSurface(m_pZMap);
 			(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
-			int size = Objects.size();
 			// 3DÇÃï`âÊ
 			{
 				// äÓñ{ï`âÊ
 				for (short priorty = PRIORTY::PLAYER; priorty < PRIORTY::PARTICLE; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+					int size = Objects[priorty].size();
 					for (int idx = 0; idx < size; idx++){
-						if (Objects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
-							if (Objects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇï`âÊ
-								Objects[idx]->object->Draw_EM(&m_Cameras[hexa_idx]);
-							}
+						if (Objects[priorty][idx]->object->GetAlive()) {	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
+							Objects[priorty][idx]->object->Draw_EM(&m_Cameras[hexa_idx]);
 						}
 					}
 				}
@@ -59,12 +62,10 @@ void CEM_Render::Draw()
 				}
 				// ÉpÅ[ÉeÉBÉNÉãï`âÊ
 				for (short priorty = PRIORTY::PARTICLE; priorty < PRIORTY::OBJECT2D; priorty++){	// óDêÊìxÇÃçÇÇ¢Ç‡ÇÃÇ©ÇÁçXêV
+					int size = Objects[priorty].size();
 					for (int idx = 0; idx < size; idx++){
-
-						if (Objects[idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
-							if (Objects[idx]->priority == priorty){	// åªç›ÇÃóDêÊìxÇ∆àÍívÇ∑ÇÈÇ‡ÇÃÇï`âÊ
-								Objects[idx]->object->Draw_EM(&m_Cameras[hexa_idx]);
-							}
+						if (Objects[priorty][idx]->object->GetAlive()){	// ê∂ë∂ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇÃÇ›ï`âÊ
+							Objects[priorty][idx]->object->Draw_EM(&m_Cameras[hexa_idx]);
 						}
 					}
 				}
@@ -75,6 +76,7 @@ void CEM_Render::Draw()
 		(*graphicsDevice()).SetRenderTarget(0, RenderingTarget);
 		(*graphicsDevice()).SetDepthStencilSurface(m_SavedMapZ);
 
+		tag.End();
 		m_isEnable = false;	// ÉVÅ[ÉìÇÃç≈èâÇÃÇ›ï`âÊÇ∑ÇÈÅB
 	}
 };

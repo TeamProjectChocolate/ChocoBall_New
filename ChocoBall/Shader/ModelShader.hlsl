@@ -239,6 +239,7 @@ static Flags g_FlagsType[] = {
 
 // ピクセルシェーダ
 PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
+	PS_OUTPUT o = (PS_OUTPUT)0;
 
 	if (flags.ZMask){
 		float4 screenPos = In.WorldPos;

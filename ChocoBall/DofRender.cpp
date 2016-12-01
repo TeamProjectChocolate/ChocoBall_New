@@ -4,6 +4,7 @@
 #include "RenderContext.h"
 #include "ObjectManager.h"
 #include "C3DImage.h"
+#include "PixTag.h"
 
 
 CDofRender::CDofRender()
@@ -43,6 +44,9 @@ void CDofRender::Draw()
 	m_isEnable = false;
 #endif
 	if (m_isEnable) {
+		CPixTag tag;
+		LPCWSTR name = L"DofBlur";
+		tag.Start(name);
 		UpdateWeight(200.0f);
 		LPDIRECT3DSURFACE9 RenderingTarget;
 		LPDIRECT3DSURFACE9 m_SavedMapZ;
@@ -144,8 +148,9 @@ void CDofRender::Draw()
 			m_pEffect->EndPass();
 			m_pEffect->End();
 		}
+		tag.End();
 	}
-
+	
 };
 
 /*!

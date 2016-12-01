@@ -57,8 +57,8 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	D3DXVec3Cross(&workVec, &workVec, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 	D3DXVec3Normalize(&workVec, &workVec);
 
-	CParticleEmitter::EmitterCreate(_T("GoalParticle_Left"), PARTICLE_TYPE::STAR, block.endPosition - (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true);
-	CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true);
+	CParticleEmitter::EmitterCreate(_T("GoalParticle_Left"), PARTICLE_TYPE::STAR, block.endPosition - (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
+	CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
 
 	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), PRIORTY::EMITTER, false);
 	m_CLevelBuilder->SetIsStage(m_Stage_ID);
@@ -158,17 +158,19 @@ void CStage::ActivateObjects(){
 }
 
 void CStage::ConfigLight() {
+	D3DXVECTOR3* LightDirection;
+	LightDirection = LightDirectionTableArray[m_Stage_ID];
 	// ディフューズライトの向き設定(ライト1～4)
-	m_Light.SetDiffuseLightDirection(0, D3DXVECTOR3(0.707f, 0.707f, 0.0f));
-	m_Light.SetDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 1.0f, 0.0f));
-	m_Light.SetDiffuseLightDirection(2, D3DXVECTOR3(1.0f, -1.0f, 0.5f));
-	m_Light.SetDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	for (short idx = 0; idx < NUM_DIFFUSE_LIGHT; idx++) {
+		m_Light.SetDiffuseLightDirection(idx, LightDirection[idx]);
+	}
 
+	D3DXVECTOR4* LightColor;
+	LightColor = LightColorTableArray[m_Stage_ID];
 	// ディフューズライトの色設定(ライト1～4)
-	m_Light.SetDiffuseLightColor(0, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
-	m_Light.SetDiffuseLightColor(1, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
-	m_Light.SetDiffuseLightColor(2, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
-	m_Light.SetDiffuseLightColor(3, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
+	for (short idx = 0; idx < NUM_DIFFUSE_LIGHT; idx++) {
+		m_Light.SetDiffuseLightColor(idx, LightColor[idx]);
+	}
 
 	// アンビエントライト(環境光)の強さ設定
 	m_Light.SetAmbientLight(D3DXVECTOR3(0.1f, 0.1f, 0.1f));

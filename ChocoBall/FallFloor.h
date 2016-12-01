@@ -19,7 +19,7 @@ public:
 	void Draw()override;
 	void SetUpTechnique()override{
 #ifdef NOT_VSM
-		m_pRender->SetUpTechnique("Boneless_Tex_Shadow");
+		//m_pRender->SetUpTechnique("Boneless_Tex_Shadow");
 #else
 		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM");
 #endif

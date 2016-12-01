@@ -102,6 +102,7 @@ void CPlayer::Initialize()
 		m_transform.position,
 		m_pCamera->GetCamera(),
 		m_StageID,
+		true,
 		true
 		);
 	//ジャンプ＆着地時の煙
@@ -111,7 +112,8 @@ void CPlayer::Initialize()
 		m_transform.position,
 		m_pCamera->GetCamera(),
 		m_StageID,
-		false
+		false,
+		true
 		);
 
 	//銃発射時の煙
@@ -136,7 +138,12 @@ void CPlayer::Initialize()
 
 	m_JumpState = JUMP_STATE::J_NULL;
 	m_JumpEndCounter = 0.0f;
-	m_JumpEndInterval = 0.25f;
+	m_JumpEndInterval = 0.15f;
+	m_JumpStartCounter = 0.0f;
+	m_JumpStartInterval = 0.04f;
+	m_AnimInterpolation = 0.05f;
+	m_RunningCounter = 0.0f;
+	m_RunningRange = 0.5f;
 }
 
 void CPlayer::SetParent(MoveFloor* parent)
@@ -200,6 +207,10 @@ void CPlayer::Update()
 		if (m_ActiveKeyState){
 			KeyState();
 		}
+		else {
+			m_RunningCounter = 0.0f;
+			m_IsActive_Y = m_IsActive_X = false;
+		}
 
 		// キー判定の結果と現在のフラグ状況から行動を選択。
 		MoveStateManaged();
@@ -220,7 +231,7 @@ void CPlayer::Update()
 		UpDownMove();
 		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
 		bool IsJump = false;
-		if (m_JumpState != JUMP_STATE::J_NULL) {
+		if (m_JumpState == JUMP_STATE::J_ZWEI) {
 			IsJump = true;
 		}
 		//プレイヤーの位置情報更新。
@@ -229,7 +240,11 @@ void CPlayer::Update()
 
 	// アニメーション再生関数を呼び出す
 	m_pModel->SetCurrentAnimNo(m_AnimState);
-	m_pModel->GetAnimation()->PlayAnimation(m_pModel->GetCurrentAnimNo(), 0.1f);
+	m_pModel->GetAnimation()->PlayAnimation(m_pModel->GetCurrentAnimNo(), m_AnimInterpolation);
+	//if (!m_pModel->GetAnimation()->GetIsInterpolate()) {
+	//	// アニメーションの補間が終了なら補間時間を初期値に戻す。
+	//	m_AnimInterpolation = 0.1f;
+	//}
 
 	// 影カメラのポジションをプレイヤーの真上に指定。
 	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
@@ -270,16 +285,16 @@ void CPlayer::ConfigLight(){
 	}
 
 	// ディフューズライト(キャラライト)の向き設定(ライト1～4)
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(0.707f, 0.707f, 0.0f));
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 1.0f, 0.0f));
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(1.0f, -1.0f, 0.5f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
 
 	// ディフューズライト(キャラライト)の色設定(ライト1～4)
-	m_pLight->SetDiffuseLightColor(0, D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f));
-	m_pLight->SetDiffuseLightColor(1, D3DXVECTOR4(0.75f, 0.75f,0.75f, 1.0f));
-	m_pLight->SetDiffuseLightColor(2, D3DXVECTOR4(0.75f, 0.75f,0.75f, 1.0f));
-	m_pLight->SetDiffuseLightColor(3, D3DXVECTOR4(0.75f,0.75f, 0.75f, 1.0f));
+	m_pLight->SetDiffuseLightColor(0, D3DXVECTOR4(0.5f, 0.5f, 0.5f, 0.25f));
+	m_pLight->SetDiffuseLightColor(1, D3DXVECTOR4(0.5f, 0.5f,0.5f, 0.25f));
+	m_pLight->SetDiffuseLightColor(2, D3DXVECTOR4(0.5f, 0.5f,0.5f, 0.25f));
+	m_pLight->SetDiffuseLightColor(3, D3DXVECTOR4(0.5f,0.5f, 0.5f, 0.25f));
 
 	// アンビエントライト(環境光)の強さ設定
 	m_pLight->SetAmbientLight(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
@@ -297,19 +312,19 @@ void CPlayer::ConfigLight(){
 void CPlayer::MoveStateManaged(){
 	switch (m_State){
 	case MOVE_STATE::Wait:
-		m_pCamera->SetTargetViewAngle(D3DXToRadian(30.0f));
+		//m_pCamera->SetTargetViewAngle(D3DXToRadian(30.0f));
 		m_AnimState = ANIMATION_STATE::WAIT;
 		m_ActiveKeyState = true;
 		break;
 	case MOVE_STATE::Walk:
-		m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
+		//m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
 		Move();
 		m_AnimState = ANIMATION_STATE::WALK;
 		m_ActiveKeyState = true;
 		m_State = MOVE_STATE::Wait;
 		break;
 	case MOVE_STATE::Dash:
-		m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
+		//m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
 		Move();
 		m_ActiveKeyState = true;
 		m_State = MOVE_STATE::Wait;
@@ -331,7 +346,7 @@ void CPlayer::MoveStateManaged(){
 	case MOVE_STATE::Flow:
 		m_pCamera->SetIsTarget(true);
 		m_pCamera->GetCamera()->SetTarget(m_transform.position);
-		m_AnimState = ANIMATION_STATE::WAIT;
+		m_AnimState = ANIMATION_STATE::WALK;
 		m_ActiveKeyState = false;
 		m_JumpState = JUMP_STATE::J_NULL;
 		//m_transform.position.y = 0.0f;
@@ -361,14 +376,16 @@ void CPlayer::Move()
 	//前後の動き
 	if (fabs(Y) > 0.0f)
 	{
-		m_moveSpeed.z = Y * MOVE_SPEED;
+		float work = m_RunningCounter / m_RunningRange;
+		m_moveSpeed.z = Y * MOVE_SPEED * work;
 		isTurn = true;
 	}
 
 	//左右の動き
 	if (fabsf(X) > 0.0f)
 	{
-		m_moveSpeed.x = X * MOVE_SPEED;
+		float work = m_RunningCounter / m_RunningRange;
+		m_moveSpeed.x = X * MOVE_SPEED * work;
 		isTurn = true;
 	}
 
@@ -384,20 +401,43 @@ void CPlayer::UpDownMove(){
 
 	switch (m_JumpState) {
 	case JUMP_STATE::J_NULL:
-		if (!m_IsIntersect.IsHitGround()) {
-			m_JumpState = JUMP_STATE::J_EINS;
-			m_NowJumpPower = PLAYER_JUMP_POWER / 2;
+		//if (!m_IsIntersect.IsHitGround()) {
+		//	m_JumpState = JUMP_STATE::J_EINS;
+		//	m_NowJumpPower = PLAYER_JUMP_POWER / 2;
+		//}
+		if (m_IsIntersect.IsHitGround()) {
+			m_NowJumpPower = 0.0f;
+			m_moveSpeed.y = 0.0f;
+		}
+		else {
+			m_JumpState = JUMP_STATE::J_ZWEI;
+			m_NowJumpPower = 0.0f;
 		}
 		break;
 	case JUMP_STATE::J_EINS:
-		m_AnimState = ANIMATION_STATE::JUMP_START;
-		if (m_IsIntersect.IsHitGround()){
-			m_JumpState = JUMP_STATE::J_ZWEI;
-			m_NowJumpPower = PLAYER_JUMP_POWER;
+		if (m_IsIntersect.IsHitGround()) {
+			m_ActiveKeyState = false;
+			m_AnimState = ANIMATION_STATE::JUMP_START;
+			m_JumpStartCounter += 1.0f / 60.0f;
+			if (m_JumpStartCounter >= m_JumpStartInterval) {
+				m_JumpStartCounter = 0.0f;
+				m_JumpState = JUMP_STATE::J_ZWEI;
+				m_NowJumpPower = PLAYER_JUMP_POWER;
+			}
+		}
+		else {
+			m_JumpState = JUMP_STATE::J_NULL;
 		}
 		break;
 	case JUMP_STATE::J_ZWEI:
-		m_AnimState = ANIMATION_STATE::JUMP_NOW;
+		m_RunningCounter = m_RunningRange;
+		if (m_State != MOVE_STATE::Vibration) {
+			m_ActiveKeyState = true;
+			m_AnimState = ANIMATION_STATE::JUMP_NOW;
+		}
+		else {
+			m_AnimState = ANIMATION_STATE::DAMAGE;
+		}
 		//着地しているか判定(着地時はtrue,そうでなければfalse)。
 		if (m_IsIntersect.IsHitGround())
 		{
@@ -406,16 +446,27 @@ void CPlayer::UpDownMove(){
 			m_pEmitter->SetEmitFlg(true);
 			m_pAudio->PlayCue("Landing", true, this);
 			m_JumpEndCounter = 0.0f;
+			if (m_IsActive_X || m_IsActive_Y) {
+				m_RunningCounter = 0.5f * m_RunningRange;
+			}
 		}
 		break;
 	case JUMP_STATE::J_DREI:
-		m_AnimState = ANIMATION_STATE::JUMP_END;
+		if (m_State != MOVE_STATE::Vibration) {
+			m_AnimState = ANIMATION_STATE::JUMP_END;
+		}
 		// 自分の周囲にパーティクル発生
 		// Setすると常にプレイヤーの場所にパーティクルの発生する
 		D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
 		pos.y = pos.y - 0.7f;
 		m_pEmitter->SetEmitPos(pos);
 		m_NowJumpPower = 0.0f;
+		if (m_IsActive_X || m_IsActive_Y) {
+			m_AnimState = ANIMATION_STATE::WALK;
+			m_JumpEndCounter = 0.0f;
+			m_JumpState = JUMP_STATE::J_NULL;
+			break;
+		}
 		m_JumpEndCounter += 1.0f / 60.0f;
 		if (m_JumpEndCounter >= m_JumpEndInterval) {
 			m_JumpState = JUMP_STATE::J_NULL;
@@ -522,27 +573,34 @@ void CPlayer::BehaviorCorrection()
 			m_targetAngleY = m_targetAngleY*-1;
 		}
 	}
-
 }
 
 void CPlayer::KeyState(){
 	// デバイスが切り替わった場合は自動で切り替える
 	SINSTANCE(CInputManager)->IsInputChanged(&m_pInput);
 
-	if (m_JumpState == JUMP_STATE::J_NULL && m_pInput->IsTriggerSpace()){
+	if ((m_JumpState == JUMP_STATE::J_NULL || m_JumpState == JUMP_STATE::J_DREI) && m_pInput->IsTriggerSpace()){
 		m_JumpState = JUMP_STATE::J_EINS;
+		m_JumpEndCounter = 0.0f;
+		m_JumpStartCounter = 0.0f;
 		m_pAudio->PlayCue("Jump", true, this);//ジャンプSE
 		m_JumpParticleTimer = 0.0f;
-		m_NowJumpPower = PLAYER_JUMP_POWER;
 		m_pEmitter->SetEmitFlg(true);
 		D3DXVECTOR3 pos = m_transform.position;//パーティクルのposを変えるためだけの格納
 		pos.y -= 0.5f;
 		m_pEmitter->SetEmitPos(pos);
 	}
-	bool IsActive_X = static_cast<bool>(fabsf(m_pInput->GetStickL_XFloat()));
-	bool IsActive_Y = static_cast<bool>(fabsf(m_pInput->GetStickL_YFloat()));
-	if (IsActive_X || IsActive_Y){
+	m_IsActive_X = static_cast<bool>(fabsf(m_pInput->GetStickL_XFloat()));
+	m_IsActive_Y = static_cast<bool>(fabsf(m_pInput->GetStickL_YFloat()));
+
+	if (m_IsActive_X || m_IsActive_Y){
+		if (m_RunningCounter <= m_RunningRange) {
+			m_RunningCounter += 1.0f / 60.0f;
+		}
 		m_State = MOVE_STATE::Walk;
+	}
+	else {
+		m_RunningCounter = 0.0f;
 	}
 	if (m_pInput->IsPressRightShift())
 	{
@@ -584,7 +642,6 @@ void CPlayer::Collisions(){
 				CFireJet* firejet = SINSTANCE(CObjectManager)->FindGameObject<CFireJet>(_T(str.c_str()));
 				if (firejet == nullptr){
 					break;
-					//return;
 				}
 				if (firejet->IsCollision(m_transform.position, 1.0f)){
 					// プレイヤーを追いかけ続けていると画面が振動してしまう。
@@ -593,7 +650,7 @@ void CPlayer::Collisions(){
 					m_pCamera->SetIsTarget(false);
 					m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 1.2f, 0.01f);
 					m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					//return;
+					break;
 				}
 			}
 		}
@@ -712,11 +769,11 @@ void CPlayer::ChocoHit()
 	m_State = MOVE_STATE::Flow;
 	m_ActiveKeyState = false;
 	m_pEmitter->SetEmitFlg(false);
-	m_AnimState = ANIMATION_STATE::WAIT;
+	m_AnimState = ANIMATION_STATE::WALK;
 	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
 	m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
 	rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f)/*btVector3(0.1f, 0.1f, 0.1f)*/);//第一引数は質量、第二引数は回転のしやすさ
-	m_pModel->GetAnimation()->SetAnimSpeed(1.0f);//アニメーション再生速度を設定
+	m_pModel->GetAnimation()->SetAnimSpeed(5.0f);//アニメーション再生速度を設定
 }
 void CPlayer::EnemyBulletHit( D3DXVECTOR3 moveDir )
 {
@@ -733,6 +790,8 @@ void CPlayer::EnemyBulletHit( D3DXVECTOR3 moveDir )
 }
 void CPlayer::RollingPlayer()
 {
+	m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
+
 	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
 
 	//物理エンジンで計算した移動をプレイヤーに反映
