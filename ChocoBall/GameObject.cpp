@@ -73,5 +73,5 @@ void CGameObject::Draw_EM(CCamera* camera){
 }
 
 void CGameObject::Is_DrawShadow_Use_Horizon(){
-	static_cast<CShadowSamplingRender*>(m_pShadowRender)->SetIsHorizon(false);
+	m_pModel->SetIsHorizon(false);
 }

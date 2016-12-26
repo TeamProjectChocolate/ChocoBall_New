@@ -49,8 +49,14 @@ void CShadowRender::Update(){
 	m_camera.SetTarget(m_target);
 	m_camera.Update();
 }
+#include "tkStopwatch.h"
 
 void CShadowRender::Draw(){
+	CPixTag tag2;
+	tag2.Start(L"CShadowRender::Draw");
+	
+	static CStopwatch sw;
+	sw.Start();
 	// もとのレンダリングターゲットを保存
 	IDirect3DSurface9* pOldBackBuffer;
 	IDirect3DSurface9* pOldZBuffer;
@@ -78,24 +84,13 @@ void CShadowRender::Draw(){
 			itr = m_ShadowObjects.erase(itr);
 		}
 	}
-	//for (int idx = 0, size = m_ShadowObjects.size(); idx < size; idx++){
-	//	if (m_ShadowObjects[idx] != nullptr){
-	//		if (m_ShadowObjects[idx]->GetAlive()){
-	//			m_ShadowObjects[idx]->DrawShadow(&m_camera);
-	//		}
-	//		else{
-	//			DeleteObject(m_ShadowObjects[idx]);
-	//		}
-	//	}
-	//	else{
-	//		DeleteObject(m_ShadowObjects[idx]);
-	//	}
-	//}
 	// インスタンシング
 	vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::_3D_ShadowSample_I);
 	for (auto data : datas){
 			data->render->Draw();
 	}
+	tag2.End();
+	sw.Stop();
 
 #ifdef NOT_VSM
 #else

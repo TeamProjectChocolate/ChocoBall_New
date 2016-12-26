@@ -37,12 +37,12 @@ public:
 	//XACT終了関数
 	void CleanupXACT();
 
-	//キュー再生関数(キュー名)
+	//キュー再生関数
 	//引き数:const char*型 サウンド名
 	//		 bool型 音を重ねて再生するかのフラグ(trueなら重ねる,falseなら重ねない)
 	void PlayCue(const char*,bool,void*);
 
-	//キュー停止関数(キュー名)
+	//キュー停止関数
 	void StopCue(const char*,bool,void*);
 
 	void AddSound(LPCSTR name,void* pointer){

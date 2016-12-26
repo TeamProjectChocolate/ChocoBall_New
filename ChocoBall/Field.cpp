@@ -56,8 +56,6 @@ void CField::Initialize(){
 #ifdef NOT_VSM
 #else
 	SINSTANCE(CShadowRender)->Entry(this);
-#endif
-
 	m_CourceDef.SetStageID(m_StageID);
 	m_CourceDef.Initialize();
 	{
@@ -86,7 +84,12 @@ void CField::Initialize(){
 			pPosition = reinterpret_cast<D3DXVECTOR3*>(OneByte);
 		}
 		vb->Unlock();
+
+		m_pModel->CopyHorizon(m_Horizon);
 	}
+
+#endif
+
 }
 
 void CField::Update(){
@@ -104,6 +107,5 @@ void CField::Draw(){
 }
 
 void CField::Is_DrawShadow_Use_Horizon() {
-	static_cast<CShadowSamplingRender*>(m_pShadowRender)->SetIsHorizon(true);
-	static_cast<CShadowSamplingRender*>(m_pShadowRender)->CopyHorizon(m_Horizon);
+	m_pModel->SetIsHorizon(true);
 }

@@ -37,7 +37,6 @@ struct VS_OUTPUT{
 	float4  depth	: TEXCOORD;
 	float Horizon : TEXCOORD1;
 	float4 wPos:TEXCOORD2;
-	//float4 worldPos : TEXCOORD1;
 };
 
 VS_OUTPUT VS_ShadowMain(VS_INPUT In, uniform bool isBone){
@@ -66,7 +65,6 @@ VS_OUTPUT VS_ShadowMain(VS_INPUT In, uniform bool isBone){
 		Out.pos = mul(In.pos, World);
 	}
 
-	//Out.worldPos = Out.pos;
 	Out.pos = mul(Out.pos, LightViewProj);
 	Out.depth = Out.pos;
 	return Out;
@@ -152,12 +150,6 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 }
 
 float4 PS_ShadowMain(VS_OUTPUT In,uniform bool isHorizon)	: COLOR{
-	return 0.0f;
-	//if (isNotDraw) {
-	//	if (g_Horizon - In.worldPos.y < 0.0f) {
-	//		clip(-1.0f);
-	//	}
-	//}
 	if (isHorizon) {
 		clip(In.Horizon - In.wPos.y);
 	}

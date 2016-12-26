@@ -37,7 +37,12 @@ public:
 #endif
 	}
 	void SetUpShadowTechnique()override {
+#ifdef NOT_VSM
+		m_pShadowRender->SetUpTechnique("BonelessShadowMapping");
+#else
 		m_pShadowRender->SetUpTechnique("BonelessShadowMapping_Horizon");
+#endif
+
 	}
 
 	void Is_DrawShadow_Use_Horizon()override;

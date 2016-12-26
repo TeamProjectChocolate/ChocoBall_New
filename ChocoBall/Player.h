@@ -40,6 +40,9 @@ public:
 	void EM_SetUpTechnique()override{
 		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
 	}
+	void SetUpShadowTechnique()override {
+		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
+	}
 
 	// ƒ‰ƒCƒgİ’èB
 	void ConfigLight()override;

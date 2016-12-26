@@ -24,7 +24,6 @@ void CInputManager::CreateInput(HWND hWnd){
 	CGamePad* gamepad = new CGamePad;
 	gamepad->Update();
 	Add(gamepad);
-
 }
 
 void CInputManager::Add(CKeyBoard* Input){

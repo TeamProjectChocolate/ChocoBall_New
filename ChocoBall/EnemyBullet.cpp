@@ -34,7 +34,6 @@ void CEnemyBullet::BulletPlayerCollision(){
 	float E;
 	E = D3DXVec3Length(&dist);//ベクトルの長さを計算
 	if (E <= 1){
-		//ゲームオーバーつけてねノボリン
 		if (!g_player->GetGameover())
 		{
 			dist /= E;

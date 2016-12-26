@@ -23,6 +23,10 @@ public:
 	void EM_SetUpTechnique()override{
 		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
 	}
+	void SetUpShadowTechnique()override {
+		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
+	}
+
 
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;

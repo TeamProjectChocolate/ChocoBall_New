@@ -2,7 +2,6 @@
 #include "stdafx.h"
 
 
-
 enum GimmickType{
 	GimmickType_Chocoball,
 	GimmickType_Wall,
@@ -131,7 +130,7 @@ static LPCSTR StageGameObject_Final[] = {
 };
 
 // 上に新しい配列を追加したらここにそのオブジェクト配列のポインタを順番どおりに格納してください
-// ※その後、一番下にある、配列の要素数を格納する配列も更新してください
+// ※その後、配列の要素数を格納する配列も更新してください
 
 static LPCSTR* StageArray[] = {
 	StageGameObject_1,
@@ -281,6 +280,7 @@ static SCollisionInfo GimmickTriggerInfoTable_6[] = {
 static SCollisionInfo GimmickTriggerInfoTable_Final[] = {
 #include "GimmickTriggerInfoStageFinal.h"
 };
+
 // ステージ1で使用するギミック発動用当たり判定を設定した配列のポインタを格納する配列
 // ※ステージを追加したら下のような書き方で配列に要素を追加してください
 static SCollisionInfo* GimmickinfoTableArray[] = {

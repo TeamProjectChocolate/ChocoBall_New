@@ -63,6 +63,7 @@ public:											\
 		return m_instance;						\
 }
 
+
 const D3DXVECTOR3 CVec3Zero = { 0.0f, 0.0f, 0.0f };
 const D3DXVECTOR3 CVec3Right = { 1.0f, 0.0f, 0.0f };
 const D3DXVECTOR3 CVec3Left = { -1.0f, 0.0f, 0.0f };

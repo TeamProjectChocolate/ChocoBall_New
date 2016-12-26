@@ -10,7 +10,6 @@
 CShadowSamplingRender::CShadowSamplingRender()
 {
 	m_pShadowCamera = nullptr;
-	m_Horizon.clear();
 	m_pHorizonBuffer = nullptr;
 	m_VertexDecl_Override = nullptr;
 	m_IsFirst = true;
@@ -29,7 +28,7 @@ void CShadowSamplingRender::Initialize(){
 }
 
 void CShadowSamplingRender::Draw(){
-	if (m_IsHorizon) {
+	if (m_pModel->m_IsHorizon) {
 		// 境界線以上の描画を省く場合はこちらを通る。
 		this->ActivateHorizon();
 	}
@@ -83,7 +82,7 @@ void CShadowSamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContai
 			}
 		}
 
-		m_pEffect->SetTechnique("BoneShadowMapping");
+		m_pEffect->SetTechnique(m_pTechniqueName);
 		m_pEffect->Begin(NULL, 0);
 		m_pEffect->BeginPass(0);
 
@@ -94,12 +93,12 @@ void CShadowSamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContai
 		// ボーンの数
 		m_pEffect->SetFloat("g_numBone", pMeshContainer->NumInfl);
 
-		m_pEffect->CommitChanges();
-		if (m_IsHorizon) {
+		if (m_pModel->m_IsHorizon) {
 			// 上書きした頂点データを使用して描画するので、DrawSubset関数は使用できない。
 			this->DrawHorizon();
 		}
 		else {
+			m_pEffect->CommitChanges();
 			pMeshContainer->MeshData.pMesh->DrawSubset(iattrib);
 		}
 	}
@@ -114,32 +113,14 @@ void CShadowSamplingRender::NonAnimationDraw(){
 
 	m_pShadowCamera->SetCamera(m_pEffect);
 	m_pEffect->SetMatrix("World"/*エフェクトファイル内の変数名*/, &(m_pModel->m_World)/*設定したい行列へのポインタ*/);
-	//// 境界線設定
-	{
-		//CCamera* camera = SINSTANCE(CRenderContext)->GetCurrentCamera();
-		//CPlayer* Obj = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
-		//if (camera) {
-		//	if (!(Obj->GetIsJump())) {
-		//		m_PlayerPos_Y = Obj->GetPos().y;
-		//	}
-		//	else {
-		//		if (m_PlayerPos_Y >= Obj->GetPos().y) {
-		//			m_PlayerPos_Y = Obj->GetPos().y;
-		//		}
-		//	}
-		//	float Horizon_Y = (camera->GetPos().y - m_PlayerPos_Y) / 2;
-		//	m_pEffect->SetFloat("g_Horizon", m_PlayerPos_Y + Horizon_Y);
-		//}
-	}
 	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
-	m_pEffect->CommitChanges();						//この関数を呼び出すことで、データの転送が確定する。
-
-	if (m_IsHorizon) {
+	if (m_pModel->m_IsHorizon) {
 		// 上書きした頂点データを使用して描画するので、DrawSubset関数は使用できない。
 		this->DrawHorizon();
 	}
 	else {
+		m_pEffect->CommitChanges();						//この関数を呼び出すことで、データの転送が確定する。
 		for (DWORD i = 0; i < container->NumMaterials; i++) {
 			container->MeshData.pMesh->DrawSubset(i);						// メッシュを描画
 		}
@@ -155,8 +136,13 @@ void CShadowSamplingRender::CopyBuffer() {
 
 	float* pWork;
 	m_pHorizonBuffer->Lock(0, desc.Size, (void**)&pWork, D3DLOCK_DISCARD);
-	for (int idx = 0; idx < m_Horizon.size(); idx++) {
-		*pWork = m_Horizon[idx];
+	for (int idx = 0; idx < m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices(); idx++) {
+		if (m_pModel->m_IsVerticesNumHorizon) {
+			*pWork = m_pModel->m_Horizon[idx];
+		}
+		else {
+			*pWork = m_pModel->m_HorizonSingle;
+		}
 		pWork++;
 	}
 	m_pHorizonBuffer->Unlock();
@@ -178,32 +164,25 @@ void CShadowSamplingRender::DrawHorizon() {
 	DWORD fvf = container->MeshData.pMesh->GetFVF();
 	DWORD stride = D3DXGetFVFVertexSize(fvf);
 
-	// いらない？
-	//(*graphicsDevice()).SetStreamSourceFreq(0,D3DSTREAMSOURCE_INDEXEDDATA | 1);
-	//(*graphicsDevice()).SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+	(*graphicsDevice()).SetStreamSourceFreq(0,D3DSTREAMSOURCE_INDEXEDDATA | 1);
+	(*graphicsDevice()).SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 
 	(*graphicsDevice()).SetVertexDeclaration(m_VertexDecl_Override);
-	//(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);
-	//(*graphicsDevice()).SetStreamSource(1, m_pHorizonBuffer, 0,sizeof(float));
-
-	// 境界線用のバッファーに値をコピー。
-	//this->CopyBuffer();
+	(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);
+	(*graphicsDevice()).SetStreamSource(1, m_pHorizonBuffer, 0,sizeof(float));
 
 	// インデックスバッファをセット。
 	(*graphicsDevice()).SetIndices(ib);
 
 	m_pEffect->CommitChanges();
-	int vert = container->MeshData.pMesh->GetNumVertices();
-	int numFace = container->MeshData.pMesh->GetNumFaces();
 	(*graphicsDevice()).DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, container->MeshData.pMesh->GetNumVertices(), 0, container->MeshData.pMesh->GetNumFaces());
 
 	// ここでバッファーを削除しないとメモリリークが発生する。
 	vb->Release();
 	ib->Release();
 
-	// 使い終わった配列を初期化。
-	// これをしないと配列の要素数がバッファーのサイズを超えてしまい、メモリ破壊が発生する。
-	m_Horizon.clear();
+	(*graphicsDevice()).SetStreamSourceFreq(0, 1);
+	(*graphicsDevice()).SetStreamSourceFreq(1, 1);
 }
 
 void CShadowSamplingRender::ActivateHorizon() {
@@ -232,6 +211,9 @@ void CShadowSamplingRender::ActivateHorizon() {
 		(*graphicsDevice()).CreateVertexDeclaration(DeclElement, &m_VertexDecl_Override);
 		// 境界線用のバッファー生成。
 		(*graphicsDevice()).CreateVertexBuffer(sizeof(float) * container->MeshData.pMesh->GetNumVertices(), 0, 0, D3DPOOL_MANAGED, &m_pHorizonBuffer, 0);
+
+		this->CopyBuffer();
+
 		m_IsFirst = false;
 	}
 }

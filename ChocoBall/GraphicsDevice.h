@@ -8,11 +8,6 @@ public:
 	CGraphicsDevice(){
 		m_pD3d = nullptr;
 		m_pDevice = nullptr;
-		//m_pMeshMat = nullptr;
-		//m_pMeshTex = nullptr;
-		//m_pMaterials = nullptr;
-		//m_pMesh = nullptr;
-		//m_pFileName = nullptr;
 	}
 	~CGraphicsDevice(){
 		FreeDX();
@@ -30,30 +25,11 @@ public:
 	HRESULT GetCooperativeLevel(void){
 		return m_pDevice->TestCooperativeLevel();
 	}
-	// デバイスの回復を試みる
-	//HRESULT RecoverDevice(){
-	//	return m_pDevice->Reset(&m_d3dpp);
-	//}
-	//LPDIRECT3DDEVICE9へのキャストに関するオペレータ演算子
+	// シングルトン
 	operator LPDIRECT3DDEVICE9() const { return this->m_pDevice; }
 private:
 	LPDIRECT3D9 m_pD3d;			//DIRECT3Dオブジェクト
 	LPDIRECT3DDEVICE9 m_pDevice;	//Direct3Dデバイス
-	//D3DMATERIAL9* m_pMeshMat;			// マテリアル情報
-	//LPDIRECT3DTEXTURE9* m_pMeshTex;		// メッシュのテクスチャ
-	//D3DXMATRIX m_translation;
-	//D3DXMATRIX m_rotation;
-	//LPD3DXBUFFER m_pMaterials;
-	//DWORD m_NumMaterials;
-	//LPD3DXMESH m_pMesh;
-	//LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL;
-	//D3DPRESENT_PARAMETERS m_d3dpp;
-	//D3DPRESENT_PARAMETERS m_d3dppWin;
-	//D3DPRESENT_PARAMETERS m_d3dppFull;
-//protected:
-	//LPCTSTR m_pFileName;	// 読み込むXファイルの名前を格納する
-	//D3DXVECTOR3 m_position;	// 位置情報
-	//D3DXVECTOR3 m_angle;	// 回転情報
 };
 
 //グローバル関数を定義してどこかにある実体を返す(ここでいうとcGraphicsDeviceクラスのインスタンスを返す)

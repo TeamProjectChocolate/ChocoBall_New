@@ -323,4 +323,8 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	m_RotationMatrix.clear();
 
 	m_pModel = nullptr;
+
+	(*graphicsDevice()).SetStreamSourceFreq(0, 1);
+	(*graphicsDevice()).SetStreamSourceFreq(1, 1);
+	(*graphicsDevice()).SetStreamSourceFreq(2, 1);
 }
