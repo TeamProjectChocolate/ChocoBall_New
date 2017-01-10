@@ -143,6 +143,8 @@
     <ClInclude Include="JetGimmick.h" />
     <ClInclude Include="LevelBuilder.h" />
     <ClInclude Include="LockOn.h" />
+    <ClInclude Include="MapObjectManager.h" />
+    <ClInclude Include="MapTable.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MoveFloor.h" />
     <ClInclude Include="Number.h" />
@@ -260,6 +262,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LockOn.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="MapObjectManager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MoveFloor.cpp" />
     <ClCompile Include="Number.cpp" />

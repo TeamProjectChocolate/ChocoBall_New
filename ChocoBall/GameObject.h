@@ -149,6 +149,9 @@ public:
 	inline void SetRotation(const D3DXVECTOR3& axis, float rota){
 		D3DXQuaternionRotationAxis(&(m_transform.angle), &axis, rota);
 	}
+	inline void SetQuaternion(const D3DXQUATERNION& quat) {
+		m_transform.angle = quat;
+	}
 
 	float GetmoveSpeed()
 	{

@@ -385,6 +385,10 @@
     <ClInclude Include="Skybox.h">
       <Filter>Game\Field</Filter>
     </ClInclude>
+    <ClInclude Include="MapTable.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -684,6 +688,7 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Game\Field</Filter>
     </ClCompile>
+    <ClCompile Include="MapObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">
