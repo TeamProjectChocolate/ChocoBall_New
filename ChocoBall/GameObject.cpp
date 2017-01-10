@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "EM_SamplingRender.h"
 #include "EM_SamplingRender_I.h"
+#include "ActreLight.h"
 
 CGameObject::~CGameObject()
 {
@@ -45,6 +46,10 @@ void CGameObject::InitInstancing(int num,bool isNull){
 
 void CGameObject::Update(){
 	m_pModel->Update(m_transform);
+	if (m_HasMyLight) {
+		// 女優ライトを使用する場合はワールド行列でライトを更新する。
+		static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);
+	}
 }
 
 void CGameObject::Draw(){

@@ -8,6 +8,7 @@ class StageWindow : EditorWindow
     string myString1 = "";
     string myString2 = "";
     string myString3 = "";
+    string myString4 = "";
 
 
     [MenuItem("Window/ヘッダー出力")]
@@ -93,5 +94,24 @@ class StageWindow : EditorWindow
                 Debug.Log("プレイヤーの情報が無事出力できました。");
             }
         }
+
+        //Windowのマップチップの情報の表示
+        myString4 = EditorGUILayout.TextField("マップチップの情報", myString4);
+        //マップチップの情報のボタンが押されtureが返って来る。
+        if (GUILayout.Button("マップチップの情報を出力"))
+        {
+            //空白の時の例外処理
+            if (myString4 == "")
+            {
+                Debug.Log("文字列を入力してください。");
+            }
+            else
+            {
+                //敵とギミックの情報の出力の処理
+                PlayerPositionInfo.ShowWindow(myString4);
+                Debug.Log("マップチップの情報が無事出力できました。");
+            }
+        }
+
     }
 }

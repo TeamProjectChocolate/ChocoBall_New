@@ -389,6 +389,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="MapObjectManager.h" />
+    <ClInclude Include="Enemy_People.h">
+      <Filter>Game\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -689,6 +692,9 @@
       <Filter>Game\Field</Filter>
     </ClCompile>
     <ClCompile Include="MapObjectManager.cpp" />
+    <ClCompile Include="Enemy_People.cpp">
+      <Filter>Game\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

@@ -1,11 +1,5 @@
 #include "stdafx.h"
-#include "EnemyManager.h"
-#include "RenderContext.h"
-#include "GameObject.h"
-#include "ObjectManager.h"
-#include "Player.h"
-#include "InputManager.h"
-
+#include "EnemyLR.h"
 
 CEnemyLR::CEnemyLR()
 {
@@ -26,7 +20,7 @@ void CEnemyLR::SetInitPosition(D3DXVECTOR3 pos)
 }
 void CEnemyLR::Initialize()
 {
-	EnemyBase::Initialize();
+	CEnemy_People::Initialize();
 	SetRotation(D3DXVECTOR3(0, 1, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_moveSpeed = 0.05f;
@@ -51,7 +45,7 @@ void CEnemyLR::Update()
 	if (m_State != MOVE_STATE::Fly){
 		m_State = MOVE_STATE::Walk;
 	}
-	EnemyBase::Update();
+	CEnemy_People::Update();
 }
 
 

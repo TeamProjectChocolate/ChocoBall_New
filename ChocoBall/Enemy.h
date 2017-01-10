@@ -1,14 +1,13 @@
 #pragma once
 #include "stdafx.h"
-#include "islntersect.h"
+#include "Enemy_People.h"
 #include "CourceDef.h"
 #include "Turn.h"
-#include "EnemyBase.h"
 #include "EnemyBullet.h"
 #include "Player.h"
 
 
-class CEnemy : public EnemyBase
+class CEnemy : public CEnemy_People
 {
 public:
 	CEnemy();

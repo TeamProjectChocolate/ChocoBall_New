@@ -10,13 +10,14 @@ class CEnemyManager;
 class EnemyBase : public CGameObject
 {
 public:
+	enum Enemy_ModelType { People = 0, Boss};
 	virtual void OnDestroy();
 	virtual void Initialize()override;
 	virtual void Update()override;
+	virtual void ConfigLight()override;
 	void Build();
-	virtual void Move() = 0;
 	void PlayerBulletHit(D3DXVECTOR3);
-	void RollingEnemy();
+	virtual void HitReaction() = 0;
 	void SetUpTechnique()override{
 		m_pRender->SetUpTechnique("Skin_Tex_Lim");
 	}
@@ -35,15 +36,17 @@ public:
 	MOVE_STATE GetMoveState(){
 		return m_State;
 	}
-private:
+
+	Enemy_ModelType GetMyType() {
+		return m_MyModelType;
+	}
+protected:
 	enum ENEMY_ANIMATION{ Down = 0, Wait, Walk, Stance,WaitNow, MAX };
 private:
-	CIsIntersect m_IsIntersect;		//CIsIntersectのインスタンス
-	float m_deadTimer;
 	CEnemyManager* m_pEnemyManager;
+protected:
 	ENEMY_ANIMATION m_AnimState;
 	PLAYING_STATE m_PlayingState;
-protected:
 	STAGE_ID m_StageID;
 	// 挙動制御関連。
 	MOVE_STATE m_State;
@@ -51,12 +54,18 @@ protected:
 	float m_TargetAngleY;
 	bool m_IsTurn;
 	CTurn m_Turn;				//CTurnのインスタンス
+	Enemy_ModelType m_MyModelType;
 };
 
-static double EnemyAnimationTime[] = {
-	21.0 / 30.0,
-	101.0 / 30.0,
-	16.0 / 30.0,
-	9.0 / 30.0,
-	101.0 / 30.0,
+#define Max_AnimNum 5
+
+static double EnemyAnimationTime[][Max_AnimNum] = {
+	// 人型雑魚エネミー。
+	{
+		21.0 / 30.0,
+		101.0 / 30.0,
+		16.0 / 30.0,
+		9.0 / 30.0,
+		101.0 / 30.0
+	}
 };

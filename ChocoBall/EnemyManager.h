@@ -1,8 +1,5 @@
 #pragma once
-#include "Enemy.h"
-#include "EnemyLR.h"
-#include "EnemyFB.h"
-#include "Enemyjamp.h"
+#include "EnemyBase.h"
 #include "GameObject.h"
 #include "ShadowRender.h"
 
@@ -19,10 +16,8 @@ public:
 		this->DeleteAll();
 	}
 
-	void ConfigLight()override;
 	void AddEnemy(EnemyBase* enemy)
 	{
-		enemy->SetLight(m_pLight);
 		m_Enemys.push_back(enemy);
 	}
 	void DeleteEnemy(EnemyBase* enemy)

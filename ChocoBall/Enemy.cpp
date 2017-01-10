@@ -1,10 +1,7 @@
 #include "stdafx.h"
-#include "EnemyManager.h"
-#include "RenderContext.h"
-#include "GameObject.h"
+#include "Enemy.h"
 #include "ObjectManager.h"
 #include "Player.h"
-#include "InputManager.h"
 
 extern CEnemyManager g_enemyMgr;
 extern CPlayer* g_player;
@@ -29,7 +26,7 @@ void CEnemy::SetInitPosition(D3DXVECTOR3 pos)
 }
 void CEnemy::Initialize()
 {
-	EnemyBase::Initialize();
+	CEnemy_People::Initialize();
 	SetRotation(D3DXVECTOR3(0, 1, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_moveSpeed = 0.0f;
@@ -80,7 +77,7 @@ void CEnemy::Update()
 		}
 	}
 
-	EnemyBase::Update();
+	CEnemy_People::Update();
 }
 
 

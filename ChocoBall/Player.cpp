@@ -250,8 +250,8 @@ void CPlayer::Update()
 	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
 	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2.0f*/5.0f, 0.0f));
 
-	// ライトの更新
-	static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);
+	//// ライトの更新
+	//static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);
 
 	// 弾の更新および削除。
 	int size = m_bullets.size();

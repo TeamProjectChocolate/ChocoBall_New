@@ -9,6 +9,6 @@ struct MapObject
 	D3DXVECTOR3 Scale;
 };
 
-static MapObject MapObjects_Boss[] = {
-
-};
+//static MapObject MapObjects_Boss[] = {
+//
+//};

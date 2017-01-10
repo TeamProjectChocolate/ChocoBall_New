@@ -1,12 +1,6 @@
 #pragma once
 #include "stdafx.h"
 #include "EnemyFB.h"
-#include "EnemyManager.h"
-#include "RenderContext.h"
-#include "GameObject.h"
-#include "ObjectManager.h"
-#include "Player.h"
-#include "InputManager.h"
 
 
 CEnemyFB::CEnemyFB()
@@ -19,7 +13,7 @@ CEnemyFB::~CEnemyFB(){ }
 
 void CEnemyFB::Initialize()
 {
-	EnemyBase::Initialize();
+	CEnemy_People::Initialize();
 	SetRotation(D3DXVECTOR3(0, 1, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_moveSpeed = 0.05f;
@@ -46,7 +40,7 @@ void CEnemyFB::Update()
 	if (m_State != MOVE_STATE::Fly){
 		m_State = MOVE_STATE::Walk;
 	}
-	EnemyBase::Update();
+	CEnemy_People::Update();
 }
 
 

@@ -61,6 +61,7 @@ bool CPlayerBullet::BulletEnemyCollision(){
 		if (L <= 1)
 		{
 			if (NearEnemy->GetMoveState() != MOVE_STATE::Fly){
+				if(NearEnemy->GetMyType() != EnemyBase::Enemy_ModelType::Boss)
 				EnemyDownNum++;
 			}
 			NearEnemy->PlayerBulletHit(m_bullet->GetDirection());

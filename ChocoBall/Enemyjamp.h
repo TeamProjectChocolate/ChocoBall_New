@@ -1,13 +1,11 @@
 #pragma once
 #include "stdafx.h"
-#include "C3DImage.h"
+#include "Enemy_People.h"
 #include "Rigidbody.h"
-#include "islntersect.h"
 #include "CourceDef.h"
 #include "Turn.h"
-#include "EnemyBase.h"
 
-class CEnemyjamp : public EnemyBase
+class CEnemyjamp : public CEnemy_People
 {
 public:
 	CEnemyjamp();

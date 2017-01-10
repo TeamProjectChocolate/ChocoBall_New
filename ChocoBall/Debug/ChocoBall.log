@@ -1,17 +1,4 @@
-﻿  InputManager.cpp
-c:\github\chocoball_new\chocoball\interface.h(5): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'INTERFACE_TYPE' の左辺を無視します。
-  コードを生成中...
-  コンパイル中...
-  AllocateHierarchy.cpp
-c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
-c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
-c:\github\chocoball_new\chocoball\infomation.h(70): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
-c:\github\chocoball_new\chocoball\infomation.h(78): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
-c:\github\chocoball_new\chocoball\allocatehierarchy.cpp(15): warning C4316: 'D3DXFRAME_DERIVED': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-  コードを生成中...
-  コンパイル中...
-  DirectX.cpp
-c:\github\chocoball_new\chocoball\interface.h(5): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'INTERFACE_TYPE' の左辺を無視します。
+﻿  Enemy_People.cpp
 c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
 c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
 c:\github\chocoball_new\chocoball\infomation.h(70): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
@@ -19,9 +6,6 @@ c:\github\chocoball_new\chocoball\infomation.h(78): warning C4091: 'typedef ': �
 c:\github\chocoball_new\chocoball\animation.h(63): warning C4800: 'ID3DXAnimationController *const ': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
 c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'int2' の左辺を無視します。
 c:\github\chocoball_new\chocoball\rendercontext.h(27): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
-c:\github\chocoball_new\chocoball\gameobject.h(79): warning C4316: 'C2DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-c:\github\chocoball_new\chocoball\gameobject.h(85): warning C4316: 'C3DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
 c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
@@ -117,90 +101,11 @@ c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(82): warning C4
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(88): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(100): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
-c:\github\chocoball_new\chocoball\courcedef.h(11): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'COURCE_BLOCK' の左辺を無視します。
-c:\github\chocoball_new\chocoball\bullet.h(41): warning C4927: 変換が正しくありません。複数のユーザー定義の変換が暗黙的に適用されています。
-  c:\github\chocoball_new\chocoball\bullet.h(41): note: コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.inl(270): note: 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください
-  コードを生成中...
-  スキップ中... (関連する変更は検出されませんでした)
-  islntersect.cpp
-  ZBufferSphere.cpp
-  UpFloor.cpp
-  Tunr.cpp
-  TitleSelect.cpp
-  TitleCursor.cpp
-  TitleBack.cpp
-  TestObject2D.cpp
-  TestInstancing.cpp
-  StageManager.cpp
-  Stage.cpp
-  SmokeJet.cpp
-  Skybox.cpp
-  SkinModelData.cpp
-  ShadowSamplingRender_I.cpp
-  ShadowSamplingRender.cpp
-  ShadowRender.cpp
-  Score.cpp
-  SceneTitle.cpp
-  SceneResult.cpp
-  Scene.cpp
-  Rigidbody.cpp
-  ResultSelect.cpp
-  ResultCursor.cpp
-  ResultBack.cpp
-  Result.cpp
-  RenderTarget.cpp
-  RenderContext.cpp
-  Primitive.cpp
-  PlayerBullet.cpp
-  Player.cpp
-  ParticleEmitter.cpp
-  Particle.cpp
-  ObjectManager.cpp
-  Number.cpp
-  MoveFloor.cpp
-  MainScene.cpp
-  LockOn.cpp
-  LevelBuilder.cpp
-  JetGimmick.cpp
-  InstancingRender.cpp
-  ImageManager.cpp
-  Icon.cpp
-  GraphicsDevice.cpp
-  GameOver.cpp
-  GameObject.cpp
-  GameManager.cpp
-  GameCamera.cpp
-  FireJet.cpp
-  Field.cpp
-  FallFloor.cpp
-  Enemyjamp.cpp
-  EnemyManager.cpp
-  EnemyLR.cpp
-  EnemyFB.cpp
-  EnemyBullet.cpp
-  EnemyBase.cpp
-  Enemy.cpp
-  Effect.cpp
-  EM_SamplingRender_I.cpp
-  EM_SamplingRender.cpp
-  EM_Render.cpp
-  DofRender.cpp
-  DirectFont.cpp
-  CourceCamera.cpp
-  ClearText.cpp
-  ChocoBall.cpp
-  Camera.cpp
-  CBManager.cpp
-  C3DObjectRender_S.cpp
-  C3DObjectRender.cpp
-  C3DImage.cpp
-  C2DRender.cpp
-  C2DImage.cpp
-  BulletPhysics.cpp
-  Bullet.cpp
-  BuildBlock.cpp
-  BloomRender.cpp
-  Block.cpp
+c:\github\chocoball_new\chocoball\gameobject.h(79): warning C4316: 'C2DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\github\chocoball_new\chocoball\gameobject.h(85): warning C4316: 'C3DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
+c:\github\chocoball_new\chocoball\enemy_people.cpp(54): warning C4305: '+=': 'double' から 'float' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemy_people.cpp(96): warning C4305: '+=': 'double' から 'float' へ切り詰めます。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
   ChocoBall.vcxproj -> C:\GitHub\ChocoBall_New\Debug\ChocoBall.exe
   ChocoBall.vcxproj -> C:\GitHub\ChocoBall_New\Debug\ChocoBall.pdb (Full PDB)
