@@ -42,7 +42,6 @@ c:\github\chocoball_new\chocoball\debug\resultselect.obj
 c:\github\chocoball_new\chocoball\debug\rigidbody.obj
 c:\github\chocoball_new\chocoball\debug\scene.obj
 c:\github\chocoball_new\chocoball\debug\sceneresult.obj
-c:\github\chocoball_new\chocoball\debug\gamecamera.obj
 c:\github\chocoball_new\chocoball\debug\gamemanager.obj
 c:\github\chocoball_new\chocoball\debug\gameobject.obj
 c:\github\chocoball_new\chocoball\debug\gameover.obj
@@ -60,10 +59,9 @@ c:\github\chocoball_new\chocoball\debug\levelbuilder.obj
 c:\github\chocoball_new\chocoball\debug\light.obj
 c:\github\chocoball_new\chocoball\debug\lockon.obj
 c:\github\chocoball_new\chocoball\debug\mainscene.obj
+c:\github\chocoball_new\chocoball\debug\mapobjectmanager.obj
 c:\github\chocoball_new\chocoball\debug\model.obj
 c:\github\chocoball_new\chocoball\debug\movefloor.obj
-c:\github\chocoball_new\chocoball\debug\courcecamera.obj
-c:\github\chocoball_new\chocoball\debug\courcedef.obj
 c:\github\chocoball_new\chocoball\debug\directfont.obj
 c:\github\chocoball_new\chocoball\debug\directinput.obj
 c:\github\chocoball_new\chocoball\debug\directx.obj
@@ -79,9 +77,11 @@ c:\github\chocoball_new\chocoball\debug\enemylr.obj
 c:\github\chocoball_new\chocoball\debug\enemyfb.obj
 c:\github\chocoball_new\chocoball\debug\enemyjamp.obj
 c:\github\chocoball_new\chocoball\debug\enemymanager.obj
+c:\github\chocoball_new\chocoball\debug\enemy_people.obj
 c:\github\chocoball_new\chocoball\debug\fallfloor.obj
 c:\github\chocoball_new\chocoball\debug\field.obj
 c:\github\chocoball_new\chocoball\debug\firejet.obj
+c:\github\chocoball_new\chocoball\debug\gamecamera.obj
 c:\github\chocoball_new\chocoball\debug\actrelight.obj
 c:\github\chocoball_new\chocoball\debug\allocatehierarchy.obj
 c:\github\chocoball_new\chocoball\debug\animation.obj
@@ -100,8 +100,8 @@ c:\github\chocoball_new\chocoball\debug\camera.obj
 c:\github\chocoball_new\chocoball\debug\cbmanager.obj
 c:\github\chocoball_new\chocoball\debug\chocoball.obj
 c:\github\chocoball_new\chocoball\debug\cleartext.obj
-c:\github\chocoball_new\chocoball\debug\mapobjectmanager.obj
-c:\github\chocoball_new\chocoball\debug\enemy_people.obj
+c:\github\chocoball_new\chocoball\debug\courcecamera.obj
+c:\github\chocoball_new\chocoball\debug\courcedef.obj
 c:\github\chocoball_new\debug\chocoball.ilk
 c:\github\chocoball_new\debug\chocoball.exe
 c:\github\chocoball_new\debug\chocoball.pdb

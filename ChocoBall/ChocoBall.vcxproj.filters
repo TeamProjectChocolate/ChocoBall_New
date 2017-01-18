@@ -385,12 +385,14 @@
     <ClInclude Include="Skybox.h">
       <Filter>Game\Field</Filter>
     </ClInclude>
-    <ClInclude Include="MapTable.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="MapObjectManager.h" />
     <ClInclude Include="Enemy_People.h">
       <Filter>Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTable.h">
+      <Filter>Game\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectManager.h">
+      <Filter>Game\Field</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -691,9 +693,11 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Game\Field</Filter>
     </ClCompile>
-    <ClCompile Include="MapObjectManager.cpp" />
     <ClCompile Include="Enemy_People.cpp">
       <Filter>Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectManager.cpp">
+      <Filter>Game\Field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

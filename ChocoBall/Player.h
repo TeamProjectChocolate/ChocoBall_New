@@ -35,7 +35,7 @@ public:
 	void Update()override;
 	void Draw()override;
 	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("Skin_Tex_Lim");
+		m_pRender->SetUpTechnique("Skin_Tex");
 	}
 	void EM_SetUpTechnique()override{
 		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");

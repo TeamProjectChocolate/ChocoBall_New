@@ -211,30 +211,36 @@ struct Flags{
 #define BLOOM 7
 #define LIM 8
 #define TEX_SHADOW_VSM_ZMASK 9
-#define TEX_LIM 10
-#define TEX_FRESNEL 11
-#define TEX_BLOOM 12
-#define TEX_SHADOW_VSM_FRESNEL 13
-#define TEX_SHADOW_VSM 14
-#define TEX_SHADOW 15
+#define TEX_SHADOW_ZMASK 10
+#define TEX_LIM 11
+#define TEX_FRESNEL 12
+#define TEX_BLOOM 13
+#define TEX_SHADOW_VSM_FRESNEL 14
+#define TEX_SHADOW_VSM 15
+#define TEX_SHADOW 16
+#define TEX_SHADOW_VSM_ZMASK_FRESNEL 17
+#define TEX_SHADOW_ZMASK_FRESNEL 18
 
 static Flags g_FlagsType[] = {
-	{ false, false, false, false, false, false, false, false },	// ライトのみを当てた描画。
-	{ true, false, false, false, false, false, false, false },	// テクスチャ追加。
-	{ false, true, false, false, false, false, false, false },	// シャドウ。
-	{ false, true, true, false, false, false, false, false },	// ソフトシャドウ。
-	{ false, false, false, true, false, false, false, false },// 法線マップ。
-	{ false, false, false, false, true, false, false, false },// Zマスク。
-	{ false, false, false, false, false, true, false, false },// フレネル反射。
-	{ false, false, false, false, false, false, true, false },// ブルーム。
-	{ false, false, false, false, false, false, false, true },// リムライト。
-	{ true, true, true, false, true, false, false, false },// テクスチャ、ソフトシャドウ、Zマスク。
-	{ true, false, false, false, false, false, false, true },// テクスチャ、リムライト。
-	{ true, false, false, false, false, true, false, false },//テクスチャ、フレネル反射。
-	{ true, false, false, false, false, false, true, false },//テクスチャ、ブルーム。
-	{ true, true, true, false, false, true, false, false },//テクスチャ、ソフトシャドウ、フレネル反射。
-	{ true, true, true, false, false, false, false, false },//テクスチャ、ソフトシャドウ。
-	{ true, true, false, false, false, false, false, false },//テクスチャ、シャドウ。
+	{ false, false, false, false, false, false, false, false },	// ライトのみを当てた描画。0
+	{ true, false, false, false, false, false, false, false },	// テクスチャ追加。1
+	{ false, true, false, false, false, false, false, false },	// シャドウ。2
+	{ false, true, true, false, false, false, false, false },	// ソフトシャドウ。3
+	{ false, false, false, true, false, false, false, false },// 法線マップ。4
+	{ false, false, false, false, true, false, false, false },// Zマスク。5
+	{ false, false, false, false, false, true, false, false },// フレネル反射。6
+	{ false, false, false, false, false, false, true, false },// ブルーム。7
+	{ false, false, false, false, false, false, false, true },// リムライト。8
+	{ true, true, true, false, true, false, false, false },// テクスチャ、ソフトシャドウ、Zマスク。9
+	{ true, true, false, false, true, false, false, false },// テクスチャ、シャドウ、Zマスク。10
+	{ true, false, false, false, false, false, false, true },// テクスチャ、リムライト。11
+	{ true, false, false, false, false, true, false, false },//テクスチャ、フレネル反射。12
+	{ true, false, false, false, false, false, true, false },//テクスチャ、ブルーム。13
+	{ true, true, true, false, false, true, false, false },//テクスチャ、ソフトシャドウ、フレネル反射。14
+	{ true, true, true, false, false, false, false, false },//テクスチャ、ソフトシャドウ。15
+	{ true, true, false, false, false, false, false, false },//テクスチャ、シャドウ。16
+	{ true, true, true, false, true, true, false, false },// テクスチャ、ソフトシャドウ、Zマスク、フレネル反射。17
+	{ true, true, false, false, true, true, false, false },// テクスチャ、シャドウ、Zマスク、フレネル反射。18
 };
 
 // ピクセルシェーダ
@@ -254,8 +260,8 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 
 	float3 normal;		// 法線マップに書き込まれている法線
 	if (flags.NMap){
-		normal = tex2D(g_normalMapSampler, In.uv);	// ここで得られる値は0.0から1.0(本来は-1.0から1.0の意味でなければならない)
-		// -1.0～1.0の範囲に調整する
+		normal = tex2D(g_normalMapSampler, In.uv);	// ここで得られる値は0.0から1.0。
+		// -1.0～1.0の範囲に調整する。
 		normal = (normal * 2.0f) - 1.0f;
 
 		float3 biNormal;	// 従ベクトル(ポリゴンに沿うベクトル、三次元空間では軸が三つ必要なため、法線と接ベクトルと従ベクトルを使用する)
@@ -272,11 +278,12 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 	}
 	else
 	{
-		normal = In.normal;
+		normal = normalize(In.normal);
 	}
 
 	// ディフューズライトの計算
-	float4 light = CalcDiffuseLight(normal);
+	float4 light = (float4)0;
+	light = CalcDiffuseLight(normal);
 
 	// リムライトの計算
 	if (flags.Lim){
@@ -310,6 +317,7 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 
 	// アンビエントライトを加算
 	light.xyz += g_light.ambient;
+	light.xyz = clamp(light.xyz, 0.0f, 1.0f);
 
 	if (flags.Bloom){
 		// αに輝度を埋め込む
@@ -322,20 +330,61 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 	if (flags.Fresnel){
 		float alpha = color.a;
 		// 視線の反射ベクトル算出。
-		float3 vReflect = reflect(mul(g_EyeDir, World), normal);
-		float4 work1 = texCUBE(cubeTexSampler, vReflect);
-		work1.a = 1.0f;
+		float3 vReflect = reflect(normal,In.WorldPos - mul(g_EyePosition, World) * -1.0f/*, float3(0.0f,-1.0f,0.0f)*/);
+		float4 ReflectColor = texCUBE(cubeTexSampler, vReflect);
+		ReflectColor.a = 1.0f;
 		// 視線の屈折ベクトル算出。
-		float3 vRefract = refract(mul(g_EyeDir, World), normal, g_Refractive);
-		float4 work2 = texCUBE(cubeTexSampler, vRefract);
-		work2.a = 1.0f;
+		float3 vRefract = refract(In.WorldPos - mul(g_EyePosition, World) * -1.0f, normal, g_Refractive);
+		float4 RefractColor = texCUBE(cubeTexSampler, vRefract);
+		RefractColor.a = 1.0f;
 		// フレネル反射率計算。
-		float fresnel = CalcFresnel(normal, In.WorldPos, 1.000293f/*地球の大気の屈折率。*/, g_Refractive);
+		float fresnel = /*clamp(*/CalcFresnel(normal, In.WorldPos, mul(g_EyeDir, World), 1.000293f/*地球の大気の屈折率。*/, g_Refractive)/*,0.0f,1.0f)*/;
+
 		// 求めた反射率でブレンディング。
+		
+		// ケース１
+		//color.xyz = (color.xyz * alpha) + ((1.0f - alpha) * fresnel * ReflectColor.xyz) + ((1.0f - alpha) * (1.0f - alpha) * RefractColor.xyz);
+		
+		// ケース２
 		color.xyz *= (1.0f - fresnel) * alpha;
-		color.xyz += work1.xyz * fresnel * alpha;
-		color.xyz += work2.xyz * (1.0f - alpha)/* * fresnel*/;
-		color.a = /*1.0f*/alpha;
+		color.xyz += ReflectColor.xyz * fresnel * alpha;
+		color.xyz += RefractColor.xyz * (1.0f - alpha)/* * fresnel*/;
+
+		// ケース３
+		//color.xyz = ((alpha * fresnel) * ReflectColor.xyz) + ((1.0f - alpha) * (1.0f - fresnel) * RefractColor.xyz) + ((((1.0f - alpha) - ((1.0f - alpha) * (1.0f - fresnel))) + (alpha - (alpha * fresnel))) * color.xyz);
+
+		// ケース４
+		//// 反射先のピクセルと屈折先のピクセルを合成。
+		//float3 WorkColor = (alpha * fresnel * ReflectColor.xyz);
+		//WorkColor += ((1.0f - alpha) * RefractColor.xyz);
+		//// 透明度で物体自身のカラーと合成。
+		//color.xyz = (color.xyz * (alpha - (alpha * fresnel))) + WorkColor;
+
+		// ケース５
+		//float3 WorkColor = (fresnel * ReflectColor.xyz);
+		//WorkColor += ((1.0f - fresnel) * color.xyz);
+		//color.xyz = (WorkColor * alpha) + (RefractColor.xyz * (1.0f - alpha));
+
+		// ケース６
+		//color.xyz = color.xyz * (1.0f - fresnel) * alpha;
+		//color.xyz += ReflectColor.xyz * (1.0f - fresnel) * (1.0f - alpha);
+		//color.xyz += RefractColor.xyz * fresnel;
+
+		//color.a = clamp(alpha + fresnel,0.0f,1.0f);
+		//color.a = alpha;
+
+		// ケース７
+		//color = lerp(ReflectColor, RefractColor, fresnel);
+
+		color.a = alpha/*fresnel * 0.5f + 0.5f*/;
+
+		//color.a = clamp(alpha + Refractive,0.0f,1.0f);
+		//if (alpha <= 0.01f) {
+		//	color.a = Refractive;
+		//}
+		//else {
+		//	color.a = alpha;
+		//}
 		//color += lerp(work1, work2, fresnel);
 		//color.a = fresnel*0.5 + 0.5;
 		//color.xyz += (work1.xyz * fresnel)/* + (work2 * (1.0f - fresnel))*/;
@@ -409,12 +458,26 @@ technique Skin_Tex_Fresnel{
 	}
 }
 
-technique Boneless_Tex_Fresnel/*NotNormalMapNonAnimationFresnelTec*/{
+technique Boneless_Tex_Fresnel{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(false);
 		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_FRESNEL]);
 	}
 }
+
+technique Boneless_Tex_Shadow_VSM_ZMask_Fresnel {
+	pass p0 {
+		VertexShader = compile vs_3_0 VS_Main(false);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_VSM_ZMASK_FRESNEL]);
+	}
+};
+
+technique Boneless_Tex_Shadow_ZMask_Fresnel {
+	pass p0 {
+		VertexShader = compile vs_3_0 VS_Main(false);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_ZMASK_FRESNEL]);
+	}
+};
 
 technique Boneless_Tex_Shadow_VSM_ZMask{
 	pass p0{
@@ -426,7 +489,7 @@ technique Boneless_Tex_Shadow_VSM_ZMask{
 technique Boneless_Tex_Shadow_ZMask{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(false);
-		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_VSM_ZMASK]);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_ZMASK]);
 	}
 };
 
@@ -444,14 +507,14 @@ technique Boneless_Tex_Shadow{
 	}
 };
 
-technique Boneless_Tex_Shadow_VSM_Fresnel/*NotNormalMapNonAnimationFresnelShadowTec*/{
+technique Boneless_Tex_Shadow_VSM_Fresnel{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(false);
 		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_SHADOW_VSM_FRESNEL]);
 	}
 }
 
-technique Bonelsee_Tex_Bloom/*NotNormalMapNonAnimationBloomTec*/{
+technique Bonelsee_Tex_Bloom{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(false);
 		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_BLOOM]);
@@ -475,7 +538,7 @@ technique Boneless_Tex_Lim{
 technique Skin_Tex{
 	pass p0{
 		VertexShader = compile vs_3_0 VS_Main(true);
-		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX_LIM]);
+		PixelShader = compile ps_3_0 PS_Main(g_FlagsType[TEX]);
 	}
 };
 

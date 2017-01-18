@@ -195,9 +195,11 @@ void C3DObjectRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	// 環境マップをシェーダーに渡す。
 	m_pEffect->SetTexture("g_CubeTex", SINSTANCE(CRenderContext)->GetEMRender()->GetCubeTex());
 
+
 	for (DWORD i = 0; i < container->NumMaterials; i++){
 		m_pEffect->SetTexture(m_hShadowMap, SINSTANCE(CShadowRender)->GetTexture());	// テクスチャ情報をセット
 		m_pEffect->SetTexture(m_hTexture, container->ppTextures[i]);	// テクスチャ情報をセット
+		// 法線マップをシェーダーに渡す。
 		//m_pEffect->SetTexture("g_normalMap", SINSTANCE(CImageManager)->Find2DImage(_T("image/normal.jpg"))->pTex);
 		m_pEffect->CommitChanges();						//この関数を呼び出すことで、データの転送が確定する。
 		container->MeshData.pMesh->DrawSubset(i);						// メッシュを描画

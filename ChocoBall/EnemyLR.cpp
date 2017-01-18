@@ -55,7 +55,7 @@ void CEnemyLR::Draw()
 	{
 		m_Rigidbody.Draw();
 		SetUpTechnique();
-		CGameObject::Draw();
+		CEnemy_People::Draw();
 	}
 }
 

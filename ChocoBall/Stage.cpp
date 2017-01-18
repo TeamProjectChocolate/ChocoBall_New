@@ -8,6 +8,7 @@
 #include "StageTable.h"
 #include "ParticleEmitter.h"
 #include "Icon.h"
+#include "MapObjectManager.h"
 
 CStage::CStage()
 {
@@ -24,32 +25,34 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 {
 	m_Stage_ID = NowId;
 
+	// ステージを生成していく。
+	// すべてのステージに必要なゲームオブジェクトをアクティブ化。
 	ActivateObjects();
 
+	// どのステージか通知。
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
 	m_pCamera->SetStageID(m_Stage_ID);
-
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 	m_pEnemyManager->SetStageID(m_Stage_ID);
-
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
 	m_pPlayer->SetStageID(m_Stage_ID);
+	SINSTANCE(CObjectManager)->FindGameObject<CMapObjectManager>(_T("TESTStage3D"))->SetStageID(m_Stage_ID);
+	SINSTANCE(CRenderContext)->GetEMRender()->SetPos(EM_CameraPosArray[m_Stage_ID]);
+
 	m_pPlayer->SetAudio(pAudio);
 
-	SINSTANCE(CObjectManager)->FindGameObject<CField>(_T("TESTStage3D"))->SetStageID(m_Stage_ID);
-	SINSTANCE(CObjectManager)->GenerationObject<Skybox>(_T("skybox"), PRIORTY::OBJECT3D, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CZBufferSphere>(_T("ZBufferSphere"), PRIORTY::PLAYER, false);
-
+	// ObjectManagerにゲームオブジェクト群を初期化させる。
 	SINSTANCE(CObjectManager)->Intialize();
 
+	// GUIのポジションを設定。
 	m_StageClearNum = SINSTANCE(CObjectManager)->FindGameObject<CNumber>(_T("StageNUMBER"));
 	m_StageClearNum->SetPos(D3DXVECTOR3(230.0f, 130.0f, 0.0f));
 	m_StageClearNum->SetValue(CStageManager::m_ClearNum);
-
 	CIcon* obj = SINSTANCE(CObjectManager)->FindGameObject<CIcon>(_T("Clear_Icon"));
 	obj->SetPos(D3DXVECTOR3(60.0f, 130.0f, 1.0f));
 	obj->SetScale(D3DXVECTOR3(60.0f, 65.0f, 0.0f));
 
+	// プレイヤーで使用するコース定義。
 	CCourceDef* cource = m_pPlayer->GetCourceDef();
 	COURCE_BLOCK block = cource->FindCource(cource->EndCource());
 	D3DXVECTOR3 workVec = block.endPosition - block.startPosition;
@@ -57,19 +60,22 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	D3DXVec3Cross(&workVec, &workVec, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 	D3DXVec3Normalize(&workVec, &workVec);
 
+	// ゴールパーティクル。
 	CParticleEmitter::EmitterCreate(_T("GoalParticle_Left"), PARTICLE_TYPE::STAR, block.endPosition - (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
 	CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
 
+	// レベル生成。
 	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), PRIORTY::EMITTER, false);
 	m_CLevelBuilder->SetIsStage(m_Stage_ID);
 	m_CLevelBuilder->Build(pAudio);
 
+	// プレイヤーをシャドウキャスターに設定。
 	SINSTANCE(CShadowRender)->Entry(m_pPlayer);
 
 	// 共通ライト設定。
 	this->ConfigLight();
-	m_pAudio = pAudio;
 
+	m_pAudio = pAudio;
 	m_pAudio->PlayCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽再生
 	m_GameState = GAMEEND_ID::CONTINUE;
 	m_isGameContinue = true;
@@ -127,34 +133,18 @@ void CStage::Draw()
 }
 
 
-// ステージで使用するオブジェクトの情報を配列に追加したらここのif文を追加すること
-void CStage::ActivateObjects(){
-	LPCSTR* ObjectDataArray = StageArray[m_Stage_ID];
-	int size = StageObjectNumArray[m_Stage_ID];
+void CStage::ActivateObjects() {
 
-	for (int idx = 0; idx < size; idx++){
-		if (strcmp(ObjectDataArray[idx], "TESTStage3D") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CField>(_T(ObjectDataArray[idx]), PRIORTY::OBJECT3D, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "BulletPhysics") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CBulletPhysics>(_T(ObjectDataArray[idx]), PRIORTY::CONFIG, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "Camera") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CCourceCamera>(_T(ObjectDataArray[idx]), PRIORTY::CONFIG, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "EnemyManager") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CEnemyManager>(_T(ObjectDataArray[idx]), PRIORTY::ENEMY, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "TEST3D") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CPlayer>(_T(ObjectDataArray[idx]), PRIORTY::PLAYER, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "NUMBER") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T(ObjectDataArray[idx]), PRIORTY::OBJECT2D_ALPHA, false);
-		}
-		else if (strcmp(ObjectDataArray[idx], "StageNUMBER") == 0){
-			SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T(ObjectDataArray[idx]), PRIORTY::OBJECT2D_ALPHA, false);
-		}
-	}
+	// すべてのステージ共通のオブジェクト。
+	SINSTANCE(CObjectManager)->GenerationObject<Skybox>(_T("skybox"), PRIORTY::OBJECT3D, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CZBufferSphere>(_T("ZBufferSphere"), PRIORTY::PLAYER, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CMapObjectManager>(_T("TESTStage3D"), PRIORTY::OBJECT3D_ALPHA, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CBulletPhysics>(_T("BulletPhysics"), PRIORTY::CONFIG, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CCourceCamera>(_T("Camera"), PRIORTY::CONFIG, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CEnemyManager>(_T("EnemyManager"), PRIORTY::ENEMY, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CPlayer>(_T("TEST3D"), PRIORTY::PLAYER, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("NUMBER"), PRIORTY::OBJECT2D_ALPHA, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("StageNUMBER"), PRIORTY::OBJECT2D_ALPHA, false);
 }
 
 void CStage::ConfigLight() {

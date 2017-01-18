@@ -44,8 +44,14 @@ void CLevelBuilder::Build(CAudio* pAudio)
 	SEnemyAndGimmickInfo* pInfo = infoTableArray[StageID];
 	CEnemyManager* enemyMgr = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 	for (int i = 0; i < tableSize; i++){
-
 		SEnemyAndGimmickInfo info = pInfo[i];
+		if (tableSize == 1) {
+			if (info.enemyType == EnemyType::EnemyType_None && info.gimmickType == GimmickType::GimmickType_None) {
+				// エネミーもギミックも配置されていない。
+				break;
+			}
+		}
+
 		if (info.enemyType == EnemyType::EnemyType_LR){
 			//敵を生成。
 			CEnemyLR* enemy = new CEnemyLR;
@@ -221,6 +227,12 @@ void CLevelBuilder::Build(CAudio* pAudio)
 	SCollisionInfo* pInfo2 = GimmickinfoTableArray[StageID];
 	for (int i = 0; i < arraySize2; i++) {
 		SCollisionInfo& collision = pInfo2[i];
+		if (arraySize2 == 1) {
+			if (D3DXVec3Length(&collision.scale) <= 0.001f) {
+				// 配置されていない。
+				break;
+			}
+		}
 		m_GhostShape[i] = new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f));
 		btTransform groundTransform;
 		groundTransform.setIdentity();

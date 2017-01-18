@@ -19,6 +19,9 @@ public:
 	LPDIRECT3DCUBETEXTURE9 GetCubeTex(){
 		return m_pCubeTex;
 	}
+	void SetPos(const D3DXVECTOR3& pos) {
+		m_CameraPos = pos;
+	}
 private:
 	CRenderTarget m_RenderTarget;
 	LPDIRECT3DCUBETEXTURE9 m_pCubeTex;
@@ -26,6 +29,7 @@ private:
 	LPDIRECT3DSURFACE9 m_pCubeSurfaces[HEXA];
 	CCamera m_Cameras[HEXA];
 	bool m_isEnable;
+	D3DXVECTOR3 m_CameraPos;
 };
 
 // ˜Z–Ê‘Ì‚»‚ê‚¼‚ê‚Ì–Ê‚ğ•`‰æ‚·‚éÛ‚ÌƒJƒƒ‰‚ÌŒü‚«B

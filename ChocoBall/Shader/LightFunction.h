@@ -60,19 +60,67 @@ sampler_state{
 	MipFilter = LINEAR;
 };
 
+// 屈折率計算。
+float CalcRefractive(
+	float Refractive1,	//現在光が進んでいる物の反射率。
+	float Refractive2	//光が透過しようとしている物質の反射率。
+	) {
+	return Refractive1 / Refractive2;	// 屈折率算出。
+}
+
+
+//float Fresnel() {
+//}
+
+// Sclickの近似式。
+float Schlick(float f0, float u) {
+	return f0 + (1.0f - f0) * pow(min(0.0f,1.0f - u), 5);
+}
+
+//float Phong() {
+//
+//}
+
+// 反射ピクセルと屈折ピクセルをフレネル反射率で合成。
+float4 lerp(float4 refract, float4 reflect, float fresnel)
+{
+	return float4(refract + (reflect - refract)*fresnel);
+}
+
+// ケース１
+//// フレネル反射率計算。
 float CalcFresnel(
 	float3 normal,		//ワールド座標系での法線。
 	float4 pos,			//ワールド座標系での頂点座標。
+	float4 EyeDir,		//カメラの向き。 
 	float Refractive1,	//現在光が進んでいる物の反射率。
 	float Refractive2	//光が透過しようとしている物質の反射率。
 	){
-	// フレネル反射率計算。
-	float3 EyeDir = normalize(pos - g_EyePosition);	//視線ベクトル算出。
-	float InRad = abs(acos(dot(-EyeDir, normal)));	// 入射角算出。
-	float Refractive = Refractive1 / Refractive2;	// 屈折率算出。
+	float Refractive = CalcRefractive(Refractive1, Refractive2);
+	//float3 EyeDir = normalize(g_EyeDir);
+		//normalize(pos - g_EyePosition);	//視線ベクトル算出。
+	float InRad = abs(acos(dot(EyeDir, normal)));	// 入射角算出。
 	float RefractiveRad = InRad * Refractive;	// 屈折角算出。
 	float Rs = (sin(InRad - RefractiveRad) / sin(InRad + RefractiveRad)) * (sin(InRad - RefractiveRad) / sin(InRad + RefractiveRad));
 	float Rp = (tan(InRad - RefractiveRad) / tan(InRad + RefractiveRad)) * (tan(InRad - RefractiveRad) / tan(InRad + RefractiveRad));
 
 	return Rs + Rp / 2.0f;		// 反射率を返却。
 }
+
+// ケース２
+//float CalcFresnel(
+//	float3 normal,		//ワールド座標系での法線。
+//	float4 pos,			//ワールド座標系での頂点座標。
+//	float4 EyeDir,		//カメラの向き。 
+//	float Refractive1,	//現在光が進んでいる物の屈折率。
+//	float Refractive2	//光が透過しようとしている物質の屈折率。
+//) {
+////	float3 EyeDir = normalize(/*pos - g_EyePosition*//*g_EyePosition - pos*/g_EyeDir);	//視線ベクトル算出。
+//	float3 LightDir = normalize(g_light.diffuseLightDir[0]);
+//	// ハーフベクトルを算出。
+//	float3 HalfVec = normalize(LightDir + EyeDir);
+//	// 物質の相対屈折率の比から、フレネル反射係数F(0°)を求める。
+//	float f0 = pow((Refractive1) / (Refractive2), 2);
+//	float f = Schlick(f0, dot(LightDir, HalfVec));
+//	return f;		// 反射率を返却。
+//}

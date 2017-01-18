@@ -89,8 +89,9 @@ enum RENDER_STATE{ None = 0, _2D, _3D, _3D_Simple, _3D_ShadowSample, _3D_ShadowS
 
 enum PLAYING_STATE{ONCE = 0,REPEAT};
 
-enum REFRACTIVES{EARTH = 0,CHOCOLATE,GOLD,GLASS};
-
+// フレネル反射で使用する、物体のタイプ。
+enum REFRACTIVES{EARTH = 0,CHOCOLATE,GOLD,GLASS,NONE = 999};
+// 各物体の屈折率。
 static float g_RefractivesTable[] = {
 	1.000293f,
 	1.457f,

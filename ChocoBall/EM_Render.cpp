@@ -8,8 +8,8 @@
 
 CEM_Render::CEM_Render()
 {
+	m_CameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
-
 
 CEM_Render::~CEM_Render()
 {
@@ -41,6 +41,10 @@ void CEM_Render::Draw()
 
 		vector<vector<OBJECT_DATA*>> Objects = SINSTANCE(CObjectManager)->GetObjectList();
 		for (short hexa_idx = 0; hexa_idx < HEXA; hexa_idx++){
+			// カメラのポジション設定。
+			m_Cameras[hexa_idx].SetPos(m_CameraPos);
+			m_Cameras[hexa_idx].Update();
+
 			(*graphicsDevice()).SetRenderTarget(0,m_pCubeSurfaces[hexa_idx]);
 			(*graphicsDevice()).SetDepthStencilSurface(m_pZMap);
 			(*graphicsDevice()).Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
@@ -133,17 +137,16 @@ void CEM_Render::Initialize()
 		m_Cameras[idx].SetNear(1.0f);
 		m_Cameras[idx].SetAspect(1.0f);
 		m_Cameras[idx].SetViewAngle(D3DXToRadian(90.0f));
-		m_Cameras[idx].SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_Cameras[idx].SetPos(m_CameraPos);
 		m_Cameras[idx].SetTarget(lookAt[idx]);
 		m_Cameras[idx].SetUp(up[idx]);
 		m_Cameras[idx].SetUpdateType(EUpdateType::enUpdateTypeTarget);
 		m_Cameras[idx].SetNotWorkOutFlg(true);
-		m_Cameras[idx].Update();
-		D3DXMATRIX* view = m_Cameras[idx].GetViewPointer();
-		CCamera* pCamera = SINSTANCE(CRenderContext)->GetCurrentCamera();
-		if (pCamera){
-			D3DXMatrixMultiply(view, view, &(pCamera->GetView()));
-		}
+		//D3DXMATRIX* view = m_Cameras[idx].GetViewPointer();
+		//CCamera* pCamera = SINSTANCE(CRenderContext)->GetCurrentCamera();
+		//if (pCamera){
+		//	D3DXMatrixMultiply(view, view, &(pCamera->GetView()));
+		//}
 		//D3DXMatrixLookAtLH(&m_View, &l_pos, &lookAt[idx], &up[idx]);			// ビューマトリックス設定
 	}
 	m_isEnable = true;

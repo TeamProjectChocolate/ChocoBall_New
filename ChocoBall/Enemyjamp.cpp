@@ -54,7 +54,7 @@ void CEnemyjamp::Draw()
 {
 	if (GetAlive())
 	{
-		CGameObject::Draw();
+		CEnemy_People::Draw();
 	}
 }
 

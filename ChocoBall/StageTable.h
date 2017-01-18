@@ -9,14 +9,16 @@ enum GimmickType{
 	GimmickType_MoveFloor,
 	GimmickType_UpFloor,
 	GimmickType_FireJet,
-	GimmickType_SmokeJet
+	GimmickType_SmokeJet,
+	GimmickType_None = 999
 };
 
 enum EnemyType{
 	EnemyType_LR,
 	EnemyType_FB,
 	EnemyType_JUMP,
-	EnemyType_BULLET
+	EnemyType_BULLET,
+	EnemyType_None = 999
 };
 struct SEnemyAndGimmickInfo{
 	D3DXVECTOR3 pos;
@@ -32,16 +34,63 @@ struct SCollisionInfo {
 	D3DXVECTOR3 scale;
 };
 
-// フィールドのXファイル名
+struct MapObject
+{
+	const char* FileName;
+	D3DXVECTOR3 Position;
+	D3DXQUATERNION Rotation;
+	D3DXVECTOR3 Scale;
+	int RType;	// 屈折率。
+	float Alpha;
+};
+
+// フィールドで使用するXファイル名。
 // ※上から順にステージ1,2,3……
-static LPCSTR FieldNameArray[] = {
-	"image/SUTE2_01.x",
-	"image/StageModel_Iriguchi1.x",
-	"image/StageModel_Huzita3.x",
-	"image/StageModel_Huzita4.x",
-	"image/StageModel_Huzita5.x",
-	"image/StageModel_Iriguchi2.x",
-	"image/StageModel_Ookawa1.x",
+static MapObject MapObjects_1[] = {
+#include "MapChipOutputByUnityStage1.h"
+};
+static MapObject MapObjects_2[] = {
+#include "MapChipOutputByUnityStage2.h"
+};
+static MapObject MapObjects_3[] = {
+#include "MapChipOutputByUnityStage3.h"
+};
+static MapObject MapObjects_4[] = {
+#include "MapChipOutputByUnityStage4.h"
+};
+static MapObject MapObjects_5[] = {
+#include "MapChipOutputByUnityStage5.h"
+};
+static MapObject MapObjects_6[] = {
+#include "MapChipOutputByUnityStage6.h"
+};
+static MapObject MapObjects_Final[] = {
+#include "MapChipOutputByUnityStageFinal.h"
+};
+static MapObject MapObjects_Boss[] = {
+#include "MapChipOutputByUnityStageBoss.h"
+};
+
+static MapObject* MapObjectsPointerArray[] = {
+	MapObjects_1,
+	MapObjects_2,
+	MapObjects_3,
+	MapObjects_4,
+	MapObjects_5,
+	MapObjects_6,
+	MapObjects_Final,
+	MapObjects_Boss,
+};
+
+static int MapObjectsMaxArray[] = {
+	ARRAYSIZE(MapObjects_1),
+	ARRAYSIZE(MapObjects_2),
+	ARRAYSIZE(MapObjects_3),
+	ARRAYSIZE(MapObjects_4),
+	ARRAYSIZE(MapObjects_5),
+	ARRAYSIZE(MapObjects_6),
+	ARRAYSIZE(MapObjects_Final),
+	ARRAYSIZE(MapObjects_Boss),
 };
 
 // フィールドで使用するBGM
@@ -53,105 +102,11 @@ static LPCSTR Stage_BGM[] = {
 	"lastStage",
 	"lastStage",
 	"Modern",
+	"Modern",
 };
 
+enum STAGE_ID{ FIRST = 0, SECOUND,THARD,FOURTH,FIFTH,SIX, FINAL,BOSS, MAX, STAGE_NONE = 999 };
 
-
-enum STAGE_ID{ FIRST = 0, SECOUND,THARD,FOURTH,FIFTH,SIX, FINAL, MAX, STAGE_NONE = 999 };
-
-
-
-// ステージ1で使用するオブジェクトの定義配列
-// ※新しいステージを作ったら同じ書き方で新しい配列を追加してください
-// ※オブジェクトの名前は、同じステージの中でなければ被っても構いません
-// ※下の配列に新しい名前のオブジェクトを追加したらStage.cppのActivateObjects関数にif文を追加してください
-static LPCSTR StageGameObject_1[] = {
-	{ "BulletPhysics" },// すべてのステージにこれが必要です
-	{ "TESTStage3D" },// すべてのステージにこれが必要です
-	{ "Camera" },// すべてのステージにこれが必要です
-	{ "EnemyManager" },// すべてのステージにこれが必要です
-	{ "TEST3D" },// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_2[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_3[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_4[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_5[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_6[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-static LPCSTR StageGameObject_Final[] = {
-	{ "BulletPhysics" },	// すべてのステージにこれが必要です
-	{ "TESTStage3D" },	// すべてのステージにこれが必要です
-	{ "Camera" },	// すべてのステージにこれが必要です
-	{ "EnemyManager" },	// すべてのステージにこれが必要です
-	{ "TEST3D" },	// すべてのステージにこれが必要です
-	{ "NUMBER" },// すべてのステージにこれが必要です
-	{ "StageNUMBER" },// すべてのステージにこれが必要です
-};
-
-// 上に新しい配列を追加したらここにそのオブジェクト配列のポインタを順番どおりに格納してください
-// ※その後、配列の要素数を格納する配列も更新してください
-
-static LPCSTR* StageArray[] = {
-	StageGameObject_1,
-	StageGameObject_2,
-	StageGameObject_3,
-	StageGameObject_4,
-	StageGameObject_5,
-	StageGameObject_6,
-	StageGameObject_Final
-};
-
-// ステージオブジェクト配列の要素数を格納する配列
-static int StageObjectNumArray[] = {
-	ARRAYSIZE(StageGameObject_1),
-	ARRAYSIZE(StageGameObject_2),
-	ARRAYSIZE(StageGameObject_3),
-	ARRAYSIZE(StageGameObject_4),
-	ARRAYSIZE(StageGameObject_5),
-	ARRAYSIZE(StageGameObject_6),
-	ARRAYSIZE(StageGameObject_Final)
-};
 
 // ステージ1のコース定義
 static D3DXVECTOR3 CourceDefine_1[] = {
@@ -175,6 +130,10 @@ static D3DXVECTOR3 CourceDefine_6[] = {
 static D3DXVECTOR3 CourceDefine_Final[] = {
 #include "CourceDefStageFinal.h"
 };
+static D3DXVECTOR3 CourceDefine_Boss[] = {
+#include "CourceDefStageBoss.h"
+};
+
 
 static D3DXVECTOR3* CourceDefineArray[] = {
 	CourceDefine_1,
@@ -183,7 +142,8 @@ static D3DXVECTOR3* CourceDefineArray[] = {
 	CourceDefine_4,
 	CourceDefine_5,
 	CourceDefine_6,
-	CourceDefine_Final
+	CourceDefine_Final,
+	CourceDefine_Boss,
 };
 
 static int CourceDefineNumArray[] = {
@@ -193,7 +153,8 @@ static int CourceDefineNumArray[] = {
 	ARRAYSIZE(CourceDefine_4),
 	ARRAYSIZE(CourceDefine_5),
 	ARRAYSIZE(CourceDefine_6),
-	ARRAYSIZE(CourceDefine_Final)
+	ARRAYSIZE(CourceDefine_Final),
+	ARRAYSIZE(CourceDefine_Boss),
 };
 
 // ステージごとのプレイヤーのポジション情報を格納
@@ -205,6 +166,18 @@ static SCollisionInfo PlayerTransformArray[] = {
 #include "PlayerPositionInfoStage5.h"
 #include "PlayerPositionInfoStage6.h"
 #include "PlayerPositionInfoStageFinal.h"
+#include "PlayerPositionInfoStageBoss.h"
+};
+
+static D3DXVECTOR3 EM_CameraPosArray[] = {
+#include "OutputMapCameraStage1.h"
+#include "OutputMapCameraStage2.h"
+#include "OutputMapCameraStage3.h"
+#include "OutputMapCameraStage4.h"
+#include "OutputMapCameraStage5.h"
+#include "OutputMapCameraStage6.h"
+#include "OutputMapCameraStageFinal.h"
+#include "OutputMapCameraStageBoss.h"
 };
 
 // ステージ1で使用するギミックやエネミーのポジションなどを設定した配列
@@ -230,6 +203,9 @@ static SEnemyAndGimmickInfo infoTable_6[] = {
 static SEnemyAndGimmickInfo infoTable_Final[] = {
 #include "EnemyGimmickInfoStageFinal.h"
 };
+static SEnemyAndGimmickInfo infoTable_Boss[] = {
+#include "EnemyGimmickInfoStageBoss.h"
+};
 
 
 // ステージ1で使用するギミックやエネミーのポジションなどを設定した配列のポインタを格納する配列
@@ -241,7 +217,8 @@ static SEnemyAndGimmickInfo* infoTableArray[] = {
 	infoTable_4,
 	infoTable_5,
 	infoTable_6,
-	infoTable_Final
+	infoTable_Final,
+	infoTable_Boss,
 };
 
 // ステージ1で使用するギミックやエネミーのポジションなどを設定した配列の要素数を格納する配列
@@ -253,7 +230,8 @@ static int InfoTableSizeArray[] = {
 	ARRAYSIZE(infoTable_4),
 	ARRAYSIZE(infoTable_5),
 	ARRAYSIZE(infoTable_6),
-	ARRAYSIZE(infoTable_Final)
+	ARRAYSIZE(infoTable_Final),
+	ARRAYSIZE(infoTable_Boss),
 };
 
 
@@ -280,6 +258,10 @@ static SCollisionInfo GimmickTriggerInfoTable_6[] = {
 static SCollisionInfo GimmickTriggerInfoTable_Final[] = {
 #include "GimmickTriggerInfoStageFinal.h"
 };
+static SCollisionInfo GimmickTriggerInfoTable_Boss[] = {
+#include "GimmickTriggerInfoStageBoss.h"
+};
+
 
 // ステージ1で使用するギミック発動用当たり判定を設定した配列のポインタを格納する配列
 // ※ステージを追加したら下のような書き方で配列に要素を追加してください
@@ -290,7 +272,8 @@ static SCollisionInfo* GimmickinfoTableArray[] = {
 	GimmickTriggerInfoTable_4,
 	GimmickTriggerInfoTable_5,
 	GimmickTriggerInfoTable_6,
-	GimmickTriggerInfoTable_Final
+	GimmickTriggerInfoTable_Final,
+	GimmickTriggerInfoTable_Boss,
 };
 
 
@@ -303,7 +286,8 @@ static int GimmickInfoTableSizeArray[] = {
 	ARRAYSIZE(GimmickTriggerInfoTable_4),
 	ARRAYSIZE(GimmickTriggerInfoTable_5),
 	ARRAYSIZE(GimmickTriggerInfoTable_6),
-	ARRAYSIZE(GimmickTriggerInfoTable_Final)
+	ARRAYSIZE(GimmickTriggerInfoTable_Final),
+	ARRAYSIZE(GimmickTriggerInfoTable_Boss),
 };
 
 // ステージ1のフィールドの当たり判定
@@ -329,6 +313,10 @@ static SCollisionInfo collisionInfoTable_6[] = {
 static SCollisionInfo collisionInfoTable_Final[] = {
 #include "collisionInfoStageFinal.h"
 };
+static SCollisionInfo collisionInfoTable_Boss[] = {
+#include "collisionInfoStageBoss.h"
+};
+
 
 
 // ステージ1のフィールドの当たり判定を設定した配列のポインタを格納する配列
@@ -340,7 +328,8 @@ static SCollisionInfo* collisionInfoTableArray[] = {
 	collisionInfoTable_4,
 	collisionInfoTable_5,
 	collisionInfoTable_6,
-	collisionInfoTable_Final
+	collisionInfoTable_Final,
+	collisionInfoTable_Boss,
 };
 
 // ステージ1でのフィールドの当たり判定を設定した配列の要素数を格納する配列
@@ -352,7 +341,8 @@ static int collisionInfoTableSizeArray[] = {
 	ARRAYSIZE(collisionInfoTable_4),
 	ARRAYSIZE(collisionInfoTable_5),
 	ARRAYSIZE(collisionInfoTable_6),
-	ARRAYSIZE(collisionInfoTable_Final)
+	ARRAYSIZE(collisionInfoTable_Final),
+	ARRAYSIZE(collisionInfoTable_Boss),
 };
 
 static D3DXVECTOR4 LightColorTable_1[] = {
@@ -404,6 +394,14 @@ static D3DXVECTOR4 LightColorTable_Final[] = {
 	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
 };
 
+static D3DXVECTOR4 LightColorTable_Boss[] = {
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f) ,
+	D3DXVECTOR4(0.75f, 0.75f, 0.75f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f),
+	D3DXVECTOR4(0.5f, 0.5f, 0.5f, 1.0f)
+};
+
+
 static D3DXVECTOR4* LightColorTableArray[] = {
 	LightColorTable_1,
 	LightColorTable_2,
@@ -411,8 +409,10 @@ static D3DXVECTOR4* LightColorTableArray[] = {
 	LightColorTable_4,
 	LightColorTable_5,
 	LightColorTable_6,
-	LightColorTable_Final
+	LightColorTable_Final,
+	LightColorTable_Boss,
 };
+
 
 static D3DXVECTOR3 LightDirectionTable_1[] = {
 	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
@@ -463,6 +463,14 @@ static D3DXVECTOR3 LightDirectionTable_Final[] = {
 	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
 };
 
+static D3DXVECTOR3 LightDirectionTable_Boss[] = {
+	D3DXVECTOR3(0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, -0.5f, 0.0f),
+	D3DXVECTOR3(0.5f, 0.5f, 0.0f),
+	D3DXVECTOR3(-0.5f, 0.5f, 0.0f)
+};
+
+
 static D3DXVECTOR3* LightDirectionTableArray[] = {
 	LightDirectionTable_1,
 	LightDirectionTable_2,
@@ -470,5 +478,6 @@ static D3DXVECTOR3* LightDirectionTableArray[] = {
 	LightDirectionTable_4,
 	LightDirectionTable_5,
 	LightDirectionTable_6,
-	LightDirectionTable_Final
+	LightDirectionTable_Final,
+	LightDirectionTable_Boss,
 };

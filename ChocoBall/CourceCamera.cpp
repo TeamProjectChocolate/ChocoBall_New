@@ -118,7 +118,9 @@ void CCourceCamera::Draw(){
 void CCourceCamera::ClearCamera(){
 	D3DXVECTOR3 Vec = m_NowPos - m_CurrentCource.startPosition;
 	D3DXVECTOR3 Vec2 = m_CurrentCource.endPosition - m_CurrentCource.startPosition;
-	float length = D3DXVec3Dot(&Vec2, &Vec);
+	D3DXVec3Normalize(&Vec2, &Vec2);
+	float length = fabs(D3DXVec3Dot(&Vec2, &Vec));
+	
 	if (0.001f >= length){
 		D3DXVECTOR3 TargetPos = m_CurrentCource.startPosition;
 		TargetPos.y += 2.5f;

@@ -51,7 +51,7 @@ void CEnemyFB::Draw()
 		//IMAGE3D* img = GetImage();
 		m_Rigidbody.Draw();
 		SetUpTechnique();
-		CGameObject::Draw();
+		CEnemy_People::Draw();
 	}
 }
 

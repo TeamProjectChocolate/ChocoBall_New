@@ -18,12 +18,6 @@ public:
 	void Build();
 	void PlayerBulletHit(D3DXVECTOR3);
 	virtual void HitReaction() = 0;
-	void SetUpTechnique()override{
-		m_pRender->SetUpTechnique("Skin_Tex_Lim");
-	}
-	void EM_SetUpTechnique()override{
-		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
-	}
 	void SetUpShadowTechnique()override {
 		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
 	}

@@ -13,9 +13,8 @@ class CField :
 {
 public:
 	CField(){
-		m_myMotionState = nullptr;
-		m_myMotionState = nullptr;
 		m_Horizon.clear();
+		UseModel<C3DImage>();
 	};
 	~CField();
 
@@ -24,9 +23,19 @@ public:
 	void Draw()override;
 	void SetUpTechnique()override{
 #ifdef NOT_VSM
-		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_ZMask");
+		if (m_IsFresnel) {
+				m_pRender->SetUpTechnique("Boneless_Tex_Shadow_ZMask_Fresnel");
+		}
+		else {
+			m_pRender->SetUpTechnique("Boneless_Tex_Shadow_ZMask");
+		}
 #else
-		m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_ZMask");
+		if (m_IsFresnel) {
+			m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_ZMask_Fresnel");
+		}
+		else {
+			m_pRender->SetUpTechnique("Boneless_Tex_Shadow_VSM_ZMask");
+		}
 #endif
 	}
 	void EM_SetUpTechnique()override{
@@ -42,23 +51,24 @@ public:
 #else
 		m_pShadowRender->SetUpTechnique("BonelessShadowMapping_Horizon");
 #endif
-
 	}
 
 	void Is_DrawShadow_Use_Horizon()override;
 
-	void SetStageID(STAGE_ID id){
+	void SetZBufferSphere(CZBufferSphere* pSphere) {
+		m_czbuffersphere = pSphere;
+	}
+	void SetStageID(STAGE_ID id) {
 		m_StageID = id;
 	}
-	
+	void SetIsFresnel(bool flg) {
+		m_IsFresnel = flg;
+	}
 private:
-	//ここからbulletPhysicsの剛体を使用するために必要な変数。
-	vector<btBoxShape*>	m_groundShape;	//地面のコリジョン形状。
-	vector<btRigidBody*>		m_rigidBody;	//剛体。
-	btDefaultMotionState* m_myMotionState;
 	STAGE_ID m_StageID;
 	CZBufferSphere* m_czbuffersphere;
 	vector<float> m_Horizon;
 	CCourceDef m_CourceDef;
+	bool m_IsFresnel;	// フレネル反射を適応するか。
 };
 

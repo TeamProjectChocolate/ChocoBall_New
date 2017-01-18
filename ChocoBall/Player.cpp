@@ -194,12 +194,11 @@ void CPlayer::Update()
 		m_transform.position.y = pos.y;
 		m_transform.position.z = pos.z;
 	}
+	// メインシーンの状態を管理する処理。
+	StateManaged();
 
 	if (m_GameState == GAMEEND_ID::CONTINUE)
 	{
-		// メインシーンの状態を管理する処理。
-		StateManaged();
-
 		// 当たり判定。
 		Collisions();
 
@@ -286,9 +285,13 @@ void CPlayer::ConfigLight(){
 
 	// ディフューズライト(キャラライト)の向き設定(ライト1～4)
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(0.0f, 0.0f, -1.0f));
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
-	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(3, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+
+	//static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	//static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(-1.0f, 0.0f, 0.0f));
+	//static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(3, D3DXVECTOR3(0.0f, 0.0f, 1.0f));
 
 	// ディフューズライト(キャラライト)の色設定(ライト1～4)
 	m_pLight->SetDiffuseLightColor(0, D3DXVECTOR4(0.5f, 0.5f, 0.5f, 0.25f));

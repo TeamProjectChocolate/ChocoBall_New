@@ -67,6 +67,7 @@ void CRenderContext::CreateRenderingTerget(){
 	
 	// 環境マップ描画用クラス。
 	m_EMRender = CreateRender<CEM_Render>(RENDER_STATE::EM, _T(""), true);
+	m_EMRender->SetPos(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
 	// レンダリングターゲット生成。
 	STargetParam param = {
@@ -118,7 +119,6 @@ void CRenderContext::RenderingStart(){
 void CRenderContext::RenderingEnd(){
 	(*graphicsDevice()).SetRenderTarget(1, nullptr);
 	m_BloomRender->Draw();
-	m_EMRender->Draw();
 	m_DofRender->Draw();
 }
 

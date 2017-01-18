@@ -55,7 +55,9 @@ void CGameObject::Update(){
 void CGameObject::Draw(){
 	SetUpTechnique();
 	m_pRender->SetModelData(m_pModel);
-	m_pRender->SetMyLight(m_pLight);
+	if (m_HasMyLight) {
+		m_pRender->SetMyLight(m_pLight);
+	}
 	m_pRender->Draw();
 }
 

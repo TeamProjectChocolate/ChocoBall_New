@@ -47,7 +47,7 @@ void CDofRender::Draw()
 		CPixTag tag;
 		LPCWSTR name = L"DofBlur";
 		tag.Start(name);
-		UpdateWeight(200.0f);
+		UpdateWeight(20.0f);
 		LPDIRECT3DSURFACE9 RenderingTarget;
 		LPDIRECT3DSURFACE9 m_SavedMapZ;
 

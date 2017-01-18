@@ -13,6 +13,13 @@ public:
 	void HitReaction()override;
 	void RollingEnemy();
 	void ConfigLight()override;
+	void SetUpTechnique()override {
+		m_pRender->SetUpTechnique("Skin_Tex");
+	}
+	void EM_SetUpTechnique()override {
+		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
+	}
+
 private:
 	CIsIntersect m_IsIntersect;		//CIsIntersectのインスタンス
 	float m_deadTimer;

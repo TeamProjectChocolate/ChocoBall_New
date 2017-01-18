@@ -178,6 +178,14 @@ public:
 		m_pLight = pLight;
 	}
 
+	// 屈折率をモデルに設定。
+	// 引数は反射タイプの列挙型。
+	inline void SetRefractive(REFRACTIVES ref) {
+		m_pModel->m_Refractive = g_RefractivesTable[ref];
+	}
+	inline void SetAlpha(float f) {
+		m_pModel->SetAlpha(f);
+	}
 protected:
 	CModel* m_pModel;
 	CRender* m_pRender;
