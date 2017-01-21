@@ -17,7 +17,6 @@ public:
 	void Draw()override;
 	void Move()override;
 	void Setradius(float radius);
-	void SetInitPosition(D3DXVECTOR3 pos);
 	void EnemyBulletShot();
 	void EnemyDeleteBullet(CEnemyBullet* bullet);
 	void ExcuteDeleteBullets();
@@ -30,7 +29,6 @@ public:
 private:
 	CInterface*	m_pInput;
 	float			m_radius;
-	D3DXVECTOR3		m_initPosition;		//èâä˙ç¿ïWÅB
 	float			m_eTurnSpeed;		//âÒì]ë¨ìx
 	//CRigidbody		m_Rigidbody;
 	bool			m_Hitflag;

@@ -106,9 +106,9 @@ c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(94): warning C4
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(100): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
   コードを生成中...
 c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
   コンパイル中...
   islntersect.cpp
 c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
@@ -3588,6 +3588,112 @@ c:\github\chocoball_new\chocoball\gameobject.h(85): warning C4316: 'C3DImage': �
 c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
 c:\github\chocoball_new\chocoball\enemy_people.cpp(54): warning C4305: '+=': 'double' から 'float' へ切り詰めます。
 c:\github\chocoball_new\chocoball\enemy_people.cpp(96): warning C4305: '+=': 'double' から 'float' へ切り詰めます。
+  Enemy_Boss.cpp
+c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
+c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
+c:\github\chocoball_new\chocoball\infomation.h(70): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXMESHCONTAINER_DERIVED' の左辺を無視します。
+c:\github\chocoball_new\chocoball\infomation.h(78): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'PARTICLE_DATA' の左辺を無視します。
+c:\github\chocoball_new\chocoball\animation.h(63): warning C4800: 'ID3DXAnimationController *const ': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+c:\github\chocoball_new\chocoball\bloomrender.h(13): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'int2' の左辺を無視します。
+c:\github\chocoball_new\chocoball\rendercontext.h(27): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'RENDER_DATA' の左辺を無視します。
+c:\github\chocoball_new\chocoball\enemygimmickinfostage4.h(40): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(4): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostage5.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(22): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(31): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(40): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(58): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(67): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(76): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(85): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(103): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(112): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(121): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(373): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(382): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(391): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(400): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(409): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(418): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(499): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(517): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(535): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(544): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(553): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(571): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(580): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(589): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(607): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(625): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(652): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(661): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(679): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(706): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(724): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(733): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(742): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(760): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(769): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(787): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(805): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(823): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(832): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(841): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(850): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(859): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(868): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(877): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(886): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(904): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(922): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(931): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(940): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(949): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(958): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(967): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(976): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(985): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(994): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1003): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1012): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1021): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1030): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1039): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1048): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1057): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1066): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1075): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1084): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1093): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1102): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1120): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1129): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1138): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1147): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1156): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1165): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1174): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1201): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1219): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\enemygimmickinfostagefinal.h(1228): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(22): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(28): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(34): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(40): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(46): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(52): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(58): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(64): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(70): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(76): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(82): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(88): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(100): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
+c:\github\chocoball_new\chocoball\gameobject.h(79): warning C4316: 'C2DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\github\chocoball_new\chocoball\gameobject.h(85): warning C4316: 'C3DImage': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\github\chocoball_new\chocoball\audio.h(20): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SOUND_DATA' の左辺を無視します。
   EnemyManager.cpp
 c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
 c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -4448,6 +4554,33 @@ c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(88): warning C4
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(94): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\gimmicktriggerinfostagefinal.h(100): warning C4305: '引数': 'double' から 'FLOAT' へ切り詰めます。
 c:\github\chocoball_new\chocoball\courcedef.h(11): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'COURCE_BLOCK' の左辺を無視します。
+  コードを生成中...
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\jetgimmick.h(31): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\jetgimmick.h(31): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
+c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+  コンパイル中...
   CourceCamera.cpp
 c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
 c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -4560,32 +4693,6 @@ c:\github\chocoball_new\chocoball\bullet.h(41): warning C4927: 変換が正し�
   c:\github\chocoball_new\chocoball\bullet.h(41): note: コンストラクター 'D3DXVECTOR3::D3DXVECTOR3(const FLOAT *)' を呼び出しているとき
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3dx9math.inl(270): note: 'D3DXVECTOR3::D3DXVECTOR3' の宣言を確認してください
 c:\github\chocoball_new\chocoball\courcecamera.cpp(19): warning C4244: '引数': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
-  コードを生成中...
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\jetgimmick.h(31): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\jetgimmick.h(31): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
-  コンパイル中...
   CBManager.cpp
 c:\github\chocoball_new\chocoball\infomation.h(34): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'TEXTURE_SIZE' の左辺を無視します。
 c:\github\chocoball_new\chocoball\infomation.h(55): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'D3DXFRAME_DERIVED' の左辺を無視します。
@@ -4812,8 +4919,44 @@ c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数
 c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\rendercontext.h(63): warning C4715: 'CRenderContext::SelectRender': 値を返さないコントロール パスがあります。
-c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\model.h(88): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+c:\github\chocoball_new\chocoball\model.h(90): warning C4172: ローカル変数またはテンポラリのアドレスを返します
 c:\github\chocoball_new\chocoball\model.h(60): warning C4172: ローカル変数またはテンポラリのアドレスを返します
+  スキップ中... (関連する変更は検出されませんでした)
+  Tunr.cpp
+  TitleSelect.cpp
+  TitleBack.cpp
+  TestObject2D.cpp
+  Skybox.cpp
+  ShadowSamplingRender_I.cpp
+  ShadowRender.cpp
+  Scene.cpp
+  Rigidbody.cpp
+  ResultSelect.cpp
+  ResultCursor.cpp
+  ResultBack.cpp
+  Result.cpp
+  RenderContext.cpp
+  Number.cpp
+  Model.cpp
+  InstancingRender.cpp
+  Icon.cpp
+  GameOver.cpp
+  GameObject.cpp
+  GameManager.cpp
+  EM_SamplingRender_I.cpp
+  EM_SamplingRender.cpp
+  EM_Render.cpp
+  DofRender.cpp
+  ClearText.cpp
+  ChocoBall.cpp
+  Camera.cpp
+  C3DObjectRender_S.cpp
+  C3DObjectRender.cpp
+  C3DImage.cpp
+  C2DImage.cpp
+  BulletPhysics.cpp
+  BloomRender.cpp
+  Block.cpp
   ChocoBall.vcxproj -> C:\GitHub\ChocoBall_New\Debug\ChocoBall.exe
   ChocoBall.vcxproj -> C:\GitHub\ChocoBall_New\Debug\ChocoBall.pdb (Full PDB)

@@ -330,15 +330,16 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 	if (flags.Fresnel){
 		float alpha = color.a;
 		// 視線の反射ベクトル算出。
-		float3 vReflect = reflect(normal,In.WorldPos - mul(g_EyePosition, World) * -1.0f/*, float3(0.0f,-1.0f,0.0f)*/);
+		float3 vReflect = reflect(In.WorldPos - mul(g_EyePosition, World), normal/*, float3(0.0f,-1.0f,0.0f)*/);
 		float4 ReflectColor = texCUBE(cubeTexSampler, vReflect);
 		ReflectColor.a = 1.0f;
 		// 視線の屈折ベクトル算出。
-		float3 vRefract = refract(In.WorldPos - mul(g_EyePosition, World) * -1.0f, normal, g_Refractive);
+		float3 vRefract = refract(In.WorldPos - mul(g_EyePosition, World)/* * -1.0f*/, normal, g_Refractive);
 		float4 RefractColor = texCUBE(cubeTexSampler, vRefract);
 		RefractColor.a = 1.0f;
 		// フレネル反射率計算。
-		float fresnel = /*clamp(*/CalcFresnel(normal, In.WorldPos, mul(g_EyeDir, World), 1.000293f/*地球の大気の屈折率。*/, g_Refractive)/*,0.0f,1.0f)*/;
+		//float fresnel = /*clamp(*/CalcFresnel(normal, In.WorldPos, mul(g_EyeDir, World), 1.000293f/*地球の大気の屈折率。*/, g_Refractive)/*,0.0f,1.0f)*/;
+		float fresnel = /*clamp(*/CalcFresnel(normal, In.WorldPos, mul(g_EyePosition, World), 1.000293f/*地球の大気の屈折率。*/, g_Refractive)/*,0.0f,1.0f)*/;
 
 		// 求めた反射率でブレンディング。
 		
@@ -349,6 +350,7 @@ PS_OUTPUT PS_Main(VS_OUTPUT In, uniform Flags flags){
 		color.xyz *= (1.0f - fresnel) * alpha;
 		color.xyz += ReflectColor.xyz * fresnel * alpha;
 		color.xyz += RefractColor.xyz * (1.0f - alpha)/* * fresnel*/;
+		color.xyz = min(color.xyz, 1.0f);
 
 		// ケース３
 		//color.xyz = ((alpha * fresnel) * ReflectColor.xyz) + ((1.0f - alpha) * (1.0f - fresnel) * RefractColor.xyz) + ((((1.0f - alpha) - ((1.0f - alpha) * (1.0f - fresnel))) + (alpha - (alpha * fresnel))) * color.xyz);

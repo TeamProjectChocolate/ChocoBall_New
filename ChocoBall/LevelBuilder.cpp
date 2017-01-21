@@ -16,6 +16,7 @@
 #include "UpFloor.h"
 #include "FireJet.h"
 #include "SmokeJet.h"
+#include "Enemy_Boss.h"
 
 
 CLevelBuilder::CLevelBuilder()
@@ -88,6 +89,17 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		else if (info.enemyType == EnemyType::EnemyType_BULLET){
 			//“G‚ð¶¬B
 			CEnemy* enemy = new CEnemy;
+			enemy->SetStageID(m_IsStage);
+			enemy->Initialize();
+			info.pos.x = pInfo[i].pos.x * -1;
+			info.pos.z = pInfo[i].pos.z * -1;
+			enemy->SetInitPosition(info.pos);
+			enemy->Build();
+			enemyMgr->AddEnemy(enemy);
+		}
+		else if (info.enemyType == EnemyType::EnemyType_Boss) {
+			//“G‚ð¶¬B
+			CEnemy_Boss* enemy = new CEnemy_Boss;
 			enemy->SetStageID(m_IsStage);
 			enemy->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;

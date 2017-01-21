@@ -88,13 +88,20 @@ public class OutputEnemyGimmick : MonoBehaviour {
                 }
                 if (tr.gameObject.name != "GimmickTrigger")
                 {
+                    if(tr.GetComponent<EnemyGimmick>().enemyType != EnemyGimmick.ENEMY_TYPE.None && tr.GetComponent<EnemyGimmick>().gimmickType != EnemyGimmick.GIMMICK_TYPE.None)
+                    {
+                        Debug.Log("EnemyTypeとGimmickTypeのどちらにもNoneでないものが入力されています。\n");
+                        headerTxt = "";
+                        IsBreak = true;
+                        break;
+                    }
                     headerTxt += string.Format("//{0}\n", tr.name);
                     headerTxt += "{\n";
                     headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f),             //平行移動\n", tr.position.x, tr.position.y, tr.position.z);
                     headerTxt += string.Format("\tD3DXQUATERNION({0:f}, {1:f}f, {2:f}f, {3:f}f ),    //回転\n", tr.rotation.x, tr.rotation.y, tr.rotation.z, tr.rotation.w);
                     headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f ),            //拡大\n", tr.lossyScale.x, tr.lossyScale.y, tr.lossyScale.z);
-                    headerTxt += string.Format("\t{0},//エネミータイプ\n", tr.GetComponent<EnemyGimmick>().enemyType);
-                    headerTxt += string.Format("\t{0},//ギミックタイプ\n", tr.GetComponent<EnemyGimmick>().gimmickType);
+                    headerTxt += string.Format("\t{0},//エネミータイプ\n", (int)(tr.GetComponent<EnemyGimmick>().enemyType));
+                    headerTxt += string.Format("\t{0},//ギミックタイプ\n", (int)(tr.GetComponent<EnemyGimmick>().gimmickType));
                     headerTxt += string.Format("\t{0:f}f,//最大移動量\n", tr.GetComponent<EnemyGimmick>().MaxMove);
                     headerTxt += "},\n";
                 }
@@ -112,10 +119,15 @@ public class OutputEnemyGimmick : MonoBehaviour {
                 headerTxt += string.Format("\t0.0f,//最大移動量\n");
                 headerTxt += "},\n";
 
+                IsBreak = true;
             }
         }
         sw = new StreamWriter("../../ChocoBall/EnemyGimmickInfo" + mystring2+".h", false, Encoding.UTF8);
         sw.Write(headerTxt);
         sw.Close();
+        if (IsBreak)
+        {
+            return;
+        }
     }
 }

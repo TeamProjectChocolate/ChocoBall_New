@@ -11,7 +11,7 @@ int CStageManager::m_ClearNum = 0;
 void CStageManager::Initialize()
 {
 	m_NowStage = STAGE_ID::STAGE_NONE;
-	ChangeStage(STAGE_ID::BOSS);
+	ChangeStage(STAGE_ID::FIRST);
 	SetNextStage();
 }
 

@@ -394,6 +394,10 @@
     <ClInclude Include="MapObjectManager.h">
       <Filter>Game\Field</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy_Boss.h">
+      <Filter>Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="HadBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -699,6 +703,10 @@
     <ClCompile Include="MapObjectManager.cpp">
       <Filter>Game\Field</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy_Boss.cpp">
+      <Filter>Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="HadBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

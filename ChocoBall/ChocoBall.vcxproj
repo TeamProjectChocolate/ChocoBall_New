@@ -130,6 +130,7 @@
     <ClInclude Include="EnemyLR.h" />
     <ClInclude Include="EnemyFB.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="Enemy_Boss.h" />
     <ClInclude Include="Enemy_People.h" />
     <ClInclude Include="FallFloor.h" />
     <ClInclude Include="Field.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GamePad.h" />
+    <ClInclude Include="HadBar.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="InstancingRender.h" />
     <ClInclude Include="Interface.h" />
@@ -242,6 +244,7 @@
     <ClCompile Include="EnemyFB.cpp" />
     <ClCompile Include="Enemyjamp.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="Enemy_Boss.cpp" />
     <ClCompile Include="Enemy_People.cpp" />
     <ClCompile Include="FallFloor.cpp" />
     <ClCompile Include="Field.cpp" />
@@ -252,6 +255,7 @@
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GamePad.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
+    <ClCompile Include="HadBar.cpp" />
     <ClCompile Include="Icon.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="InputManager.cpp" />

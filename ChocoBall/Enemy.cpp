@@ -19,11 +19,7 @@ void CEnemy::Setradius(float radius)
 {
 	m_radius = radius;
 }
-void CEnemy::SetInitPosition(D3DXVECTOR3 pos)
-{
-	m_initPosition = pos;
-	m_transform.position = pos;
-}
+
 void CEnemy::Initialize()
 {
 	CEnemy_People::Initialize();

@@ -17,7 +17,7 @@ public:
 	}
 	void EM_SetUpTechnique()override
 	{
-		m_pEMSamplingRender->SetUpTechnique("Bonelsee_Tex_Bloom");
+		m_pEMSamplingRender->SetUpTechnique("Bonelsee_Tex");
 	}
 private:
 

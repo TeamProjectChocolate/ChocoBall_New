@@ -9,6 +9,12 @@ void EnemyBase::Build(){
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 }
 
+void EnemyBase::SetInitPosition(D3DXVECTOR3 pos)
+{
+	m_initPosition = pos;
+	m_transform.position = pos;
+}
+
 void EnemyBase::Initialize(){
 	UseModel<C3DImage>();
 	SINSTANCE(CShadowRender)->Entry(this);

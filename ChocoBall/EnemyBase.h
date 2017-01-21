@@ -17,6 +17,7 @@ public:
 	virtual void ConfigLight()override;
 	void Build();
 	void PlayerBulletHit(D3DXVECTOR3);
+	void SetInitPosition(D3DXVECTOR3 pos);
 	virtual void HitReaction() = 0;
 	void SetUpShadowTechnique()override {
 		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
@@ -39,6 +40,7 @@ protected:
 private:
 	CEnemyManager* m_pEnemyManager;
 protected:
+	D3DXVECTOR3		m_initPosition;		//‰ŠúÀ•WB
 	ENEMY_ANIMATION m_AnimState;
 	PLAYING_STATE m_PlayingState;
 	STAGE_ID m_StageID;

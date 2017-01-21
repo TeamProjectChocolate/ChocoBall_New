@@ -18,6 +18,7 @@ enum EnemyType{
 	EnemyType_FB,
 	EnemyType_JUMP,
 	EnemyType_BULLET,
+	EnemyType_Boss,
 	EnemyType_None = 999
 };
 struct SEnemyAndGimmickInfo{

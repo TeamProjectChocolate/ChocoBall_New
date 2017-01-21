@@ -138,9 +138,9 @@ void CEM_Render::Initialize()
 		m_Cameras[idx].SetAspect(1.0f);
 		m_Cameras[idx].SetViewAngle(D3DXToRadian(90.0f));
 		m_Cameras[idx].SetPos(m_CameraPos);
-		m_Cameras[idx].SetTarget(lookAt[idx]);
+		m_Cameras[idx].SetDirection(lookAt[idx]);
 		m_Cameras[idx].SetUp(up[idx]);
-		m_Cameras[idx].SetUpdateType(EUpdateType::enUpdateTypeTarget);
+		m_Cameras[idx].SetUpdateType(EUpdateType::enUpdateTypeDirection);
 		m_Cameras[idx].SetNotWorkOutFlg(true);
 		//D3DXMATRIX* view = m_Cameras[idx].GetViewPointer();
 		//CCamera* pCamera = SINSTANCE(CRenderContext)->GetCurrentCamera();
