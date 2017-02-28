@@ -1,0 +1,44 @@
+﻿  btKinematicCharacterController.cpp
+  btConeTwistConstraint.cpp
+ConstraintSolver\btConeTwistConstraint.cpp(868): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(913): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(973): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+ConstraintSolver\btConeTwistConstraint.cpp(975): warning C4244: '=': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+  btContactConstraint.cpp
+c:\github\chocoball_new\bulletphysics\src\bulletdynamics\constraintsolver\btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
+  btFixedConstraint.cpp
+  btGearConstraint.cpp
+  btGeneric6DofConstraint.cpp
+  btGeneric6DofSpring2Constraint.cpp
+ConstraintSolver\btGeneric6DofSpring2Constraint.cpp(786): warning C4244: '初期化中': 'double' から 'btScalar' への変換です。データが失われる可能性があります。
+  btGeneric6DofSpringConstraint.cpp
+  btHinge2Constraint.cpp
+  btHingeConstraint.cpp
+  btNNCGConstraintSolver.cpp
+  btPoint2PointConstraint.cpp
+  btSequentialImpulseConstraintSolver.cpp
+  btSliderConstraint.cpp
+  btSolve2LinearConstraint.cpp
+  btTypedConstraint.cpp
+  btUniversalConstraint.cpp
+  btDiscreteDynamicsWorld.cpp
+C:\GitHub\ChocoBall_New\\BulletPhysics\src\BulletDynamics/ConstraintSolver/btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
+  btRigidBody.cpp
+  btSimpleDynamicsWorld.cpp
+  コンパイル中...
+  btMultiBody.cpp
+  btMultiBodyConstraint.cpp
+  btMultiBodyConstraintSolver.cpp
+  btMultiBodyDynamicsWorld.cpp
+  btMultiBodyJointLimitConstraint.cpp
+Featherstone\btMultiBodyJointLimitConstraint.cpp(114): warning C4244: '初期化中': 'int' から 'btScalar' への変換です。データが失われる可能性があります。
+  btMultiBodyJointMotor.cpp
+  btMultiBodyPoint2Point.cpp
+  btDantzigLCP.cpp
+  btLemkeAlgorithm.cpp
+  btMLCPSolver.cpp
+  btRaycastVehicle.cpp
+C:\GitHub\ChocoBall_New\\BulletPhysics\src\BulletDynamics/ConstraintSolver/btContactConstraint.h(25): warning C4359: 'btContactConstraint': アライメント指定子は実際のアラインメント (128) より小さいため、無視されます。
+  btWheelInfo.cpp
+  LINK : MSIL .netmodule または /GL を伴ってコンパイルされたモジュールが見つかりました。/LTCG を使用して再開始してください。リンカーのパフォーマンスを向上させるためには、コマンドラインに /LTCG を追加してください。
+  BulletDynamics.vcxproj -> C:\GitHub\ChocoBall_New\\bulletPhysics\lib\Release\BulletDynamics.lib

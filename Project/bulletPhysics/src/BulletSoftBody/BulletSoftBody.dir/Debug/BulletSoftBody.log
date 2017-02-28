@@ -1,0 +1,11 @@
+﻿  btDefaultSoftBodySolver.cpp
+  btSoftBody.cpp
+  btSoftBodyConcaveCollisionAlgorithm.cpp
+  btSoftBodyHelpers.cpp
+btSoftBodyHelpers.cpp(555): warning C4316: 'btSoftBody::Link': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  btSoftBodyRigidBodyCollisionConfiguration.cpp
+  btSoftRigidCollisionAlgorithm.cpp
+  btSoftRigidDynamicsWorld.cpp
+  btSoftSoftCollisionAlgorithm.cpp
+  コードを生成中...
+  BulletSoftBody.vcxproj -> C:\GitHub\ChocoBall_New\Project\\bulletPhysics\lib\Debug\BulletSoftBody_Debug.lib
