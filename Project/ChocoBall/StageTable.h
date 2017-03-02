@@ -1,7 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-#define TEISYUTU_YOU	// 提出用に遊べるステージを減らすスイッチ(定義で提出用になる)。
 
 enum GimmickType{
 	GimmickType_Chocoball,
@@ -27,6 +26,7 @@ struct SEnemyAndGimmickInfo{
 	D3DXVECTOR3 pos;
 	D3DXQUATERNION rot;
 	D3DXVECTOR3 scale;
+	D3DXVECTOR3 DirectionZ;
 	int enemyType;
 	int gimmickType;
 	float MaxMove;

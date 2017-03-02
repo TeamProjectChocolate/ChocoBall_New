@@ -70,11 +70,11 @@ public:
 	bool GetEmitFlg(){
 		return m_EmitFlg;
 	}
-	void SetDirection(D3DXVECTOR3 dir){
-		m_dir = dir;
+	void SetDirection(const D3DXVECTOR3& dir){
+		m_emitDirection = dir;
 	}
 	const D3DXVECTOR3& GetDirection()override{
-		return m_dir;
+		return m_emitDirection;
 	}
 	D3DXVECTOR3 GetTailPos(){
 		return *m_TailPosition;
@@ -120,12 +120,12 @@ private:
 	CCamera* m_camera;
 	SParticleEmitParameter* m_param;
 	D3DXVECTOR3 m_emitPosition;
+	D3DXVECTOR3 m_emitDirection;	// パーティクルを発生させる向き(オブジェクトの方向を表すものとは別物として定義)。
 	list<CParticle*> m_ParticleList;
 	char m_EmitterName[MAX_NAME];
 	char m_ParticleName[MAX_NAME];
 	int m_count;
 	bool m_EmitFlg;	// パーティクルを生成するかのフラグ
-	D3DXVECTOR3 m_dir;
 	int m_CurrentCourceNo;
 	int m_NowPlayerCourceNo;
 	CCourceDef m_CourceDef;

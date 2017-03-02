@@ -71,6 +71,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
             headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f),             //平行移動\n");
             headerTxt += string.Format("\tD3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f ),    //回転\n");
             headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f ),            //拡大\n");
+            headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f ),            //Zの向きベクトル\n");
             headerTxt += string.Format("\t999,//エネミータイプ\n");
             headerTxt += string.Format("\t999,//ギミックタイプ\n");
             headerTxt += string.Format("\t0.0f,//最大移動量\n");
@@ -88,7 +89,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
                 }
                 if (tr.gameObject.tag != "GimmickTrigger")
                 {
-                    if(tr.GetComponent<EnemyGimmick>().enemyType != EnemyGimmick.ENEMY_TYPE.None && tr.GetComponent<EnemyGimmick>().gimmickType != EnemyGimmick.GIMMICK_TYPE.None)
+                    if(tr.gameObject.GetComponent<EnemyGimmick>().enemyType != EnemyGimmick.ENEMY_TYPE.None && tr.gameObject.GetComponent<EnemyGimmick>().gimmickType != EnemyGimmick.GIMMICK_TYPE.None)
                     {
                         Debug.Log("EnemyTypeとGimmickTypeのどちらにもNoneでないものが入力されています。\n");
                         headerTxt = "";
@@ -100,6 +101,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
                     headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f),             //平行移動\n", tr.position.x, tr.position.y, tr.position.z);
                     headerTxt += string.Format("\tD3DXQUATERNION({0:f}f, {1:f}f, {2:f}f, {3:f}f ),    //回転\n", tr.rotation.x, tr.rotation.y, tr.rotation.z, tr.rotation.w);
                     headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f ),            //拡大\n", tr.lossyScale.x, tr.lossyScale.y, tr.lossyScale.z);
+                    headerTxt += string.Format("\tD3DXVECTOR3({0:f}f, {1:f}f, {2:f}f),             //Zの向きベクトル\n", tr.forward.x, tr.forward.y, tr.forward.z);
                     headerTxt += string.Format("\t{0},//エネミータイプ\n", (int)(tr.GetComponent<EnemyGimmick>().enemyType));
                     headerTxt += string.Format("\t{0},//ギミックタイプ\n", (int)(tr.GetComponent<EnemyGimmick>().gimmickType));
                     headerTxt += string.Format("\t{0:f}f,//最大移動量\n", tr.GetComponent<EnemyGimmick>().MaxMove);
@@ -114,6 +116,7 @@ public class OutputEnemyGimmick : MonoBehaviour {
                 headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f),             //平行移動\n");
                 headerTxt += string.Format("\tD3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f ),    //回転\n");
                 headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f ),            //拡大\n");
+                headerTxt += string.Format("\tD3DXVECTOR3(0.0f, 0.0f, 0.0f ),            //Zの向きベクトル\n");
                 headerTxt += string.Format("\t999,//エネミータイプ\n");
                 headerTxt += string.Format("\t999,//ギミックタイプ\n");
                 headerTxt += string.Format("\t0.0f,//最大移動量\n");

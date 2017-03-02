@@ -87,7 +87,7 @@ void CPlayer::Initialize()
 	
 	deadTimer = 0.0f;
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
-	CParticleEmitter::EmitterCreate(
+	CParticleEmitter* StartEmitter = CParticleEmitter::EmitterCreate(
 		_T("ParticleEmitterStart"),
 		PARTICLE_TYPE::STAR,
 		m_transform.position,
@@ -96,6 +96,7 @@ void CPlayer::Initialize()
 		true,
 		true
 		);
+	StartEmitter->SetCourceLange(2);
 	//ジャンプ＆着地時の煙
 	m_pEmitter = CParticleEmitter::EmitterCreate(
 		_T("ParticleEmitterSmoke"),
@@ -238,7 +239,7 @@ void CPlayer::Update()
 
 	// 影カメラのポジションをプレイヤーの真上に指定。
 	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
-	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(0.0f, /*2.0f*/5.0f, 0.0f));
+	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(1.0f, /*2.0f*/5.0f, 0.0f));
 
 	//// ライトの更新
 	//static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);

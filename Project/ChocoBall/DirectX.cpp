@@ -272,7 +272,10 @@ string g_text;
 
 void Update()
 {
+#ifdef TEISYUTU_YOU
+#else
 	g_Watch.Start();
+#endif
 	SINSTANCE(CInputManager)->Update();
 	SINSTANCE(CGameManager)->Update();		//シーン更新
 }
@@ -286,15 +289,20 @@ void Draw()
 		(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, true);
 		(*graphicsDevice()).SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 		SINSTANCE(CGameManager)->Draw();		// シーン描画
-		SINSTANCE(CDirectFont)->Draw(g_text.c_str(), 730, 20);
+#ifdef TEISYUTU_YOU
+#else
+		//SINSTANCE(CDirectFont)->Draw(g_text.c_str(), 730, 20);
+#endif
 		(*graphicsDevice()).EndScene();
 	}
 
 	(*graphicsDevice()).Present(NULL, NULL, NULL, NULL);
-
+#ifdef TEISYUTU_YOU
+#else
 	g_Watch.Stop();
 	double counter = g_Watch.GetElapsed();
 	counter = 1.0 / counter;
 	g_text = "FPS = ";
 	g_text = g_text + to_string(counter);
+#endif
 }

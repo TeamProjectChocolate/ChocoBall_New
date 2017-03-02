@@ -1,12 +1,1 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets(76,5): warning : 別のプロセスで使用されているため、プロセスはファイル 'c:\github\chocoball_new\bulletphysics\src\bulletsoftbody\bulletsoftbody.dir\release\btsoftbodyconcavecollisionalgorithm.obj' にアクセスできません。
-  btDefaultSoftBodySolver.cpp
-  btSoftBody.cpp
-  btSoftBodyConcaveCollisionAlgorithm.cpp
-  btSoftBodyHelpers.cpp
-btSoftBodyHelpers.cpp(555): warning C4316: 'btSoftBody::Link': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-  btSoftBodyRigidBodyCollisionConfiguration.cpp
-  btSoftRigidCollisionAlgorithm.cpp
-  btSoftRigidDynamicsWorld.cpp
-  btSoftSoftCollisionAlgorithm.cpp
-  LINK : MSIL .netmodule または /GL を伴ってコンパイルされたモジュールが見つかりました。/LTCG を使用して再開始してください。リンカーのパフォーマンスを向上させるためには、コマンドラインに /LTCG を追加してください。
-  BulletSoftBody.vcxproj -> C:\GitHub\ChocoBall_New\\bulletPhysics\lib\Release\BulletSoftBody.lib
+﻿  BulletSoftBody.vcxproj -> C:\GitHub\ChocoBall_New\Project\\bulletPhysics\lib\Release\BulletSoftBody.lib

@@ -30,7 +30,6 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	SetAlive(true);
 
 	D3DXVec3Normalize(&m_Vector2, &GetVector());
-	m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, false, true);
 }
 
 
@@ -42,6 +41,7 @@ void CChocoBall::Update()
 	if (m_IsBurst) {
 		if (m_TimeCounter >= m_DeathTime) {
 			// チョコボールを破裂させる。
+			m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, false, true);
 			m_pEmitter->SetEmitPos(m_transform.position);
 			m_pEmitter->SetEmitFlg(true);
 			m_pEmitter->SetIsUseCource(false);
@@ -84,8 +84,10 @@ void CChocoBall::Draw()
 void CChocoBall::OnDestroy()
 {
 	m_Rigidbody.OnDestroy();
-	if (!(m_pEmitter->GetIsUseDeathTime())) {
-		SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(m_pEmitter);
+	if (m_pEmitter) {
+		if (!(m_pEmitter->GetIsUseDeathTime())) {
+			SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(m_pEmitter);
+		}
 	}
 	m_pEmitter = nullptr;
 }

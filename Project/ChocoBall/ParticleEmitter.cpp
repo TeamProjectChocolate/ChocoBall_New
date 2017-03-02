@@ -23,7 +23,7 @@ void CParticleEmitter::Initialize(){
 	m_timer = 0.0f;
 	m_random.Init(0.1);
 	SetAlive(true);
-	D3DXVec3Normalize(&m_dir,&(m_param->initVelocity));
+	D3DXVec3Normalize(&m_emitDirection,&(m_param->initVelocity));
 	strcpy(m_ParticleName, m_param->texturePath);
 	m_CourceDef.SetStageID(m_Stage_ID);
 	m_CourceDef.Initialize();
@@ -68,7 +68,7 @@ void CParticleEmitter::EmitParticle() {
 	if (m_IsUseCource) {
 		m_CurrentCourceNo = m_CourceDef.FindCource(m_emitPosition).blockNo;
 		m_NowPlayerCourceNo = m_CourceDef.FindCource(m_pPlayer->GetPos()).blockNo;
-		if (!(abs(m_CurrentCourceNo - m_NowPlayerCourceNo) <= m_CourceLange && m_CurrentCourceNo != -1 && m_NowPlayerCourceNo != -1)) {
+		if (m_CurrentCourceNo == -1 || abs(m_CurrentCourceNo - m_NowPlayerCourceNo) > m_CourceLange || m_NowPlayerCourceNo == -1) {
 			return;
 		}
 	}
@@ -76,7 +76,8 @@ void CParticleEmitter::EmitParticle() {
 		if (m_timer >= m_param->intervalTime) {
 			for (int idx = 0; idx < m_param->EmitNum; idx++) {
 				CParticle* p = SINSTANCE(CObjectManager)->GenerationObject<CParticle>(static_cast<LPCSTR>(m_ParticleName), PRIORTY::PARTICLE_ALPHA, false);
-				p->InitParticle(m_random, *m_camera, m_param, m_emitPosition, m_dir);
+				// パーティクルを発生させる方向を上書きする。
+				p->InitParticle(m_random, *m_camera, m_param, m_emitPosition, m_emitDirection);
 				m_timer = 0.0f;
 				m_ParticleList.push_back(p);
 				m_pTailParticle = p;

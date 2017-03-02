@@ -7,7 +7,7 @@ float4x4 Proj;
 float4x3 g_WorldMatrixArray[MAX_MATRICES]:WORLDMATRIXARRAY;
 float g_numBone;		// 骨の数
 
-float g_PlayerHorizon;	// シャドウマップに書き込むかの境界線。
+float g_PlayerHorizon;	// シャドウマップに書き込むかの境界線(プレイヤーの足元)。
 
 struct VS_INPUT{
 	float4	pos		: POSITION;
@@ -136,6 +136,7 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 	
 	// 境界線用処理。
 	{
+		// プレイヤーの足元(ワールド座標)とコース定義参照の境界線(ワールド座標)を比較し、より一の低いものを境界線として採用。
 		if (In.Horizon <= g_PlayerHorizon) {
 			Out.Horizon = In.Horizon;
 		}
@@ -151,6 +152,7 @@ VS_OUTPUT VS_ShadowMain_Horizon(VS_INPUT_HORIZON In, uniform bool isBone) {
 
 float4 PS_ShadowMain(VS_OUTPUT In,uniform bool isHorizon)	: COLOR{
 	if (isHorizon) {
+		// 境界線より上の頂点を無視。
 		clip(In.Horizon - In.wPos.y);
 	}
 	float z = In.depth.z / In.depth.w;

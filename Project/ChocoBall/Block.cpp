@@ -70,42 +70,22 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 void CBlock::Update()
 {
 	switch (m_eState){
-	case enState_Normal:{
-		//•¨—ƒGƒ“ƒWƒ“‚ÅŒvŽZ‚³‚ê‚½„‘Ì‚ÌˆÊ’u‚Æ‰ñ“]‚ð”½‰f‚³‚¹‚éB
-		//const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
-		//const btQuaternion& rRot = m_rigidBody->getWorldTransform().getRotation();
-		//D3DXVECTOR3 pos(rPos.x(), rPos.y(), rPos.z());
-		//D3DXQUATERNION rot(rRot.x(), rRot.y(), rRot.z(), rRot.w());
-		//m_transform.position.x = rPos.x();
-		//m_transform.position.y = rPos.y();
-		//m_transform.position.z = rPos.z();
-		//m_box.SetPosition(pos);
-		//m_box.SetRotation(rot);
-		//m_box.UpdateWorldMatrix();
-		//m_shadowModel.SetWorldMatrix(m_box.GetWorldMatrix());
-		//ShadowMap().Entry(&m_shadowModel);
-		//m_life += 1.0f / 60.0f;
-		////m_transform.position.y -= 0.05f;
-
-		//btVector3 a(0.0f, 0.0f, 1.0f);
-
-		//if (GetAsyncKeyState('A')){
-		//	m_rigidBody->setLinearVelocity(a);
-		//}
-		btTransform& trans = m_rigidBody->getWorldTransform();
-		trans.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-		trans.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z));
-	}break;
-	case enState_Broken:{
-	}break;
-	case enState_Fall:{
+	case enState_Normal:
+		break;
+	case enState_Broken:
+		break;
+	case enState_Fall:
 		m_transform.position.y -= 0.1f;
-		if (m_fallPosY > m_transform.position.y){
+		m_rigidBody->activate();
+		if (m_transform.position.y <= m_fallPosY){
 			m_transform.position.y = m_fallPosY;
 			m_eState = enState_Normal;
 		}
-	}break;
+		break;
 	}
+
+	m_rigidBody->getWorldTransform().setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
+	m_rigidBody->getWorldTransform().setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z));
 
 	CGameObject::Update();
 }

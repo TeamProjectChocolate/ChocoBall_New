@@ -32,6 +32,10 @@ void CField::Initialize(){
 	SINSTANCE(CShadowRender)->Entry(this);
 	m_CourceDef.SetStageID(m_StageID);
 	m_CourceDef.Initialize();
+
+	// 一度Transformを使ってワールド行列を生成。
+	m_pModel->Update(m_transform);
+
 	// 頂点情報に影を落とすか落とさないかの境界線を埋め込む。
 	// フィールドの屋根の影を描画しないため。
 	{
@@ -46,13 +50,25 @@ void CField::Initialize(){
 		int stride = desc.Size / m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices();
 		for (int idx = 0; idx < m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices(); idx++) {
 			COURCE_BLOCK work;
-			work = m_CourceDef.FindCource(*pPosition);
-			D3DXVECTOR3 CourceVec = work.endPosition - work.startPosition;
-			D3DXVECTOR3 WorkVec = *pPosition - work.startPosition;
-			D3DXVec3Normalize(&CourceVec, &CourceVec);
-			// 頂点の座標をコース定義の線分に射影し、y成分を境界線にする。
-			float WorkLength = D3DXVec3Dot(&WorkVec, &CourceVec);
-			D3DXVECTOR3 HorizonVec = work.startPosition + CourceVec * WorkLength;
+			D3DXVECTOR3 HorizonVec;
+			D3DXVECTOR3 WorldPos;
+			// 頂点バッファの頂点座標はローカル座標なので、一度ワールド座標系に変換する。
+			D3DXVec3Transform(&static_cast<D3DXVECTOR4>(WorldPos),pPosition,&(m_pModel->m_World));
+			// 接触しているコースを探索。
+			work = m_CourceDef.FindCource(WorldPos);
+			if (work.blockNo != -1) {
+				// コースに接触している。
+				D3DXVECTOR3 CourceVec = work.endPosition - work.startPosition;
+				D3DXVECTOR3 WorkVec = WorldPos - work.startPosition;
+				D3DXVec3Normalize(&CourceVec, &CourceVec);
+				// 頂点の座標をコース定義の線分に射影し、y成分を境界線にする。
+				float WorkLength = D3DXVec3Dot(&CourceVec,&WorkVec);
+				HorizonVec = work.startPosition + (CourceVec * WorkLength);
+			}
+			else {
+				// コースに接触していない。
+				HorizonVec.y = FLT_MAX;
+			}
 			m_Horizon.push_back(HorizonVec.y);
 			// D3DXVECTOR3*型は1バイトではないので1バイト単位であるchar*型に変換してポインタを進める。
 			char* OneByte = reinterpret_cast<char*>(pPosition);

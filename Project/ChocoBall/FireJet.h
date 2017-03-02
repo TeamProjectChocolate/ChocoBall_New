@@ -17,5 +17,6 @@ public:
 	void SetName(LPCSTR name){
 		strcpy(m_pFileName, name);
 	}
+	int hogehoge = 0xFDFDFDFD;
 };
 

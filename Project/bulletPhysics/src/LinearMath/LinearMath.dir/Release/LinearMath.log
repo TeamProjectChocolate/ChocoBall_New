@@ -1,10 +1,1 @@
-﻿  btAlignedAllocator.cpp
-  btConvexHull.cpp
-  btConvexHullComputer.cpp
-  btGeometryUtil.cpp
-  btPolarDecomposition.cpp
-  btQuickprof.cpp
-  btSerializer.cpp
-  btVector3.cpp
-  LINK : MSIL .netmodule または /GL を伴ってコンパイルされたモジュールが見つかりました。/LTCG を使用して再開始してください。リンカーのパフォーマンスを向上させるためには、コマンドラインに /LTCG を追加してください。
-  LinearMath.vcxproj -> C:\GitHub\ChocoBall_New\\bulletPhysics\lib\Release\LinearMath.lib
+﻿  LinearMath.vcxproj -> C:\GitHub\ChocoBall_New\Project\\bulletPhysics\lib\Release\LinearMath.lib

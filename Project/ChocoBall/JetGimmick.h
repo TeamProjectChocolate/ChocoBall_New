@@ -21,7 +21,7 @@ public:
 	void SetCamera(CCamera* pCamera){
 		m_pCamera = pCamera;
 	}
-	void SetDirection(D3DXVECTOR3 dir){
+	void SetDirection(const D3DXVECTOR3& dir){
 		m_pEmitter->SetDirection(dir);
 	}
 	void SetPos(const D3DXVECTOR3& pos)override{

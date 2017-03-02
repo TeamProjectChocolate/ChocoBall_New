@@ -2,15 +2,18 @@
 #include "FireJet.h"
 #include "CourceDef.h"
 
+static int hoge = 0;
+
 CFireJet::CFireJet()
 {
+	this->hogehoge = hoge;
+	hoge++;
 }
 
 
 CFireJet::~CFireJet()
 {
 }
-
 void CFireJet::Initialize(){
 	m_IntervalTime = 3.0f;
 	m_JetTime = 3.0f;
