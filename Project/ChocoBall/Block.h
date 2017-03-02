@@ -17,6 +17,10 @@ public:
 		m_eState = enState_Normal;
 		m_fallPosY = 0.0f;
 	}
+	~CBlock() {
+		// 登録していた自分の剛体を削除。
+		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
+	}
 	void OnDestroy()override;
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot);
 	void Update();
@@ -86,9 +90,9 @@ private:
 	D3DXVECTOR3		m_moveSpeed;	//落下速度
 	float			m_radius;
 	//ここからbulletPhysicsの剛体を使用するために必要な変数。
-	btRigidBody*		m_rigidBody;		//剛体。
-	btCollisionShape*	m_collisionShape;	//コリジョンの形状。
-	btDefaultMotionState* m_myMotionState;
+	unique_ptr<btRigidBody>		m_rigidBody;		//剛体。
+	unique_ptr<btCollisionShape>	m_collisionShape;	//コリジョンの形状。
+	unique_ptr<btDefaultMotionState> m_myMotionState;
 	bool m_life;
 	EnState				m_eState;	//状態。
 	float				m_fallPosY;	//落下位置。

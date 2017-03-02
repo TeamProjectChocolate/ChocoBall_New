@@ -5,7 +5,7 @@
 #include "RenderContext.h"
 
 void CBlock::OnDestroy(){
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody);
+	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
 	//子供に死亡したことを通知。
 	if (m_child){
 		m_child->OnDestroyParent();
@@ -44,17 +44,8 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_transform.angle = rot;
-	//m_RigitBody.Initialize(&m_transform.position, &m_transform.scale);
 
 	this->Build(D3DXVECTOR3(1.0f, 1.0f, 1.0f), m_transform.position);
-
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-	m_rigidBody->setUserIndex(CollisionType_Wall);
-	//m_moveSpeed.x = 0.0f;
-	//m_moveSpeed.z = 0.0f;
-	//m_moveSpeed.y = 0.0f;
-
-	//m_radius = 1.0f;
 
 	SetAlive(true);
 
@@ -121,17 +112,19 @@ void CBlock::Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos)
 {
 
 	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+	m_collisionShape.reset(new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)));
 	btTransform groundTransform;
 	groundTransform.setIdentity();
 	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
 	float mass = 0.0f;
 
 	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState = new btDefaultMotionState(groundTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState, m_collisionShape, btVector3(0, 0, 0));
-	m_rigidBody = new btRigidBody(rbInfo);
+	m_myMotionState.reset(new btDefaultMotionState(groundTransform));
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
+	m_rigidBody.reset(new btRigidBody(rbInfo));
 	m_rigidBody->setUserIndex(CollisionType_Wall);
+	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	m_rigidBody->activate();
 	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody);
+	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody.get());
 }
