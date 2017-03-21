@@ -43,6 +43,7 @@ void CEM_Render::Draw()
 		for (short hexa_idx = 0; hexa_idx < HEXA; hexa_idx++){
 			// カメラのポジション設定。
 			m_Cameras[hexa_idx].SetPos(m_CameraPos);
+			// カメラ更新。
 			m_Cameras[hexa_idx].Update();
 
 			(*graphicsDevice()).SetRenderTarget(0,m_pCubeSurfaces[hexa_idx]);
@@ -51,7 +52,7 @@ void CEM_Render::Draw()
 			// 3Dの描画
 			{
 				// 基本描画
-				for (short priorty = PRIORTY::PLAYER; priorty < PRIORTY::PARTICLE; priorty++){	// 優先度の高いものから更新
+				for (short priorty = OBJECT::PRIORTY::PLAYER; priorty < OBJECT::PRIORTY::PARTICLE; priorty++){	// 優先度の高いものから更新
 					int size = Objects[priorty].size();
 					for (int idx = 0; idx < size; idx++){
 						if (Objects[priorty][idx]->object->GetAlive()) {	// 生存しているもののみ描画
@@ -60,12 +61,12 @@ void CEM_Render::Draw()
 					}
 				}
 				// 蓄積したデータでインスタンシング描画
-				vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::EM_Sampling_I);
+				vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::EM_Sampling_I);
 				for (auto data : datas){
 					data->render->Draw();
 				}
 				// パーティクル描画
-				for (short priorty = PRIORTY::PARTICLE; priorty < PRIORTY::OBJECT2D; priorty++){	// 優先度の高いものから更新
+				for (short priorty = OBJECT::PRIORTY::PARTICLE; priorty < OBJECT::PRIORTY::OBJECT2D; priorty++){	// 優先度の高いものから更新
 					int size = Objects[priorty].size();
 					for (int idx = 0; idx < size; idx++){
 						if (Objects[priorty][idx]->object->GetAlive()){	// 生存しているもののみ描画
@@ -81,7 +82,10 @@ void CEM_Render::Draw()
 		(*graphicsDevice()).SetDepthStencilSurface(m_SavedMapZ);
 
 		tag.End();
+#ifdef TEST_EM
+#else
 		m_isEnable = false;	// シーンの最初のみ描画する。
+#endif
 	}
 };
 
@@ -101,37 +105,11 @@ void CEM_Render::Initialize()
 		D3DCUBEMAP_FACES type = static_cast<D3DCUBEMAP_FACES>(idx);
 		m_pCubeTex->GetCubeMapSurface(type, 0, &m_pCubeSurfaces[idx]);
 	}
-	// カメラ生成。
-	//// 六面体それぞれの面を描画する際のカメラの向き。
-	//D3DXVECTOR3 lookAt[6] = {
-	//	D3DXVECTOR3(1.0f, 0.0f, 0.0f), // +X
-	//	D3DXVECTOR3(-1.0f, 0.0f, 0.0f), // -X
-	//	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +Y
-	//	D3DXVECTOR3(0.0f, -1.0f, 0.0f), // -Y
-	//	D3DXVECTOR3(0.0f, 0.0f, 1.0f), // +Z
-	//	D3DXVECTOR3(0.0f, 0.0f, -1.0f) // -Z
-	//};
-	//// 六面体のそれぞれの面を描画する際の上方向(上面と下面の描画は特に注意)。
-	//D3DXVECTOR3 up[6] = {
-	//	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +X(Up = +Y)
-	//	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // -X(Up = +Y)
-	//	D3DXVECTOR3(0.0f, 0.0f, -1.0f), // +Y(Up = -Z)
-	//	D3DXVECTOR3(0.0f, 0.0f, 1.0f), // -X(Up = +Z)
-	//	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // +Z(Up = +Y)
-	//	D3DXVECTOR3(0.0f, 1.0f, 0.0f), // -Z(Up = +Y)
-	//};
+
+	D3DXMatrixIdentity(&m_CameraRota);
+	m_CameraPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	for (short idx = 0; idx < HEXA; idx++){
-		//float l_Far = 10000.0f;
-		//float l_Near = 1.0f;
-		//float l_ViewAngle = D3DXToRadian(90.0f);
-		//D3DXVECTOR3 l_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		//D3DXMatrixPerspectiveFovLH(
-		//	&m_Proj,							// 射影マトリックス
-		//	l_ViewAngle,						// 画角
-		//	1.0f,							// アスペクト比
-		//	l_Near,								// Nearプレーン
-		//	l_Far);								// Farプレーン
 		m_Cameras[idx].Initialize();
 		m_Cameras[idx].SetFar(10000.0f);
 		m_Cameras[idx].SetNear(1.0f);
@@ -142,12 +120,6 @@ void CEM_Render::Initialize()
 		m_Cameras[idx].SetUp(up[idx]);
 		m_Cameras[idx].SetUpdateType(EUpdateType::enUpdateTypeDirection);
 		m_Cameras[idx].SetNotWorkOutFlg(true);
-		//D3DXMATRIX* view = m_Cameras[idx].GetViewPointer();
-		//CCamera* pCamera = SINSTANCE(CRenderContext)->GetCurrentCamera();
-		//if (pCamera){
-		//	D3DXMatrixMultiply(view, view, &(pCamera->GetView()));
-		//}
-		//D3DXMatrixLookAtLH(&m_View, &l_pos, &lookAt[idx], &up[idx]);			// ビューマトリックス設定
 	}
 	m_isEnable = true;
 #endif

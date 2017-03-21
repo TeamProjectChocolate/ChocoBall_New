@@ -1,4 +1,4 @@
 sceneSetups:
-- path: C:/GitHub/NewFPS/New FPS/Assets/Team/Scenes/TitleScene.unity
+- path: C:/GitHub/NewFPS/New FPS/Assets/Team/Scenes/GameScene.unity
   isLoaded: 1
   isActive: 1

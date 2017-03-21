@@ -16,15 +16,13 @@ void CUpFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale
 	m_transform.angle = rot;
 
 	if (scale.z != 1.0f){
-		this->Build(D3DXVECTOR3(1.5f * scale.x, 0.3f * scale.y, 1.75f * scale.z), m_transform.position);
+		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.75f * scale.z * 0.5f)), CollisionType::Floor, false, 0.0f, true,true);
 	}
 	else{
-		this->Build(D3DXVECTOR3(1.5f * scale.x, 0.3f * scale.y, 1.0f * scale.z), m_transform.position);
+		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.0f * scale.z * 0.5f)), CollisionType::Floor, false, 0.0f, true,true);
 	}
 
-	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
-
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 
 	SetAlive(true);
 	m_IamFlgKeeper = false;
@@ -34,12 +32,8 @@ void CUpFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale
 void CUpFloor::Update()
 {
 
-	btTransform& trans = m_rigidBody->getWorldTransform();
-	trans.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-
 	D3DXVECTOR3 PlayerPos = m_player->GetPos();
 
-	CGameObject::Update();
 	if (IsHitPlayer(m_transform.position, 1.0f))
 	{
 		if (m_MaxMove == -1 || m_transform.position.y < StartPos.y + m_MaxMove){
@@ -69,31 +63,14 @@ void CUpFloor::Update()
 		}
 		m_transform.position.y -= 0.05f;
 	}
+
+	CGameObject::Update();
 }
 
 
 void CUpFloor::Draw()
 {
 	CGameObject::Draw();
-}
-
-
-void CUpFloor::Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos){
-	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	groundTransform.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z, m_transform.angle.w));
-	float mass = 0.0f;
-
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState = new btDefaultMotionState(groundTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState, m_collisionShape, btVector3(0, 0, 0));
-	m_rigidBody = new btRigidBody(rbInfo);
-	//m_rigidBody->setUserIndex(1);
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody);
 }
 
 

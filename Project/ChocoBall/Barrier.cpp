@@ -10,7 +10,6 @@ CBarrier::CBarrier()
 
 CBarrier::~CBarrier()
 {
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_pRigidBody.get());
 }
 
 void CBarrier::Initialize()
@@ -21,7 +20,7 @@ void CBarrier::Initialize()
 	SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), 0.0f); 
 	m_pModel->m_alpha = 0.0f;
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::GLASS];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::GLASS];
 
 	SetAlive(false);
 }
@@ -33,20 +32,7 @@ void CBarrier::Build(const D3DXVECTOR3& pos,float radius) {
 	// 剛体生成。
 	{
 		btScalar Radius = radius * 0.5f * 0.5f;
-		m_pSphereShape.reset(new btSphereShape(Radius));//ここで剛体の形状を決定
-		btTransform rbTransform;
-		rbTransform.setIdentity();
-		rbTransform.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z) + btVector3(0.0f, 0.0f, 1.0f));
-		//rbTransform.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z, m_transform.angle.w));
-
-		//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-		m_myMotionState.reset(new btDefaultMotionState(rbTransform));
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, m_myMotionState.get(), m_pSphereShape.get(), btVector3(0, 0, 0));
-		m_pRigidBody.reset(new btRigidBody(rbInfo));
-		m_pRigidBody->setUserIndex(CollisionType::CollisionType_Boss_Barrier);
-		m_pRigidBody->activate();
-		//ワールドに追加。
-		//SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddCollisionObject_Dynamic();
+		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 1.0f),new btSphereShape(Radius), CollisionType::Boss_Barrier,false,0.0f,true,false);
 	}
 }
 
@@ -80,7 +66,6 @@ void CBarrier::Update()
 			SetAlive(false);
 		}
 	}
-	m_pRigidBody->getWorldTransform().setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z) + btVector3(0.0f, 0.0f, 1.0f));
 	CGameObject::Update();
 }
 
@@ -88,7 +73,7 @@ void CBarrier::Update()
 void CBarrier::OffBarrier() {
 	if (m_IsBarrierOn) {
 		m_IsBarrierOn = false;
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_pRigidBody.get());
+		m_CollisionObject->RemoveWorld();
 	}
 }
 
@@ -100,6 +85,6 @@ void CBarrier::OnBarrier() {
 		m_Radius = 27.0f;
 		m_transform.scale = D3DXVECTOR3(m_Radius, m_Radius, m_Radius);
 		m_pModel->SetAlpha(0.0f);
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_pRigidBody.get());
+		m_CollisionObject->AddWorld();
 	}
 }

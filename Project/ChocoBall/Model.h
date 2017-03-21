@@ -20,9 +20,9 @@ public:
 		m_Refractive = 1.000293f;/*ínãÖÇÃëÂãCÇÃã¸ê‹ó¶*/
 		m_Horizon.clear();
 	};
-	~CModel(){};
+	virtual ~CModel(){};
 	virtual void Initialize();
-	virtual void Update(const TRANSFORM&);
+	virtual void Update(const SH_ENGINE::TRANSFORM&);
 	virtual void SetImage() = 0;
 
 	void SetAlpha(float alpha){
@@ -88,7 +88,7 @@ public:
 	virtual const D3DXVECTOR2& GetSplit(){ return D3DXVECTOR2(0.0f, 0.0f); };
 	virtual void SetNow(const D3DXVECTOR2&){}
 	virtual const D3DXVECTOR2& GetNow(){ return D3DXVECTOR2(0.0f, 0.0f); };
-	virtual IMAGE2D* GetImage_2D(){ return nullptr; }
+	virtual MODEL::IMAGE2D* GetImage_2D(){ return nullptr; }
 
 	// éËåyÇ…àµÇ¢ÇΩÇ¢ÇΩÇﬂpublicÇ∆Ç∑ÇÈ
 public:

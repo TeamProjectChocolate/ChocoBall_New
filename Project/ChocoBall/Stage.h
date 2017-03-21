@@ -39,7 +39,7 @@ private:
 	CParticleEmitter* m_pEmitter;
 	CLevelBuilder* m_CLevelBuilder;
 	bool m_isGameContinue = true;
-	GAMEEND_ID m_GameState = GAMEEND_ID::CONTINUE;
+	GAMEEND::ID m_GameState = GAMEEND::ID::CONTINUE;
 
 	CScore m_score;	
 	CCourceCamera* m_pCamera;

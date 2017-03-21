@@ -1,16 +1,22 @@
 #pragma once
 
-enum CollisionType{
-	CollisionType_Player,			//プレイヤーのコリジョン。
-	CollisionType_Map,				//地形コリジョン。
-	CollisionType_Chocoball,		//チョコボール。
-	CollisionType_ChocoballTrigger,	//チョコボール起動コリジョン。
-	CollisionType_Camera,			//カメラのコリジョン
-	CollisionType_Wall,				//チョコ壁のコリジョン
-	CollisionType_Bullet,				//弾のコリジョン
-	CollisionType_Enemy,
-	CollisionType_Boss,
-	CollisionType_Boss_Gost,
-	CollisionType_Boss_Cource,
-	CollisionType_Boss_Barrier,
-};
+//namespace {
+	enum class CollisionType {
+		None = -1,
+		Player = 0,			//プレイヤーのコリジョン。
+		Map,				//地形コリジョン。
+		Chocoball,		//チョコボール。
+		ChocoballTrigger,	//チョコボール起動コリジョン。
+		Camera,			//カメラのコリジョン
+		Wall,				//チョコ壁のコリジョン
+		Floor,
+		Boss,
+		Boss_Gost,
+		Boss_Cource,
+		Boss_Barrier,
+		AttackWall,		// ボスが発生させたチョコ壁。
+		Bullet,				//弾のコリジョン
+		Enemy,
+		Max
+	};
+//}

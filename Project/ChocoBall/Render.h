@@ -4,12 +4,13 @@
 #include "Camera.h"
 #include "Light.h"
 
+
 class CModel;
 class CRender
 {
 public:
 	CRender();
-	~CRender();
+	virtual ~CRender();
 	virtual void Initialize() = 0;
 	virtual void Draw() = 0;
 	virtual void Draw(const D3DXVECTOR2& FarNear, const D3DXVECTOR3& PintoPos, const D3DXMATRIX& PintoWorld){};
@@ -56,5 +57,8 @@ protected:
 	CLight* m_pLight = nullptr;
 	LPDIRECT3DTEXTURE9 m_pSampleTexture;	// 描画する前に最初に受け取るテクスチャ
 	D3DXVECTOR2 m_DepthFarNear;
+
+public:
+	static int test;
 };
 

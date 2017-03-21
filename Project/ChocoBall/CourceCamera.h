@@ -17,7 +17,7 @@ public:
 	void SetStageID(STAGE_ID id){
 		m_StageID = id;
 	}
-	void SetGameState(GAMEEND_ID id){
+	void SetGameState(GAMEEND::ID id){
 		m_GameState = id;
 	}
 	bool GetIsEnd(){
@@ -31,8 +31,8 @@ public:
 	}
 private:
 	CCourceDef m_courceDef;
-	COURCE_BLOCK m_PrevCource;	// プレイヤーがワンフレーム前にいたブロック
-	COURCE_BLOCK m_CurrentCource;	// プレイヤーが現在いるブロック
+	Cource::COURCE_BLOCK m_PrevCource;	// プレイヤーがワンフレーム前にいたブロック
+	Cource::COURCE_BLOCK m_CurrentCource;	// プレイヤーが現在いるブロック
 	bool m_CompCamera;			// カメラの補完処理	
 	D3DXVECTOR3 m_NowPos;		// 現在のカメラの位置
 	D3DXVECTOR3 m_cameraPosSpeed;	//カメラの移動速度。
@@ -42,7 +42,7 @@ private:
 	bool m_isFirst;
 	STAGE_ID m_StageID;
 	bool m_TurnFlg;
-	GAMEEND_ID m_GameState;
+	GAMEEND::ID m_GameState;
 	bool m_IsEnd;
 	CIsIntersect m_Isintersect;
 	bool m_IsTarget;

@@ -28,7 +28,7 @@ public:
 	{
 		return m_pAnimController;
 	}
-	D3DXMESHCONTAINER_DERIVED* GetContainer(){
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* GetContainer(){
 		return m_pMeshContainer;
 	}
 	void UpdateBoneMatrix(const D3DXMATRIX* matWorld);
@@ -67,7 +67,7 @@ private:
 private:
 	LPD3DXFRAME m_frameRoot = NULL;		// フレームルート
 	ID3DXAnimationController* m_pAnimController;	// アニメーションコントローラ
-	D3DXMESHCONTAINER_DERIVED* m_pMeshContainer;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* m_pMeshContainer;
 	bool m_isClone;	// このモデルデータはクローンか。
 };
 

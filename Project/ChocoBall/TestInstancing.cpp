@@ -63,7 +63,7 @@ void CTestInstancing::Initialize(){
 
 	//インスタンシング描画用の初期化。
 	D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
 	// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 	container->MeshData.pMesh->GetDeclaration(declElement);
 	// 頂点の宣言の終端を探索
@@ -118,7 +118,7 @@ void CTestInstancing::Initialize(){
 }
 
 void CTestInstancing::Update(){
-	CPlayer* player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	CPlayer* player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	if (player == nullptr){
 		return;
 	}
@@ -173,7 +173,7 @@ void CTestInstancing::Update(){
 
 
 void CTestInstancing::Draw(){
-	D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = model.GetImage_3D()->GetContainer();
 
 	(*graphicsDevice()).SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pEffect->SetTechnique("NonAnimationInstancing_SFresnel");

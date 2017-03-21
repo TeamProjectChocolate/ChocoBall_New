@@ -47,7 +47,7 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 	SINSTANCE(CShadowRender)->Entry(this);
 	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::CHOCOLATE];
 #endif
 
 	SetAlive(true);

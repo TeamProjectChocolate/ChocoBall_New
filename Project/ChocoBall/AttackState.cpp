@@ -28,8 +28,8 @@ bool CAttackState::Update() {
 		}
 		else {
 			// 攻撃が終わったのでコースの属性をMoveに変更して再び移動開始。
-			vector<BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
-			now[0]->BlockType = Boss_Cource::BOSS_COURCE_TYPE::Move;
+			vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+			now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
 			m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
 		}
 		return true;
@@ -40,7 +40,7 @@ bool CAttackState::Update() {
 // 突進。
 bool CAttackState::BossRush() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::FastsSwim);
-	m_pObject->SetPlayingState(PLAYING_STATE::REPEAT);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 	return true;
 }
 
@@ -51,10 +51,10 @@ void CAttackState::Exit(CEnemy_Boss::BOSS_STATE next) {
 	}
 	else if (next == CEnemy_Boss::BOSS_STATE::Escape) {
 		// 攻撃中にダメージを受けた。
-		vector<BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+		vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
 		if (now.size() == 1 && !(now[0]->IsEnd)) {
 			// 最後のコースではないのでコースの属性をMoveに変更。
-			now[0]->BlockType = Boss_Cource::BOSS_COURCE_TYPE::Move;
+			now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
 		}
 	}
 	// コース判定を再起動。

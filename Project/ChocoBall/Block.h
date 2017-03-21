@@ -18,8 +18,6 @@ public:
 		m_fallPosY = 0.0f;
 	}
 	~CBlock() {
-		// 登録していた自分の剛体を削除。
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
 	}
 	void OnDestroy()override;
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot);
@@ -40,7 +38,7 @@ public:
 	}
 
 	void SetRenderState()override{
-		m_RenderingState = RENDER_STATE::_3D_Simple;
+		m_RenderingState = RENDER::TYPE::_3D_Simple;
 	}
 
 	void Setradius(float radius)
@@ -72,6 +70,9 @@ public:
 	{
 		return m_isDead;
 	}
+	void SetCollisionType(CollisionType type) {
+		m_CollisionObject->ConfigCollisionType(type);
+	}
 private:
 	//子供を設定。
 	void SetChild(CBlock* child)
@@ -79,7 +80,6 @@ private:
 		m_child = child;
 	}
 private:
-	CIsIntersect	m_IsIntersect;
 	enum EnState{
 		enState_Normal,	//通常状態。
 		enState_Broken,	//壊れた。
@@ -89,10 +89,6 @@ private:
 	CBlock*			m_child;		//子供
 	D3DXVECTOR3		m_moveSpeed;	//落下速度
 	float			m_radius;
-	//ここからbulletPhysicsの剛体を使用するために必要な変数。
-	unique_ptr<btRigidBody>		m_rigidBody;		//剛体。
-	unique_ptr<btCollisionShape>	m_collisionShape;	//コリジョンの形状。
-	unique_ptr<btDefaultMotionState> m_myMotionState;
 	bool m_life;
 	EnState				m_eState;	//状態。
 	float				m_fallPosY;	//落下位置。

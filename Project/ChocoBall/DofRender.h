@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "RenderTarget.h"
 
+class CGameObject;
 
 class CDofRender:public CRender
 {

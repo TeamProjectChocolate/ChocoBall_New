@@ -26,10 +26,10 @@ void CCBManager::Initialize()
 		SINSTANCE(CShadowRender)->Entry(this);	// チョコボールはインスタンシング描画のため自身を登録する
 		m_pModel->m_alpha = 1.0f;
 		m_pModel->m_luminance = 0.0f;
-		m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::EARTH];
+		m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::EARTH];
 #endif
 		// 当たり判定を行うオブジェクトを登録。
-		m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("TEST3D"));
+		m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
 		m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
 }
 
@@ -55,8 +55,8 @@ void CCBManager::Update()
 		}
 		else {
 			// チョコボールの寿命が尽きていれば削除。
-			// ユニークポインタを明示的に解放。
-			(*itr).reset(nullptr);
+			// シェアードポインタの参照カウンタを明示的に減らす。
+			(*itr).reset();
 			itr = m_Choco.erase(itr);
 		}
 	}
@@ -100,12 +100,12 @@ void CCBManager::CreateChocoBall() {
 				Epos.x += rate;
 				Epos.z += fabsf(rate);
 				Epos.y += rate;
-				CChocoBall* ptr = new CChocoBall;
+				shared_ptr<CChocoBall> ptr(new CChocoBall);
 				ptr->SetStageID(m_StageID);
 				ptr->Initialize(pos, Epos);
-				m_Choco.push_back(unique_ptr<CChocoBall>(ptr));
+				m_Choco.push_back(ptr);
 #ifdef NOT_INSTANCING
-				SINSTANCE(CShadowRender)->Entry(&(*ptr.get()));
+				SINSTANCE(CShadowRender)->Entry(ptr.get());
 #endif
 				createCount++;
 			}
@@ -118,17 +118,17 @@ void CCBManager::Draw()
 #ifdef NOT_INSTANCING
 	bool isBeginDraw = false;
 
-	for (int i = 0; i < m_numCreate; i++){
-		if (m_Choco[i].GetAlive()){
+	for (int i = 0; i < m_Choco.size(); i++){
+		if (m_Choco[i]->GetAlive()){
 			if (!isBeginDraw){
-				m_Choco[i].BeginDraw();
+				m_Choco[i]->BeginDraw();
 				isBeginDraw = true;
 			}
-			m_Choco[i].Draw();
+			m_Choco[i]->Draw();
 		}
 	}
 	if (isBeginDraw){
-		m_Choco[m_numCreate - 1].EndDraw();
+		m_Choco[m_Choco.size() - 1]->EndDraw();
 	}
 #else
 		// ObjectManagerからDraw関数が呼ばれたら、インスタンシング用のレンダーに行列データを蓄積していく
@@ -157,7 +157,7 @@ void CCBManager::DrawShadow(CCamera* camera){
 void CCBManager::Draw_EM(CCamera* camera){
 #ifdef NOT_INSTANCING
 	for (int i = 0; i < m_Choco.size(); i++) {
-		m_Choco[i].Draw_EM(camera);
+		m_Choco[i]->Draw_EM(camera);
 	}
 #else
 	static_cast<CEM_SamplingRender_I*>(m_pEMSamplingRender)->SetCamera(camera);
@@ -171,6 +171,16 @@ void CCBManager::Draw_EM(CCamera* camera){
 #endif
 }
 
+void CCBManager::OnTriggerStay(btCollisionObject* pCollision) {
+	if (pCollision->getUserIndex() == static_cast<int>(CollisionType::Player)) {
+		// チョコボール生成開始。
+		this->Initialize();
+		this->SetAlive(true);
+		// チョコボールトリガーのコリジョンをコリジョンワールドから除外。
+		m_CollisionObject->RemoveWorld();
+	}
+}
+
 void CCBManager::IsHit()
 {
 	bool IsPlayerHit = false;
@@ -181,7 +191,7 @@ void CCBManager::IsHit()
 				// プレイヤー用判定。
 				D3DXVECTOR3 MaxSize;//最大値
 				D3DXVECTOR3 MinSize;//最小値
-				const static float Sphereradius = 0.3f;//チョコボールの半径
+				const static float Sphereradius = 0.25f;//チョコボールの半径
 				D3DXVECTOR3 size = m_pPlayer->GetSize();
 				size *= 0.5f;
 				D3DXVECTOR3 pos = m_pPlayer->GetPos();
@@ -212,7 +222,7 @@ void CCBManager::IsHit()
 				if (m_IsBossDamage) {
 					D3DXVECTOR3 MaxSize;//最大値
 					D3DXVECTOR3 MinSize;//最小値
-					const static float Sphereradius = 0.3f;//チョコボールの半径
+					const static float Sphereradius = 0.25f;//チョコボールの半径
 					D3DXVECTOR3 size = m_pBoss->GetSize();
 					size *= 0.5f;
 					D3DXVECTOR3 pos = m_pBoss->GetPos();
@@ -260,9 +270,9 @@ void CCBManager::FindCource(){
 
 void CCBManager::NonActivate(){
 #ifdef NOT_INSTANCING
-	for (auto& choco : m_Choco){
-		choco.SetAlive(false);
-		SINSTANCE(CShadowRender)->DeleteObjectImidieit(&choco);
+	for (auto choco : m_Choco){
+		choco->SetAlive(false);
+		SINSTANCE(CShadowRender)->DeleteObjectImidieit(choco.get());
 	}
 #else
 	SINSTANCE(CShadowRender)->DeleteObject(this);

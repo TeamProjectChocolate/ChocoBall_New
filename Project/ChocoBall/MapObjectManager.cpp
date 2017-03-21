@@ -4,7 +4,6 @@
 #include "CollisionType.h"
 
 CMapObjectManager::CMapObjectManager() {
-	m_myMotionState = nullptr;
 }
 
 CMapObjectManager::~CMapObjectManager() {
@@ -13,15 +12,10 @@ CMapObjectManager::~CMapObjectManager() {
 		SAFE_DELETE(Obj);
 	}
 	m_MapObjects.clear();
-	for (auto rigidBody : m_rigidBody) {
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(rigidBody);
+	for (auto rigidBody : m_rigidBodys) {
 		SAFE_DELETE(rigidBody);
 	}
-	m_rigidBody.clear();
-	for (auto ground : m_groundShape) {
-		SAFE_DELETE(ground);
-	}
-	m_groundShape.clear();
+	m_rigidBodys.clear();
 }
 
 void CMapObjectManager::Initialize() {
@@ -92,23 +86,34 @@ void CMapObjectManager::Build() {
 		int arraySize = collisionInfoTableSizeArray[m_StageID];	//配列の要素数を返す。
 		for (int i = 0; i < arraySize; i++) {
 			SCollisionInfo& collision = Table[i];
-			btBoxShape* work = new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f));
-			m_groundShape.push_back(work);
-			btTransform groundTransform;
-			groundTransform.setIdentity();
-			groundTransform.setOrigin(btVector3(-collision.pos.x, collision.pos.y, -collision.pos.z));
-			groundTransform.setRotation(btQuaternion(-collision.rotation.x, collision.rotation.y, -collision.rotation.z, collision.rotation.w));
-			float mass = 0.0f;
 
-			//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-			m_myMotionState = new btDefaultMotionState(groundTransform);
-			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState, work, btVector3(0, 0, 0));
-			btRigidBody* work2 = new btRigidBody(rbInfo);
-			m_rigidBody.push_back(work2);
-			work2->activate();
-			m_rigidBody[i]->setUserIndex(CollisionType_Map);
-			//ワールドに追加。
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(work2);
+			SH_ENGINE::TRANSFORM tr;	// 剛体に渡すTransform情報。
+			tr.Identity();
+			// 位置情報設定。
+			tr.position = collision.pos;
+			// Unityの座標系からDirectXの座標系に変換。
+			tr.position.x *= -1.0f;
+			tr.position.z *= -1.0f;
+			// 回転情報設定。
+			tr.angle = collision.rotation;
+			// Unityの座標系からDirectXの座標系に変換。
+			tr.angle.x *= -1.0f;
+			tr.angle.z *= -1.0f;
+			// ※スケールは不要なため省く。
+
+			CRigidbody* work = new CRigidbody;
+			work->InitCollision(
+				nullptr,
+				tr,
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f)),
+				CollisionType::Map,
+				0.0f,
+				true,
+				true);
+			//work->BitMask_AllOn();
+			//work->BitMask_Off(CollisionType::Player);
+			m_rigidBodys.push_back(work);
 		}
 	}
 
@@ -128,12 +133,12 @@ void CMapObjectManager::Build() {
 			WorkObj->SetStageID(m_StageID);
 			WorkObj->SetFileName(name.c_str());
 
-			PRIORTY priorty;
+			OBJECT::PRIORTY priorty;
 			if (MapObjects[idx].Alpha >= 1.0f) {
-				priorty = PRIORTY::OBJECT3D;
+				priorty = OBJECT::PRIORTY::OBJECT3D;
 			}
 			else {
-				priorty = PRIORTY::OBJECT3D_ALPHA;
+				priorty = OBJECT::PRIORTY::OBJECT3D_ALPHA;
 			}
 			WorkObj->Initialize();
 
@@ -150,12 +155,12 @@ void CMapObjectManager::Build() {
 			WorkObj->SetQuaternion(MapObjects[idx].Rotation);
 			D3DXVECTOR3 scale = MapObjects[idx].Scale;
 			WorkObj->SetScale(MapObjects[idx].Scale);
-			if (static_cast<REFRACTIVES>(MapObjects[idx].RType) == REFRACTIVES::NONE) {
+			if (static_cast<FRESNEL::REFRACTIVES>(MapObjects[idx].RType) == FRESNEL::REFRACTIVES::NONE) {
 				WorkObj->SetIsFresnel(false);
 			}
 			else {
 				WorkObj->SetIsFresnel(true);
-				WorkObj->SetRefractive(static_cast<REFRACTIVES>(MapObjects[idx].RType));
+				WorkObj->SetRefractive(static_cast<FRESNEL::REFRACTIVES>(MapObjects[idx].RType));
 			}
 			WorkObj->SetAlpha(MapObjects[idx].Alpha);
 

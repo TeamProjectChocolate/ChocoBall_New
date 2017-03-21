@@ -49,8 +49,8 @@ void CEM_SamplingRender::DrawFrame(LPD3DXFRAME pFrame){
 }
 
 void CEM_SamplingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase){
-	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
+	ANIMATION::D3DXFRAME_DERIVED* pFrame = (ANIMATION::D3DXFRAME_DERIVED*)pFrameBase;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<ANIMATION::D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
 
 	if (pMeshContainer->pSkinInfo != nullptr){
 		// ƒXƒLƒ“î•ñ‚ ‚è
@@ -62,7 +62,7 @@ void CEM_SamplingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBas
 	}
 }
 
-void CEM_SamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D3DXFRAME_DERIVED* pFrame){
+void CEM_SamplingRender::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer, ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
 	LPD3DXBONECOMBINATION pBoneComb;
 	m_pEffect->SetTechnique(m_pTechniqueName);
@@ -106,7 +106,7 @@ void CEM_SamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer
 }
 
 
-void CEM_SamplingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
+void CEM_SamplingRender::NonAnimationDraw(ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
 	D3DXMATRIX World;
 	if (pFrame != nullptr){
@@ -118,7 +118,7 @@ void CEM_SamplingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 		}
 	}
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 	if (container->ppTextures == nullptr){
 		m_pEffect->SetTechnique("Boneless_Basic");
 	}
@@ -153,4 +153,6 @@ void CEM_SamplingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 	}
 	m_pEffect->EndPass();
 	m_pEffect->End();
+
+	m_pModel = nullptr;
 }

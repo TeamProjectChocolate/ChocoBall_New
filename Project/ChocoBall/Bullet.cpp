@@ -18,13 +18,13 @@ void Bullet::Initialize()
 	SetAlive(true);
 	m_pModel->m_alpha = 0.75f;//“§–¾“x
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::GOLD];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::GOLD];
 	m_radius = 1.0f;
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 	m_moveSpeed.y = 0.0f;
 	this->Build();
-	m_IsIntersect.CollisitionInitialize(&m_transform.position, m_radius,CollisionType_Bullet);
+	//m_IsIntersect.Initialize(&m_transform.position, m_radius,CollisionType_Bullet);
 }
 
 void Bullet::Update()
@@ -34,7 +34,7 @@ void Bullet::Update()
 	m_transform.position.y = m_transform.position.y + m_dir.y*m_Speed;
 	m_transform.position.z = m_transform.position.z + m_dir.z*m_Speed;
 
-	m_IsIntersect.Intersect2(&m_transform.position, &m_moveSpeed);
+	//m_IsIntersect.Intersect2(&m_transform.position, &m_moveSpeed);
 
 	float length = D3DXVec3Length(&D3DXVECTOR3(m_transform.position - m_StartPos));
 	if (length >= m_Range) {

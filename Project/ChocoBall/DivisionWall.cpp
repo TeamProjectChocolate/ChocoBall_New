@@ -9,7 +9,6 @@ CDivisionWall::CDivisionWall()
 
 CDivisionWall::~CDivisionWall()
 {
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
 }
 
 void CDivisionWall::Build(const D3DXVECTOR3& pos, const D3DXQUATERNION& Rotation) {
@@ -20,24 +19,9 @@ void CDivisionWall::Build(const D3DXVECTOR3& pos, const D3DXQUATERNION& Rotation
 	// 剛体生成。
 	{
 		D3DXVECTOR3 size = D3DXVECTOR3(5.0f,6.0f,1.0f);
-
 		//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-		m_collisionShape.reset(new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)));
-		btTransform groundTransform;
-		groundTransform.setIdentity();
-		groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-		groundTransform.setRotation(btQuaternion(Rotation.x, Rotation.y, Rotation.z, Rotation.w));
-		float mass = 0.0f;
-
-		//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-		m_myMotionState.reset(new btDefaultMotionState(groundTransform));
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
-		m_rigidBody.reset(new btRigidBody(rbInfo));
-		m_rigidBody->setUserIndex(CollisionType_Wall);
-		//ワールドに追加。
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody.get());
-		m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-		m_rigidBody->setUserIndex(CollisionType_Wall);
+		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)), CollisionType::Wall, false, 0.0f, true,true);
+		m_CollisionObject->BitMask_AllOn();
 	}
 }
 
@@ -47,7 +31,7 @@ void CDivisionWall::Initialize() {
 	CGameObject::Initialize();
 	m_pModel->m_alpha = 0.7f;
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::GLASS];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::GLASS];
 	m_moveSpeed = 0.5f;
 
 	SetAlive(true);
@@ -62,9 +46,6 @@ void CDivisionWall::Update() {
 		Local_X.z = Rota.m[0][2];
 		m_transform.position += Local_X * m_moveSpeed;
 		m_Length += m_moveSpeed;
-		btTransform& trans = m_rigidBody->getWorldTransform();
-		trans.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-		trans.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z));
 		if (m_Length > m_transform.scale.x) {
 			// オブジェクトの横のサイズ分スライドしたら。
 			m_IsMove = false;

@@ -42,15 +42,15 @@ public:
 	void ApplyFource(const D3DXVECTOR3& applyFource){
 		this->m_applyFource = applyFource;
 	}
-	bool GetIsDead(){
-		return m_state == EMIT_STATE::DEAD;
-	}
 	void SetFileName(LPCSTR name){
 		CH_ASSERT(strlen(name) <= MAX_FILENAME);
 		strcpy(m_pFileName, name);
 	}
 	D3DXVECTOR3* GetPosRef(){
 		return &(m_ParticleData.position);
+	}
+	void SetTailParticle(CParticle** p) {
+		m_pTailParticle = p;
 	}
 private:
 	CPrimitive m_Primitive;
@@ -59,17 +59,19 @@ private:
 	CRandom* m_random;
 	float m_life;
 	float m_timer;
-	PARTICLE_DATA m_ParticleData;
+	PARTICLE::DATA m_ParticleData;
 	float m_rotateZ;
 	D3DXVECTOR3 m_addVelocityRandomMargin;	// 速度の積分のときのランダム幅
 	bool m_isFade;		// 死ぬときにフェードアウトするかのフラグ
 	float m_fadeTime;		// フェードの時間
-	EMIT_STATE m_state;	// 状態
+	PARTICLE::EMIT_STATE m_state;	// 状態
 	float m_initAlpha;	// 初期アルファ
 	bool m_isBillboard;	// ビルボードかどうかのフラグ
 	D3DXVECTOR3 m_applyFource;	// 外部から加わる力
 	float m_brightness;		// 輝度。ブルームが有効なら強くすると光があふれる
 	int m_alphaBlendMode;		// 半透明合成、1加算合成
 	float m_deltaTime;
+
+	CParticle** m_pTailParticle = nullptr;	// 最後に生成したパーティクルの入ったポインタ。
 };
 

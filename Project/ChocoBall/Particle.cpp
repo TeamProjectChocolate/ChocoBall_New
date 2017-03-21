@@ -14,6 +14,10 @@ CParticle::CParticle()
 
 CParticle::~CParticle()
 {
+	if (*m_pTailParticle == this) {
+		// 自分が最後に生成したパーティクルなら、最後に生成したパーティクルのポインタ変数にnullを入れる。
+		*m_pTailParticle = nullptr;
+	}
 }
 
 void CParticle::Initialize(){
@@ -71,7 +75,7 @@ void CParticle::Draw(){
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
 
-	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
 	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
 
@@ -157,7 +161,7 @@ void CParticle::Draw_EM(CCamera* camera){
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
 
-	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
 	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
 
@@ -214,7 +218,7 @@ void CParticle::SetupMatrices(){
 	D3DXMatrixTranslation(&Trans, m_ParticleData.position.x, m_ParticleData.position.y, m_ParticleData.position.z);
 	if (m_isBillboard){
 		// ビルボード処理
-		const D3DXMATRIX CameraRota = m_camera->GetCameraRotation();
+		const D3DXMATRIX CameraRota = m_camera->GetRotation();
 		D3DXMatrixMultiply(&(m_pModel->m_World), &(m_pModel->m_World), &CameraRota);
 	}
 	else{
@@ -224,27 +228,27 @@ void CParticle::SetupMatrices(){
 	D3DXMatrixMultiply(&(m_pModel->m_World), &(m_pModel->m_World), &Trans);
 
 	switch (m_state){
-	case EMIT_STATE::RUN:
+	case PARTICLE::EMIT_STATE::RUN:
 		if (m_timer >= m_life){
 			if (m_isFade){
-				m_state = EMIT_STATE::FADEOUT;
+				m_state = PARTICLE::EMIT_STATE::FADEOUT;
 				m_timer = 0.0f;
 			}
 			else{
-				m_state = EMIT_STATE::DEAD;
+				m_state = PARTICLE::EMIT_STATE::DEAD;
 			}
 		}
 		break;
-	case EMIT_STATE::FADEOUT:{
+	case PARTICLE::EMIT_STATE::FADEOUT:{
 		float t = m_timer / m_fadeTime;
 		m_timer += m_deltaTime;
 		m_pModel->m_alpha = m_initAlpha + (-m_initAlpha)*t;
 		if (m_pModel->m_alpha <= 0.0f){
 			m_pModel->m_alpha = 0.0f;
-			m_state = EMIT_STATE::DEAD;
+			m_state = PARTICLE::EMIT_STATE::DEAD;
 		}
 	}break;
-	case EMIT_STATE::DEAD:
+	case PARTICLE::EMIT_STATE::DEAD:
 		SINSTANCE(CObjectManager)->DeleteGameObject(this);
 		SetAlive(false);
 		break;
@@ -257,8 +261,8 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 
 	UseModel<C2DImage>();
 	m_pModel->SetFileName(param->texturePath);
-	m_pRender = SINSTANCE(CRenderContext)->SelectRender(RENDER_STATE::_2D,_T(""),false,m_pModel);
-	m_pEMSamplingRender = SINSTANCE(CRenderContext)->SelectRender(RENDER_STATE::EM_Sampling, _T(""), false, m_pModel);
+	m_pRender = SINSTANCE(CRenderContext)->SelectRender(RENDER::TYPE::_2D,_T(""),false,m_pModel);
+	m_pEMSamplingRender = SINSTANCE(CRenderContext)->SelectRender(RENDER::TYPE::EM_Sampling, _T(""), false, m_pModel);
 
 
 	if (param->size_randMax < param->size_randMin){
@@ -283,7 +287,7 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 		uv = param->uvTable[0];
 	}
 
-	SShapeVertex_PT vp[] = {
+	PRIMITIVE::SShapeVertex_PT vp[] = {
 		{ -halfW, halfH, 0.0f, 1.0f, uv.x, uv.y },
 		{ halfW, halfH, 0.0f, 1.0f, uv.z, uv.y },
 		{ -halfW, -halfH, 0.0f, 1.0f, uv.x, uv.w },
@@ -295,7 +299,7 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	m_Primitive.Create(
 		EType::eTriangleStrip,
 		4,
-		sizeof(SShapeVertex_PT),
+		sizeof(PRIMITIVE::SShapeVertex_PT),
 		scShapeVertex_PT_Element,
 		vp,
 		4,
@@ -321,7 +325,7 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	m_addVelocityRandomMargin = param->addVelocityRandomMargin;
 	m_ParticleData.gravity = param->gravity;
 	m_isFade = param->isFade;
-	m_state = EMIT_STATE::RUN;
+	m_state = PARTICLE::EMIT_STATE::RUN;
 	m_initAlpha = param->initAlpha;
 	m_pModel->m_alpha = m_initAlpha;
 	m_fadeTime = param->fadeTime;

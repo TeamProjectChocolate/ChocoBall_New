@@ -19,12 +19,12 @@ void CRenderContext::CreateRenderingTerget(){
 	}
 	m_Renders.clear();
 
-	for (int i = 0; i < RENDER_STATE::Max; i++){
+	for (int i = 0; i < RENDER::TYPE::Max; i++){
 		m_Renders.push_back(vector<RENDER_DATA*>());
 	}
 
 
-	static SShapeVertex_PT vertex[]{
+	static PRIMITIVE::SShapeVertex_PT vertex[]{
 		{
 			-1.0f, 1.0f, 0.0f, 1.0f,
 			0.0f, 0.0f
@@ -48,7 +48,7 @@ void CRenderContext::CreateRenderingTerget(){
 	m_copyBackBufferPrim.Create(
 		EType::eTriangleStrip,
 		4,
-		sizeof(SShapeVertex_PT),
+		sizeof(PRIMITIVE::SShapeVertex_PT),
 		scShapeVertex_PT_Element,
 		vertex,
 		4,
@@ -60,14 +60,14 @@ void CRenderContext::CreateRenderingTerget(){
 	m_bufferSize_Height = WINDOW_HEIGHT * 2;
 
 	// 被写界深度描画用クラス。
-	m_DofRender = CreateRender<CDofRender>(RENDER_STATE::Dof, _T(""),true);
+	m_DofRender = CreateRender<CDofRender>(RENDER::TYPE::Dof, _T(""),true);
 
 	// ブルーム描画用クラス。
-	m_BloomRender = CreateRender<CBloomRender>(RENDER_STATE::Bloom,_T(""),true);
+	m_BloomRender = CreateRender<CBloomRender>(RENDER::TYPE::Bloom,_T(""),true);
 	
 	// 環境マップ描画用クラス。
-	m_EMRender = CreateRender<CEM_Render>(RENDER_STATE::EM, _T(""), true);
-	m_EMRender->SetPos(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	m_EMRender = CreateRender<CEM_Render>(RENDER::TYPE::EM, _T(""), true);
+	m_EMRender->SetCameraPos(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
 	// レンダリングターゲット生成。
 	STargetParam param = {
@@ -93,8 +93,17 @@ void CRenderContext::CreateRenderingTerget(){
 }
 
 void CRenderContext::RenderingStart(){
+#ifdef TEST_EM
+	if (m_pCamera) {
+		// 現在のカメラ情報を設定。
+		m_EMRender->SetCameraPos(m_pCamera->GetPos() + m_pCamera->GetDir() * 11.0f);
+		// 環境マップ描画
+		m_EMRender->Draw();
+	}
+#else
 	// 環境マップ描画
 	m_EMRender->Draw();
+#endif
 
 	// もとのレンダリングターゲットを保存
 	(*graphicsDevice()).GetRenderTarget(0, &m_SavedBuffer);
@@ -141,7 +150,7 @@ void CRenderContext::SetRenderingBuffer(){
 	m_pEffect->CommitChanges();				//この関数を呼び出すことで、データの転送が確定する。描画を行う前に一回だけ呼び出す。
 	
 	(*graphicsDevice()).SetVertexDeclaration(m_copyBackBufferPrim.GetVertexDecl());
-	(*graphicsDevice()).SetStreamSource(0, m_copyBackBufferPrim.GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+	(*graphicsDevice()).SetStreamSource(0, m_copyBackBufferPrim.GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 	(*graphicsDevice()).SetIndices(m_copyBackBufferPrim.GetIndexBuffer());
 
 	(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -157,26 +166,36 @@ void CRenderContext::ChangeScenedProcess(){
 
 void CRenderContext::DeleteRenders(){
 	for (int idx = 0; idx < m_Renders.size(); idx++){
-		for (auto itr = m_Renders[idx].begin(); itr != m_Renders[idx].end();){
-			if (!(*itr)->IsCommon){
-				SAFE_DELETE((*itr)->render);
-				SAFE_DELETE(*itr);
-				itr = m_Renders[idx].erase(itr);
-			}
-			else{
-				itr++;
+		if (m_Renders[idx].size() > 0) {
+			for (auto itr = m_Renders[idx].begin(); itr != m_Renders[idx].end();) {
+				if (!((*itr)->IsCommon)) {
+					char text[256];
+					sprintf(text, "%x\n", (*itr)->render);
+					OutputDebugString(text);
+					SAFE_DELETE((*itr)->render);
+					SAFE_DELETE(*itr);
+					itr = m_Renders[idx].erase(itr);
+				}
+				else {
+					itr++;
+				}
 			}
 		}
 	}
+	char text[256];
+	sprintf(text, "デリート完了。\n");
+	OutputDebugString(text);
 }
 
 void CRenderContext::DeleteAll(){
-	for (int idx = 0; idx < m_Renders.size(); idx++){
-		for (auto itr = m_Renders[idx].begin(); itr != m_Renders[idx].end();itr++){
-			SAFE_DELETE((*itr)->render);
-			SAFE_DELETE(*itr);
+	for (int idx = 0; idx < m_Renders.size(); idx++) {
+		if (m_Renders[idx].size() > 0) {
+			for (auto itr = m_Renders[idx].begin(); itr != m_Renders[idx].end(); itr++) {
+				SAFE_DELETE((*itr)->render);
+				SAFE_DELETE(*itr);
+			}
+			m_Renders[idx].clear();
 		}
-		m_Renders[idx].clear();
 	}
 	m_Renders.clear();
 }

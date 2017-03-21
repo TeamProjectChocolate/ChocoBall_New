@@ -14,7 +14,7 @@ public:
 	void Update();
 	void SetCamera(LPD3DXEFFECT);
 	//void SetFarNear(LPD3DXEFFECT);
-	inline void SetPos(D3DXVECTOR3 pos){
+	inline void SetPos(const D3DXVECTOR3& pos){
 		m_position = pos;
 	}
 	inline D3DXVECTOR3 GetPos(){
@@ -23,10 +23,10 @@ public:
 	inline D3DXVECTOR3 GetDir(){
 		return m_direction;
 	}
-	inline void SetTarget(D3DXVECTOR3 target){
+	inline void SetTarget(const D3DXVECTOR3& target){
 		m_target = target;
 	}
-	inline void SetUp(D3DXVECTOR3 up){
+	inline void SetUp(const D3DXVECTOR3& up){
 		m_up = up;
 	}
 	inline void SetViewAngle(float angle){
@@ -47,7 +47,7 @@ public:
 	inline float GetFar(){
 		return m_Far;
 	}
-	inline void SetDirection(D3DXVECTOR3 dir)
+	inline void SetDirection(const D3DXVECTOR3& dir)
 	{
 		m_direction = dir;
 	}
@@ -55,24 +55,24 @@ public:
 	{
 		m_updateType = type;
 	}
-	inline void SetAxis(D3DXVECTOR3 axis){
+	inline void SetAxis(const D3DXVECTOR3& axis){
 		m_Axis = axis;
 	}
-	D3DXMATRIX GetView()
+	const D3DXMATRIX& GetView()
 	{
 		return m_View;
 	}
 	D3DXMATRIX* GetViewPointer(){
 		return &m_View;
 	}
-	D3DXMATRIX GetProj()
+	const D3DXMATRIX& GetProj()
 	{
 		return m_Proj;
 	}
-	D3DXMATRIX GetCameraRotation(){
+	const D3DXMATRIX& GetRotation(){
 		return m_Rota;
 	}
-	D3DXVECTOR3 GetTarget()
+	const D3DXVECTOR3& GetTarget()
 	{
 		return m_target;
 	}

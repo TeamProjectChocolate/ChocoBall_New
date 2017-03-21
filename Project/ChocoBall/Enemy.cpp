@@ -30,12 +30,12 @@ void CEnemy::Initialize()
 	SetAlive(true);	//死亡フラグ
 	m_pModel->m_alpha = 1.0f;	//透明度？
 
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 }
 
 void CEnemy::Update()
 {
-	if (m_State != MOVE_STATE::Fly){
+	if (m_State != MOVE::STATE::Fly){
 		m_EnemyToPlayerVec = g_player->GetPos() - this->m_transform.position;
 		float E;
 		E = D3DXVec3Length(&m_EnemyToPlayerVec);//ベクトルの長さを計算
@@ -43,10 +43,10 @@ void CEnemy::Update()
 
 		if (E <= 20)
 		{
-			m_State = MOVE_STATE::RockOn;
+			m_State = MOVE::STATE::RockOn;
 		}
 		else{
-			m_State = MOVE_STATE::Wait;
+			m_State = MOVE::STATE::Wait;
 		}
 	}
 	CEnemy_People::Update();
@@ -68,7 +68,7 @@ void CEnemy::EnemyBulletShot()
 	if (time >= 180)
 	{
 		time = 0;
-		CEnemyBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CEnemyBullet>(_T("EnemyBullet"), PRIORTY::OBJECT3D, false);
+		CEnemyBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CEnemyBullet>(_T("EnemyBullet"), OBJECT::PRIORTY::OBJECT3D, false);
 		bullet->Initialize();
 		bullet->SetStartPos(m_transform.position);
 		D3DXVECTOR3 work;

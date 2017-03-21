@@ -261,7 +261,7 @@ void Initialize()
 	SINSTANCE(CGameManager)->SetAudio(pAudio);
 	AddScene();
 	SINSTANCE(CGameManager)->ChangeScene(_T("Title"/*"Main"*/));
-	SINSTANCE(CObjectManager)->AddObject(&g_BulletPhysics, _T("BulletPhysics"), PRIORTY::CONFIG, true);
+	SINSTANCE(CObjectManager)->AddObject(&g_BulletPhysics, _T("BulletPhysics"),OBJECT::PRIORTY::CONFIG, true);
 	//SINSTANCE(CObjectManager)->GenerationObject<CIcon>(_T("Kill_Icon"), PRIORTY::OBJECT2D_ALPHA, true);
 	//SINSTANCE(CObjectManager)->GenerationObject<CIcon>(_T("Clear_Icon"), PRIORTY::OBJECT2D_ALPHA, true)->SetFileName(_T("Image/CLEAR_icon.png"));
 	SINSTANCE(CGameManager)->SetNextScene();

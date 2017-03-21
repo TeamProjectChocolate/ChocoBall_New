@@ -28,10 +28,6 @@ public:
 	// バリア起動。
 	void OnBarrier();
 private:
-	unique_ptr<btRigidBody> m_pRigidBody;
-	unique_ptr<btSphereShape> m_pSphereShape;
-	unique_ptr<btDefaultMotionState> m_myMotionState;
-private:
 	// 作業用。
 	bool m_IsBarrierOn = false;		// バリアが起動されたか。
 	float m_MaxRadius;	// バリアの最大半径。

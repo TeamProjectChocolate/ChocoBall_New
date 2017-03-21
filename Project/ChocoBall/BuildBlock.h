@@ -28,13 +28,13 @@ public:
 	void Initialize(D3DVECTOR pos, D3DXQUATERNION rot);
 
 	void SetRenderState()override{
-		m_RenderingState = RENDER_STATE::Instancing;
+		m_RenderingState = RENDER::TYPE::Instancing;
 	}
 	void SetShadowRenderState()override{
-		m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample_I;
+		m_ShadowRenderingState = RENDER::TYPE::_3D_ShadowSample_I;
 	}
 	void EM_SetRenderState()override{
-			m_EMRenderingState = RENDER_STATE::EM_Sampling_I;
+			m_EMRenderingState = RENDER::TYPE::EM_Sampling_I;
 	}
 
 	void ActivateShadowRender()override;
@@ -93,6 +93,15 @@ public:
 		m_IsThrow = true;
 		m_ThrowPower = Power;
 		m_Direction = dir;
+		for (short row = 0; row < BUILD_H; row++) {
+			for (short col = 0; col < BUILD_W; col++) {
+				m_blocks[row][col].SetCollisionType(CollisionType::AttackWall);
+			}
+		}
+	}
+
+	static int GetBBManagerNum() {
+		return m_BBManagerNum;
 	}
 private:
 	CBlock	m_blocks[BUILD_H][BUILD_W];	//•Ç‚Ì”z—ñ

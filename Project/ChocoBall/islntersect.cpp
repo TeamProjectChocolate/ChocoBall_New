@@ -2,523 +2,208 @@
 
 #include "stdafx.h"
 #include "islntersect.h"
-#include "CBManager.h"
-#include "Audio.h"
-
+#include "ObjectManager.h"
 
 #define ORIGIN_CENTER	//定義で起点が足元。
-
-void GenelateChocoBall(CCBManager* mgr, btGhostObject* m_hitCollisionObject, CAudio* pAudio);
-
-// プレイヤー用コールバック
-struct SweepResult_Y : public btCollisionWorld::ConvexResultCallback
-{
-	// 何らかのコリジョンと衝突したか。
-	bool isHit;
-	// 衝突した点。
-	D3DXVECTOR3 hitPos = D3DXVECTOR3(0.0f, -FLT_MAX, 0.0f);
-	// 衝突した点の法線(Y成分)。
-	D3DXVECTOR3 hitNormal = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	// 
-	D3DXVECTOR3 startPos;
-	float dist = FLT_MAX;
-	// 当たったコリジョンのタイプを格納。
-	CollisionType hitCollisionType;
-	CAudio* m_pAudio;
-
-	SweepResult_Y()
-	{
-		isHit = false;
-		//fMin = FLT_MAX;
-	}
-
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-	{
-		if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_ChocoballTrigger) {
-
-			CCBManager* mgr = (CCBManager*)convexResult.m_hitCollisionObject->getUserPointer();
-			GenelateChocoBall(mgr, (btGhostObject*)convexResult.m_hitCollisionObject, m_pAudio);
-			return 0.0f;
-		}
-
-		if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Player
-			|| convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Chocoball
-			|| convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Enemy) {
-			//無視。
-			return 0.0f;
-		}
-		else if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Camera) {
-			//無視。
-			return 0.0f;
-		}
-		else if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Bullet) {
-			return 0.0f;
-		}
-
-		// 衝突店の法線を引っ張ってくる。
-		D3DXVECTOR3 hitPointNormal = convexResult.m_hitNormalLocal;
-		// 上方向と法線のなす角度を算出。
-		float angle = D3DXVec3Dot(&hitPointNormal, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-		angle = fabsf(acosf(angle));
-		if (angle < fPI * 0.3f) {	// 地面の傾斜が54度より小さい場合地面とみなす。
-									// 衝突している。
-			isHit = true;
-			D3DXVECTOR3 hitPosTmp = convexResult.m_hitPointLocal;
-			// 衝突点の距離を求める。
-			D3DXVECTOR3 vDist;
-			vDist = hitPosTmp - startPos;
-			float fDistTmp = D3DXVec3Length(&vDist);
-			if (dist > fDistTmp) {
-				// この衝突点のほうが近いので、最も近い衝突点を更新する。
-				hitPos = hitPosTmp;
-				hitNormal = static_cast<D3DXVECTOR3>(convexResult.m_hitNormalLocal);
-				dist = fDistTmp;
-			}
-		}
-		hitCollisionType = static_cast<CollisionType>(convexResult.m_hitCollisionObject->getUserIndex());
-
-		return 0;
-
-		//	float d = D3DXVec3Dot(&hitPointNormal, &CVec3Up);
-		//	if (d < 0.0f) {
-		//		//当たってない。
-		//		return 0.0f;
-		//	}
-		//	if (acosf(d) > fPI * 0.2) {
-		//		//ホントは地面かどうかとかの属性を見るのがベストなんだけど、今回は角度で。
-		//		return 0.0f;
-		//	}
-		//	isHit = true;
-		//	D3DXVECTOR3 hitPosTmp;
-		//	hitPosTmp.x = convexResult.m_hitPointLocal.x();
-		//	hitPosTmp.y = convexResult.m_hitPointLocal.y();
-		//	hitPosTmp.z = convexResult.m_hitPointLocal.z();
-		//	D3DXVECTOR3 diff;
-		//	diff = hitPosTmp - startPos;
-		//	float len = D3DXVec3Length(&diff);
-		//	if (len < fMin){
-		//		hitPos = hitPosTmp;
-		//		fMin = len;
-		//	}
-		//	return 0.0f;
-	}
-};
-
-
-struct SweepResult_XZ : public btCollisionWorld::ConvexResultCallback
-{
-	// 衝突した点の法線(XZ成分)。
-	D3DXVECTOR3 hitNormalXZ;
-	// 何かのコリジョンに当たったか。
-	bool isHit = false;
-	// 当たったコリジョンのタイプを格納。
-	CollisionType hitCollisionType;
-	// 衝突点。
-	D3DXVECTOR3 hitPos;
-	CAudio* m_pAudio;
-	SweepResult_XZ()
-	{
-		isHit = false;
-	}
-
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-	{
-		if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_ChocoballTrigger) {
-			CCBManager* mgr = (CCBManager*)convexResult.m_hitCollisionObject->getUserPointer();
-			GenelateChocoBall(mgr, (btGhostObject*)convexResult.m_hitCollisionObject, m_pAudio);
-			return 0.0f;
-		}
-
-		if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Player
-			|| convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Chocoball
-			|| convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Enemy)
-		{
-			//無視。
-			return 0.0f;
-		}
-		else if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Camera) {
-			//無視。
-			return 0.0f;
-		}
-		else if (convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Bullet) {
-			return 0.0f;
-		}
-
-
-		D3DXVECTOR3 hitPointNormal;
-		hitPointNormal.x = convexResult.m_hitNormalLocal.x();
-		hitPointNormal.y = convexResult.m_hitNormalLocal.y();
-		hitPointNormal.z = convexResult.m_hitNormalLocal.z();
-
-		float d = D3DXVec3Dot(&hitPointNormal, &CVec3Up);
-		if (acosf(d) < fPI * 0.2) {
-			//ホントは地面かどうかとかの属性を見るのがベストなんだけど、今回は角度で。
-			return 0.0f;
-		}
-		isHit = true;
-		//XZ平面での法線。
-		hitNormalXZ.x = hitPointNormal.x;
-		hitNormalXZ.y = 0.0f;
-		hitNormalXZ.z = hitPointNormal.z;
-		D3DXVec3Normalize(&hitNormalXZ, &hitNormalXZ);
-
-		btTransform transform = convexResult.m_hitCollisionObject->getWorldTransform();
-
-
-		hitPos.x = convexResult.m_hitPointLocal.x();
-		hitPos.y = convexResult.m_hitPointLocal.y();
-		hitPos.z = convexResult.m_hitPointLocal.z();
-
-		hitCollisionType = static_cast<CollisionType>(convexResult.m_hitCollisionObject->getUserIndex());
-
-		return 0.0f;
-	}
-};
-
-
-void GenelateChocoBall(CCBManager* mgr, btGhostObject* m_hitCollisionObject, CAudio* pAudio) {
-	if (!mgr->GetAlive()) {
-		pAudio->PlayCue("Chocoball", true, nullptr);//チョコ落下Audio
-		mgr->Initialize();
-		mgr->SetAlive(true);
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveCollisionObject_Dynamic(m_hitCollisionObject);
-	}
-};
-
-// カメラ用コールバック
-struct SweepResultGround_Camera : public btCollisionWorld::ConvexResultCallback
-{
-	bool isHit;
-	D3DXVECTOR3 hitPos;
-	D3DXVECTOR3 startPos;
-	float fMin;
-
-	SweepResultGround_Camera()
-	{
-		isHit = false;
-		fMin = FLT_MAX;
-	}
-
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-	{
-		if (convexResult.m_hitCollisionObject->getUserIndex() != CollisionType_Map
-			|| convexResult.m_hitCollisionObject->getUserIndex() == CollisionType_Enemy)
-		{
-			//無視。
-			return 0.0f;
-		}
-
-		D3DXVECTOR3 hitPointNormal;
-		hitPointNormal.x = convexResult.m_hitNormalLocal.x();
-		hitPointNormal.y = convexResult.m_hitNormalLocal.y();
-		hitPointNormal.z = convexResult.m_hitNormalLocal.z();
-		float d = D3DXVec3Dot(&hitPointNormal, &CVec3Up);
-		if (d < 0.0f) {
-			//当たってない。
-			return 0.0f;
-		}
-		if (acosf(d) > fPI * 0.2) {
-			//ホントは地面かどうかとかの属性を見るのがベストなんだけど、今回は角度で。
-			return 0.0f;
-		}
-		isHit = true;
-		D3DXVECTOR3 hitPosTmp;
-		hitPosTmp.x = convexResult.m_hitPointLocal.x();
-		hitPosTmp.y = convexResult.m_hitPointLocal.y();
-		hitPosTmp.z = convexResult.m_hitPointLocal.z();
-		D3DXVECTOR3 diff;
-		diff = hitPosTmp - startPos;
-		float len = D3DXVec3Length(&diff);
-		if (len < fMin){
-			hitPos = hitPosTmp;
-			fMin = len;
-		}
-		return 0.0f;
-	}
-};
-
-struct SweepResultCeiling_Camera : public btCollisionWorld::ConvexResultCallback {
-	bool isHit;
-	D3DXVECTOR3 hitPos;
-	D3DXVECTOR3 startPos;
-	float fMin;
-
-	SweepResultCeiling_Camera()
-	{
-		isHit = false;
-		fMin = FLT_MAX;
-	}
-
-	virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
-	{
-		if (convexResult.m_hitCollisionObject->getUserIndex() != CollisionType_Map)
-		{
-			//無視。
-			return 0.0f;
-		}
-
-
-		return 0.0f;
-	}
-};
 
 CIsIntersect::CIsIntersect()
 {
 	m_isHitGround = false;
 	m_Jumpflag = false;
+	for (int idx = 0; idx < static_cast<int>(CollisionType::Max); idx++) {
+		m_MaskCollisionTypes.push_back(false);
+	}
 }
 
 CIsIntersect::~CIsIntersect()
 {
+	m_MaskCollisionTypes.clear();
 }
 
 //剛体(当たり判定のある物体)の初期化
-void CIsIntersect::CollisitionInitialize(D3DXVECTOR3* position,float radius,CollisionType type)
+void CIsIntersect::Initialize(btRigidBody* Rigidbody)
 {
-	//コリジョン初期化。
-	m_radius = radius;
-	//Box(立方体),sphere(球体)などで当たり範囲を決める。
-	m_collisionShape = new btSphereShape(m_radius);//ここで剛体の形状を決定
-
-	float mass = 0.1f;
-
-	btTransform rbTransform;
-	rbTransform.setIdentity();
-	rbTransform.setOrigin(btVector3(position->x, position->y, position->z));
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState = new btDefaultMotionState(rbTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState, m_collisionShape, btVector3(0, 0, 0));
-	m_rigidBody = new btRigidBody(rbInfo);
-	m_rigidBody->setUserIndex(type);
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody);
+	m_rigidBody = Rigidbody;
+	m_collisionShape = m_rigidBody->getCollisionShape();
 }
 
 //物理エンジンを使った当たり判定処理&ジャンプ処理
 void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool Jumpflag)
 {
+	m_isFirstCallback = true;
 	m_isHitGround = false;
 	m_Jumpflag = Jumpflag;
-	static float deltaTime = 1.0f / 60.0f;						/************/
-	static D3DXVECTOR3 gravity(0.0f, -40.0f, 0.0f);	//重力		/*  ジ		*/
-	D3DXVECTOR3 addGravity = gravity;							/*  ャ		*/
-	addGravity *= (deltaTime);			//0.16秒事に加速		/*  ン		*/
-	*moveSpeed += (addGravity);	//落下速度						/*  プ		*/
-	D3DXVECTOR3 addPos;											/*  処		*/
-	addPos = *moveSpeed;										/*  理		*/
-	addPos *= (deltaTime);										/*			*/
-	D3DXVECTOR3 Up(0.0f, 1.0f, 0.0f);							/************/
+	static float deltaTime = 1.0f / 60.0f;
+	static D3DXVECTOR3 gravity(0.0f, -40.0f, 0.0f);	//重力	
+	D3DXVECTOR3 addGravity = gravity;	
+	addGravity *= (deltaTime);			//0.16秒事に加速(1フレームの重力加速度)。
+	// 速度に加速度を加算。
+	*moveSpeed += (addGravity);	//落下速度
+	D3DXVECTOR3 addPos;
+	addPos = *moveSpeed;
+	addPos *= (deltaTime);	
+	D3DXVECTOR3 Up(0.0f, 1.0f, 0.0f);
 
-	//XZ平面を調べる。
-	{
-		int loopCount = 0;
-		while (true) {
-			btTransform start, end;
-			start.setIdentity();
-			end.setIdentity();
-			start.setOrigin(btVector3(position->x, position->y, position->z));
-			D3DXVECTOR3 newPos;
-			SweepResult_XZ callback;
-			callback.m_pAudio = m_pAudio;
-			D3DXVECTOR3 addPosXZ = addPos;
-			addPosXZ.y = 0.0f;
-			if (D3DXVec3Length(&addPosXZ) > 0.0001f) {
-				newPos = (*position + addPosXZ);
-				end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(m_collisionShape, start, end, callback);
-			}
-			if (callback.isHit) {
-				//当たった。
-				//壁。
- 				addPos.x = callback.hitPos.x - position->x;
-				addPos.z = callback.hitPos.z - position->z;
-
-				D3DXVECTOR3 t;
-				t.x = -addPos.x;
-				t.y = 0.0f;
-				t.z = -addPos.z;
-				D3DXVec3Normalize(&t, &t);
-				//D3DXVec3Normalize(&t, &addPos);
-				//半径分押し戻す。
-				t *= m_radius;
-				addPos += t;
-				//続いて壁に沿って滑らせる。
-				//滑らせる方向を計算。
-				D3DXVec3Cross(&t, &callback.hitNormalXZ, &Up);
-				D3DXVec3Normalize(&t, &t);
-				//D3DXVec3Normalize(&t, &addPos);
-				t *= D3DXVec3Dot(&t, &addPosXZ);
-				addPos += t;	//滑らせるベクトルを加算。
-
-				//if (callback.hitCollisionType == CollisionType::CollisionType_Boss) {
-				//	// 当たったものがボスならしびれさせる。
-				//	SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"))->EnemyHit();
-				//}
-			}
-			else {
-				//どことも当たらないので終わり。
-				break;
-			}
-			loopCount++;
-			if (loopCount == 5) {
-				break;
-			}
-		}
-	}
-	//下方向を調べる。
+	// コリジョンワールドでの当たり判定。
 	{
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
-#ifdef ORIGIN_CENTER
 		start.setOrigin(btVector3(position->x, position->y, position->z));
-#else
-		start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
-#endif
-		D3DXVECTOR3 endPos;
-		SweepResult_Y callback;
-		callback.m_pAudio = m_pAudio;
-		callback.startPos = *position;
-		if (fabsf(addPos.y) > 0.0001f) {
-			endPos = *position;
-#ifdef ORIGIN_CENTER
-			endPos.y += addPos.y;
-#else
-			newPos.y += addPos.y + m_radius;
-#endif
-			if (m_Jumpflag)
-			{
-				//ジャンプ中
-				if (addPos.y > 0.0f) {
-					// 上昇中。
-					// 上昇中でもXZに移動した結果めり込んでいる可能性があるので下を調べる。
-					endPos.y -= addPos.y * 0.01f;
-				}
-				else {
-					// 落下している場合はそのまま下を調べる。
-					endPos.y += addPos.y;
-				}
-				//end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			}
-			else
-			{
-				// 地面上にいない場合は1m下を見る。
-				endPos.y -= 1.0f;
-				////ジャンプ中以外は地面にプレイヤーをくっ付ける
-				//end.setOrigin(btVector3(newPos.x, newPos.y - 1.0f, newPos.z));
-			}
-			end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
-
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(m_collisionShape, start, end, callback);
+		D3DXVECTOR3 newPos;
+		SweepResult_Collision callback;
+		callback.UserPointer = static_cast<CGameObject*>(m_rigidBody->getUserPointer());
+		callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
+		if (D3DXVec3Length(&addPos) > 0.0001f) {
+			newPos = (*position + addPos);
+			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
 		}
-		if (callback.isHit) {
-			//当たった。
-			//地面。
-			
-			D3DXVECTOR3 Circle;
-			float x = 0.0f;
-			float offset = 0.0f;	//押し戻す量。
-			Circle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			
-			Circle = *position;
-			Circle.y = callback.hitPos.y;//円の中心
-			D3DXVECTOR3 v = Circle - callback.hitPos;
-			x = D3DXVec3Length(&v);//物体の角とプレイヤーの間の横幅の距離が求まる。
-
-			offset = sqrt(m_radius*m_radius - x*x);//yの平方根を求める。
-		
-			moveSpeed->y = 0.0f;
-			addPos.y = callback.hitPos.y - position->y;
-			m_isHitGround = true;
-#ifdef ORIGIN_CENTER
-			addPos.y += offset;
-#endif
-
-			//if (callback.hitCollisionType == CollisionType::CollisionType_Boss) {
-			//	// 当たったものがボスならしびれさせる。
-			//	SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"))->EnemyHit();
-			//}
-		}
-		
 	}
-
-	*position += addPos;
-
-	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
-
-	m_rigidBody->getWorldTransform().setOrigin(btVector3(position->x, position->y, position->z));
-}
-
-void CIsIntersect::Intersect2(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed)
-{
-
-	static float deltaTime = 1.0f / 60.0f;						/************/
-	static D3DXVECTOR3 gravity(0.0f, 0.0f, 0.0f);	//重力		/*  ジ		*/
-	D3DXVECTOR3 addGravity = gravity;							/*  ャ		*/
-	addGravity *= (deltaTime);			//0.16秒事に加速		/*  ン		*/
-	*moveSpeed += (addGravity);	//落下速度						/*  プ		*/
-	D3DXVECTOR3 addPos;											/*  処		*/
-	addPos = *moveSpeed;										/*  理		*/
-	addPos *= (deltaTime);										/*			*/
-	D3DXVECTOR3 Up(0.0f, 1.0f, 0.0f);							/************/
-
-	//XZ平面を調べる。
+	// 物理ワールドでの当たり判定。
 	{
-		int loopCount = 0;
-		while (true) {
-			btTransform start, end;
-			start.setIdentity();
-			end.setIdentity();
-			start.setOrigin(btVector3(position->x, position->y, position->z));
-			D3DXVECTOR3 newPos;
-			SweepResult_XZ callback;
-			callback.m_pAudio = m_pAudio;
-			D3DXVECTOR3 addPosXZ = addPos;
-			addPosXZ.y = 0.0f;
-			if (D3DXVec3Length(&addPosXZ) > 0.0001f) {
-				newPos = (*position + addPosXZ);
-				end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(m_collisionShape, start, end, callback);
-			}
-			if (callback.isHit) {
-				//当たった。
-				//壁。
-				addPos.x = callback.hitPos.x - position->x;
-				addPos.z = callback.hitPos.z - position->z;
+		//XZ平面を調べる。
+		{
+			int loopCount = 0;
+			while (true) {
+				D3DXVECTOR3 addPosXZ = addPos;
+				addPosXZ.y = 0.0f;
+				if (D3DXVec3Length(&addPosXZ) > 0.0001f) {
+					// このクラスに登録されている剛体が自発的に移動している場合。
+					// 移動前と移動後のTransform情報を生成。
+					btTransform start, end;
+					start.setIdentity();
+					end.setIdentity();
+					start.setOrigin(btVector3(position->x, position->y, position->z));
+					D3DXVECTOR3 newPos;
+					newPos = (*position + addPosXZ);
+					end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
+					// 衝突した場合のコールバックを定義。
+					SweepResult_XZ callback;
+					callback.UserPointer = static_cast<CGameObject*>(m_rigidBody->getUserPointer());
+					// 無視する当たりの属性を設定。
+					callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
+					// フラグ初期化。
+					callback.isFirstCallback = m_isFirstCallback;
+					// 生成した情報で当たり判定。
+					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+					if (callback.isHit) {
+						//当たった。
+						//壁。
+						addPos.x = callback.hitPos.x - position->x;
+						addPos.z = callback.hitPos.z - position->z;
 
-				D3DXVECTOR3 t;
-				t.x = -addPos.x;
-				t.y = 0.0f;
-				t.z = -addPos.z;
-				D3DXVec3Normalize(&t, &t);
-				//D3DXVec3Normalize(&t, &addPos);
-				//半径分押し戻す。
-				t *= m_radius;
-				addPos += t;
-				//続いて壁に沿って滑らせる。
-				//滑らせる方向を計算。
-				D3DXVec3Cross(&t, &callback.hitNormalXZ, &Up);
-				D3DXVec3Normalize(&t, &t);
-				//D3DXVec3Normalize(&t, &addPos);
-				t *= D3DXVec3Dot(&t, &addPosXZ);
-				addPos += t;	//滑らせるベクトルを加算。
+						D3DXVECTOR3 t;
+						t.x = -addPos.x;
+						t.y = 0.0f;
+						t.z = -addPos.z;
+						D3DXVec3Normalize(&t, &t);
+						//D3DXVec3Normalize(&t, &addPos);
+						//半径分押し戻す。
+						float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+						t *= radius;
+						addPos += t;
+						//続いて壁に沿って滑らせる。
+						//滑らせる方向を計算。
+						D3DXVec3Cross(&t, &callback.hitNormalXZ, &Up);
+						D3DXVec3Normalize(&t, &t);
+						//D3DXVec3Normalize(&t, &addPos);
+						t *= D3DXVec3Dot(&t, &addPosXZ);
+						addPos += t;	//滑らせるベクトルを加算。
 
-				//if (callback.hitCollisionType == CollisionType::CollisionType_Boss) {
-				//	// 当たったものがボスならしびれさせる。
-				//	SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"))->EnemyHit();
-				//}
+						// オブジェクトのコールバックが一度呼ばれたのでフラグをオフ。
+						m_isFirstCallback = false;
+					}
+					else {
+						//どことも当たらないので終わり。
+						break;
+					}
+				}
+				loopCount++;
+				if (loopCount <= 5) {
+					// 無限ループにならないようある程度で処理を中断。
+					break;
+				}
 			}
-			else {
-				//どことも当たらないので終わり。
-				break;
-			}
-			loopCount++;
-			if (loopCount == 5) {
-				break;
+		}
+		//下方向を調べる。
+		{
+			if (fabsf(addPos.y) > 0.0001f) {
+				btTransform start, end;
+				start.setIdentity();
+				end.setIdentity();
+#ifdef ORIGIN_CENTER
+				start.setOrigin(btVector3(position->x, position->y, position->z));
+#else
+				start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
+#endif
+				D3DXVECTOR3 endPos;
+				SweepResult_Y callback;
+				callback.UserPointer = static_cast<CGameObject*>(m_rigidBody->getUserPointer());
+				callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
+				callback.isFirstCallback = m_isFirstCallback;
+
+				callback.startPos = endPos = *position;
+#ifdef ORIGIN_CENTER
+				endPos.y += addPos.y;
+#else
+				newPos.y += addPos.y + m_radius;
+#endif
+				if (m_Jumpflag)
+				{
+					//ジャンプ中
+					if (addPos.y > 0.0f) {
+						// 上昇中。
+						// 上昇中でもXZに移動した結果めり込んでいる可能性があるので下を調べる。
+						endPos.y -= addPos.y * 0.01f;
+					}
+					else {
+						// 落下している場合はそのまま下を調べる。
+						endPos.y += addPos.y;
+					}
+					//end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
+				}
+				else
+				{
+					// 地面上にいない場合は1m下を見る。
+					endPos.y -= 1.0f;
+					////ジャンプ中以外は地面にプレイヤーをくっ付ける
+					//end.setOrigin(btVector3(newPos.x, newPos.y - 1.0f, newPos.z));
+				}
+				end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
+
+				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+				if (callback.isHit) {
+					//当たった。
+					//地面。
+
+					D3DXVECTOR3 Circle;
+					float x = 0.0f;
+					float offset = 0.0f;	//押し戻す量。
+					Circle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+					Circle = *position;
+					Circle.y = callback.hitPos.y;//円の中心
+					D3DXVECTOR3 v = Circle - callback.hitPos;
+					x = D3DXVec3Length(&v);//物体の角とプレイヤーの中心との距離が求まる。
+
+					float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+					offset = radius - x;
+					//offset = sqrt(radius * radius - x * x);//yの平方根を求める。
+
+					moveSpeed->y = 0.0f;
+					addPos.y = callback.hitPos.y - position->y;
+					m_isHitGround = true;
+#ifdef ORIGIN_CENTER
+					addPos.y += offset;
+#endif
+					// オブジェクトのコールバックが一度呼ばれたのでフラグをオフ。
+					m_isFirstCallback = false;
+				}
 			}
 		}
 	}
-	
+
 	*position += addPos;
 
 	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
@@ -550,7 +235,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			newPos.y += addPos.y + m_radius;
 #endif
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(m_collisionShape, start, end, callback);
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
 		}
 		if (callback.isHit) {
 			//当たった。
@@ -565,7 +250,8 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			D3DXVECTOR3 v = Circle - callback.hitPos;
 			x = D3DXVec3Length(&v);//物体の角とプレイヤーの間の横幅の距離が求まる。
 
-			offset = sqrt(m_radius*m_radius - x*x);//yの平方根を求める。
+			float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+			offset = sqrt(radius * radius - x * x);//yの平方根を求める。
 
 			moveSpeed->y = 0.0f;
 			addPos.y = callback.hitPos.y - position->y;
@@ -575,6 +261,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 		}
 
 	}
+
 	*position += addPos;
 
 	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();

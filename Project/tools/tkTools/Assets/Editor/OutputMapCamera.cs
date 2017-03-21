@@ -6,7 +6,7 @@ public class OutputMapCamera : MonoBehaviour {
 
     public static void ShowWindow(string mystring5)
     {
-        GameObject EM_Camera = GameObject.Find("EM_Camera");
+        GameObject EM_Camera = GameObject.FindGameObjectWithTag("EM_Camera");
         string headerTxt = "";
 
         if (EM_Camera)

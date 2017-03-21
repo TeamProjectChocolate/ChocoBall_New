@@ -22,7 +22,6 @@
 
 CLevelBuilder::CLevelBuilder()
 {
-	memset(m_ghostObject, 0, sizeof(m_ghostObject));//ghostobjectの配列を0からメモリ分初期化
 	m_IsStage = STAGE_ID::STAGE_NONE;
 	m_ChocoWallNum = 0;
 	m_FireJetNum = 0;
@@ -31,12 +30,6 @@ CLevelBuilder::CLevelBuilder()
 
 CLevelBuilder::~CLevelBuilder()
 {
-	CObjectManager* objMgr = SINSTANCE(CObjectManager);
-	for (int i = 0; i < MaxCollision; i++){
-		if (m_ghostObject[i]){
-			objMgr->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveCollisionObject_Dynamic(m_ghostObject[i]);
-		}
-	}
 	m_DivisionWalls.clear();
 }
 
@@ -102,7 +95,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		else if (info.enemyType == EnemyType::EnemyType_Boss) {
 			//敵を生成。
 			// ボスは特別にエネミーマネージャーではなくオブジェクトマネージャーに登録。
-			CEnemy_Boss* boss = SINSTANCE(CObjectManager)->GenerationObject<CEnemy_Boss>(_T("BossEnemy"), PRIORTY::ENEMY, false);
+			CEnemy_Boss* boss = SINSTANCE(CObjectManager)->GenerationObject<CEnemy_Boss>(_T("BossEnemy"), OBJECT::PRIORTY::ENEMY, false);
 			boss->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;
 			info.pos.z = pInfo[i].pos.z * -1;
@@ -112,8 +105,9 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.gimmickType == GimmickType_Chocoball){
 			//チョコボールを生成。
-			CCBManager* mgr = SINSTANCE(CObjectManager)->GenerationObject<CCBManager>(_T("Mgr"), PRIORTY::OBJECT3D, false);
+			CCBManager* mgr = SINSTANCE(CObjectManager)->GenerationObject<CCBManager>(_T("Mgr"), OBJECT::PRIORTY::OBJECT3D, false);
 			m_chocoballMgrList.push_back(mgr);
+			// チョコボール生成位置をセット。
 			D3DXVECTOR3 startPos(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z);
 			D3DXQUATERNION rot(pInfo[i].rot.x, pInfo[i].rot.y, pInfo[i].rot.z, pInfo[i].rot.w);
 			D3DXMATRIX mRot;
@@ -133,18 +127,17 @@ void CLevelBuilder::Build(CAudio* pAudio)
 
 			string str = "B_Block";
 			char num[100];
-			_itoa(m_ChocoWallNum, num, 10);
+			_itoa(CBuildBlock::GetBBManagerNum(), num, 10);
 			str += num;
-			CBuildBlock* buildBlock = SINSTANCE(CObjectManager)->GenerationObject<CBuildBlock>(_T(str.c_str()),PRIORTY::OBJECT3D,false);
+			CBuildBlock* buildBlock = SINSTANCE(CObjectManager)->GenerationObject<CBuildBlock>(_T(str.c_str()), OBJECT::PRIORTY::OBJECT3D,false);
 			buildBlock->Initialize(
 				D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),
 				pInfo[i].rot
 			);
-			m_ChocoWallNum++;
 		}
 		else if (info.gimmickType == GimmickType_FallFloor){
 			//落ちる床だよ。つかって
-			FallingFloor* fallfloor = SINSTANCE(CObjectManager)->GenerationObject<FallingFloor>(_T("FallFloor"), PRIORTY::OBJECT3D, false);
+			FallingFloor* fallfloor = SINSTANCE(CObjectManager)->GenerationObject<FallingFloor>(_T("FallFloor"), OBJECT::PRIORTY::OBJECT3D, false);
 			fallfloor->SetAudio(pAudio);
 			fallfloor->Initialize(
 				D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),
@@ -156,7 +149,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.gimmickType == GimmickType_MoveFloor){
 			// 動く床
-			MoveFloor* movefloor = SINSTANCE(CObjectManager)->GenerationObject<MoveFloor>(_T("movefloor"), PRIORTY::OBJECT3D, false);
+			MoveFloor* movefloor = SINSTANCE(CObjectManager)->GenerationObject<MoveFloor>(_T("movefloor"), OBJECT::PRIORTY::OBJECT3D, false);
 			movefloor->SetAudio(pAudio);
 			movefloor->Initialize(
 				D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),
@@ -176,7 +169,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.gimmickType == GimmickType_UpFloor){
 			// 上昇床
-			CUpFloor* upfloor = SINSTANCE(CObjectManager)->GenerationObject<CUpFloor>(_T("movefloor"), PRIORTY::OBJECT3D, false);
+			CUpFloor* upfloor = SINSTANCE(CObjectManager)->GenerationObject<CUpFloor>(_T("movefloor"), OBJECT::PRIORTY::OBJECT3D, false);
 			upfloor->SetAudio(pAudio);
 			D3DXQUATERNION rot(-pInfo[i].rot.x, pInfo[i].rot.y, -pInfo[i].rot.z,pInfo[i].rot.w);
 			upfloor->Initialize(
@@ -193,7 +186,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			char num[100];
 			_itoa(m_FireJetNum, num, 10);
 			str += num;
-			CFireJet* fire = SINSTANCE(CObjectManager)->GenerationObject<CFireJet>(_T(str.c_str()), PRIORTY::OBJECT3D_ALPHA, false);
+			CFireJet* fire = SINSTANCE(CObjectManager)->GenerationObject<CFireJet>(_T(str.c_str()), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 			fire->SetEmitterName(_T(str.c_str()));
 			fire->SetStageID(m_IsStage);
 			fire->SetAudio(pAudio);
@@ -214,7 +207,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			char num[100];
 			_itoa(m_FireJetNum, num, 10);
 			str += num;
-			CSmokeJet* smoke = SINSTANCE(CObjectManager)->GenerationObject<CSmokeJet>(_T(str.c_str()), PRIORTY::OBJECT3D_ALPHA, false);
+			CSmokeJet* smoke = SINSTANCE(CObjectManager)->GenerationObject<CSmokeJet>(_T(str.c_str()), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 			smoke->SetEmitterName(_T(str.c_str()));
 			smoke->SetStageID(m_IsStage);
 			smoke->Initialize();
@@ -230,7 +223,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.gimmickType == GimmickType_DivisionWall) {
 			// 進行不能壁。
-			CDivisionWall* Wall = SINSTANCE(CObjectManager)->GenerationObject<CDivisionWall>(_T("DivisionWall"), PRIORTY::OBJECT3D_ALPHA, false);
+			CDivisionWall* Wall = SINSTANCE(CObjectManager)->GenerationObject<CDivisionWall>(_T("DivisionWall"), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 			Wall->Initialize();
 			D3DXQUATERNION rot(pInfo[i].rot.x, pInfo[i].rot.y, pInfo[i].rot.z, pInfo[i].rot.w);
 			Wall->Build(D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),rot);
@@ -250,26 +243,19 @@ void CLevelBuilder::Build(CAudio* pAudio)
 				break;
 			}
 		}
-		m_GhostShape[i] = new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f));
-		btTransform groundTransform;
-		groundTransform.setIdentity();
-		groundTransform.setOrigin(btVector3(-collision.pos.x, collision.pos.y, -collision.pos.z));
-		groundTransform.setRotation(btQuaternion(collision.rotation.x, collision.rotation.y, collision.rotation.z, collision.rotation.w));
-
-		m_ghostObject[i] = new btGhostObject();
-		m_ghostObject[i]->activate();
-		m_ghostObject[i]->setCollisionShape(m_GhostShape[i]);
-		m_ghostObject[i]->setWorldTransform(groundTransform);
-		m_ghostObject[i]->setUserIndex(CollisionType_ChocoballTrigger);
-		m_ghostObject[i]->setUserPointer(m_chocoballMgrList[i]);
-
-		//ワールドに追加。
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddCollisionObject_Dynamic(m_ghostObject[i]);
+		// チョコボールトリガーのポジションをセット。
+		m_chocoballMgrList[i]->SetPos(D3DXVECTOR3(-collision.pos.x, collision.pos.y, -collision.pos.z));
+		// チョコボールトリガーの回転をセット。
+		m_chocoballMgrList[i]->SetQuaternion(D3DXQUATERNION(collision.rotation.x, collision.rotation.y, collision.rotation.z, collision.rotation.w));
+		// チョコボールトリガーのコリジョンを生成。
+		m_chocoballMgrList[i]->ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f)), CollisionType::ChocoballTrigger, true, 0.0f, true,true);
+		m_chocoballMgrList[i]->GetCollision()->BitMask_AllOn();
+		m_chocoballMgrList[i]->GetCollision()->BitMask_Off(CollisionType::Player);
 	}
 	m_chocoballMgrList.clear();
 
 	// マップオブジェクト配置。
 	{
-		SINSTANCE(CObjectManager)->FindGameObject<CMapObjectManager>(_T("TESTStage3D"))->Build();
+		SINSTANCE(CObjectManager)->FindGameObject<CMapObjectManager>(_T("MapChipManager"))->Build();
 	}
 }

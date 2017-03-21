@@ -30,12 +30,12 @@ public:
 	///※インスタンスの名前は255文字以内としてください
 	///※オブジェクトのインスタンスはCObjectManagerクラスの外部でdeleteしないこと
 	///※必ずCObjectManagerクラスのDeleteGameObject関数を呼び出して行うこと
-	T* GenerationObject(LPCSTR ObjectName,PRIORTY priorty,bool common){
+	T* GenerationObject(LPCSTR ObjectName,OBJECT::PRIORTY priorty,bool common){
 		T* Object = new T;
 		Object->ActiveManagerNewFlg();	// ObjectManagerクラス内でnewしたため、フラグをtrueにする
 		Object->SetCommon(common);
-		if (priorty > PRIORTY::MAX_PRIORTY){
-			priorty = PRIORTY::MAX_PRIORTY;
+		if (priorty > OBJECT::PRIORTY::MAX_PRIORTY){
+			priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 		}
 		this->Add(Object, ObjectName,priorty);
 		return Object;
@@ -55,7 +55,7 @@ public:
 		T* Object = new T;
 		Object->ActiveManagerNewFlg();	// ObjectManagerクラス内でnewしたため、フラグをtrueにする
 		Object->SetCommon(common);
-		PRIORTY priorty = PRIORTY::MAX_PRIORTY;
+		PRIORTY priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 		this->Add(Object,ObjectName ,priorty);
 		return Object;
 	}
@@ -70,7 +70,7 @@ public:
 	///※インスタンスの名前は255文字以内としてください
 	///※この関数で登録したインスタンスをnewで生成している場合は、必ずCObjectManagerクラスのDeleteGameObject関数を呼び出した後に
 	///  CObjectManagerクラスの外部できちんとdeleteしてください
-	void AddObject(CGameObject*,LPCSTR, PRIORTY,bool);
+	void AddObject(CGameObject*,LPCSTR, OBJECT::PRIORTY,bool);
 
 	///すでに生成されているオブジェクトをマネージャークラスに登録する関数(優先度なし：自動的に優先度は最低になります)
 	///引き数: CGameObject*型 登録するGameObjectのポインタ
@@ -93,7 +93,7 @@ public:
 	///※関数が重いため多用しないこと
 	T* FindGameObject(LPCSTR ObjectName)
 	{
-		for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++) {
+		for (int priorty = 0; priorty < OBJECT::PRIORTY::MAX_PRIORTY; priorty++) {
 			int size = m_GameObjects[priorty].size();
 			for (int idx = 0; idx < size; idx++) {
 				if (!strcmp(m_GameObjects[priorty][idx]->objectname, ObjectName)) {
@@ -150,7 +150,7 @@ public:
 		return m_GameObjects;
 	}
 private:
-	void Add(CGameObject*,LPCSTR, PRIORTY);
+	void Add(CGameObject*,LPCSTR, OBJECT::PRIORTY);
 	vector<vector<OBJECT_DATA*>> m_GameObjects;	// GameObject*のリスト
 	vector<CGameObject*> m_DeleteObjects;	// 削除リスト
 

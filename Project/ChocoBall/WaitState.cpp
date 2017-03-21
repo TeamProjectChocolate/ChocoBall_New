@@ -11,9 +11,9 @@ CWaitState::~CWaitState()
 }
 
 void CWaitState::Entry() {
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Wait);
-	m_pObject->SetPlayingState(PLAYING_STATE::REPEAT);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 
 	m_WaitStage = State_Wait::WaitStage::Rotate;
 
@@ -34,7 +34,7 @@ bool CWaitState::Update() {
 			ChangeLocalState(CEnemy_Boss::BOSS_STATE::NonAction);
 			break;
 		case State_Wait::WaitStage::WaitNow:
-			if (m_pObject->GetNowCource()[0]->BlockType == Boss_Cource::BOSS_COURCE_TYPE::Wait) {
+			if (m_pObject->GetNowCource()[0]->BlockType == Cource::Boss_Cource::BOSS_COURCE_TYPE::Wait) {
 				if (D3DXVec3Length(&(m_pPlayer->GetPos() - m_pObject->GetPos())) <= WAIT_RANGE) {
 					// プレイヤーが一定範囲まで近づいたか。
 					m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
@@ -44,7 +44,7 @@ bool CWaitState::Update() {
 					return false;
 				}
 			}
-			else if (m_pObject->GetNowCource()[0]->BlockType == Boss_Cource::BOSS_COURCE_TYPE::Attack) {
+			else if (m_pObject->GetNowCource()[0]->BlockType == Cource::Boss_Cource::BOSS_COURCE_TYPE::Attack) {
 				if (D3DXVec3Length(&(m_pPlayer->GetPos() - m_pObject->GetPos())) <= WAIT_RANGE) {
 					// プレイヤーが一定範囲まで近づいたか。
 					// コースの属性が攻撃。

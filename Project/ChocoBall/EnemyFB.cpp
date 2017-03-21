@@ -23,7 +23,7 @@ void CEnemyFB::Initialize()
 	flg = true;
 
 	m_Courcedef.Initialize();
-	COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
+	Cource::COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
 
 	D3DXVECTOR3 CourceVec;
 	CourceVec = Cource.endPosition - Cource.startPosition;					//スタートからゴールに向けてのベクトル
@@ -37,8 +37,8 @@ void CEnemyFB::SetInitPosition(D3DXVECTOR3 pos)
 }
 void CEnemyFB::Update()
 {
-	if (m_State != MOVE_STATE::Fly){
-		m_State = MOVE_STATE::Walk;
+	if (m_State != MOVE::STATE::Fly){
+		m_State = MOVE::STATE::Walk;
 	}
 	CEnemy_People::Update();
 }
@@ -48,8 +48,6 @@ void CEnemyFB::Draw()
 {
 	if (GetAlive())
 	{
-		//IMAGE3D* img = GetImage();
-		m_Rigidbody.Draw();
 		SetUpTechnique();
 		CEnemy_People::Draw();
 	}

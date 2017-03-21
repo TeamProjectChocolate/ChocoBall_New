@@ -20,7 +20,7 @@ LPD3DXEFFECT CEffect::SetEffect(LPCSTR pFileName){
 LPD3DXEFFECT CEffect::LoadEffect(LPCSTR pFileName){
 	HRESULT hr;
 	LPD3DXBUFFER compileErrorBuffer = nullptr;
-	EFFECT_DATA* Effect = new EFFECT_DATA;
+	EFFECT::DATA* Effect = new EFFECT::DATA;
 	CH_ASSERT(strlen(pFileName) < MAX_FILENAME);
 	strcpy(Effect->pFileName,pFileName);
 	// ID3DXEffectインタフェース生成

@@ -29,10 +29,6 @@ public:
 		m_IsMove = flg;
 	}
 private:
-	//ここからbulletPhysicsの剛体を使用するために必要な変数。
-	unique_ptr<btRigidBody>		m_rigidBody;		//剛体。
-	unique_ptr<btCollisionShape>	m_collisionShape;	//コリジョンの形状。
-	unique_ptr<btDefaultMotionState> m_myMotionState;
 	bool m_IsMove = false;
 private:
 	// 作業用変数。

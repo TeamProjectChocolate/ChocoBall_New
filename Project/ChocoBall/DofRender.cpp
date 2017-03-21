@@ -82,7 +82,7 @@ void CDofRender::Draw()
 			m_pEffect->CommitChanges();
 
 			(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 			(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 			(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -112,7 +112,7 @@ void CDofRender::Draw()
 			m_pEffect->SetTexture("g_blur", m_BlurTarget[0].GetTexture());
 			m_pEffect->CommitChanges();
 			(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 			(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 			(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -140,7 +140,7 @@ void CDofRender::Draw()
 			m_pEffect->SetValue("g_offset", offset, sizeof(offset));
 			m_pEffect->CommitChanges();
 			(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 			(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 			(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -191,7 +191,7 @@ void CDofRender::MathPinto(){
 	D3DXVECTOR3 PintoPos;
 
 	if (m_UsePintoObject){
-		m_pPintoObject = SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("TEST3D"));
+		m_pPintoObject = SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("Player"));
 
 		if (m_pPintoObject != nullptr){
 			CModel* model = m_pPintoObject->GetModel();

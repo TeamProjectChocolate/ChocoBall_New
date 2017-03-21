@@ -1,106 +1,70 @@
 #include "stdafx.h"
 #include "Rigidbody.h"
-#include "Objectmanager.h"
+#include "ObjectManager.h"
+#include "BulletPhysics.h"
+
+
 
 CRigidbody::CRigidbody()
 {
-
 }
 
 CRigidbody::~CRigidbody()
 {
-
+	// 絶対に消すな。
+	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
+	// 禁止事項の詳細は基底クラスのデストラクタに記載。
+	this->RemoveWorld();
 }
 
-void CRigidbody::Initialize(D3DXVECTOR3* m_position, D3DXVECTOR3* size)
+void CRigidbody::Build(const btTransform& transform, float mass, bool isKinematic) 
 {
-	D3DXMatrixIdentity(&matWorld);
-	m_life = 0.0f;
-	Build(*size, *m_position);
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-}
-void CRigidbody::Initialize(D3DXVECTOR3* m_position, float radius)
-{
-	D3DXMatrixIdentity(&matWorld);
-	m_life = 0.0f;
-	Build(radius, *m_position);
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-}
-void CRigidbody::Update(D3DXVECTOR3* m_position)
-{
-	//物理エンジンで計算された剛体の位置と回転を反映させる。
-	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
-	const btQuaternion& rRot = m_rigidBody->getWorldTransform().getRotation();
-	m_position->x = rPos.x();
-	m_position->y = rPos.y();
-	m_position->z = rPos.z();
-	//D3DXVECTOR3 axis(0.707f, -0.707f, 0.0f);
-	//D3DXQuaternionRotationAxis(&m_rotation, &axis, D3DXToRadian(45.0f));
-	m_rotation.x = rRot.x();
-	m_rotation.y = rRot.y();
-	m_rotation.z = rRot.z();
-	m_rotation.w = rRot.w();
-}
+	m_IsKinematic = isKinematic;
+	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+	m_myMotionState.reset(new btDefaultMotionState(transform));
+	if (isKinematic) {
+		mass = 0.0f;
+	}
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
+	m_collisionObject.reset(new btRigidBody(rbInfo));
 
-void CRigidbody::Draw()
-{
-	D3DXMATRIX rotMatrix;
-	D3DXMatrixRotationQuaternion(
-		&rotMatrix,
-		&m_rotation
-		);
-	D3DXMatrixMultiply(&matWorld, &rotMatrix, &matWorld);
-}
-
-void CRigidbody::OnDestroy()
-{
-	if (m_rigidBody){
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
+	if (isKinematic) {
+		// 剛体をキネマティック剛体に設定。
+		m_collisionObject->setCollisionFlags(m_collisionObject->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	}
 }
-/*!
-*@brief	構築処理。
-*@param[in]	size	箱のサイズ。
-*@param[in]	pos		箱の座標。
-*/
-void CRigidbody::Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos)
+
+void CRigidbody::Update(D3DXVECTOR3* pos,D3DXQUATERNION* rot)
 {
-	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape.reset(new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)));
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	float mass = 1.0f;
-
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState.reset(new btDefaultMotionState(groundTransform));
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
-	m_rigidBody.reset(new btRigidBody(rbInfo));
-	m_rigidBody->setUserIndex(1);
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody.get());
-
+	if (m_collisionObject.get()) {
+		// 剛体が生成されている。
+		if (m_IsKinematic) {
+			// オブジェクトが物理挙動しない。
+			// 受け取ったオブジェクトの位置情報と回転情報を剛体に格納。
+			m_collisionObject->getWorldTransform().setOrigin(btVector3(pos->x, pos->y, pos->z) + m_OriginOffset);
+			m_collisionObject->getWorldTransform().setRotation(btQuaternion(rot->x, rot->y, rot->z, rot->w));
+		}
+		else {
+			// オブジェクトが物理挙動する。
+			// 剛体の位置情報と回転情報を受け取ったオブジェクトの位置情報と回転情報に格納。
+			const btVector3& origin = m_collisionObject->getWorldTransform().getOrigin();
+			*pos = D3DXVECTOR3(origin.getX(), origin.getY(), origin.getZ());
+			*pos -= D3DXVECTOR3(m_OriginOffset);
+			const btQuaternion& quat = m_collisionObject->getWorldTransform().getRotation();
+			*rot = D3DXQUATERNION(quat.getX(), quat.getY(), quat.getZ(), quat.getW());
+		}
+	}
 }
-/*!
-*@brief	構築処理。
-*@param[in]	radius	球の半径。
-*@param[in]	pos		球の座標。
-*/
-void CRigidbody::Build(float radius, const D3DXVECTOR3& pos)
-{
-	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape.reset(new btSphereShape(radius));
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	float mass = 1.0f;
 
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState.reset(new btDefaultMotionState(groundTransform));
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
-	m_rigidBody.reset(new btRigidBody(rbInfo));
-	m_rigidBody->setUserIndex(1);
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody.get());
-
+// この剛体オブジェクトを物理ワールドに追加する。
+void CRigidbody::AddWorld(){
+	if (m_collisionObject.get()) {
+		m_pBulletPhysics->AddRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()),m_MyBitGroup,m_LayerMask);
+	}
+}
+// この剛体オブジェクトを物理ワールドから削除する。
+void CRigidbody::RemoveWorld(){
+	if (m_collisionObject.get()) {
+		m_pBulletPhysics->RemoveRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()));
+	}
 }

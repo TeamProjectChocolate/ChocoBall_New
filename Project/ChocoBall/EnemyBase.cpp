@@ -27,11 +27,11 @@ void EnemyBase::Initialize(){
 void EnemyBase::Update(){
 	// アニメーション再生関数を呼び出す
 	m_pModel->SetCurrentAnimNo(m_AnimState);
-	if (m_PlayingState == PLAYING_STATE::REPEAT){
+	if (m_PlayingState == ANIMATION::PLAYING_STATE::REPEAT){
 		m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), 0.1f,true);
 
 	}
-	else if (m_PlayingState == PLAYING_STATE::ONCE){
+	else if (m_PlayingState == ANIMATION::PLAYING_STATE::ONCE){
 		m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), 0.1f,false);
 	}
 	CGameObject::Update();

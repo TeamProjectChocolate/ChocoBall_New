@@ -3,16 +3,16 @@
 #include "ShadowRender.h"
 #include "BulletPhysics.h"
 #include "RenderContext.h"
+#include "Infomation.h"
 
 void CBlock::OnDestroy(){
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_rigidBody.get());
+	m_CollisionObject->RemoveWorld();
 	//子供に死亡したことを通知。
 	if (m_child){
 		m_child->OnDestroyParent();
 	}
 	m_isDead = true;
 }
-
 
 //親が死んだときに呼ばれる処理。
 void CBlock::OnDestroyParent()
@@ -38,23 +38,21 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 #ifdef NOT_INSTANCING
 	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::CHOCOLATE];
 #endif
-	m_transform.position = pos; //D3DXVECTOR3(0.0f, 3.0f, 0.0f);
-	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
+	m_transform.position = pos;
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_transform.angle = rot;
 
-	this->Build(D3DXVECTOR3(1.0f, 1.0f, 1.0f), m_transform.position);
-
+	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)), CollisionType::Wall, false, 0.0f, true,true);
+	m_CollisionObject->BitMask_AllOn();
+	m_CollisionObject->BitMask_Off(CollisionType::Player);
 	SetAlive(true);
 
 #ifdef NOT_INSTANCING
 	SINSTANCE(CShadowRender)->Entry(this);
 #endif
-	//SetAlpha(1.0f);
-	//m_IsIntersect.CollisitionInitialize(&m_transform.position, m_radius);
-	//m_hShaderTecnique = m_pEffect->GetTechniqueByName("NotNormalMapNonAnimationFresnelTec");
 }
 
 
@@ -67,16 +65,13 @@ void CBlock::Update()
 		break;
 	case enState_Fall:
 		m_transform.position.y -= 0.1f;
-		m_rigidBody->activate();
+		//m_RigidBody->activate();
 		if (m_transform.position.y <= m_fallPosY){
 			m_transform.position.y = m_fallPosY;
 			m_eState = enState_Normal;
 		}
 		break;
 	}
-
-	m_rigidBody->getWorldTransform().setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-	m_rigidBody->getWorldTransform().setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z));
 
 	CGameObject::Update();
 }
@@ -100,31 +95,10 @@ void CBlock::BeginDraw()
 	// 視点をシェーダーに転送
 	m_pRender->GetEffect()->SetVector("EyePosition", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
 
-
 	SINSTANCE(CShadowRender)->SetShadowCamera(m_pRender->GetEffect());
 }
 void CBlock::EndDraw()
 {
 	m_pRender->GetEffect()->EndPass();
 	m_pRender->GetEffect()->End();
-}
-void CBlock::Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos)
-{
-
-	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape.reset(new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)));
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	float mass = 0.0f;
-
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState.reset(new btDefaultMotionState(groundTransform));
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState.get(), m_collisionShape.get(), btVector3(0, 0, 0));
-	m_rigidBody.reset(new btRigidBody(rbInfo));
-	m_rigidBody->setUserIndex(CollisionType_Wall);
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-	m_rigidBody->activate();
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody.get());
 }

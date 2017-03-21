@@ -18,9 +18,9 @@ CEM_SamplingRender_I::~CEM_SamplingRender_I()
 {
 	m_worldMatrix.clear();
 	m_RotationMatrix.clear();
-	SAFE_DELETE(m_WorldMatrixBuffer);
-	SAFE_DELETE(m_RotationMatrixBuffer);
-	SAFE_DELETE(m_VertexDecl);
+	//SAFE_DELETE(m_WorldMatrixBuffer);
+	//SAFE_DELETE(m_RotationMatrixBuffer);
+	//SAFE_DELETE(m_VertexDecl);
 }
 
 void CEM_SamplingRender_I::CopyMatrixToVertexBuffer()
@@ -63,7 +63,7 @@ void CEM_SamplingRender_I::Initialize(){
 
 	//インスタンシング描画用の初期化。
 	D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 	// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 	container->MeshData.pMesh->GetDeclaration(declElement);
 	// 頂点の宣言の終端を探索
@@ -155,8 +155,8 @@ void CEM_SamplingRender_I::DrawFrame(LPD3DXFRAME pFrame){
 }
 
 void CEM_SamplingRender_I::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase){
-	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
+	ANIMATION::D3DXFRAME_DERIVED* pFrame = (ANIMATION::D3DXFRAME_DERIVED*)pFrameBase;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<ANIMATION::D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
 
 	if (pMeshContainer->pSkinInfo != nullptr){
 		// スキン情報あり
@@ -168,7 +168,7 @@ void CEM_SamplingRender_I::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerB
 	}
 }
 
-void CEM_SamplingRender_I::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D3DXFRAME_DERIVED* pFrame){
+void CEM_SamplingRender_I::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer, ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
 	//LPD3DXBONECOMBINATION pBoneComb;
 	//m_pEffect->SetTechnique(m_pTechniqueName);
@@ -212,9 +212,9 @@ void CEM_SamplingRender_I::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContain
 }
 
 
-void CEM_SamplingRender_I::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
+void CEM_SamplingRender_I::NonAnimationDraw(ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 	m_pEffect->SetTechnique(m_pTechniqueName);
 
@@ -233,6 +233,8 @@ void CEM_SamplingRender_I::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 
 	m_pEffect->SetFloat(m_hAlpha, m_pModel->m_alpha);
 	m_pEffect->SetFloat(m_hluminance, m_pModel->m_luminance);
+	m_pEffect->SetTexture(m_hTexture, container->ppTextures[0]);	// テクスチャ情報をセット
+
 
 	// インスタンシング描画
 	{

@@ -6,7 +6,7 @@
 
 CScore::CScore()
 {
-	//m_player = (SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D")));
+	//m_player = (SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player")));
 	m_player = NULL;
 	m_number = NULL;
 }
@@ -20,7 +20,7 @@ void CScore::Update()
 {	
 	if (m_player == NULL)
 	{
-		m_player = (SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D")));
+		m_player = (SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player")));
 	}
 	if (m_number == NULL)
 	{

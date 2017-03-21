@@ -32,7 +32,7 @@ void CEnemyLR::Initialize()
 
 	m_Courcedef.SetStageID(m_StageID);
 	m_Courcedef.Initialize();
-	COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
+	Cource::COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
 	
 	D3DXVECTOR3 CourceVec = Cource.endPosition - Cource.startPosition;					//スタートからゴールに向けてのベクトル
 	D3DXVec3Normalize(&CourceVec, &CourceVec);										//上で求めたベクトルの正規化
@@ -42,8 +42,8 @@ void CEnemyLR::Initialize()
 
 void CEnemyLR::Update()
 {
-	if (m_State != MOVE_STATE::Fly){
-		m_State = MOVE_STATE::Walk;
+	if (m_State != MOVE::STATE::Fly){
+		m_State = MOVE::STATE::Walk;
 	}
 	CEnemy_People::Update();
 }
@@ -53,7 +53,6 @@ void CEnemyLR::Draw()
 {
 	if (GetAlive())
 	{
-		m_Rigidbody.Draw();
 		SetUpTechnique();
 		CEnemy_People::Draw();
 	}

@@ -20,7 +20,7 @@ void C2DImage::Initialize(){
 	CModel::Initialize();
 }
 
-void C2DImage::Update(const TRANSFORM& transform)
+void C2DImage::Update(const SH_ENGINE::TRANSFORM& transform)
 {
 	D3DXVECTOR3 Scale;
 	Scale.x = transform.scale.x / WINDOW_WIDTH;

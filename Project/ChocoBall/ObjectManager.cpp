@@ -8,26 +8,26 @@ CObjectManager* CObjectManager::m_instance = nullptr;
 
 void CObjectManager::OnCreate() {
 	// 優先度の数だけ配列を生成。
-	for (int idx = 0; idx < PRIORTY::MAX_PRIORTY; idx++) {
+	for (int idx = 0; idx < OBJECT::PRIORTY::MAX_PRIORTY; idx++) {
 		m_GameObjects.push_back(vector<OBJECT_DATA*>());
 	}
 }
 
-void CObjectManager::AddObject(CGameObject* Object, LPCSTR ObjectName, PRIORTY priorty,bool common){
-	if (priorty > PRIORTY::MAX_PRIORTY){
-		priorty = PRIORTY::MAX_PRIORTY;
+void CObjectManager::AddObject(CGameObject* Object, LPCSTR ObjectName, OBJECT::PRIORTY priorty,bool common){
+	if (priorty > OBJECT::PRIORTY::MAX_PRIORTY){
+		priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 	}
 	Object->SetCommon(common);
 	this->Add(Object,ObjectName,priorty);
 }
 
 void CObjectManager::AddObject(CGameObject* Object,LPCSTR ObjectName,bool common){
-	PRIORTY priorty = PRIORTY::MAX_PRIORTY;
+	OBJECT::PRIORTY priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 	Object->SetCommon(common);
 	this->Add(Object,ObjectName, priorty);
 }
 
-void CObjectManager::Add(CGameObject* GameObject,LPCSTR ObjectName, PRIORTY priority){
+void CObjectManager::Add(CGameObject* GameObject,LPCSTR ObjectName, OBJECT::PRIORTY priority){
 	OBJECT_DATA* Obj;
 	Obj = new OBJECT_DATA;
 	CH_ASSERT(strlen(ObjectName) < OBJECTNAME_MAX);
@@ -90,7 +90,7 @@ void CObjectManager::CleanManager(){
 void CObjectManager::ExcuteDeleteObjects(){
 	vector<OBJECT_DATA*>::iterator itr;
 	vector<CGameObject*>::iterator itr2;
-	for (int priorty = PRIORTY::MAX_PRIORTY - 1; priorty >= 0; priorty--) {
+	for (int priorty = OBJECT::PRIORTY::MAX_PRIORTY - 1; priorty >= 0; priorty--) {
 		for (itr = m_GameObjects[priorty].begin(); itr != m_GameObjects[priorty].end();) {
 			bool inclimentFlg = true;
 			for (itr2 = m_DeleteObjects.begin(); itr2 != m_DeleteObjects.end();) {
@@ -121,7 +121,7 @@ void CObjectManager::ExcuteDeleteObjects(){
 }
 
 void CObjectManager::Intialize(){
-	for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++){
+	for (int priorty = 0; priorty < OBJECT::PRIORTY::MAX_PRIORTY; priorty++){
 		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
 				if (!(m_GameObjects[priorty][idx]->object->GetOriginal())){
@@ -132,7 +132,7 @@ void CObjectManager::Intialize(){
 }
 
 void CObjectManager::Update(){
-	for (short priorty = 0; priorty < PRIORTY::MAX_PRIORTY;priorty++){	// 優先度の高いものから更新
+	for (short priorty = 0; priorty < OBJECT::PRIORTY::MAX_PRIORTY;priorty++){	// 優先度の高いものから更新
 		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
 			if (m_GameObjects[priorty][idx]->object->GetAlive()){	// 生存しているもののみ更新
@@ -145,10 +145,22 @@ void CObjectManager::Update(){
 void CObjectManager::Draw(){
 	SINSTANCE(CRenderContext)->RenderingStart();
 
+	// 各種描画のための設定。
+	{
+		for (short priorty = 0; priorty < OBJECT::PRIORTY::EMITTER; priorty++) {	// 優先度の高いものから
+			int size = m_GameObjects[priorty].size();
+			for (int idx = 0; idx < size; idx++) {
+				if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// 生存しているもののみ。
+					m_GameObjects[priorty][idx]->object->Draw();
+				}
+			}
+		}
+	}
+
 	// 3Dの描画
 	{
 		// 基本描画(不透明3Dオブジェクトまで)。
-		for (short priorty = 0; priorty < PRIORTY::OBJECT3D_ALPHA; priorty++) {	// 優先度の高いものから更新
+		for (short priorty = OBJECT::PRIORTY::EMITTER; priorty < OBJECT::PRIORTY::OBJECT3D_ALPHA; priorty++) {	// 優先度の高いものから更新
 			int size = m_GameObjects[priorty].size();
 			for (int idx = 0; idx < size; idx++){
 				if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// 生存しているもののみ描画
@@ -162,12 +174,12 @@ void CObjectManager::Draw(){
 			}
 		}
 		// 蓄積したデータでインスタンシング描画(不透明)。
-		vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::Instancing);
+		vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing);
 		for (auto data : datas){
 			data->render->Draw();
 		}
 		// 3Dオブジェクト(半透明)描画。
-		for (short priorty = PRIORTY::OBJECT3D_ALPHA; priorty < PRIORTY::PARTICLE; priorty++){	// 優先度の高いものから更新
+		for (short priorty = OBJECT::PRIORTY::OBJECT3D_ALPHA; priorty < OBJECT::PRIORTY::PARTICLE; priorty++){	// 優先度の高いものから更新
 			int size = m_GameObjects[priorty].size();
 			for (int idx = 0; idx < size; idx++){
 
@@ -186,14 +198,14 @@ void CObjectManager::Draw(){
 			}
 		}
 		// 蓄積したデータでインスタンシング描画(半透明)。
-		vector<RENDER_DATA*> datas_alpha = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::Instancing_Alpha);
+		vector<CRenderContext::RENDER_DATA*> datas_alpha = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing_Alpha);
 		for (auto data : datas_alpha) {
 			data->render->Draw();
 		}
 	}
 
 	// パーティクル描画。
-	for (short priorty = PRIORTY::PARTICLE; priorty < PRIORTY::OBJECT2D; priorty++) {	// 優先度の高いものから更新
+	for (short priorty = OBJECT::PRIORTY::PARTICLE; priorty < OBJECT::PRIORTY::OBJECT2D; priorty++) {	// 優先度の高いものから更新
 		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++) {
 
@@ -214,7 +226,7 @@ void CObjectManager::Draw(){
 	SINSTANCE(CRenderContext)->SetRenderingBuffer();
 
 	// 2Dの描画
-	for (short priorty = PRIORTY::OBJECT2D; priorty < PRIORTY::MAX_PRIORTY; priorty++){	// 優先度の高いものから更新
+	for (short priorty = OBJECT::PRIORTY::OBJECT2D; priorty < OBJECT::PRIORTY::MAX_PRIORTY; priorty++){	// 優先度の高いものから更新
 		int size = m_GameObjects[priorty].size();
 		for (int idx = 0; idx < size; idx++){
 			if (m_GameObjects[priorty][idx]->object->GetAlive()) {	// 生存しているもののみ描画
@@ -225,7 +237,7 @@ void CObjectManager::Draw(){
 }
 
 void CObjectManager::DeleteAll(){
-	for (int priorty = 0; priorty < PRIORTY::MAX_PRIORTY; priorty++) {
+	for (int priorty = 0; priorty < OBJECT::PRIORTY::MAX_PRIORTY; priorty++) {
 		for (int idx = 0, size = m_GameObjects.size(); idx < size; idx++) {
 			if (m_GameObjects[priorty][idx]->object->GetManagerNewFlg()) {
 				SAFE_DELETE(m_GameObjects[priorty][idx]->object);

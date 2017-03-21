@@ -17,9 +17,9 @@ CInstancingRender::~CInstancingRender()
 {
 	m_worldMatrix.clear();
 	m_RotationMatrix.clear();
-	SAFE_DELETE(m_WorldMatrixBuffer); 
-	SAFE_DELETE(m_RotationMatrixBuffer);
-	SAFE_DELETE(m_VertexDecl);
+	m_WorldMatrixBuffer->Release();
+	m_RotationMatrixBuffer->Release();
+	m_VertexDecl->Release();
 }
 
 void CInstancingRender::CopyMatrixToVertexBuffer()
@@ -63,7 +63,32 @@ void CInstancingRender::Initialize(){
 
 		//インスタンシング描画用の初期化。
 		D3DVERTEXELEMENT9 declElement[MAX_FVF_DECL_SIZE];
-		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+		ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+
+		// 追加する頂点定義を作成。
+
+		// D3DVERTEXELEMENT9
+		// 各要素：ストリーム番号
+		/*		   offset要素(各ストリームの先頭から何番目に定義されているかを表す数字[sizeof(型名) * 数字]の書き方)*/
+		//		   頂点情報をどの肩を使用して宣言するか(行列はfloat4の要素を四つ使用して構成する)
+		//		   テッセレーション(ポリゴン分割)の方法を指定。普通テッセレーションはあまり使わないため、デフォルト設(D3DDECLMETHOD_DEFAULT)で十分
+		//		   usage要素
+		/*		   UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
+		D3DVERTEXELEMENT9 AddElement_World[] = {
+			{ 1,  0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },  // WORLD 1行目
+			{ 1, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },  // WORLD 2行目
+			{ 1, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 },  // WORLD 3行目
+			{ 1, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 },  // WORLD 4行目
+			D3DDECL_END()
+		};
+		D3DVERTEXELEMENT9 AddElement_Rotation[] = {
+			{ 2,  0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 5 },  // ROTATION 1行目
+			{ 2, 16, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 6 },  // ROTATION 2行目
+			{ 2, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 7 },  // ROTATION 3行目
+			{ 2, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 8 },  // ROTATION 4行目
+			D3DDECL_END()
+		};
+
 		// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)
 		container->MeshData.pMesh->GetDeclaration(declElement);
 		// 頂点の宣言の終端を探索
@@ -73,30 +98,13 @@ void CInstancingRender::Initialize(){
 				//終端を発見。
 				//ここからインスタンシング用の頂点レイアウトを埋め込む。
 				WORD offset = 0;
-				for (short num = 0; num < 4; num++){
+				for (int num = 0; AddElement_World[num].Type != D3DDECLTYPE_UNUSED; num++){
 					// WORLD行列はfloat4x4なので、1行ずつfloat4で定義していく
-					declElement[elementIndex] = {
-						1,	// ストリーム番号
-						offset,	/*offset要素(各ストリームの先頭から何番目に定義されているかを表す数字[sizeof(型名) * 数字]の書き方)*/
-						D3DDECLTYPE_FLOAT4,	// 頂点情報をどの肩を使用して宣言するか(行列はfloat4の要素を四つ使用して構成する)
-						D3DDECLMETHOD_DEFAULT, // テッセレーション(ポリゴン分割)の方法を指定。普通テッセレーションはあまり使わないため、デフォルト設(D3DDECLMETHOD_DEFAULT)で十分
-						D3DDECLUSAGE_TEXCOORD,	// usage要素
-						static_cast<BYTE>(num + 1) /*UsageIndex要素(Usageが重複しているものについて、固有番号を振って識別するもの)*/
-					};
-					offset += sizeof(float)* 4;
+					declElement[elementIndex] = AddElement_World[num];
 					elementIndex++;
 				}
-				WORD offset2 = 0;
-				for (short num = 0; num < 4; num++){
-					declElement[elementIndex] = {
-						2,
-						offset2,
-						D3DDECLTYPE_FLOAT4,
-						D3DDECLMETHOD_DEFAULT,
-						D3DDECLUSAGE_TEXCOORD,
-						static_cast<BYTE>(4 + num + 1)
-					};
-					offset2 += sizeof(float)* 4;
+				for (int num = 0; AddElement_Rotation[num].Type != D3DDECLTYPE_UNUSED; num++) {
+					declElement[elementIndex] = AddElement_Rotation[num];
 					elementIndex++;
 				}
 				declElement[elementIndex] = D3DDECL_END();	// 頂点宣言の終端(番兵)を設定(正確には、頂点宣言の最後の要素を初期化している)
@@ -106,6 +114,11 @@ void CInstancingRender::Initialize(){
 		}
 		//上で宣言した頂点情報で頂点定義を作成。
 		(*graphicsDevice()).CreateVertexDeclaration(declElement, &m_VertexDecl);
+
+		// 追加する各エレメントの頂点サイズを取得。
+		m_BufferStride_World = D3DXGetDeclVertexSize(AddElement_World, 1);
+		m_BufferStride_Rotation = D3DXGetDeclVertexSize(AddElement_Rotation, 2);
+		
 		m_IsFirst = false;
 	}
 }
@@ -113,8 +126,8 @@ void CInstancingRender::Initialize(){
 void CInstancingRender::CreateMatrixBuffer(unsigned int MaxNum){
 	//ワールド行列用のバッファの作成。
 	if (m_MaxNum < MaxNum){
-		(*graphicsDevice()).CreateVertexBuffer(sizeof(D3DXMATRIX)* MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
-		(*graphicsDevice()).CreateVertexBuffer(sizeof(D3DXMATRIX)* MaxNum, 0, 0, D3DPOOL_MANAGED, &m_RotationMatrixBuffer, 0);
+		(*graphicsDevice()).CreateVertexBuffer(m_BufferStride_World * MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
+		(*graphicsDevice()).CreateVertexBuffer(m_BufferStride_Rotation * MaxNum, 0, 0, D3DPOOL_MANAGED, &m_RotationMatrixBuffer, 0);
 		m_MaxNum = MaxNum;
 	}
 }
@@ -157,8 +170,8 @@ void CInstancingRender::DrawFrame(LPD3DXFRAME pFrame){
 }
 
 void CInstancingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase){
-	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
+	ANIMATION::D3DXFRAME_DERIVED* pFrame = (ANIMATION::D3DXFRAME_DERIVED*)pFrameBase;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<ANIMATION::D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
 
 	if (pMeshContainer->pSkinInfo != nullptr){
 		// スキン情報あり
@@ -170,7 +183,7 @@ void CInstancingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase
 	}
 }
 
-void CInstancingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer, D3DXFRAME_DERIVED* pFrame){
+void CInstancingRender::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer, ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
 	//LPD3DXBONECOMBINATION pBoneComb;
 	//SetUpTechniqueAnimation();
@@ -236,9 +249,9 @@ void CInstancingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer,
 }
 
 
-void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
+void CInstancingRender::NonAnimationDraw(ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 	// 透明度有効化
 	(*graphicsDevice()).SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -297,8 +310,8 @@ void CInstancingRender::NonAnimationDraw(D3DXFRAME_DERIVED* pFrame){
 		(*graphicsDevice()).SetVertexDeclaration(m_VertexDecl);
 
 		(*graphicsDevice()).SetStreamSource(0, vb, 0, stride);							//頂点バッファをストリーム0番目に設定
-		(*graphicsDevice()).SetStreamSource(1, m_WorldMatrixBuffer, 0, sizeof(D3DXMATRIX));	//ワールド行列用のバッファをストリーム1番目に設定。
-		(*graphicsDevice()).SetStreamSource(2, m_RotationMatrixBuffer, 0, sizeof(D3DXMATRIX));
+		(*graphicsDevice()).SetStreamSource(1, m_WorldMatrixBuffer, 0, m_BufferStride_World);	//ワールド行列用のバッファをストリーム1番目に設定。
+		(*graphicsDevice()).SetStreamSource(2, m_RotationMatrixBuffer, 0, m_BufferStride_Rotation);
 		//ワールド行列を頂点バッファにコピー。
 		CopyMatrixToVertexBuffer();
 		(*graphicsDevice()).SetIndices(ib);

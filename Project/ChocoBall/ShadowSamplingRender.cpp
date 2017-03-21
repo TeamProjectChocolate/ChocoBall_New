@@ -54,7 +54,7 @@ void CShadowSamplingRender::DrawFrame(LPD3DXFRAME pFrame){
 }
 
 void CShadowSamplingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase){
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = static_cast<ANIMATION::D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
 
 	if (pMeshContainer->pSkinInfo != nullptr){
 		// ボーンありの影の描画
@@ -66,7 +66,7 @@ void CShadowSamplingRender::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer
 	}
 }
 
-void CShadowSamplingRender::AnimationDraw(D3DXMESHCONTAINER_DERIVED* pMeshContainer){
+void CShadowSamplingRender::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer){
 	LPD3DXBONECOMBINATION pBoneComb;
 
 	pBoneComb = reinterpret_cast<LPD3DXBONECOMBINATION>(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
@@ -113,7 +113,7 @@ void CShadowSamplingRender::NonAnimationDraw(){
 
 	m_pShadowCamera->SetCamera(m_pEffect);
 	m_pEffect->SetMatrix("World"/*エフェクトファイル内の変数名*/, &(m_pModel->m_World)/*設定したい行列へのポインタ*/);
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 	if (m_pModel->m_IsHorizon) {
 		// 上書きした頂点データを使用して描画するので、DrawSubset関数は使用できない。
@@ -149,14 +149,14 @@ void CShadowSamplingRender::CopyBuffer() {
 }
 
 void CShadowSamplingRender::DrawHorizon() {
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 	//g_pMeshから頂点バッファ、インデックスバッファを引っ張ってきて、直接描画する。
 	LPDIRECT3DVERTEXBUFFER9 vb;
 	container->MeshData.pMesh->GetVertexBuffer(&vb);
 	LPDIRECT3DINDEXBUFFER9 ib;
 	container->MeshData.pMesh->GetIndexBuffer(&ib);
 
-	m_pEffect->SetFloat("g_PlayerHorizon", SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("TEST3D"))->GetPos().y - 0.5f);
+	m_pEffect->SetFloat("g_PlayerHorizon", SINSTANCE(CObjectManager)->FindGameObject<CGameObject>(_T("Player"))->GetPos().y - 0.5f);
 
 	// ストライドを取得。
 	// ※ストライドは1頂点のサイズを示す。
@@ -189,7 +189,7 @@ void CShadowSamplingRender::ActivateHorizon() {
 	// 頂点定義の上書きやバッファの定義は一度だけ行う。
 	if (m_IsFirst) {
 		// メッシュコンテナ取得。
-		D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+		ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 		// 現在の頂点宣言オブジェクトを取得(※頂点宣言オブジェクトとは、頂点データがどのような構成になっているかを宣言したものである)。
 		D3DVERTEXELEMENT9 DeclElement[MAX_FVF_DECL_SIZE];
 		container->MeshData.pMesh->GetDeclaration(DeclElement);

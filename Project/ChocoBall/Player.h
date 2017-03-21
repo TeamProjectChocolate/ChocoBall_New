@@ -18,7 +18,7 @@ class CCBManager;
 class CParticleEmitter;
 class MoveFloor;
 
-#define PLAYER_JUMP_POWER /*20.0f*/13.5f	//プレイヤーのジャンプの力。
+#define PLAYER_JUMP_POWER 13.5f	//プレイヤーのジャンプの力。
 
 class CPlayer : public CGameObject
 {
@@ -43,6 +43,8 @@ public:
 		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
 	}
 
+	void OnTriggerStay(btCollisionObject* pCollision)override;
+
 	// チョコボールとの当たりのコールバック関数。
 	void ChocoHit();
 
@@ -62,7 +64,7 @@ public:
 	{
 		return m_ShotFlg;
 	}
-	GAMEEND_ID GetGameState()
+	GAMEEND::ID GetGameState()
 	{
 		return m_GameState;
 	}
@@ -99,7 +101,7 @@ public:
 	}
 	void RequestGameOver()
 	{
-		m_GameState = GAMEEND_ID::OVER;
+		m_GameState = GAMEEND::ID::OVER;
 	}
 	bool IsVibration() ;
 	
@@ -128,7 +130,7 @@ private:
 	D3DXVECTOR3		m_lightDir[NUM_DIFFUSE_LIGHT];
 	D3DXVECTOR4		m_lightColor[NUM_DIFFUSE_LIGHT];	
 	// プレイヤー制御関連。
-	MOVE_STATE m_State;
+	MOVE::STATE m_State;
 	ANIMATION_STATE m_AnimState;
 	float m_AnimInterpolation;	// アニメーションの補間時間。
 	bool			m_ShotFlg;			//弾が発射されているのかのフラグ
@@ -168,7 +170,7 @@ private:
 	float m_VibrationInterval;			// 振動してから次の振動判定までの猶予。
 	float m_VibrationCounter;			// カウンター。
 	// ゲームオーバー制御関連。
-	GAMEEND_ID		m_GameState = GAMEEND_ID::CONTINUE;
+	GAMEEND::ID		m_GameState = GAMEEND::ID::CONTINUE;
 	bool            GamaOverFlag;		//ゲームオーバー
 	float			deadTimer;			//ゲームオーバーまでの待機時間
 	// ギミック関連。

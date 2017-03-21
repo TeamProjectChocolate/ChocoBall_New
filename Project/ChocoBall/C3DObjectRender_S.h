@@ -14,7 +14,7 @@ public:
 private:
 	void DrawFrameSimple(LPD3DXFRAME pFrame);
 	void DrawMeshContainerSimple(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase);
-	void NonAnimationDrawSimple(D3DXFRAME_DERIVED*);
+	void NonAnimationDrawSimple(ANIMATION::D3DXFRAME_DERIVED*);
 
 private:
 	bool m_UseBorn;

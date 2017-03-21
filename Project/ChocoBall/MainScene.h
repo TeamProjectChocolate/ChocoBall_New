@@ -21,7 +21,7 @@ private:
 	CPlayer* m_Player;
 	EnemyBase* m_Enemy;	//“G‚Ì•Ï”B
 	Bullet m_Bullet;
-	GAMEEND_ID m_GameState = GAMEEND_ID::CONTINUE;
+	GAMEEND::ID m_GameState = GAMEEND::ID::CONTINUE;
 	bool m_isGameContinue = true;
 	CLevelBuilder m_CLevelBuilder;
 };

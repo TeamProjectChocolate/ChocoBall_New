@@ -72,14 +72,14 @@ HRESULT C3DImage::LoadXFile(){
 	return S_OK;
 }
 
-void C3DImage::Update(const TRANSFORM& transform){
+void C3DImage::Update(const SH_ENGINE::TRANSFORM& transform){
 	AnimationUpdate(transform);
 	if (m_animation.IsHasAnimationController()){
 		m_animation.Update(DELTA_TIME);
 	}
 }
 
-void C3DImage::AnimationUpdate(const TRANSFORM& transform){
+void C3DImage::AnimationUpdate(const SH_ENGINE::TRANSFORM& transform){
 	D3DXMATRIX Trans;	// 移動行列
 	D3DXMATRIX Scale;	// 拡大・縮小行列
 	//D3DXMatrixIdentity(&m_World);	// 行列初期化

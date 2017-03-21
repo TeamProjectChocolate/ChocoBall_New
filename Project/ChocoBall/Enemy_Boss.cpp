@@ -31,31 +31,32 @@ CEnemy_Boss::~CEnemy_Boss()
 
 void CEnemy_Boss::InitState() {
 	// ボスのステートをすべて登録していく。
-	m_States.push_back(unique_ptr<CState>(new CSleepState(this)));
-	m_States.push_back(unique_ptr<CState>(new CWaitState(this)));
-	m_States.push_back(unique_ptr<CState>(new CMoveState(this)));
-	m_States.push_back(unique_ptr<CState>(new CAttackState(this)));
-	m_States.push_back(unique_ptr<CState>(new CEscapeState(this)));
-	m_States.push_back(unique_ptr<CState>(new CShotAttackState(this)));
-	m_States.push_back(unique_ptr<CState>(new CRushAttackState(this)));
-	m_States.push_back(unique_ptr<CState>(new CShotState(this)));
-	m_States.push_back(unique_ptr<CState>(new CTransState(this)));
-	m_States.push_back(unique_ptr<CState>(new CRotateState(this)));
+	m_States.push_back(shared_ptr<CState>(new CSleepState(this)));
+	m_States.push_back(shared_ptr<CState>(new CWaitState(this)));
+	m_States.push_back(shared_ptr<CState>(new CMoveState(this)));
+	m_States.push_back(shared_ptr<CState>(new CAttackState(this)));
+	m_States.push_back(shared_ptr<CState>(new CEscapeState(this)));
+	m_States.push_back(shared_ptr<CState>(new CShotAttackState(this)));
+	m_States.push_back(shared_ptr<CState>(new CRushAttackState(this)));
+	m_States.push_back(shared_ptr<CState>(new CShotState(this)));
+	m_States.push_back(shared_ptr<CState>(new CTransState(this)));
+	m_States.push_back(shared_ptr<CState>(new CRotateState(this)));
 
 	// 何もしないステート。
-	m_States.push_back(unique_ptr<CState>(new CState(this)));
+	m_States.push_back(shared_ptr<CState>(new CState(this)));
 }
 
 void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 {
 	m_transform.position = pos;
 	// 剛体にポジションを設定。
-	m_pRigidBody->getWorldTransform().setOrigin(btVector3(pos.x, pos.y, pos.z));
-	m_pCollision->getWorldTransform().setOrigin(btVector3(pos.x, pos.y, pos.z));
+	m_CollisionObject->SetPos(pos);
+	// コース判定用のコリジョンにポジションを設定。
+	m_CourceCollision.SetPos(pos);
 	// 現在のコース取得。
-	m_IsNowCourceChange = m_CourceDef.FindCource(m_pCollision.get(), &m_NowCource);
+	m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollision(), &m_NowCource);
 	// バリア初期化。
-	m_pBarrier = SINSTANCE(CObjectManager)->GenerationObject<CBarrier>(_T("Barrier"), PRIORTY::OBJECT3D_ALPHA, false);
+	m_pBarrier = SINSTANCE(CObjectManager)->GenerationObject<CBarrier>(_T("Barrier"), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 	m_pBarrier->Initialize();
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
@@ -76,7 +77,7 @@ void CEnemy_Boss::Initialize() {
 
 	m_size = D3DXVECTOR3(5.0f,5.0f,20.0f);
 
-	m_PlayingState = PLAYING_STATE::REPEAT;
+	m_PlayingState = ANIMATION::PLAYING_STATE::REPEAT;
 	m_AnimState = BOSS_ANIMATION::Wait;
 	m_State = BOSS_STATE::BWait;
 	m_pModel->SetUseBorn(true);
@@ -90,7 +91,7 @@ void CEnemy_Boss::Initialize() {
 	m_pModel->SetAlpha(1.0f);
 
 	// HPバー生成。
-	m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),PRIORTY::OBJECT2D,false);
+	m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),OBJECT::PRIORTY::OBJECT2D,false);
 	vector<BarColor> ColorArray;
 	ColorArray.push_back(BarColor::Green);
 	ColorArray.push_back(BarColor::Yellow);
@@ -99,39 +100,21 @@ void CEnemy_Boss::Initialize() {
 
 	// 剛体を生成。
 	{
-		btScalar Radius = 3.5f * 0.5f;
-		btScalar Height = (30.0f * 0.5f) - Radius;
-		m_pCapsuleCollision.reset(new btCapsuleShapeZ(Radius,Height));//ここで剛体の形状を決定
-		m_OriginOffset = btVector3(0.0f, -0.25f, 0.0f);
-		btTransform rbTransform;
-		rbTransform.setIdentity();
-		rbTransform.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z) + m_OriginOffset);
-		rbTransform.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z, m_transform.angle.w));
-
-		//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-		m_myMotionState.reset(new btDefaultMotionState(rbTransform));
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, m_myMotionState.get(), m_pCapsuleCollision.get(), btVector3(0, 0, 0));
-		m_pRigidBody.reset(new btRigidBody(rbInfo));
-		m_pRigidBody->setUserIndex(CollisionType::CollisionType_Boss);
-		m_pRigidBody->activate();
-		//ワールドに追加。
-		//SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddCollisionObject_Dynamic();
-
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_pRigidBody.get());
+		btScalar Radius = m_CapsuleRadius * 0.5f;
+		btScalar Height = (m_CapsuleHeight * 0.5f) - Radius;
+		//ここで剛体の形状を決定。
+		btCapsuleShapeZ* pShape = new btCapsuleShapeZ(Radius, Height);
+		ActivateCollision(D3DXVECTOR3(0.0f, -0.25f, 0.0f),pShape,CollisionType::Boss,false,0.0f,true,true);
+		m_CollisionObject->BitMask_AllOn();
+		m_CollisionObject->BitMask_Off(CollisionType::Player);
+		m_CollisionObject->BitMask_Off(CollisionType::Chocoball);
 	}
 
 	// コース判定用のコリジョンを生成。
 	{
-		m_CollisionSize = btVector3(1.0f / 2.0f, 1.0f / 2.0f, 1.0f / 2.0f);
-		m_pBoxShape_Cource.reset(new btBoxShape(m_CollisionSize));//ここでコリジョンの形状を決定
-		btTransform rbTransform;
-		rbTransform.setIdentity();
-		rbTransform.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-		m_pCollision.reset(new btCollisionObject);
-		m_pCollision->setWorldTransform(rbTransform);
-		m_pCollision->setCollisionShape(m_pBoxShape_Cource.get());
-		//ワールドに追加。
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddCollisionObject(m_pCollision.get());
+		m_CourceCollision.InitCollision(this,m_transform,Vector3::Zero, new btBoxShape(btVector3(1.0f / 2.0f, 1.0f / 2.0f, 1.0f / 2.0f)),CollisionType::Boss_Gost,0.0f,true,true);
+		m_CourceCollision.BitMask_AllOn();
+		m_CourceCollision.BitMask_Off(CollisionType::Boss_Cource);
 	}
 
 	// コース定義初期化。
@@ -146,7 +129,7 @@ void CEnemy_Boss::Update() {
 
 	if (m_IsUpdateCource) {
 		// 当たり判定の結果で現在いるコースを更新。
-		m_IsNowCourceChange = m_CourceDef.FindCource(m_pCollision.get(), &m_NowCource);
+		m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollision(), &m_NowCource);
 	}
 
 	// 現在のステートを更新。
@@ -154,20 +137,17 @@ void CEnemy_Boss::Update() {
 
 	// アニメーション再生関数を呼び出す
 	m_pModel->SetCurrentAnimNo(m_AnimState);
-	if (m_PlayingState == PLAYING_STATE::REPEAT) {
+	if (m_PlayingState == ANIMATION::PLAYING_STATE::REPEAT) {
 		m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), 0.5f,true);
 	}
-	else if (m_PlayingState == PLAYING_STATE::ONCE) {
+	else if (m_PlayingState == ANIMATION::PLAYING_STATE::ONCE) {
 		m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), 0.5f,false);
 	}
 
 	CGameObject::Update();
 
-	// 剛体情報更新。
-	m_pRigidBody->getWorldTransform().setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z) + m_OriginOffset);
-	m_pRigidBody->getWorldTransform().setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z, m_transform.angle.w));
-	// コース判定用の剛体更新。
-	m_pCollision->getWorldTransform().setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
+	// コース判定用のコリジョン更新。
+	m_CourceCollision.SetPos(m_transform.position);
 
 	m_pBarrier->SetPos(m_transform.position);
 }
@@ -226,8 +206,8 @@ void CEnemy_Boss::DivisionWallOpen() {
 void CEnemy_Boss::OnDestroy()
 {
 	SINSTANCE(CShadowRender)->DeleteObjectImidieit(this);
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveRigidBody_Dynamic(m_pRigidBody.get());
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->RemoveCollisionObject(m_pCollision.get());
+	m_CollisionObject->RemoveWorld();
+	m_CourceCollision.RemoveWorld();
 }
 
 void CEnemy_Boss::ConfigLight() {

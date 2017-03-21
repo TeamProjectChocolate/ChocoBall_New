@@ -5,7 +5,7 @@
 #include "Enemy_Boss.h"
 
 CShotState::CShotState(CEnemy_Boss* obj) : CState(obj) {
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 }
 
 CShotState::~CShotState()
@@ -18,11 +18,11 @@ void CShotState::Entry() {
 
 bool CShotState::Update() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::FastsSwim);
-	m_pObject->SetPlayingState(PLAYING_STATE::ONCE);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::ONCE);
 	m_TimeCounter += 1.0f / 60.0f;
 	if (m_TimeCounter >= m_IntervalTime) {
 		for (int idx = 0; idx < 4; idx++) {
-			CEnemyBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CEnemyBullet>(_T("EnemyBaullet"), PRIORTY::OBJECT3D, false);
+			CEnemyBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CEnemyBullet>(_T("EnemyBaullet"), OBJECT::PRIORTY::OBJECT3D, false);
 			bullet->Initialize();
 			D3DXVECTOR3 pos = m_pObject->GetPos() + (BuletShotOffsetDir[idx]) * 3.0f;
 			bullet->SetStartPos(pos);

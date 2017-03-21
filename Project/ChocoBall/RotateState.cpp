@@ -8,7 +8,7 @@ CRotateState::~CRotateState()
 
 void CRotateState::Entry() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Wait);
-	m_pObject->SetPlayingState(PLAYING_STATE::REPEAT);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 	m_RotationTime = 0.0f;
 	m_TimeCounter = 0.0f;
 	m_IsFirst = true;

@@ -75,7 +75,7 @@ void CBloomRender::Draw()
 			m_pEffect->CommitChanges();
 
 			(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+			(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 			(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 			(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -112,7 +112,7 @@ void CBloomRender::Draw()
 				m_pEffect->CommitChanges();
 
 				(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 				(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 				(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -145,7 +145,7 @@ void CBloomRender::Draw()
 				m_pEffect->SetTexture("g_blur", m_DownSamplingRenderTarget[idx][0].GetTexture());
 				m_pEffect->CommitChanges();
 				(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 				(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 				(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -238,7 +238,7 @@ void CBloomRender::Draw()
 				m_pEffect->SetValue("g_offset", offset, sizeof(offset));
 				m_pEffect->CommitChanges();
 				(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+				(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 				(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 				(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);

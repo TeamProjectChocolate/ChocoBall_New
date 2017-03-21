@@ -7,6 +7,6 @@ void CModel::Initialize(){
 	SetImage();
 }
 
-void CModel::Update(const TRANSFORM& transform){
+void CModel::Update(const SH_ENGINE::TRANSFORM& transform){
 
 }

@@ -3,6 +3,7 @@
 #include "CollisionType.h"
 #include "RenderContext.h"
 #include "ShadowRender.h"
+#include "Infomation.h"
 
 void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 {
@@ -13,14 +14,20 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 #ifdef NOT_INSTANCING
  	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
-	m_pModel->m_Refractive = g_RefractivesTable[REFRACTIVES::CHOCOLATE];
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::CHOCOLATE];
 #endif
 	m_transform.position = Spos; 
 	SetVector(m_transform.position, Epos);
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	m_Rigidbody.Initialize(&m_transform.position, 0.3f);
-	m_Rigidbody.SetUserIndex(CollisionType_Chocoball);
+	btSphereShape* Shape = new btSphereShape(0.3f);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Chocoball, false, 1.0f, false,true);
+	m_CollisionObject->BitMask_AllOn();
+	m_CollisionObject->BitMask_Off(CollisionType::Player);
+	m_CollisionObject->BitMask_Off(CollisionType::Map);
+	m_CollisionObject->BitMask_Off(CollisionType::Wall);
+	m_CollisionObject->BitMask_Off(CollisionType::Boss);
+	m_CollisionObject->BitMask_Off(CollisionType::Boss_Barrier);
 
 	m_moveSpeed.x = 0.05f;
 	m_moveSpeed.z = 0.05f;
@@ -35,15 +42,16 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 
 void CChocoBall::Update()
 {
-
-	m_Rigidbody.ApplyForce(m_Vector2 * 5.0f);
-	m_Rigidbody.Update(&m_transform.position);
+	D3DXVECTOR3 Force = m_Vector2 * 5.0f;
+	static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Force);
 	if (m_IsBurst) {
 		if (m_TimeCounter >= m_DeathTime) {
 			// チョコボールを破裂させる。
-			m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, false, true);
-			m_pEmitter->SetEmitPos(m_transform.position);
-			m_pEmitter->SetEmitFlg(true);
+			m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, true, true);
+			D3DXVECTOR3 ThisToCameraVec = SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos() - m_transform.position;
+			D3DXVec3Normalize(&ThisToCameraVec, &ThisToCameraVec);
+			m_pEmitter->SetEmitPos(m_transform.position - (ThisToCameraVec * 0.5f));
+			//m_pEmitter->SetEmitFlg(true);
 			m_pEmitter->SetIsUseCource(false);
 			m_pEmitter->SentenceOfDeath(50.0f);
 			SetAlive(false);
@@ -83,7 +91,6 @@ void CChocoBall::Draw()
 
 void CChocoBall::OnDestroy()
 {
-	m_Rigidbody.OnDestroy();
 	if (m_pEmitter) {
 		if (!(m_pEmitter->GetIsUseDeathTime())) {
 			SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(m_pEmitter);

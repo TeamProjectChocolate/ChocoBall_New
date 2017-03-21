@@ -85,7 +85,7 @@ void CShadowRender::Draw(){
 		}
 	}
 	// インスタンシング
-	vector<RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER_STATE::_3D_ShadowSample_I);
+	vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::_3D_ShadowSample_I);
 	for (auto data : datas){
 			data->render->Draw();
 	}
@@ -115,7 +115,7 @@ void CShadowRender::Draw(){
 		m_pEffect->CommitChanges();
 
 		(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-		(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+		(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 		(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 		(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -141,7 +141,7 @@ void CShadowRender::Draw(){
 		m_pEffect->CommitChanges();
 
 		(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
-		(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(SShapeVertex_PT));
+		(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 		(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 
 		(*graphicsDevice()).DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);

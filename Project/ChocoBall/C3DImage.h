@@ -19,7 +19,7 @@ public:
 	~C3DImage(){};
 
 	void Initialize()override;
-	void Update(const TRANSFORM&)override;
+	void Update(const SH_ENGINE::TRANSFORM&)override;
 	void SetImage()override;
 	//DrawSubsetとSetTextureのみを行う描画関数。
 
@@ -46,7 +46,7 @@ public:
 	}
 	CSkinModelData* GetImage_3D()override{ return m_pData; }
 private:
-	void AnimationUpdate(const TRANSFORM&);
+	void AnimationUpdate(const SH_ENGINE::TRANSFORM&);
 public:
 	// 3D描画用メンバ変数
 	CSkinModelData* m_pData;

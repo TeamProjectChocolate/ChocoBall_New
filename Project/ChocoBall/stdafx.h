@@ -38,7 +38,7 @@
 #include <memory>
 #include <locale.h>
 
-#define TEISYUTU_YOU	// 提出用ビルドのスイッチ(定義で提出用になる)。
+//#define TEISYUTU_YOU	// 提出用ビルドのスイッチ(定義で提出用になる)。
 
 #define SAFE_RELEASE(p)			{ if(p) { (p)->Release(); (p) = NULL; } }	//インスタンスリリース
 #define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);   (p) = NULL; } }	//インスタンス配列削除

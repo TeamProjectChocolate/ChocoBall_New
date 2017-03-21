@@ -23,7 +23,7 @@ void CZBufferSphere::Initialize()
 	m_transform.position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	GameCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
-	Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/ZBufferSphere2.x");
 	CGameObject::Initialize();

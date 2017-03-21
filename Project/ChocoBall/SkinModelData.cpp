@@ -69,8 +69,8 @@ void CSkinModelData::SetUpBoneMatrixPointers(LPD3DXFRAME pFrame, LPD3DXFRAME pRo
 
 void CSkinModelData::SetUpBoneMatrixPointersOnMesh(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME rootFrame){
 	unsigned int iBone, cBones;
-	D3DXFRAME_DERIVED* pFrame;
-	m_pMeshContainer = static_cast<D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
+	ANIMATION::D3DXFRAME_DERIVED* pFrame;
+	m_pMeshContainer = static_cast<ANIMATION::D3DXMESHCONTAINER_DERIVED*>(pMeshContainerBase);
 
 	if (m_pMeshContainer->pSkinInfo != nullptr){
 		cBones = m_pMeshContainer->pSkinInfo->GetNumBones();
@@ -80,7 +80,7 @@ void CSkinModelData::SetUpBoneMatrixPointersOnMesh(LPD3DXMESHCONTAINER pMeshCont
 		}
 
 		for (iBone = 0; iBone < cBones; iBone++){
-			pFrame = static_cast<D3DXFRAME_DERIVED*>(D3DXFrameFind(rootFrame,
+			pFrame = static_cast<ANIMATION::D3DXFRAME_DERIVED*>(D3DXFrameFind(rootFrame,
 			m_pMeshContainer->pSkinInfo->GetBoneName(iBone)));
 			if (pFrame == nullptr){
 				return;
@@ -96,7 +96,7 @@ void CSkinModelData::UpdateBoneMatrix(const D3DXMATRIX* matWorld){
 
 void CSkinModelData::UpdateFrameMatrices(LPD3DXFRAME pFrameBase, const D3DXMATRIX* pParentMatrix)
 {
-	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
+	ANIMATION::D3DXFRAME_DERIVED* pFrame = (ANIMATION::D3DXFRAME_DERIVED*)pFrameBase;
 
 	if (pParentMatrix != NULL)
 		// ボーンのワールド変換?
@@ -121,7 +121,7 @@ void CSkinModelData::CloneModelData(const CSkinModelData& modelData, CAnimation*
 {
 	//スケルトンの複製を作成。。
 	m_isClone = true;
-	m_frameRoot = new D3DXFRAME_DERIVED;
+	m_frameRoot = new ANIMATION::D3DXFRAME_DERIVED;
 	m_frameRoot->pFrameFirstChild = nullptr;
 	m_frameRoot->pFrameSibling = nullptr;
 	m_frameRoot->pMeshContainer = nullptr;
@@ -151,8 +151,8 @@ void CSkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 	dstFrame->TransformationMatrix = srcFrame->TransformationMatrix;
 	//メッシュコンテナをコピー。メッシュは使いまわす。
 	if (srcFrame->pMeshContainer) {
-		dstFrame->pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
-		memcpy(dstFrame->pMeshContainer, srcFrame->pMeshContainer, sizeof(D3DXMESHCONTAINER_DERIVED));
+		dstFrame->pMeshContainer = new ANIMATION::D3DXMESHCONTAINER_DERIVED;
+		memcpy(dstFrame->pMeshContainer, srcFrame->pMeshContainer, sizeof(ANIMATION::D3DXMESHCONTAINER_DERIVED));
 	}
 	else {
 		dstFrame->pMeshContainer = NULL;
@@ -161,7 +161,7 @@ void CSkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 
 	if (srcFrame->pFrameSibling != nullptr) {
 		//兄弟がいるので、兄弟のためのメモリを確保。
-		dstFrame->pFrameSibling = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameSibling = new ANIMATION::D3DXFRAME_DERIVED;
 		dstFrame->pFrameSibling->pFrameFirstChild = nullptr;
 		dstFrame->pFrameSibling->pFrameSibling = nullptr;
 		dstFrame->pFrameSibling->pMeshContainer = nullptr;
@@ -170,7 +170,7 @@ void CSkinModelData::CloneSkeleton(LPD3DXFRAME& dstFrame, LPD3DXFRAME srcFrame)
 	if (srcFrame->pFrameFirstChild != nullptr)
 	{
 		//子供がいるので、子供のためのメモリを確保。
-		dstFrame->pFrameFirstChild = new D3DXFRAME_DERIVED;
+		dstFrame->pFrameFirstChild = new ANIMATION::D3DXFRAME_DERIVED;
 		dstFrame->pFrameFirstChild->pFrameFirstChild = nullptr;
 		dstFrame->pFrameFirstChild->pFrameSibling = nullptr;
 		dstFrame->pFrameFirstChild->pMeshContainer = nullptr;
@@ -202,7 +202,7 @@ D3DXMATRIX* CSkinModelData::FindBoneWorldMatrix(LPCSTR name, LPD3DXFRAME frame) 
 	// 再起処理でボーンを検索する。
 	if (frame->Name && !strcmp(frame->Name, name)) {
 		// 発見。
-		D3DXFRAME_DERIVED* work = static_cast<D3DXFRAME_DERIVED*>(frame);
+		ANIMATION::D3DXFRAME_DERIVED* work = static_cast<ANIMATION::D3DXFRAME_DERIVED*>(frame);
 		if (work) {
 			return &work->CombinedTransformationMatrix;
 		}
@@ -236,7 +236,7 @@ void CSkinModelData::DeleteCloneSkeleton(LPD3DXFRAME frame)
 		//子供。
 		DeleteCloneSkeleton(frame->pFrameFirstChild);
 	}
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)(frame->pMeshContainer);
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = (ANIMATION::D3DXMESHCONTAINER_DERIVED*)(frame->pMeshContainer);
 	if (pMeshContainer) {
 		SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
 		SAFE_DELETE(pMeshContainer);
@@ -274,7 +274,7 @@ void CSkinModelData::DeleteSkeleton(LPD3DXFRAME frame)
 void CSkinModelData::InnerDestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
 {
 	UINT iMaterial;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = (ANIMATION::D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
 
 	SAFE_DELETE_ARRAY(pMeshContainer->pAttributeTable);
 	SAFE_DELETE_ARRAY(pMeshContainer->Name);

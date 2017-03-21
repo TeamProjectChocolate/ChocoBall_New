@@ -4,14 +4,14 @@
 
 CImageManager* CImageManager::m_instance = nullptr;
 
-void CImageManager::Add2D(IMAGE2D* image){
+void CImageManager::Add2D(MODEL::IMAGE2D* image){
 	// 新しく読み込んだXファイルを登録
 	m_ImageList.push_back(image);		// IMAGE2D情報配列に追加
 }
 
-IMAGE2D* CImageManager::LoadTextureFile(LPCSTR pFileName){
-	IMAGE2D* image;
-	image = new IMAGE2D;
+MODEL::IMAGE2D* CImageManager::LoadTextureFile(LPCSTR pFileName){
+	MODEL::IMAGE2D* image;
+	image = new MODEL::IMAGE2D;
 	strcpy(image->pFileName,pFileName);
 
 	D3DXIMAGE_INFO imgInfo;										//画像情報格納用構造体
@@ -31,7 +31,7 @@ IMAGE2D* CImageManager::LoadTextureFile(LPCSTR pFileName){
 	return image;
 }
 
-IMAGE2D* CImageManager::Find2DImage(LPCSTR pFileName){
+MODEL::IMAGE2D* CImageManager::Find2DImage(LPCSTR pFileName){
 	int size = m_ImageList.size();
 	// すでに使用するテクスチャファイルがあればそれを返す
 	for (int idx = 0; idx < size; idx++){
@@ -45,8 +45,8 @@ IMAGE2D* CImageManager::Find2DImage(LPCSTR pFileName){
 void CImageManager::Add3D(LPCSTR pFileName,CSkinModelData* ModelData)
 {
 	// 新しく読み込んだXファイルを登録
-	IMAGE3D* image;
-	image = new IMAGE3D;
+	MODEL::IMAGE3D* image;
+	image = new MODEL::IMAGE3D;
 	strcpy(image->pFileName,pFileName);
 	image->pModel = ModelData;
 	m_OriginalMeshDataList.push_back(image);		// IMAGE3D情報配列に追加

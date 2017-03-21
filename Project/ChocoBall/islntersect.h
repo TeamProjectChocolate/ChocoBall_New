@@ -10,9 +10,8 @@ class CIsIntersect
 public:
 	CIsIntersect();
 	~CIsIntersect();
-	void CollisitionInitialize(D3DXVECTOR3*,float,CollisionType);
+	void Initialize(btRigidBody*);
 	void Intersect(D3DXVECTOR3* position, D3DXVECTOR3* m_moveSpeed, bool Jumpflag);
-	void Intersect2(D3DXVECTOR3* position, D3DXVECTOR3* m_moveSpeed);
 	void IntersectCamera(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed);
 	inline bool GetIsHitGround()
 	{
@@ -22,23 +21,30 @@ public:
 	{
 		return m_rigidBody;
 	}
-	inline btSphereShape* GetSphereShape()
+	inline btCollisionShape* GetSphereShape()
 	{
 		return m_collisionShape;
 	}
-	void SetAudio(CAudio* audio){
-		m_pAudio = audio;
+	void OnMask(CollisionType type) {
+		m_MaskCollisionTypes[static_cast<int>(type)] = true;
+	}
+	void OffMask(CollisionType type) {
+		m_MaskCollisionTypes[static_cast<int>(type)] = false;
+	}
+	const vector<bool>& GetMasks() const
+	{
+		return m_MaskCollisionTypes;
 	}
 private:
 	//ここからBulletPhysicsで衝突判定を行うためのメンバ変数。
-	btGhostObject*		m_ghostObject;		//!<ゴースト。剛体の変わりになるもの。完全に物理挙動に任せたいものは剛体を使う。
-	btSphereShape*		m_collisionShape;	//!<コリジョン形状。
-	btRigidBody*			m_rigidBody;
-	btDefaultMotionState*	m_myMotionState;
-	CAudio* m_pAudio;
+	btGhostObject*		m_ghostObject = nullptr;		//!<ゴースト。剛体の変わりになるもの。完全に物理挙動に任せたいものは剛体を使う。
+	btCollisionShape*		m_collisionShape = nullptr;	//!<コリジョン形状。
+	btRigidBody*			m_rigidBody = nullptr;
+	btDefaultMotionState*	m_myMotionState = nullptr;
 
-	float			m_radius;			//半径
-	D3DXVECTOR3		m_moveSpeed;		//移動速度。
+	//D3DXVECTOR3		m_moveSpeed;		//移動速度。
 	bool			m_isHitGround;		//地面に当たった？
 	bool			m_Jumpflag;			//ジャンプフラグ
+	bool m_isFirstCallback;		// 一回の当たり判定で最初に呼ばれたコールバックか。
+	vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeを無視するかのフラグを格納。
 };

@@ -53,7 +53,7 @@ void CVibration::Update(){
 }
 
 void CVibration::ThisVibration(D3DXVECTOR3* pos,D3DXVECTOR3 Amount,float Time,float ReflectionTime){
-	COURCE_BLOCK Cource = m_CourceDef.FindCource(*pos);
+	Cource::COURCE_BLOCK Cource = m_CourceDef.FindCource(*pos);
 	m_IsVibration = true;
 	m_VibrationTime = Time;
 	m_ReflectionTime = ReflectionTime;

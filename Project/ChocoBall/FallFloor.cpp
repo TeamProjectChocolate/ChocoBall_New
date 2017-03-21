@@ -14,11 +14,11 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 	m_transform.scale = scale;
 	m_transform.angle = rot;
 	m_MaxSpeed = 0.1f;
-	this->Build(D3DXVECTOR3(1.5f*scale.x, 0.3f*scale.y, 1.5f*scale.z), m_transform.position);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.5f * scale.z * 0.5f)), CollisionType::Floor, false, 0.0f, true,true);
 
-	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 
-	m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	//m_RigidBody->setActivationState(DISABLE_DEACTIVATION);
 
 	SetAlive(true);
 }
@@ -26,13 +26,7 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 
 void FallingFloor::Update()
 {
-
-	btTransform& trans = m_rigidBody->getWorldTransform();
-	trans.setOrigin(btVector3(m_transform.position.x, m_transform.position.y, m_transform.position.z));
-
 	D3DXVECTOR3 PlayerPos = m_player->GetPos();
-
-	CGameObject::Update();
 
 	if (IsHitPlayer(m_transform.position,1.0f))
 	{
@@ -68,7 +62,8 @@ void FallingFloor::Update()
 		m_transform.position.y += 0.05f;
 		m_moveSpeed = 0.0f;
 	}
-	
+
+	CGameObject::Update();
 }
 
 
@@ -76,26 +71,6 @@ void FallingFloor::Draw()
 {
 	CGameObject::Draw();
 }
-
-
-void FallingFloor::Build(const D3DXVECTOR3& size, const D3DXVECTOR3& pos){
-	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	m_collisionShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	groundTransform.setRotation(btQuaternion(m_transform.angle.x, m_transform.angle.y, m_transform.angle.z,m_transform.angle.w));
-	float mass = 0.0f;
-
-	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	m_myMotionState = new btDefaultMotionState(groundTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_myMotionState, m_collisionShape, btVector3(0, 0, 0));
-	m_rigidBody = new btRigidBody(rbInfo);
-	//m_rigidBody->setUserIndex(1);
-	//ワールドに追加。
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->AddRigidBody_Dynamic(m_rigidBody);
-}
-
 
 bool FallingFloor::IsHitPlayer(D3DXVECTOR3 pos,float radius)
 {

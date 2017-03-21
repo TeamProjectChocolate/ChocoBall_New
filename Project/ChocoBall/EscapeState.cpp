@@ -10,7 +10,7 @@ CEscapeState::~CEscapeState()
 
 void CEscapeState::Entry() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Up);
-	m_pObject->SetPlayingState(PLAYING_STATE::ONCE);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::ONCE);
 	this->ChangeLocalState(CEnemy_Boss::BOSS_STATE::NonAction);
 	m_EStage = Escape_Stage::Damage;
 	m_TimeCounter = 0.0f;
@@ -33,7 +33,7 @@ bool CEscapeState::Update() {
 		}
 		if (m_TimeCounter >= m_IntervalTime/*m_pObject->GetAnimation()->GetIsOnceEnd()*/) {
 			// 逃走アニメーションを再生し終わった。
-			vector<BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+			vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
 			this->ChangeLocalState(CEnemy_Boss::BOSS_STATE::Trans);
 			if (now.size() == 1) {
 				if (!(now[0]->IsEnd)) {

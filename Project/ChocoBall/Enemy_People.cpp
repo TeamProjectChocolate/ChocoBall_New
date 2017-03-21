@@ -2,6 +2,7 @@
 #include "Enemy_People.h"
 #include "ActreLight.h"
 #include "BulletPhysics.h"
+#include "Rigidbody.h"
 
 CEnemy_People::CEnemy_People()
 {
@@ -18,7 +19,7 @@ void CEnemy_People::Initialize() {
 	CGameObject::Initialize();
 	m_pModel->m_Refractive = 0.34f;
 	m_AnimState = ENEMY_ANIMATION::Wait;
-	m_State = MOVE_STATE::Wait;
+	m_State = MOVE::STATE::Wait;
 	m_pModel->SetUseBorn(true);
 	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++) {
 		m_pModel->GetAnimation()->SetAnimationEndtime(idx, EnemyAnimationTime[Enemy_ModelType::People][idx]);
@@ -29,26 +30,26 @@ void CEnemy_People::Initialize() {
 
 void CEnemy_People::Update() {
 	switch (m_State) {
-	case MOVE_STATE::Wait:
+	case MOVE::STATE::Wait:
 		m_AnimState = ENEMY_ANIMATION::Wait;
 		m_CurrentAngleY = m_Turn.Update(m_IsTurn, m_TargetAngleY);
 		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_CurrentAngleY);
-		m_PlayingState = PLAYING_STATE::REPEAT;
+		m_PlayingState = ANIMATION::PLAYING_STATE::REPEAT;
 		break;
-	case MOVE_STATE::Walk:
+	case MOVE::STATE::Walk:
 		m_AnimState = ENEMY_ANIMATION::Walk;
 		Move();
 		m_CurrentAngleY = m_Turn.Update(m_IsTurn, m_TargetAngleY);
 		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_CurrentAngleY);
-		m_PlayingState = PLAYING_STATE::REPEAT;
+		m_PlayingState = ANIMATION::PLAYING_STATE::REPEAT;
 		break;
-	case MOVE_STATE::RockOn:
+	case MOVE::STATE::RockOn:
 		m_AnimState = ENEMY_ANIMATION::Stance;
 		Move();
 		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), /*m_TargetAngleY*/m_CurrentAngleY);
-		m_PlayingState = PLAYING_STATE::ONCE;
+		m_PlayingState = ANIMATION::PLAYING_STATE::ONCE;
 		break;
-	case MOVE_STATE::Fly:
+	case MOVE::STATE::Fly:
 		//m_AnimState = ENEMY_ANIMATION::Down;
 		//死亡までの待機時間の設定
 		//m_deadTimer += 1.0 / 60.0f;
@@ -64,14 +65,15 @@ void CEnemy_People::Update() {
 }
 
 void CEnemy_People::HitReaction(D3DXVECTOR3 Dir) {
-	m_IsIntersect.CollisitionInitialize(&m_transform.position, 1.0f, CollisionType_Enemy);
-	m_State = MOVE_STATE::Fly;
-	btRigidBody* rb = m_IsIntersect.GetRigidBody();//エネミーの剛体を取得
+	btSphereShape* shape = new btSphereShape(1.0f);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, CollisionType::Enemy, false, 0.0f, true,true);
+	m_State = MOVE::STATE::Fly;
 	//m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//エネミーの球を小さく設定し、チョコボールに埋もれるようにしている。
-	rb->setMassProps(1.0f, btVector3(0.01f, 0.01f, 0.01f));//第一引数は質量、第二引数は回転のしやすさ
+	CRigidbody* RBody = static_cast<CRigidbody*>(m_CollisionObject.get());
+	RBody->SetMassProps(1.0f, D3DXVECTOR3(0.01f, 0.01f, 0.01f));//第一引数は質量、第二引数は回転のしやすさ
 	Dir *= 750.0f;
-	rb->applyForce(btVector3(Dir.x, Dir.y + 1000.0f, Dir.z), btVector3(1.0f, 1.0f, 1.0f));//チョコボールに当たって吹っ飛ぶ力を設定
-	rb->setAngularVelocity(btVector3(5.0f, 5.0f, 5.0f));
+	RBody->ApplyForce(Dir + D3DXVECTOR3(0.0f,1000.0f,0.0f));//チョコボールに当たって吹っ飛ぶ力を設定
+	RBody->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
 	m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
 }
 

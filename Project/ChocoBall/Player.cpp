@@ -10,6 +10,7 @@
 #include "MoveFloor.h"
 #include "StageTable.h"
 #include "FireJet.h"
+#include "CBManager.h"
 
 CPlayer* g_player = NULL;
 
@@ -45,7 +46,6 @@ void CPlayer::Initialize()
 	m_moveSpeed.z = 0.0f;
 	m_moveSpeed.y = 0.0f;
 
-	m_radius = 1.0f;
 
 	deadTimer = 0.0f;
 
@@ -73,7 +73,7 @@ void CPlayer::Initialize()
 
 	BulletShotInterval = 0;
 
-	m_GameState = GAMEEND_ID::CONTINUE;
+	m_GameState = GAMEEND::ID::CONTINUE;
 
 	m_Courcedef.SetStageID(m_StageID);
 	m_Courcedef.Initialize();
@@ -81,9 +81,39 @@ void CPlayer::Initialize()
 
 	// ライト関連の初期化
 	this->ConfigLight();
-	
-	m_IsIntersect.CollisitionInitialize(&m_transform.position, m_radius,CollisionType_Player);
-	m_IsIntersect.SetAudio(m_pAudio);
+
+	m_radius = 1.0f;
+	//// test
+	m_radius = 1.3f;
+	btCollisionShape* Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
+
+
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Player, false, 0.1f, true/*false*/,true);
+	m_CollisionObject->BitMask_AllOn();
+	m_CollisionObject->BitMask_Off(CollisionType::Map);
+	//m_CollisionObject->BitMask_Off(CollisionType::Boss);
+	//m_CollisionObject->BitMask_Off(CollisionType::Wall);
+
+
+	//m_CollisionObject->BitMask_On(CollisionType::Player);
+	//m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+	//m_CollisionObject->BitMask_On(CollisionType::Enemy);
+	//m_CollisionObject->BitMask_On(CollisionType::Boss_Barrier);
+	//m_CollisionObject->BitMask_On(CollisionType::Boss_Cource);
+	//m_CollisionObject->BitMask_On(CollisionType::Camera);
+	//m_CollisionObject->BitMask_On(CollisionType::Bullet);
+
+	m_IsIntersect.Initialize(static_cast<btRigidBody*>(this->GetCollisionObject()));
+	// あたりを無視する属性をセットしていく。
+	// テスト
+	m_IsIntersect.OnMask(CollisionType::Player);
+	m_IsIntersect.OnMask(CollisionType::Chocoball);
+	m_IsIntersect.OnMask(CollisionType::Enemy);
+	m_IsIntersect.OnMask(CollisionType::Boss_Barrier);
+	m_IsIntersect.OnMask(CollisionType::Boss_Cource);
+	m_IsIntersect.OnMask(CollisionType::Camera);
+	m_IsIntersect.OnMask(CollisionType::Bullet);
+	//m_IsIntersect.OnMask(CollisionType_AttackWall);
 	
 	deadTimer = 0.0f;
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
@@ -124,7 +154,7 @@ void CPlayer::Initialize()
 		m_pModel->GetAnimation()->SetAnimationEndtime(idx, AnimationTime[idx]);
 	}
 	m_pModel->GetAnimation()->Play(-1,0.0f,false);
-	m_State = MOVE_STATE::Wait;
+	m_State = MOVE::STATE::Wait;
 	m_VibrationCounter = 0.0f;
 	m_VibrationInterval = 0.5f;
 
@@ -189,7 +219,7 @@ void CPlayer::Update()
 	// メインシーンの状態を管理する処理。
 	StateManaged();
 
-	if (m_GameState == GAMEEND_ID::CONTINUE)
+	if (m_GameState == GAMEEND::ID::CONTINUE)
 	{
 		// 当たり判定。
 		Collisions();
@@ -217,7 +247,7 @@ void CPlayer::Update()
 		}
 	}
 
-	if (m_State != MOVE_STATE::Flow && m_State != MOVE_STATE::Fly){
+	if (m_State != MOVE::STATE::Flow && m_State != MOVE::STATE::Fly) {
 		// 上下移動処理。
 		UpDownMove();
 		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
@@ -232,17 +262,16 @@ void CPlayer::Update()
 	// アニメーション再生関数を呼び出す
 	m_pModel->SetCurrentAnimNo(m_AnimState);
 	m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), m_AnimInterpolation,true);
-	//if (!m_pModel->GetAnimation()->GetIsInterpolate()) {
-	//	// アニメーションの補間が終了なら補間時間を初期値に戻す。
-	//	m_AnimInterpolation = 0.1f;
-	//}
 
 	// 影カメラのポジションをプレイヤーの真上に指定。
 	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
 	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(1.0f, /*2.0f*/5.0f, 0.0f));
+	//static_cast<CEM_Render*>(SINSTANCE(CRenderContext)->GetEMRender())->SetCameraPos(m_transform.position + -GetDirection() * 1.5f);
 
-	//// ライトの更新
-	//static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);
+	if (m_GameState != GAMEEND::ID::CLEAR)
+	{
+		CGameObject::Update();
+	}
 }
 
 void CPlayer::Draw(){
@@ -283,32 +312,42 @@ void CPlayer::ConfigLight(){
 	//SINSTANCE(CRenderContext)->SetCurrentLight(&m_light);
 }
 
+void CPlayer::OnTriggerStay(btCollisionObject* pCollision) {
+	if (pCollision->getUserIndex() == static_cast<int>(CollisionType::ChocoballTrigger)) {
+		// 当たったものがチョコボールトリガーならチョコボール生成。
+		CCBManager* mgr = (CCBManager*)pCollision->getUserPointer();
+		if (!mgr->GetAlive()) {
+			m_pAudio->PlayCue("Chocoball", true, nullptr);//チョコ落下Audio
+		}
+	}
+}
+
 void CPlayer::MoveStateManaged(){
 	switch (m_State){
-	case MOVE_STATE::Wait:
+	case MOVE::STATE::Wait:
 		//m_pCamera->SetTargetViewAngle(D3DXToRadian(30.0f));
 		m_AnimState = ANIMATION_STATE::WAIT;
 		m_ActiveKeyState = true;
 		break;
-	case MOVE_STATE::Walk:
+	case MOVE::STATE::Walk:
 		//m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
 		Move();
 		m_AnimState = ANIMATION_STATE::WALK;
 		m_ActiveKeyState = true;
-		m_State = MOVE_STATE::Wait;
+		m_State = MOVE::STATE::Wait;
 		break;
-	case MOVE_STATE::Dash:
+	case MOVE::STATE::Dash:
 		//m_pCamera->SetTargetViewAngle(D3DXToRadian(45.0f));
 		Move();
 		m_ActiveKeyState = true;
-		m_State = MOVE_STATE::Wait;
+		m_State = MOVE::STATE::Wait;
 		break;
-	case MOVE_STATE::Vibration:
+	case MOVE::STATE::Vibration:
 		m_vibration.Update();
 		m_VibrationCounter = 0.0f;
 		// 振動処理実行後、振動が終了しているか
 		if (!m_vibration.GetIsVibration()){
-			m_State = MOVE_STATE::Wait;
+			m_State = MOVE::STATE::Wait;
 			m_ActiveKeyState = true;
 			m_pCamera->SetIsTarget(true);
 		}
@@ -317,7 +356,7 @@ void CPlayer::MoveStateManaged(){
 			m_ActiveKeyState = false;
 		}
 		break;
-	case MOVE_STATE::Flow:
+	case MOVE::STATE::Flow:
 		m_pCamera->SetIsTarget(true);
 		m_pCamera->GetCamera()->SetTarget(m_transform.position);
 		m_AnimState = ANIMATION_STATE::WALK;
@@ -326,7 +365,7 @@ void CPlayer::MoveStateManaged(){
 		//m_transform.position.y = 0.0f;
 		RollingPlayer();
 		break;
-	case MOVE_STATE::Fly:
+	case MOVE::STATE::Fly:
 		m_pCamera->SetIsTarget(true);
 		m_pCamera->GetCamera()->SetTarget(m_transform.position);
 		m_AnimState = ANIMATION_STATE::WAIT;
@@ -405,7 +444,7 @@ void CPlayer::UpDownMove(){
 		break;
 	case JUMP_STATE::J_ZWEI:
 		m_RunningCounter = m_RunningRange;
-		if (m_State != MOVE_STATE::Vibration) {
+		if (m_State != MOVE::STATE::Vibration) {
 			m_ActiveKeyState = true;
 			m_AnimState = ANIMATION_STATE::JUMP_NOW;
 		}
@@ -426,7 +465,7 @@ void CPlayer::UpDownMove(){
 		}
 		break;
 	case JUMP_STATE::J_DREI:
-		if (m_State != MOVE_STATE::Vibration) {
+		if (m_State != MOVE::STATE::Vibration) {
 			m_AnimState = ANIMATION_STATE::JUMP_END;
 		}
 		// 自分の周囲にパーティクル発生
@@ -571,7 +610,7 @@ void CPlayer::KeyState(){
 		if (m_RunningCounter <= m_RunningRange) {
 			m_RunningCounter += 1.0f / 60.0f;
 		}
-		m_State = MOVE_STATE::Walk;
+		m_State = MOVE::STATE::Walk;
 	}
 	else {
 		m_RunningCounter = 0.0f;
@@ -613,7 +652,7 @@ void CPlayer::Collisions(){
 				}
 				if (firejet->IsCollision(m_transform.position, 1.0f)){
 					// プレイヤーを追いかけ続けていると画面が振動してしまう。
-					m_State = MOVE_STATE::Vibration;
+					m_State = MOVE::STATE::Vibration;
 					m_ActiveKeyState = false;
 					m_pCamera->SetIsTarget(false);
 					m_vibration.ThisVibration(&(m_transform.position), D3DXVECTOR3(0.002f, 0.0f, 0.0f), 1.2f, 0.01f);
@@ -629,21 +668,21 @@ void CPlayer::Collisions(){
 
 void CPlayer::StateManaged()
 {
-	if (m_GameState != GAMEEND_ID::CLEAR)
-	{
-		CGameObject::Update();
-	}
+	//if (m_GameState != GAMEEND_ID::CLEAR)
+	//{
+	//	CGameObject::Update();
+	//}
 
 	//落下死ゲームオーバー処理。
 	if (m_transform.position.y <= -15.0f)
 	{
-		m_GameState = GAMEEND_ID::OVER;
+		m_GameState = GAMEEND::ID::OVER;
 		return;
 	}
 
 	//ゲームクリア
-	COURCE_BLOCK EndBlock = m_Courcedef.FindCource(m_Courcedef.GetCourceMax() - 1);
-	COURCE_BLOCK nowBlock = m_Courcedef.FindCource(m_transform.position);
+	Cource::COURCE_BLOCK EndBlock = m_Courcedef.FindCource(m_Courcedef.GetCourceMax() - 1);
+	Cource::COURCE_BLOCK nowBlock = m_Courcedef.FindCource(m_transform.position);
 	m_NowCourceNo = nowBlock.blockNo;
 	if (nowBlock.blockNo == EndBlock.blockNo){
 		D3DXVECTOR3 LoadVec;
@@ -653,15 +692,15 @@ void CPlayer::StateManaged()
 		float Kyori = D3DXVec3Dot(&GoalToPlayerVec, &LoadVec);
 		if (Kyori < 0.001f)
 		{
-			m_GameState = GAMEEND_ID::CLEAR;
+			m_GameState = GAMEEND::ID::CLEAR;
 			return;
 		}
 	}
 }
 
 void CPlayer::EnemyHit() {
-	if (m_State != MOVE_STATE::Vibration && m_State != MOVE_STATE::Flow && m_State != MOVE_STATE::Fly) {
-		m_State = MOVE_STATE::Vibration;
+	if (m_State != MOVE::STATE::Vibration && m_State != MOVE::STATE::Flow && m_State != MOVE::STATE::Fly) {
+		m_State = MOVE::STATE::Vibration;
 		m_ActiveKeyState = false;
 		// プレイヤーを追いかけ続けていると画面が振動してしまう。
 		m_pCamera->SetIsTarget(false);
@@ -686,7 +725,7 @@ void CPlayer::BulletShot()
 		D3DXMatrixRotationY(&Rot, m_currentAngleY);
 		D3DXVec3Transform(&RV1, &RV0, &Rot);
 
-		CPlayerBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CPlayerBullet>(_T("PlayerBullet"), PRIORTY::OBJECT3D, false);
+		CPlayerBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CPlayerBullet>(_T("PlayerBullet"), OBJECT::PRIORTY::OBJECT3D, false);
 		bullet->Initialize();
 		bullet->SetStartPos(m_transform.position);
 		bullet->SetDir(static_cast<D3DXVECTOR3>(RV1));
@@ -699,8 +738,8 @@ void CPlayer::BulletShot()
 
 void CPlayer::ChocoHit()
 {
-	if (m_State != MOVE_STATE::Flow || m_State != MOVE_STATE::Fly) {
-		m_State = MOVE_STATE::Flow;
+	if (m_State != MOVE::STATE::Flow || m_State != MOVE::STATE::Fly) {
+		m_State = MOVE::STATE::Flow;
 		m_ActiveKeyState = false;
 		m_pEmitter->SetEmitFlg(false);
 		m_AnimState = ANIMATION_STATE::WALK;
@@ -712,7 +751,7 @@ void CPlayer::ChocoHit()
 }
 void CPlayer::EnemyBulletHit( D3DXVECTOR3 moveDir )
 {
-	m_State = MOVE_STATE::Fly;
+	m_State = MOVE::STATE::Fly;
 	m_AnimState = ANIMATION_STATE::WAIT;
 	m_ActiveKeyState = false;
 	m_pAudio->PlayCue("スポッ１", false, this);
@@ -749,6 +788,6 @@ void CPlayer::RollingPlayer()
 	//ゲームオーバーになるまでの待機時間の設定
 	deadTimer += 1.0f / 60.0f;
 	if (deadTimer >= 2.0f){
-		m_GameState = GAMEEND_ID::OVER;
+		m_GameState = GAMEEND::ID::OVER;
 	}
 }

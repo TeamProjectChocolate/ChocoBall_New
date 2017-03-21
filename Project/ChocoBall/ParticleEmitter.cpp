@@ -27,7 +27,7 @@ void CParticleEmitter::Initialize(){
 	strcpy(m_ParticleName, m_param->texturePath);
 	m_CourceDef.SetStageID(m_Stage_ID);
 	m_CourceDef.Initialize();
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	m_TailPosition = nullptr;
 	m_Residual = false;
 	m_CourceLange = 0;
@@ -52,10 +52,7 @@ void CParticleEmitter::Update(){
 		}
 	}
 	if (m_pTailParticle != nullptr) {
-		if (m_pTailParticle->GetIsDead()) {
-			m_pTailParticle = nullptr;
-			m_Residual = false;
-		}
+		m_Residual = false;
 	}
 
 	//// エミッター削除関連。
@@ -75,12 +72,13 @@ void CParticleEmitter::EmitParticle() {
 	if (m_EmitFlg) {
 		if (m_timer >= m_param->intervalTime) {
 			for (int idx = 0; idx < m_param->EmitNum; idx++) {
-				CParticle* p = SINSTANCE(CObjectManager)->GenerationObject<CParticle>(static_cast<LPCSTR>(m_ParticleName), PRIORTY::PARTICLE_ALPHA, false);
+				CParticle* p = SINSTANCE(CObjectManager)->GenerationObject<CParticle>(static_cast<LPCSTR>(m_ParticleName), OBJECT::PRIORTY::PARTICLE_ALPHA, false);
 				// パーティクルを発生させる方向を上書きする。
 				p->InitParticle(m_random, *m_camera, m_param, m_emitPosition, m_emitDirection);
 				m_timer = 0.0f;
 				m_ParticleList.push_back(p);
 				m_pTailParticle = p;
+				m_pTailParticle->SetTailParticle(&m_pTailParticle);
 				m_TailPosition = p->GetPosRef();
 				m_Residual = true;
 				m_count++;

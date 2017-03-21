@@ -10,12 +10,12 @@ CMoveState::~CMoveState()
 
 void CMoveState::Entry() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Swim);
-	m_pObject->SetPlayingState(PLAYING_STATE::REPEAT);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 
 	// コース定義から回転ステートのパラメータを決定。
-	vector<BOSS_COURCE_BLOCK*> nowCource = m_pObject->GetNowCource();
+	vector<Cource::BOSS_COURCE_BLOCK*> nowCource = m_pObject->GetNowCource();
 	D3DXVECTOR3 dir = D3DXVECTOR3(0.0f,0.0f,0.0f);
-	if (nowCource.size() == 1 && nowCource[0]->BlockType != Boss_Cource::BOSS_COURCE_TYPE::Move) {
+	if (nowCource.size() == 1 && nowCource[0]->BlockType != Cource::Boss_Cource::BOSS_COURCE_TYPE::Move) {
 		// アクションを行う位置への向きを取得。
 		D3DXVec3Normalize(&dir, &(nowCource[0]->ActionPos - m_pObject->GetPos()));
 	}
@@ -51,8 +51,8 @@ bool CMoveState::Update() {
 			static_cast<CTransState*>(m_pCurrentLocalState)->SetMoveSpeed(0.125f);
 			if (m_pObject->GetNowCource().size() == 1) {
 				// 接触しているコースが一つのみ。
-				BOSS_COURCE_BLOCK* block = m_pObject->GetNowCource()[0];
-				if (block->BlockType != Boss_Cource::BOSS_COURCE_TYPE::Move) {
+				Cource::BOSS_COURCE_BLOCK* block = m_pObject->GetNowCource()[0];
+				if (block->BlockType != Cource::Boss_Cource::BOSS_COURCE_TYPE::Move) {
 					// コースの属性が移動ではない。
 					float length = D3DXVec3Length(&(m_pObject->GetPos() - block->ActionPos));
 					static_cast<CTransState*>(m_pCurrentLocalState)->SetLengthMax(length);

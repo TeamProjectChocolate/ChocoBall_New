@@ -7,7 +7,7 @@ CSleepState::~CSleepState()
 
 void CSleepState::Entry() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Up);
-	m_pObject->SetPlayingState(PLAYING_STATE::ONCE);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::ONCE);
 	// 睡眠エフェクト登録。
 	m_SleepEmitter = (
 		CParticleEmitter::EmitterCreate(
@@ -15,7 +15,7 @@ void CSleepState::Entry() {
 		PARTICLE_TYPE::STAR, 
 		m_pObject->GetPos(),
 		SINSTANCE(CRenderContext)->GetCurrentCamera(),
-		SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"))->GetStageID(),
+		SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"))->GetStageID(),
 		true,
 		true)
 	);

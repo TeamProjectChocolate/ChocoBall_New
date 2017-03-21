@@ -4,7 +4,7 @@
 #include "Player.h"
 
 CTransState::CTransState(CEnemy_Boss* obj):CState(obj){
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 }
 
 CTransState::~CTransState()
@@ -13,7 +13,7 @@ CTransState::~CTransState()
 
 void CTransState::Entry() {
 	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Swim);
-	m_pObject->SetPlayingState(PLAYING_STATE::REPEAT);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 	m_Direction = m_pObject->GetDirection();	// ƒ{ƒX‚ÌŒü‚«B
 	m_InitPos = m_pObject->GetPos();
 	m_MoveSpeed = 0.0f;

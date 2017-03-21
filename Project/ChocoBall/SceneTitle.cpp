@@ -19,11 +19,11 @@ CSceneTitle::~CSceneTitle()
 }
 
 void CSceneTitle::Initialize(){
-	SINSTANCE(CObjectManager)->GenerationObject<CTitleBack>(_T("TitleBack"),PRIORTY::OBJECT2D,false);
-	CTitleSelect* start = SINSTANCE(CObjectManager)->GenerationObject<CTitleSelect>(_T("NewGame"),PRIORTY::OBJECT2D_ALPHA,false);
+	SINSTANCE(CObjectManager)->GenerationObject<CTitleBack>(_T("TitleBack"),OBJECT::PRIORTY::OBJECT2D,false);
+	CTitleSelect* start = SINSTANCE(CObjectManager)->GenerationObject<CTitleSelect>(_T("NewGame"), OBJECT::PRIORTY::OBJECT2D_ALPHA,false);
 	//CTitleSelect* Continue = SINSTANCE(CObjectManager)->GenerationObject<CTitleSelect>(_T("continue"), PRIORTY::OBJECT2D_ALPHA, false);
 	//Continue->SetFileName(_T("image/TAI_EXIT.png"));
-	CTitleCursor* cursor = SINSTANCE(CObjectManager)->GenerationObject<CTitleCursor>(_T("Cursor"), PRIORTY::OBJECT2D, false);
+	CTitleCursor* cursor = SINSTANCE(CObjectManager)->GenerationObject<CTitleCursor>(_T("Cursor"), OBJECT::PRIORTY::OBJECT2D, false);
 	cursor->SetAudio(m_pAudio);
 	//num = SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("Number"), PRIORTY::OBJECT2D_ALPHA, false);
 

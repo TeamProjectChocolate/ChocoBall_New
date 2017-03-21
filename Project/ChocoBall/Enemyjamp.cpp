@@ -25,12 +25,12 @@ void CEnemyjamp::Initialize()
 
 	m_Courcedef.SetStageID(m_StageID);
 	m_Courcedef.Initialize();
-	COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
+	Cource::COURCE_BLOCK Cource = m_Courcedef.FindCource(m_initPosition);
 	m_DeltaTime = 0.0f;
 	m_WaitTime = 0.5f;
-	m_State = MOVE_STATE::Wait;
+	m_State = MOVE::STATE::Wait;
 
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 }
 
 void CEnemyjamp::SetInitPosition(D3DXVECTOR3 pos)
@@ -40,10 +40,10 @@ void CEnemyjamp::SetInitPosition(D3DXVECTOR3 pos)
 }
 void CEnemyjamp::Update()
 {
-	if (m_State == MOVE_STATE::Wait) {
+	if (m_State == MOVE::STATE::Wait) {
 		m_DeltaTime += 1.0f / 60.0f;
 		if (m_DeltaTime >= m_WaitTime) {
-			m_State = MOVE_STATE::Walk;
+			m_State = MOVE::STATE::Walk;
 			m_moveSpeed = 0.65f;
 		}
 	}
@@ -65,7 +65,7 @@ void CEnemyjamp::Move(){
 	if (m_transform.position.y < m_initPosition.y)
 	{
 		m_transform.position = m_initPosition;
-		m_State = MOVE_STATE::Wait;
+		m_State = MOVE::STATE::Wait;
 		m_moveSpeed = 0.0f;
 		m_DeltaTime = 0.0f;
 	}

@@ -49,7 +49,7 @@ void CField::Initialize(){
 		// 1頂点のバイト単位でのサイズを取得。
 		int stride = desc.Size / m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices();
 		for (int idx = 0; idx < m_pModel->GetImage_3D()->GetContainer()->MeshData.pMesh->GetNumVertices(); idx++) {
-			COURCE_BLOCK work;
+			Cource::COURCE_BLOCK work;
 			D3DXVECTOR3 HorizonVec;
 			D3DXVECTOR3 WorldPos;
 			// 頂点バッファの頂点座標はローカル座標なので、一度ワールド座標系に変換する。

@@ -41,14 +41,16 @@ public:
 	void Draw()override;
 	void DrawShadow(CCamera*)override;
 	void Draw_EM(CCamera*)override;
+	void OnTriggerStay(btCollisionObject* pCollision)override;
+
 	void SetRenderState()override{
-		m_RenderingState = RENDER_STATE::Instancing;
+		m_RenderingState = RENDER::TYPE::Instancing;
 	}
 	void SetShadowRenderState()override{
-		m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample_I;
+		m_ShadowRenderingState = RENDER::TYPE::_3D_ShadowSample_I;
 	}
 	void EM_SetRenderState()override{
-		m_EMRenderingState = RENDER_STATE::EM_Sampling_I;
+		m_EMRenderingState = RENDER::TYPE::EM_Sampling_I;
 	}
 
 	void ActivateShadowRender()override;
@@ -131,7 +133,7 @@ private:
 private:
 	D3DXVECTOR3			m_pos;			//生成される場所のポジション。
 	D3DXVECTOR3			m_posG;			//流れていく先(ゴール)のポジション。
-	vector<unique_ptr<CChocoBall>>	m_Choco;
+	vector<shared_ptr<CChocoBall>>	m_Choco;
 	float				m_interval;		//インターバル。
 	float				m_timer;		//タイマー。
 	int					m_InitPosOfCourceNo;// チョコボールが生成された場所のコースナンバー

@@ -19,8 +19,11 @@ public:
 	LPDIRECT3DCUBETEXTURE9 GetCubeTex(){
 		return m_pCubeTex;
 	}
-	void SetPos(const D3DXVECTOR3& pos) {
+	inline void SetCameraPos(const D3DXVECTOR3& pos) {
 		m_CameraPos = pos;
+	}
+	inline void SetCameraRota(const D3DXMATRIX& rot){
+		m_CameraRota = rot;
 	}
 private:
 	CRenderTarget m_RenderTarget;
@@ -30,6 +33,7 @@ private:
 	CCamera m_Cameras[HEXA];
 	bool m_isEnable;
 	D3DXVECTOR3 m_CameraPos;
+	D3DXMATRIX m_CameraRota;	// カメラを回転させる行列(今回は外部から設定)。
 };
 
 // 六面体それぞれの面を描画する際のカメラの向き。

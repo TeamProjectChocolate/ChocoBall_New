@@ -14,7 +14,7 @@ public:
 private:
 	void DrawFrame(LPD3DXFRAME);
 	void DrawMeshContainer( LPD3DXMESHCONTAINER);
-	void AnimationDraw(D3DXMESHCONTAINER_DERIVED*);
+	void AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED*);
 	void NonAnimationDraw();
 private:
 	CCamera* m_pShadowCamera;

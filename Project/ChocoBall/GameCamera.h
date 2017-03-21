@@ -14,7 +14,7 @@ public:
 	virtual void Draw()override;
 	virtual void Draw_EM(CCamera*)override;
 	D3DXMATRIX GetCameraRotation(){
-		return m_camera.GetCameraRotation();
+		return m_camera.GetRotation();
 	}
 	D3DXMATRIX GetProj(){
 		return m_camera.GetProj();
@@ -25,6 +25,13 @@ public:
 	CCamera* GetCamera(){
 		return &m_camera;
 	}
+	inline const D3DXVECTOR3& GetPos()override {
+		return m_camera.GetPos();
+	}
+	inline void SetPos(const D3DXVECTOR3& pos)override{
+		m_camera.SetPos(pos);
+	}
+protected:
 	CCamera m_camera;
 };
 

@@ -28,7 +28,7 @@ public:
 		m_StageID = id;
 	}
 
-	MOVE_STATE GetMoveState(){
+	MOVE::STATE GetMoveState(){
 		return m_State;
 	}
 
@@ -42,10 +42,10 @@ private:
 protected:
 	D3DXVECTOR3		m_initPosition;		//初期座標。
 	int m_AnimState;
-	PLAYING_STATE m_PlayingState;
+	ANIMATION::PLAYING_STATE m_PlayingState;
 	STAGE_ID m_StageID;
 	// 挙動制御関連。
-	MOVE_STATE m_State;
+	MOVE::STATE m_State;
 	float m_CurrentAngleY;
 	float m_TargetAngleY;
 	bool m_IsTurn;

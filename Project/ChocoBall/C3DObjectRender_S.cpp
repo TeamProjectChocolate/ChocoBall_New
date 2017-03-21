@@ -52,11 +52,11 @@ void C3DObjectRender_S::DrawFrameSimple(LPD3DXFRAME pFrame){
 
 void C3DObjectRender_S::DrawMeshContainerSimple(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase){
 	// ƒXƒLƒ“î•ñ‚È‚µ
-	D3DXFRAME_DERIVED* pFrame = (D3DXFRAME_DERIVED*)pFrameBase;
+	ANIMATION::D3DXFRAME_DERIVED* pFrame = (ANIMATION::D3DXFRAME_DERIVED*)pFrameBase;
 	NonAnimationDrawSimple(pFrame);
 }
 
-void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
+void C3DObjectRender_S::NonAnimationDrawSimple(ANIMATION::D3DXFRAME_DERIVED* pFrame){
 
 	D3DXMATRIX World;
 	if (pFrame != nullptr){
@@ -68,7 +68,7 @@ void C3DObjectRender_S::NonAnimationDrawSimple(D3DXFRAME_DERIVED* pFrame){
 		}
 	}
 
-	D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* container = m_pModel->GetImage_3D()->GetContainer();
 
 
 

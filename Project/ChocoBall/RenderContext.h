@@ -17,48 +17,50 @@
 #include "EM_SamplingRender.h"
 #include "EM_SamplingRender_I.h"
 #include "RenderTarget.h"
+#include "CollisionRender.h"
 
 class CCamera;
-
-typedef struct RENDER_DATA{
-	CRender* render;
-	CHAR name[MAX_FILENAME + 1];	// 識別名
-	bool IsCommon = false;	// シーン切り替え時に削除しない場合trueにする(一度しか初期化されないBloomやDofはこれをtrueにする)
-};
 
 class CRenderContext{
 	SINGLETON_DECL(CRenderContext)
 public:
+	typedef struct RENDER_DATA {
+		CRender* render = nullptr;
+		CHAR name[MAX_FILENAME + 1];	// 識別名
+		bool IsCommon = false;	// シーン切り替え時に削除しない場合trueにする(一度しか初期化されないBloomやDofはこれをtrueにする)
+	}RENDER_DATA;
 
-	CRender* SelectRender(RENDER_STATE state,LPCSTR name,bool IsCommon,CModel* pModel){
+	CRender* SelectRender(RENDER::TYPE state,LPCSTR name,bool IsCommon,CModel* pModel){
 		switch (state){
-		case RENDER_STATE::None:
+		case RENDER::TYPE::None:
 			return nullptr;
-		case RENDER_STATE::_2D:
+		case RENDER::TYPE::_2D:
 			return CreateRender<C2DRender>(state, name, IsCommon);
-		case RENDER_STATE::_3D:
+		case RENDER::TYPE::_3D:
 			return CreateRender<C3DObjectRender>(state, name, IsCommon);
-		case RENDER_STATE::_3D_Simple:
+		case RENDER::TYPE::_3D_Simple:
 			return CreateRender<C3DObjectRender_S>(state, name, IsCommon);
-		case RENDER_STATE::_3D_ShadowSample:
+		case RENDER::TYPE::_3D_ShadowSample:
 			return CreateRender<CShadowSamplingRender>(state, name, IsCommon);
-		case RENDER_STATE::_3D_ShadowSample_I:
+		case RENDER::TYPE::_3D_ShadowSample_I:
 			return CreateRender<CShadowSamplingRender_I>(state, name, IsCommon,pModel);
-		case RENDER_STATE::Bloom:
+		case RENDER::TYPE::Bloom:
 			return CreateRender<CBloomRender>(state, name, IsCommon);
-		case RENDER_STATE::Dof:
+		case RENDER::TYPE::Dof:
 			return CreateRender<CDofRender>(state, name, IsCommon);
-		case RENDER_STATE::EM:
+		case RENDER::TYPE::EM:
 			return CreateRender<CEM_Render>(state, name, IsCommon);
-		case RENDER_STATE::EM_Sampling:
+		case RENDER::TYPE::EM_Sampling:
 			return CreateRender<CEM_SamplingRender>(state, name, IsCommon);
-		case RENDER_STATE::EM_Sampling_I:
+		case RENDER::TYPE::EM_Sampling_I:
 			return CreateRender<CEM_SamplingRender_I>(state, name, IsCommon,pModel);
-		case RENDER_STATE::Instancing:
+		case RENDER::TYPE::Instancing:
 			return CreateRender<CInstancingRender>(state, name, IsCommon,pModel);
-		case RENDER_STATE::Instancing_Alpha:
+		case RENDER::TYPE::Instancing_Alpha:
 			return CreateRender<CInstancingRender>(state, name, IsCommon, pModel);
-		case RENDER_STATE::Max:
+		//case RENDER::TYPE::Collision:
+		//	return CreateRender<CCollisionRender>(state, name, IsCommon);
+		case RENDER::TYPE::Max:
 			MessageBox(nullptr, _T("そのレンダーステートはあかんでぇ～"), _T("Message"), MB_OK);
 			abort();
 		}
@@ -67,7 +69,7 @@ public:
 	// 第二引数は生成するレンダーの名前(同じRENDER_STATEかつ同じレンダーで事足りる場合は指定しなくてもよい)
 	// 第三引数はシーン切り替え時に削除するかのフラグ(削除しない場合true)
 	template<class Type>
-	Type* CreateRender(RENDER_STATE state, LPCSTR name,bool IsCommon){
+	Type* CreateRender(RENDER::TYPE state, LPCSTR name,bool IsCommon){
 		for (auto render : m_Renders[state]){
 			if (render->render != nullptr){
 				if (!strcmp(render->name, name)){
@@ -77,8 +79,11 @@ public:
 		}
 		RENDER_DATA* data = new RENDER_DATA;
 		strcpy(data->name, name);
+		if (IsCommon) {
+			CRender::test--;
+		}
 		data->IsCommon = IsCommon;
-		Type* Render = new Type;
+		CRender* Render = new Type;
 		static_cast<Type*>(Render)->Initialize();
 		data->render = Render;
 		m_Renders[state].push_back(data);
@@ -90,7 +95,7 @@ public:
 	// 第三引数はシーン切り替え時に削除するかのフラグ(削除しない場合true)
 	// 第四引数は初期化で使用するモデルの情報
 	template<class Type>
-	Type* CreateRender(RENDER_STATE state, LPCSTR name, bool IsCommon,CModel* pModel){
+	Type* CreateRender(RENDER::TYPE state, LPCSTR name, bool IsCommon,CModel* pModel){
 		for (auto render : m_Renders[state]){
 			if (render->render != nullptr){
 				if (!strcmp(render->name, name)){
@@ -101,7 +106,10 @@ public:
 		RENDER_DATA* data = new RENDER_DATA;
 		strcpy(data->name, name);
 		data->IsCommon = IsCommon;
-		Type* Render = new Type;
+		if (IsCommon) {
+			CRender::test--;
+		}
+		CRender* Render = new Type;
 		Render->SetModelData(pModel);
 		static_cast<Type*>(Render)->Initialize();
 		data->render = Render;
@@ -109,7 +117,7 @@ public:
 		return static_cast<Type*>(Render);
 	}
 
-	void Draw(RENDER_STATE);
+	void Draw(RENDER::TYPE);
 	void Draw(CRender*);
 	void CreateRenderingTerget();
 	void RenderingStart();
@@ -121,7 +129,7 @@ public:
 	void DeleteRenders();
 
 	template<class Type>
-	Type* FindRender(RENDER_STATE state, LPCSTR name){
+	Type* FindRender(RENDER::TYPE state, LPCSTR name){
 		int size = m_Renders[state].size();
 		for (int idx = 0; idx < size; idx++){
 			if (m_Renders[state][idx]){
@@ -135,7 +143,7 @@ public:
 			}
 		}
 	}
-	const vector<RENDER_DATA*>& GetRenderArray(RENDER_STATE state){
+	const vector<RENDER_DATA*>& GetRenderArray(RENDER::TYPE state){
 		return m_Renders[state];
 	}
 

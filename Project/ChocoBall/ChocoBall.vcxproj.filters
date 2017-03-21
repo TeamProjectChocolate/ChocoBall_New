@@ -439,6 +439,14 @@
     <ClInclude Include="RushAttackState.h">
       <Filter>Game\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="IsRepulsion.h" />
+    <ClInclude Include="CollisionObject.h">
+      <Filter>Game\Phisics</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionInterface.h">
+      <Filter>Game\Phisics</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -786,6 +794,14 @@
     <ClCompile Include="ShotAttackState.cpp">
       <Filter>Game\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="IsRepulsion.cpp" />
+    <ClCompile Include="CollisionObject.cpp">
+      <Filter>Game\Phisics</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionInterface.cpp">
+      <Filter>Game\Phisics</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

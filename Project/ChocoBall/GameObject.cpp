@@ -6,6 +6,10 @@
 #include "EM_SamplingRender.h"
 #include "EM_SamplingRender_I.h"
 #include "ActreLight.h"
+#include "BulletPhysics.h"
+#include "ObjectManager.h"
+#include "CollisionObject.h"
+#include "Rigidbody.h"
 
 CGameObject::~CGameObject()
 {
@@ -30,6 +34,20 @@ void CGameObject::Initialize(){
 	//}
 }
 
+// コリジョンを生成して当たり判定を開始。
+void CGameObject::ActivateCollision(const D3DXVECTOR3& offset, btCollisionShape* pShape,CollisionType Type, bool isTrigger,float mass,bool isKinematic,bool isAddWorld) {
+
+	if(isTrigger){
+		// コリジョンのみ生成。
+		m_CollisionObject.reset(new CCollisionObject);
+	}
+	else {
+		// 剛体生成。
+		m_CollisionObject.reset(new CRigidbody);
+	}
+	m_CollisionObject->InitCollision(this, m_transform, offset, pShape, Type, mass, isKinematic, isAddWorld);
+}
+
 void CGameObject::InitInstancing(int num,bool isNull){
 	if (isNull){
 		if (static_cast<CInstancingRender*>(m_pRender)->GetWorldMatrixBuffer() == nullptr){
@@ -47,6 +65,9 @@ void CGameObject::InitInstancing(int num,bool isNull){
 }
 
 void CGameObject::Update(){
+	if (m_CollisionObject.get()) {
+		m_CollisionObject->Update(&(m_transform.position), &(m_transform.angle));
+	}
 	m_pModel->Update(m_transform);
 	// 向きベクトルに回転行列のZ成分を格納。
 	D3DXMATRIX rota = m_pModel->GetRotation();

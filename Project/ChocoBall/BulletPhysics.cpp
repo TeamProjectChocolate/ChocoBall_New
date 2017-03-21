@@ -31,6 +31,8 @@ CBulletPhysics::CBulletPhysics()
 			m_collisionConfig_Dynamic.get()
 		));
 		m_dynamicWorld->setGravity(btVector3(0, -10, 0));
+		// フィルターによる衝突ペアの生成を上書き。
+		m_dynamicWorld->getPairCache()->setOverlapFilterCallback(&m_FilterCallback);
 	}
 	// コリジョンワールド作成。
 	{
@@ -38,7 +40,12 @@ CBulletPhysics::CBulletPhysics()
 		m_CollisionDispatcher.reset(new btCollisionDispatcher(m_CollisionConfig.get()));
 		m_OverlappingPairCache.reset(new btDbvtBroadphase());
 		m_CollisionWorld.reset(new btCollisionWorld(m_CollisionDispatcher.get(), m_OverlappingPairCache.get(), m_CollisionConfig.get()));
+		// フィルターによる衝突ペアの生成を上書き。
+		m_CollisionWorld->getPairCache()->setOverlapFilterCallback(&m_FilterCallback);
 	}
+
+	//// デバッグ用のレンダーを生成。
+	//m_DebugRender = SINSTANCE(CRenderContext)->SelectRender(RENDER::TYPE::Collision, _T(""), false, nullptr);
 }
 
 /*!
@@ -55,4 +62,16 @@ void CBulletPhysics::Update()
 	m_CollisionWorld->updateAabbs();
 	// ダイナミックワールド更新。
 	m_dynamicWorld->stepSimulation(1.0f / 60.0f);
+}
+
+void CBulletPhysics::Draw() {
+	//for (auto Dynamic : m_Collisions_Dynamic) {
+	//	// 物理ワールドのコリジョン描画。
+	//	btTransform btTr = Dynamic->getWorldTransform();
+
+	//}
+	//for (auto Collison : m_Collisions) {
+	//	// コリジョンワールドのコリジョン描画。
+
+	//}
 }

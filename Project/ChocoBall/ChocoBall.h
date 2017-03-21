@@ -29,7 +29,7 @@ public:
 	}
 
 	void SetRenderState()override{
-		m_RenderingState = RENDER_STATE::_3D_Simple;
+		m_RenderingState = RENDER::TYPE::_3D_Simple;
 	}
 
 	void BeginDraw();
@@ -63,7 +63,6 @@ private:
 	D3DXVECTOR3				m_Vector;			//進行方向を格納。
 	D3DXVECTOR3				m_Vector2;
 	float					m_life;
-	CRigidbody				m_Rigidbody;
 	float					m_radius;
 	D3DXVECTOR3				m_moveSpeed;		//移動速度。
 	// チョコボールを時間差で破裂。

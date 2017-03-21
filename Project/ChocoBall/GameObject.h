@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "C2DImage.h"
 #include "C3DImage.h"
+#include "CollisionType.h"
+#include "CollisionInterface.h"
 
 class CGameObject
 {
@@ -13,14 +15,29 @@ public:
 		m_ManagerNewFlg = false;
 		m_alive = false;
 		m_pRender = nullptr;
-		m_RenderingState = RENDER_STATE::None;
+		m_RenderingState = RENDER::TYPE::None;
 		strcpy(m_pRenderName, "");
 		m_Direction = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	};
 	virtual ~CGameObject();
 	virtual void OnDestroy(){};		// ObjectManagerクラスのDeleteGameObject関数が呼ばれたときに呼び出される関数
 	virtual void Initialize();
+
+	// コリジョンもしくは剛体を生成して当たり判定を開始。
+	// 引数：	モデルの原点とコリジョンの中心の差分。
+	//			外部で定義したコリジョンの形状。
+	//			コリジョンの属性(内部でBulletPhysicsのUserIndexに登録される)。
+	//			trueならば剛体を作成せず、コリジョンのみを生成する。
+	//			質量(isKinematicがtrue、もしくはisTriggerがtrueならば自動的に0.0fになる)。
+	//			オブジェクトが物理挙動を無視するか(isTriggerがfalseのときのみ、このフラグがfalseなら物理挙動する)。
+	//			生成した後この関数内でワールドに登録するか(trueで登録)。
+	void ActivateCollision(const D3DXVECTOR3&,btCollisionShape*,CollisionType,bool,float,bool,bool);
+
+	// インスタンシング描画用の初期化関数。
 	void InitInstancing(int,bool);
+
+	// 影描画用レンダー生成関数。
+	// ※使用するレンダーを変更する場合はサブクラスで上書き。
 	virtual void ActivateShadowRender(){
 		SetShadowRenderState();
 		m_pShadowRender = SINSTANCE(CRenderContext)->SelectRender(m_ShadowRenderingState, m_pRenderName, false, m_pModel);
@@ -39,10 +56,10 @@ public:
 		if (m_pModel){
 			switch (m_pModel->m_Type){
 			case MODEL_TYPE::T_2D:
-				m_RenderingState = RENDER_STATE::_2D;
+				m_RenderingState = RENDER::TYPE::_2D;
 				break;
 			case MODEL_TYPE::T_3D:
-				m_RenderingState = RENDER_STATE::_3D;
+				m_RenderingState = RENDER::TYPE::_3D;
 				break;
 			}
 		}
@@ -53,7 +70,7 @@ public:
 			case MODEL_TYPE::T_2D:
 				return;
 			case MODEL_TYPE::T_3D:
-				m_ShadowRenderingState = RENDER_STATE::_3D_ShadowSample;
+				m_ShadowRenderingState = RENDER::TYPE::_3D_ShadowSample;
 				break;
 			}
 		}
@@ -64,7 +81,7 @@ public:
 			case MODEL_TYPE::T_2D:
 				return;
 			case MODEL_TYPE::T_3D:
-				m_EMRenderingState = RENDER_STATE::EM_Sampling;
+				m_EMRenderingState = RENDER::TYPE::EM_Sampling;
 				break;
 			}
 		}
@@ -96,10 +113,10 @@ public:
 	// モデルクラスのテクニックの名前を設定
 	// (デフォルトは設定済み、独自のテクニックを使用する場合は継承先でオーバーライド！)
 	virtual inline void SetUpTechnique(){
-		if (m_RenderingState == RENDER_STATE::_3D){
+		if (m_RenderingState == RENDER::TYPE::_3D){
 			m_pRender->SetUpTechnique("Boneless");
 		}
-		else if (m_RenderingState == RENDER_STATE::_2D){
+		else if (m_RenderingState == RENDER::TYPE::_2D){
 			m_pRender->SetUpTechnique("BasicTec");
 		}
 	}
@@ -116,7 +133,34 @@ public:
 		// 専用ライトを使用することを明示する。
 		m_HasMyLight = true;
 	}
-	CModel* GetModel(){
+
+	// 物理エンジンを用いた当たり判定で、コリジョンに衝突している間呼ばれるコールバック。
+	// 引数は当たっているコリジョン。
+	// ※自身のコリジョンを物理ワールドに登録していなければ呼ばれない。
+	// ※中身の処理は継承先で実装してください。
+	virtual void OnCollisionStay(btCollisionObject* pCollision) {
+
+	}
+
+	// 物理エンジンを用いた当たり判定で、コリジョンに衝突している間呼ばれるコールバック。
+	// 引数は当たっているコリジョン。
+	// ※自身のコリジョンをコリジョンワールドに登録していなければ呼ばれない。
+	// ※中身の処理は継承先で実装してください。
+	virtual void OnTriggerStay(btCollisionObject* pCollision) {
+
+	}
+
+	virtual inline btCollisionObject* GetCollisionObject() const {
+		return m_CollisionObject->GetCollision();
+	}
+
+	virtual inline CCollisionInterface* GetCollision() const
+	{
+		return m_CollisionObject.get();
+	}
+
+	CModel* GetModel() const
+	{
 		return m_pModel;
 	}
 	void SetAlive(bool alive){
@@ -191,8 +235,8 @@ public:
 
 	// 屈折率をモデルに設定。
 	// 引数は反射タイプの列挙型。
-	inline void SetRefractive(REFRACTIVES ref) {
-		m_pModel->m_Refractive = g_RefractivesTable[ref];
+	inline void SetRefractive(FRESNEL::REFRACTIVES ref) {
+		m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[ref];
 	}
 	inline void SetAlpha(float f) {
 		m_pModel->SetAlpha(f);
@@ -206,17 +250,20 @@ protected:
 	CLight* m_pLight = nullptr;
 	CRender* m_pShadowRender;
 	CRender* m_pEMSamplingRender;
-	RENDER_STATE m_RenderingState;	// どのレンダーを使うか
-	RENDER_STATE m_ShadowRenderingState;
-	RENDER_STATE m_EMRenderingState;
+	RENDER::TYPE m_RenderingState;	// どのレンダーを使うか
+	RENDER::TYPE m_ShadowRenderingState;
+	RENDER::TYPE m_EMRenderingState;
 	float m_moveSpeed;
-	TRANSFORM m_transform;
+	SH_ENGINE::TRANSFORM m_transform;
 	CHAR m_pFileName[MAX_FILENAME + 1];	// モデルファイルの名前(継承先で指定)
 	CHAR m_pRenderName[MAX_FILENAME + 1];	// レンダーの識別名(デフォルトでは共通レンダーを使いまわすようになっている)
 // オーバーロード初期化フラグ
 // (継承先のクラスでInitialize関数のオーバーロードを使用した場合は、このフラグをそのクラス内で必ずtrueにしてください)
 	bool m_OriginalInit;
 	vector<CGameObject*> m_ChildObjects;	// 子ども。
+protected:
+	// コリジョン。
+	unique_ptr<CCollisionInterface> m_CollisionObject;
 private:
 	D3DXVECTOR3 m_Direction;
 

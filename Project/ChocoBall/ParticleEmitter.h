@@ -23,7 +23,7 @@ public:
 	static CParticleEmitter* EmitterCreate(LPCSTR EmitterName, PARTICLE_TYPE type,D3DXVECTOR3 pos,CCamera* pcamera,STAGE_ID Id,bool Emitflg,bool IsManagerGeneration){
 		CParticleEmitter* pEmitter = nullptr;
 		if (IsManagerGeneration) {
-			pEmitter = SINSTANCE(CObjectManager)->GenerationObject<CParticleEmitter>(EmitterName, PRIORTY::EMITTER, false);
+			pEmitter = SINSTANCE(CObjectManager)->GenerationObject<CParticleEmitter>(EmitterName, OBJECT::PRIORTY::EMITTER, false);
 		}
 		else {
 			pEmitter = new CParticleEmitter;

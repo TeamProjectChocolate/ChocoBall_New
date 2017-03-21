@@ -47,7 +47,7 @@ public:
 	void SetAnimationState(BOSS_ANIMATION anim) {
 		m_AnimState = anim;
 	}
-	void SetPlayingState(PLAYING_STATE ps) {
+	void SetPlayingState(ANIMATION::PLAYING_STATE ps) {
 		m_PlayingState = ps;
 	}
 	CAnimation* GetAnimation() {
@@ -62,7 +62,7 @@ public:
 		return m_States[stateNum].get();
 	}
 
-	const vector<BOSS_COURCE_BLOCK*>& GetNowCource() {
+	const vector<Cource::BOSS_COURCE_BLOCK*>& GetNowCource() {
 		return m_NowCource;
 	}
 	bool GetIsNowCourceChange() {
@@ -96,29 +96,27 @@ private:
 	CHadBar* m_pHPBar;	// HPバー。
 
 	BOSS_STATE m_State;
-	PLAYING_STATE m_PlayingState;
+	ANIMATION::PLAYING_STATE m_PlayingState;
 	BOSS_ANIMATION m_AnimState;
 
 	D3DXVECTOR3 m_size;
 
-	btVector3 m_OriginOffset;	// モデルの原点と剛体の原点のオフセット。
-	unique_ptr<btCapsuleShapeZ> m_pCapsuleCollision;	// 剛体の形状(今回はカプセル)。
-	unique_ptr<btDefaultMotionState> m_myMotionState;
-	unique_ptr<btRigidBody> m_pRigidBody;
-	// コース定義判定用のコリジョン。
-	btVector3 m_CollisionSize;
-	unique_ptr<btBoxShape> m_pBoxShape_Cource;	// コリジョンの形状(今回は箱)。
-	unique_ptr<btCollisionObject> m_pCollision;	// コリジョン。
+	float m_CapsuleRadius = 3.5f;	// コリジョンサイズ(直径)。
+	float m_CapsuleHeight = 30.0f;	// コリジョンサイズ(高さ)。
+	CCollisionObject m_CourceCollision;
+	//btVector3 m_CollisionSize;
+	//unique_ptr<btBoxShape> m_pBoxShape_Cource;	// コリジョンの形状(今回は箱)。
+	//unique_ptr<btCollisionObject> m_pCollision;	// コリジョン。
 
 	// コース定義。
 	CBossCourceDef m_CourceDef;
-	vector<BOSS_COURCE_BLOCK*> m_NowCource;
+	vector<Cource::BOSS_COURCE_BLOCK*> m_NowCource;
 	bool m_IsNowCourceChange = false;	// 接触しているコースが前回から変化したか。
 	bool m_IsUpdateCource = true;	// コースとの当たり判定を行うか。
 
 	int m_DamageCounter = 0;
 	CState* m_pCurrentState = nullptr;
-	vector<unique_ptr<CState>> m_States;	// ボスのステートすべてを格納。
+	vector<shared_ptr<CState>> m_States;	// ボスのステートすべてを格納。
 
 	vector<CDivisionWall*>* m_Walls;
 	int m_WallsIdx = 0;	// Wallsの添え字。

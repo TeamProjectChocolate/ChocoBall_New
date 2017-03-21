@@ -56,9 +56,6 @@ private:
 	D3DXVECTOR3			PlayerPos;
 	D3DXMATRIX			m_WorldMatrix;
 	D3DXMATRIX			m_InvWorld;
-	btRigidBody*		m_rigidBody;		//剛体。
-	btCollisionShape*	m_collisionShape;	//コリジョンの形状。
-	btDefaultMotionState* m_myMotionState;
 	CPlayer*			m_player;
 	float m_MaxMove;
 	float m_MaxSpeed;

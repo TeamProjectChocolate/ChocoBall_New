@@ -60,9 +60,6 @@ private:
 	D3DXMATRIX			m_WorldMatrix;
 	D3DXMATRIX			m_InvWorld;
 	CPlayer*			m_player;
-	btRigidBody*		m_rigidBody;
-	btCollisionShape*	m_collisionShape;	//コリジョンの形状。
-	btDefaultMotionState* m_myMotionState;
 	D3DXVECTOR3			StartPos;
 	D3DXVECTOR3			PlayerPos;
 	D3DXVECTOR3			m_MoveSpeed;

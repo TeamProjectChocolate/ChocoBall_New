@@ -3,6 +3,7 @@
 #include "MapTable.h"
 #include "Field.h"
 #include "ZBufferSphere.h"
+#include "Rigidbody.h"
 
 // マップに配置するオブジェクト管理クラス。
 // ※現在はボス戦用マップを構築することにのみ使用している。
@@ -25,10 +26,8 @@ public:
 	void SetPintoPos(const D3DXVECTOR3& pos)override;
 private:
 	STAGE_ID m_StageID;
-	vector<CField*> m_MapObjects;
 	CZBufferSphere* m_czbuffersphere;
+	vector<CField*> m_MapObjects;
 	//ここからbulletPhysicsの剛体を使用するために必要な変数。
-	vector<btBoxShape*>	m_groundShape;	//地面のコリジョン形状。
-	vector<btRigidBody*>		m_rigidBody;	//剛体。
-	btDefaultMotionState* m_myMotionState;
+	vector<CRigidbody*>		m_rigidBodys;	//剛体。
 };

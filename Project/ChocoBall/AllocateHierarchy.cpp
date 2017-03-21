@@ -9,10 +9,10 @@ CAllocateHierarchy::~CAllocateHierarchy(){}
 
 HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame){
 	HRESULT hr = S_OK;
-	D3DXFRAME_DERIVED* pFrame;
+	ANIMATION::D3DXFRAME_DERIVED* pFrame;
 
 	*ppNewFrame = nullptr;
-	pFrame = new D3DXFRAME_DERIVED;
+	pFrame = new ANIMATION::D3DXFRAME_DERIVED;
 	if (pFrame == nullptr){
 		hr = E_OUTOFMEMORY;
 		goto e_Exit;
@@ -65,7 +65,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 	LPD3DXMESHCONTAINER* ppNewMeshContainer){
 	
 	HRESULT hr;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = nullptr;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = nullptr;
 	unsigned int NumFaces;
 	unsigned int iMaterial;
 	unsigned int iBone, cBones;
@@ -86,12 +86,12 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		goto e_Exit;
 	}
 
-	pMeshContainer = new D3DXMESHCONTAINER_DERIVED;
+	pMeshContainer = new ANIMATION::D3DXMESHCONTAINER_DERIVED;
 	if (pMeshContainer == nullptr){
 		hr = E_OUTOFMEMORY;
 		goto e_Exit;
 	}
-	memset(pMeshContainer, 0, sizeof(D3DXMESHCONTAINER_DERIVED));
+	memset(pMeshContainer, 0, sizeof(ANIMATION::D3DXMESHCONTAINER_DERIVED));
 
 	hr = AllocateName(Name, &pMeshContainer->Name);
 	if (FAILED(hr))
@@ -224,7 +224,7 @@ e_Exit:
 	return hr;
 }
 
-HRESULT CAllocateHierarchy::GenerateSkinnedMesh(LPDIRECT3DDEVICE9 Device, D3DXMESHCONTAINER_DERIVED* pMeshContainer){
+HRESULT CAllocateHierarchy::GenerateSkinnedMesh(LPDIRECT3DDEVICE9 Device, ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer){
 	HRESULT hr = S_OK;
 	D3DCAPS9 d3dCaps;
 	Device->GetDeviceCaps(&d3dCaps);
@@ -305,7 +305,7 @@ HRESULT CAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree){
 
 HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase){
 	unsigned int iMaterial;
-	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshContainer = (ANIMATION::D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
 	SAFE_DELETE_ARRAY(pMeshContainer->Name);
 	SAFE_DELETE_ARRAY(pMeshContainer->pAdjacency);
 	SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);

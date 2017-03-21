@@ -41,7 +41,7 @@ void CCourceCamera::Initialize(){
 	m_cameraPosSpeed.x = 0.0f;
 	m_cameraPosSpeed.y = 0.0f;
 	m_cameraPosSpeed.z = 0.0f;
-	m_PrevCource = COURCE_BLOCK();
+	m_PrevCource = Cource::COURCE_BLOCK();
 	m_PrevCource.blockNo = -1;
 	m_CurrentCource.blockNo = 0;
 	m_TurnFlg = false;
@@ -51,18 +51,18 @@ void CCourceCamera::Initialize(){
 
 void CCourceCamera::Update(){
 
-	CPlayer* pl = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	CPlayer* pl = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	if (pl->IsVibration()) {
 		return;
 	}
-	if (m_GameState == GAMEEND_ID::CONTINUE){
+	if (m_GameState == GAMEEND::ID::CONTINUE){
 		
 		D3DXVECTOR3 Target = pl->GetPos();
 		Target.y += 0.1f;
 		if (m_IsTarget){
 			m_camera.SetTarget(Target);
 		}
-		COURCE_BLOCK cource = m_courceDef.FindCource(Target);
+		Cource::COURCE_BLOCK cource = m_courceDef.FindCource(Target);
 		if (cource.blockNo != -1) {
 			m_CurrentCource = cource;
 		}
@@ -97,7 +97,11 @@ void CCourceCamera::Update(){
 		else{
 			m_NowPos = m_TargetPos;
 			m_transform.position = m_NowPos;
-			m_Isintersect.CollisitionInitialize(&m_NowPos, 2.8f,CollisionType_Camera);
+			btSphereShape* shape = new btSphereShape(2.8f);
+			ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape,CollisionType::Camera, false, 0.0f, true,true);
+			//m_CollisionObject->BitMask_AllOn();
+			//m_CollisionObject->BitMask_Off(CollisionType::Map);
+			m_Isintersect.Initialize(static_cast<btRigidBody*>(m_CollisionObject->GetCollision()));
 			m_TargetViewAngle = D3DXToRadian(45.0f);
 			m_NowViewAngle = m_TargetViewAngle;
 			m_camera.SetViewAngle(m_NowViewAngle);
@@ -105,7 +109,7 @@ void CCourceCamera::Update(){
 		}
 		m_camera.SetPos(m_NowPos);
 	}
-	else if (m_GameState == GAMEEND_ID::CLEAR){
+	else if (m_GameState == GAMEEND::ID::CLEAR){
 		ClearCamera();
 	}
 	CGameCamera::Update();
@@ -185,7 +189,7 @@ void CCourceCamera::CourceTurn(D3DXVECTOR3& Dir, D3DXVECTOR3& Target, float kaku
 	float t = D3DXVec3Dot(&Dir, &Target);
 	if (fabsf(t) - 8.0f < 0.0f &&m_PrevCource.blockNo != -1){
 		//プレイヤの座標を手前のコースに射影する。
-		CPlayer* pl = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+		CPlayer* pl = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 		D3DXVECTOR3 prevCourceDir = m_PrevCource.endPosition - m_PrevCource.startPosition;
 		D3DXVec3Normalize(&prevCourceDir, &prevCourceDir);
 		Target = pl->GetPos() - m_PrevCource.startPosition;

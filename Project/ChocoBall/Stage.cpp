@@ -34,10 +34,15 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	m_pCamera->SetStageID(m_Stage_ID);
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 	m_pEnemyManager->SetStageID(m_Stage_ID);
-	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("TEST3D"));
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 	m_pPlayer->SetStageID(m_Stage_ID);
-	SINSTANCE(CObjectManager)->FindGameObject<CMapObjectManager>(_T("TESTStage3D"))->SetStageID(m_Stage_ID);
-	SINSTANCE(CRenderContext)->GetEMRender()->SetPos(EM_CameraPosArray[m_Stage_ID]);
+	SINSTANCE(CObjectManager)->FindGameObject<CMapObjectManager>(_T("MapChipManager"))->SetStageID(m_Stage_ID);
+	D3DXVECTOR3 pos = EM_CameraPosArray[m_Stage_ID];
+	if (m_Stage_ID != STAGE_ID::BOSS) {
+		pos.x *= -1.0f;
+		pos.z *= -1.0f;
+	}
+	SINSTANCE(CRenderContext)->GetEMRender()->SetCameraPos(pos);
 
 	m_pPlayer->SetAudio(pAudio);
 
@@ -54,7 +59,7 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 
 	// プレイヤーで使用するコース定義。
 	CCourceDef* cource = m_pPlayer->GetCourceDef();
-	COURCE_BLOCK block = cource->FindCource(cource->EndCource());
+	Cource::COURCE_BLOCK block = cource->FindCource(cource->EndCource());
 	D3DXVECTOR3 workVec = block.endPosition - block.startPosition;
 	D3DXVec3Normalize(&workVec, &workVec);
 	D3DXVec3Cross(&workVec, &workVec, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
@@ -65,7 +70,7 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
 
 	// レベル生成。
-	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), PRIORTY::EMITTER, false);
+	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), OBJECT::PRIORTY::EMITTER, false);
 	m_CLevelBuilder->SetIsStage(m_Stage_ID);
 	m_CLevelBuilder->Build(pAudio);
 
@@ -77,7 +82,7 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 
 	m_pAudio = pAudio;
 	m_pAudio->PlayCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽再生
-	m_GameState = GAMEEND_ID::CONTINUE;
+	m_GameState = GAMEEND::ID::CONTINUE;
 	m_isGameContinue = true;
 }
 
@@ -88,32 +93,32 @@ void CStage::Update()
 	//m_score.Update();
 	m_pCamera->SetGameState(m_GameState);
 	if (m_isGameContinue){
-		if (m_GameState == GAMEEND_ID::CLEAR)
+		if (m_GameState == GAMEEND::ID::CLEAR)
 		{
-			SINSTANCE(CObjectManager)->GenerationObject<CClearText>(_T("Clear"), PRIORTY::OBJECT2D_ALPHA, false);
+			SINSTANCE(CObjectManager)->GenerationObject<CClearText>(_T("Clear"), OBJECT::PRIORTY::OBJECT2D_ALPHA, false);
 			SINSTANCE(CObjectManager)->FindGameObject<CClearText>(_T("Clear"))->Initialize();
 			CStageManager::m_ClearNum++;
 			//m_StageClearNum->SetValue(CStageManager::m_ClearNum);
 			m_isGameContinue = false;
 			SINSTANCE(CStageManager)->SetIsContinue(true);
 		}
-		else if (m_GameState == GAMEEND_ID::OVER)
+		else if (m_GameState == GAMEEND::ID::OVER)
 		{
-			SINSTANCE(CObjectManager)->GenerationObject<CGameOver>(_T("GameOver"), PRIORTY::OBJECT2D_ALPHA, false);
+			SINSTANCE(CObjectManager)->GenerationObject<CGameOver>(_T("GameOver"), OBJECT::PRIORTY::OBJECT2D_ALPHA, false);
 			SINSTANCE(CObjectManager)->FindGameObject<CGameOver>(_T("GameOver"))->Initialize();
 			m_isGameContinue = false;
 			SINSTANCE(CStageManager)->SetIsContinue(true);
 		}
 	}
 	else{
-		if (m_GameState == GAMEEND_ID::CLEAR){
+		if (m_GameState == GAMEEND::ID::CLEAR){
 			if (SINSTANCE(CObjectManager)->FindGameObject<CClearText>(_T("Clear"))->GetIsEnd() && m_pCamera->GetIsEnd()){
 				SINSTANCE(CStageManager)->SetContinueStage(static_cast<STAGE_ID>(m_Stage_ID + 1));
 				m_pAudio->StopCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽ストップ
 				SINSTANCE(CGameManager)->ChangeScene(_T("Result"));
 			}
 		}
-		else if (m_GameState == GAMEEND_ID::OVER){
+		else if (m_GameState == GAMEEND::ID::OVER){
 			if (SINSTANCE(CObjectManager)->FindGameObject<CGameOver>(_T("GameOver"))->GetIsEnd()){
 				m_pAudio->StopCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽ストップ
 				SINSTANCE(CGameManager)->ChangeScene(_T("Result"));
@@ -136,12 +141,12 @@ void CStage::Draw()
 void CStage::ActivateObjects() {
 
 	// すべてのステージ共通のオブジェクト。
-	SINSTANCE(CObjectManager)->GenerationObject<Skybox>(_T("skybox"), PRIORTY::OBJECT3D, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CZBufferSphere>(_T("ZBufferSphere"), PRIORTY::PLAYER, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CCourceCamera>(_T("Camera"), PRIORTY::CONFIG, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CMapObjectManager>(_T("TESTStage3D"), PRIORTY::CONFIG, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CEnemyManager>(_T("EnemyManager"), PRIORTY::ENEMY, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CPlayer>(_T("TEST3D"), PRIORTY::PLAYER, false);
+	SINSTANCE(CObjectManager)->GenerationObject<Skybox>(_T("skybox"), OBJECT::PRIORTY::OBJECT3D, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CZBufferSphere>(_T("ZBufferSphere"), OBJECT::PRIORTY::PLAYER, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CCourceCamera>(_T("Camera"), OBJECT::PRIORTY::CONFIG, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CMapObjectManager>(_T("MapChipManager"), OBJECT::PRIORTY::CONFIG, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CEnemyManager>(_T("EnemyManager"), OBJECT::PRIORTY::ENEMY, false);
+	SINSTANCE(CObjectManager)->GenerationObject<CPlayer>(_T("Player"), OBJECT::PRIORTY::PLAYER, false);
 	//SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("NUMBER"), PRIORTY::OBJECT2D_ALPHA, false);
 	//SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("StageNUMBER"), PRIORTY::OBJECT2D_ALPHA, false);
 }
