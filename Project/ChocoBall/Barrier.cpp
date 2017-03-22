@@ -31,10 +31,10 @@ void CBarrier::Build(const D3DXVECTOR3& pos,float radius) {
 	m_MaxRadius = radius;
 	// 剛体生成。
 	{
-		btScalar Radius = radius * 0.5f * 0.5f;
-		ActivateCollision(Vector3::Front,new btSphereShape(Radius), Collision::Type::Boss_Barrier,Collision::FilterGroup::Barrier,false,0.0f,true,false);
-		m_CollisionObject->BitMask_AllOff();
-		m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+		//btScalar Radius = radius * 0.5f * 0.5f;
+		//ActivateCollision(Vector3::Front,new btSphereShape(Radius), Collision::Type::Boss_Barrier,Collision::FilterGroup::Barrier,false,0.0f,true,false);
+		//m_CollisionObject->BitMask_AllOff();
+		//m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 	}
 }
 
@@ -73,20 +73,20 @@ void CBarrier::Update()
 
 // バリアを切る。
 void CBarrier::OffBarrier() {
-	if (m_IsBarrierOn) {
-		m_IsBarrierOn = false;
-		m_CollisionObject->RemoveWorld();
-	}
+	//if (m_IsBarrierOn) {
+	//	m_IsBarrierOn = false;
+	//	m_CollisionObject->RemoveWorld();
+	//}
 }
 
 // バリア起動。
 void CBarrier::OnBarrier() {
-	if (!m_IsBarrierOn) {
-		m_IsBarrierOn = true;
-		SetAlive(true);
-		m_Radius = 27.0f;
-		m_transform.scale = D3DXVECTOR3(m_Radius, m_Radius, m_Radius);
-		m_pModel->SetAlpha(0.0f);
-		m_CollisionObject->AddWorld();
-	}
+	//if (!m_IsBarrierOn) {
+	//	m_IsBarrierOn = true;
+	//	SetAlive(true);
+	//	m_Radius = 27.0f;
+	//	m_transform.scale = D3DXVECTOR3(m_Radius, m_Radius, m_Radius);
+	//	m_pModel->SetAlpha(0.0f);
+	//	m_CollisionObject->AddWorld();
+	//}
 }

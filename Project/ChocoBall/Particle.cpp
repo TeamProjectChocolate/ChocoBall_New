@@ -5,6 +5,7 @@
 #include "RenderContext.h"
 #include "C2DRender.h"
 
+LPDIRECT3DVERTEXDECLARATION9 CParticle::m_VertexDecl = nullptr;
 
 CParticle::CParticle()
 {
@@ -249,7 +250,6 @@ void CParticle::SetupMatrices(){
 		}
 	}break;
 	case PARTICLE::EMIT_STATE::DEAD:
-		SINSTANCE(CObjectManager)->DeleteGameObject(this);
 		SetAlive(false);
 		break;
 	}
@@ -296,10 +296,16 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	short index[]{
 		0, 1, 2, 3
 	};
+
+	// 頂点定義作成。
+	CreateVertexDecl();
+
+	// プリミティブ作成。
 	m_Primitive.Create(
 		EType::eTriangleStrip,
 		4,
 		sizeof(PRIMITIVE::SShapeVertex_PT),
+		m_VertexDecl,
 		scShapeVertex_PT_Element,
 		vp,
 		4,

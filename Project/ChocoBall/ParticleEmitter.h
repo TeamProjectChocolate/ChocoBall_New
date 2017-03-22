@@ -29,7 +29,7 @@ public:
 			pEmitter = new CParticleEmitter;
 		}
 		pEmitter->SetCamera(pcamera);
-		pEmitter->SetEmitParameter(reinterpret_cast<SParticleEmitParameter*>(ParticleParamPT_Array[type]));
+		pEmitter->SetEmitParameter(ParticleParamPT_Array[type]);
 		pEmitter->SetEmitterName(EmitterName);
 		pEmitter->SetEmitPos(pos);
 		pEmitter->SetEmitFlg(Emitflg);

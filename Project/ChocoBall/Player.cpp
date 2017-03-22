@@ -95,6 +95,7 @@ void CPlayer::Initialize()
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Ghost);
 
+	m_IsRepulsion.Initialize(m_CollisionObject.get());
 	m_IsIntersect.Initialize(m_CollisionObject.get());
 	// あたりを無視する属性をセットしていく。
 	// テスト
@@ -249,6 +250,10 @@ void CPlayer::Update()
 		}
 		//プレイヤーの位置情報更新。
 		if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
+			// キネマティック剛体ならこちらを通る。
+			// 他のオブジェクトがプレイヤーに与える影響を処理。
+			m_IsRepulsion.Repulsion(&m_moveSpeed);
+			// プレイヤーが移動した結果コリジョンに当たっている場合の処理。
 			m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, IsJump);
 		}
 	}

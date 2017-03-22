@@ -4,6 +4,7 @@
 #include "DirectInput.h"
 #include "ActreLight.h"
 #include "islntersect.h"
+#include "IsRepulsion.h"
 #include "Turn.h"
 #include "GameManager.h"
 #include "CourceDef.h"
@@ -167,7 +168,8 @@ private:
 	bool            LockOnflag;			//ロックオンフラグ
 	EnemyBase* m_LockOnEnemy = nullptr;
 	CLockOn         m_LockOn;			//LockOnのインスタンス
-	CIsIntersect	m_IsIntersect;		//CIsIntersectのインスタンス
+	CIsRepulsion    m_IsRepulsion;		// 他のオブジェクトがプレイヤーに与える影響を処理。
+	CIsIntersect	m_IsIntersect;		// プレイヤーが移動した結果食い込んでいる場合の処理。
 	float m_VibrationInterval;			// 振動してから次の振動判定までの猶予。
 	float m_VibrationCounter;			// カウンター。
 	// ゲームオーバー制御関連。

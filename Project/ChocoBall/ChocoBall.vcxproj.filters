@@ -409,7 +409,6 @@
     <ClInclude Include="DivisionWall.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
-    <ClInclude Include="IsRepulsion.h" />
     <ClInclude Include="CollisionObject.h">
       <Filter>Game\Phisics</Filter>
     </ClInclude>
@@ -452,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="WaitState.h">
       <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="IsRepulsion.h">
+      <Filter>Game\Phisics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -767,7 +769,6 @@
     <ClCompile Include="DivisionWall.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
-    <ClCompile Include="IsRepulsion.cpp" />
     <ClCompile Include="CollisionObject.cpp">
       <Filter>Game\Phisics</Filter>
     </ClCompile>
@@ -807,6 +808,9 @@
     </ClCompile>
     <ClCompile Include="WaitState.cpp">
       <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="IsRepulsion.cpp">
+      <Filter>Game\Phisics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -55,8 +55,7 @@ void CCBManager::Update()
 		}
 		else {
 			// チョコボールの寿命が尽きていれば削除。
-			// シェアードポインタの参照カウンタを明示的に減らす。
-			(*itr).reset();
+			SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
 			itr = m_Choco.erase(itr);
 		}
 	}
@@ -66,7 +65,6 @@ void CCBManager::Update()
 	if (no != -1) {
 		if (no - m_InitPosOfCourceNo >= 5) {
 			this->NonActivate();
-			SINSTANCE(CObjectManager)->DeleteGameObject(this);
 		}
 	}
 }
@@ -100,10 +98,10 @@ void CCBManager::CreateChocoBall() {
 				Epos.x += rate;
 				Epos.z += fabsf(rate);
 				Epos.y += rate;
-				shared_ptr<CChocoBall> ptr(new CChocoBall);
-				ptr->SetStageID(m_StageID);
-				ptr->Initialize(pos, Epos);
-				m_Choco.push_back(ptr);
+				CChocoBall* choco = SINSTANCE(CObjectManager)->GenerationObject<CChocoBall>(_T("Choco"),OBJECT::PRIORTY::OBJECT3D, false);
+				choco->SetStageID(m_StageID);
+				choco->Initialize(pos, Epos);
+				m_Choco.push_back(choco);
 #ifdef NOT_INSTANCING
 				SINSTANCE(CShadowRender)->Entry(ptr.get());
 #endif
@@ -173,14 +171,11 @@ void CCBManager::Draw_EM(CCamera* camera){
 
 void CCBManager::OnTriggerStay(const btCollisionObject* pCollision) {
 	if (pCollision->getUserIndex() == static_cast<int>(Collision::Type::Player)) {
-		if (m_isFirst) {
-			// チョコボール生成開始。
-			this->Initialize();
-			this->SetAlive(true);
-			// チョコボールトリガーのコリジョンをコリジョンワールドから除外。
-			//m_CollisionObject->RemoveWorld();
-			m_isFirst = false;
-		}
+		// チョコボール生成開始。
+		this->Initialize();
+		this->SetAlive(true);
+		// チョコボールトリガーのコリジョンをコリジョンワールドから除外。
+		m_CollisionObject->RemoveWorld();
 	}
 }
 
@@ -278,6 +273,12 @@ void CCBManager::NonActivate(){
 		SINSTANCE(CShadowRender)->DeleteObjectImidieit(choco.get());
 	}
 #else
+	for (auto choco : m_Choco) {
+		// 存在するチョコボールを削除。
+		SINSTANCE(CObjectManager)->DeleteGameObject(choco);
+	}
+	m_Choco.clear();
+	// 自分を削除する。
 	SINSTANCE(CShadowRender)->DeleteObject(this);
 #endif
 	SetAlive(false);

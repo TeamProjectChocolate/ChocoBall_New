@@ -49,6 +49,7 @@ void CRenderContext::CreateRenderingTerget(){
 		EType::eTriangleStrip,
 		4,
 		sizeof(PRIMITIVE::SShapeVertex_PT),
+		nullptr,
 		scShapeVertex_PT_Element,
 		vertex,
 		4,

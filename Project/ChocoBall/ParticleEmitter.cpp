@@ -43,7 +43,9 @@ void CParticleEmitter::Update(){
 
 	list<CParticle*>::iterator itr = m_ParticleList.begin();
 	while (itr != m_ParticleList.end()){
-		if ((*itr)){
+		if (!((*itr)->GetAlive())){
+			// ¦â‘ÎÁ‚·‚ÈB
+			SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
 			itr = m_ParticleList.erase(itr);
 			m_count--;
 		}

@@ -4,6 +4,7 @@
 #include "CourceCamera.h"
 #include "Primitive.h"
 #include "Random.h"
+#include "GraphicsDevice.h"
 
 class CRandom;
 class CCourceCamera;
@@ -37,6 +38,13 @@ public:
 	void Draw()override;
 	void Draw_EM(CCamera*)override;
 	void SetupMatrices();
+	void CreateVertexDecl() {
+		if (m_VertexDecl == nullptr) {
+			// パーティクルクラスはすべて同じ頂点定義を使用するため一つでいい。
+			//頂点定義を作成。
+			(*graphicsDevice()).CreateVertexDeclaration(scShapeVertex_PT_Element, &m_VertexDecl);
+		}
+	}
 	void InitParticle(CRandom&, CCamera&, const SParticleEmitParameter*, const D3DXVECTOR3&,D3DXVECTOR3);
 	// パーティクルに力を加える関数
 	void ApplyFource(const D3DXVECTOR3& applyFource){
@@ -73,5 +81,7 @@ private:
 	float m_deltaTime;
 
 	CParticle** m_pTailParticle = nullptr;	// 最後に生成したパーティクルの入ったポインタ。
+
+	static LPDIRECT3DVERTEXDECLARATION9 m_VertexDecl;	// 頂点定義(パーティクルで使用する頂点定義はすべて同じものなので複数回定義する意味がない)。
 };
 

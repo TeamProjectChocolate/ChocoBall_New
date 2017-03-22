@@ -65,9 +65,9 @@ private:
 	void DeleteCloneSkeleton(LPD3DXFRAME frame);
 	void InnerDestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase);
 private:
-	LPD3DXFRAME m_frameRoot = NULL;		// フレームルート
-	ID3DXAnimationController* m_pAnimController;	// アニメーションコントローラ
-	ANIMATION::D3DXMESHCONTAINER_DERIVED* m_pMeshContainer;
-	bool m_isClone;	// このモデルデータはクローンか。
+	LPD3DXFRAME m_frameRoot = nullptr;		// フレームルート
+	ID3DXAnimationController* m_pAnimController = nullptr;	// アニメーションコントローラ
+	ANIMATION::D3DXMESHCONTAINER_DERIVED* m_pMeshContainer = nullptr;
+	bool m_isClone = false;	// このモデルデータはクローンか。
 };
 

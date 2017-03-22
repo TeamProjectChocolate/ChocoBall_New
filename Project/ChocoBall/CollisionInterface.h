@@ -141,10 +141,20 @@ public:
 	inline void SetPos(const D3DXVECTOR3& pos) {
 		m_collisionObject->getWorldTransform().setOrigin(btVector3(pos.x, pos.y, pos.z));
 	}
+	// コリジョン本体の位置情報(中心点)返却。
+	inline const D3DXVECTOR3& GetPos() const {
+		D3DXVECTOR3 pos = m_collisionObject->getWorldTransform().getOrigin();
+		return pos;
+	}
 
 	// コリジョン形状本体にコリジョンサイズ設定。
 	inline void SetScale(const D3DXVECTOR3& scale) {
 		m_collisionObject->getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
+	}
+	// コリジョン形状本体にコリジョンサイズ返却(半分)。
+	inline const D3DXVECTOR3& GetScale()const {
+		D3DXVECTOR3 scale = m_collisionObject->getCollisionShape()->getLocalScaling();
+		return scale;
 	}
 
 protected:
@@ -156,10 +166,6 @@ protected:
 			btBroadphaseProxy* Proxy = m_collisionObject->getBroadphaseHandle();
 			if (Proxy) {
 				// ブロードフェーズハンドルが生成されている。
-				if (m_MyType == Collision::Type::Map || m_MyType == Collision::Type::Player) {
-					OutputDebugString("マップもしくはプレイヤーのレイヤーマスク設定。");
-				}
-				// キャラクター剛体とキネマティック剛体もあたりを取る。
 				Proxy->m_collisionFilterMask = m_LayerMask;
 			}
 		}
@@ -174,9 +180,6 @@ protected:
 			btBroadphaseProxy* Proxy = m_collisionObject->getBroadphaseHandle();
 			if (Proxy) {
 				// ブロードフェーズハンドルが生成されている。
-				if (m_MyType == Collision::Type::Map || m_MyType == Collision::Type::Player) {
-					OutputDebugString("マップもしくはプレイヤーのフィルターグループ設定。");
-				}
 				Proxy->m_collisionFilterGroup = m_FilterGroup;
 			}
 		}

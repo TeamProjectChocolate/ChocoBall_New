@@ -133,7 +133,7 @@ private:
 private:
 	D3DXVECTOR3			m_pos;			//生成される場所のポジション。
 	D3DXVECTOR3			m_posG;			//流れていく先(ゴール)のポジション。
-	vector<shared_ptr<CChocoBall>>	m_Choco;
+	vector<CChocoBall*>	m_Choco;
 	float				m_interval;		//インターバル。
 	float				m_timer;		//タイマー。
 	int					m_InitPosOfCourceNo;// チョコボールが生成された場所のコースナンバー
@@ -146,6 +146,4 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	CEnemy_Boss* m_pBoss = nullptr;
 	bool m_IsBossDamage = true;	// ボスにダメージを与えられるかのフラグ。
-
-	bool m_isFirst = true;
  };

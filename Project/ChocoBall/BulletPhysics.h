@@ -11,8 +11,8 @@ namespace {
 		// return true when pairs need collision
 		virtual bool	needBroadphaseCollision(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1) const
 		{
-			if((proxy0->m_collisionFilterGroup == 128 && proxy1->m_collisionFilterGroup == 64) || (proxy0->m_collisionFilterGroup == 64 && proxy1->m_collisionFilterGroup == 128)){
-				OutputDebugString("プレイヤーかマップ");
+			if(((proxy0->m_collisionFilterGroup == 32768 || proxy0->m_collisionFilterGroup == -32768) && (proxy1->m_collisionFilterGroup == 8192)) || ((proxy1->m_collisionFilterGroup == 32768 || proxy1->m_collisionFilterGroup == -32768) && (proxy0->m_collisionFilterGroup == 8192))){
+				OutputDebugString("バリア");
 			}
 			bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
 			collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
@@ -182,6 +182,12 @@ public:
 		btCollisionWorld::ContactResultCallback& resultCallback
 	)
 	{
+		// 引数で指定されたコリジョンオブジェクトのフィルターグループとフィルターマスクをコールバックに設定。
+		// ※これをしないとコールバックに最初から設定されているデフォルトの値が渡される。
+		{
+			resultCallback.m_collisionFilterGroup = Collision->getBroadphaseHandle()->m_collisionFilterGroup;
+			resultCallback.m_collisionFilterMask = Collision->getBroadphaseHandle()->m_collisionFilterMask;
+		}
 		m_dynamicWorld->contactTest(const_cast<btCollisionObject*>(Collision), resultCallback);
 	}
 
@@ -277,14 +283,14 @@ namespace {
 		}
 	};
 
-	// コリジョンワールド。
+	// ワールドの何かと当たったか。
 	struct ContactResult : public btCollisionWorld::ContactResultCallback {
 		ContactResult()
 		{
 			isHit = false;
 		}
 		
-		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
+		D3DXVECTOR3 hitPoint = Vector3::Zero;
 
 		// 何かのコリジョンに当たったか。
 		bool isHit = false;
@@ -324,6 +330,9 @@ namespace {
 			}
 
 			isHit = true;
+			// 衝突点を格納。
+			btVector3 point = cp.m_positionWorldOnB;
+			hitPoint = D3DXVECTOR3(point.getX(), point.getY(), point.getZ());
 			// コリジョンオブジェクト2の属性。
 			hitCollisionType = static_cast<Collision::Type>(colObj1Wrap->getCollisionObject()->getUserIndex());
 			return 0.0f;

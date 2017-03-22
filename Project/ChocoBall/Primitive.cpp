@@ -18,9 +18,11 @@ CPrimitive::~CPrimitive()
 	Release();
 }
 
-void CPrimitive::Create(EType primitiveType,
+void CPrimitive::Create(
+	EType primitiveType,
 	int numVertex,
 	int vertexStride,
+	LPDIRECT3DVERTEXDECLARATION9 decl,
 	const D3DVERTEXELEMENT9* vertexLayout,
 	void* pSrcVertexBuffer,
 	int numIndex,
@@ -35,9 +37,10 @@ void CPrimitive::Create(EType primitiveType,
 	m_numVertex = numVertex;
 	m_vertexStride = vertexStride;
 	m_numIndex = numIndex;
-	Release();
-	VertexBufferCreate(numVertex, vertexStride, vertexLayout, pSrcVertexBuffer);
+	//Release();
+	VertexBufferCreate(numVertex, vertexStride, pSrcVertexBuffer);
 	IndexBufferCreate(numIndex, indexFormat, pSrcIndexBuffer);
+	VertexDeclCreate(decl,vertexLayout);
 	if (primitiveType == eTriangleList){
 		m_numPolygon = numIndex / 3;
 		m_d3dPrimitiveType = D3DPT_TRIANGLELIST;
@@ -48,12 +51,16 @@ void CPrimitive::Create(EType primitiveType,
 	}
 }
 
-void CPrimitive::Release(){
-	SAFE_RELEASE(m_vertexBuffer);
-	SAFE_RELEASE(m_indexBuffer);
+void CPrimitive::Release() {
+	if (m_vertexBuffer) {
+		m_vertexBuffer->Release();
+	}
+	if (m_indexBuffer) {
+		m_indexBuffer->Release();
+	}
 }
 
-void CPrimitive::VertexBufferCreate(int numVertex, int stride, const D3DVERTEXELEMENT9* vertexLayout, const void* pSrcVertexBuffer){
+void CPrimitive::VertexBufferCreate(int numVertex, int stride,const void* pSrcVertexBuffer){
 	LPDIRECT3DVERTEXBUFFER9 pVB;
 	int l_numVertex = numVertex;
 	int l_stride = stride;
@@ -72,9 +79,6 @@ void CPrimitive::VertexBufferCreate(int numVertex, int stride, const D3DVERTEXEL
 		pVB->Unlock();
 	}
 	m_vertexBuffer = pVB;
-	//頂点定義を作成。
-	d3dDevice->CreateVertexDeclaration(vertexLayout, &m_pVertexDecl);
-
 }
 
 void CPrimitive::IndexBufferCreate(int numIndex, D3DFORMAT format, const void* pSrcIndexBuffer){
@@ -110,4 +114,14 @@ void CPrimitive::IndexBufferCreate(int numIndex, D3DFORMAT format, const void* p
 		pIB->Unlock();
 	}
 	m_indexBuffer = pIB;
+}
+
+void CPrimitive::VertexDeclCreate(LPDIRECT3DVERTEXDECLARATION9 decl, const D3DVERTEXELEMENT9* element) {
+	// 頂点定義が渡されていなければ受け取った値で頂点定義作成。
+	if (decl == nullptr) {
+		(*graphicsDevice()).CreateVertexDeclaration(element, &m_pVertexDecl);
+	}
+	else {
+		m_pVertexDecl = decl;
+	}
 }

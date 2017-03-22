@@ -55,7 +55,7 @@ public:
 		T* Object = new T;
 		Object->ActiveManagerNewFlg();	// ObjectManagerクラス内でnewしたため、フラグをtrueにする
 		Object->SetCommon(common);
-		PRIORTY priorty = OBJECT::PRIORTY::MAX_PRIORTY;
+		OBJECT::PRIORTY priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 		this->Add(Object,ObjectName ,priorty);
 		return Object;
 	}

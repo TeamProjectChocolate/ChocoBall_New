@@ -48,15 +48,22 @@ void C3DImage::Initialize(){
 
 void C3DImage::SetImage(){
 	CSkinModelData* pModel = SINSTANCE(CImageManager)->Find3DImage(m_pFileName);
-	if (pModel){
-		CSkinModelData* NewModelData = new CSkinModelData;
-		NewModelData->CloneModelData(*pModel, &m_animation);
-		m_pData = new CSkinModelData;
-		m_pData = NewModelData;
-		SINSTANCE(CImageManager)->Push_CloneModelData(NewModelData);
-		//if (m_pImage->pModel->GetAnimationController() != nullptr){
-		//	m_animation.Initialize(m_pImage->pModel->GetAnimationController());
-		//}
+	if (pModel) {
+		if (pModel->GetAnimationController()) {
+			// ボーン構造がある場合はこちら。
+			CSkinModelData* NewModelData = new CSkinModelData;
+			NewModelData->CloneModelData(*pModel, &m_animation);
+			m_pData = new CSkinModelData;
+			m_pData = NewModelData;
+			SINSTANCE(CImageManager)->Push_CloneModelData(NewModelData);
+			//if (m_pImage->pModel->GetAnimationController() != nullptr){
+			//	m_animation.Initialize(m_pImage->pModel->GetAnimationController());
+			//}
+		}
+		else {
+			// ボーン構造がない場合。
+			this->m_pData = pModel;
+		}
 	}
 	else{
 		LoadXFile();
