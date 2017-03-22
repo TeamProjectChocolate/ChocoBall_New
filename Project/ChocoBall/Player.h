@@ -43,8 +43,8 @@ public:
 		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
 	}
 
-	void OnTriggerStay(btCollisionObject* pCollision)override;
-	void OnCollisionStay(btCollisionObject* pCollision)override;
+	void OnTriggerStay(const btCollisionObject* pCollision)override;
+	void OnCollisionStay(const btCollisionObject* pCollision)override;
 	
 	// チョコボールとの当たりのコールバック関数。
 	void ChocoHit();

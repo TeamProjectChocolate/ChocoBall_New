@@ -95,7 +95,7 @@ public:
 		m_Direction = dir;
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
-				m_blocks[row][col].SetCollisionType(CollisionType::AttackWall);
+				m_blocks[row][col].SetCollisionType(Collision::Type::AttackWall);
 			}
 		}
 	}

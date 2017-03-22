@@ -143,7 +143,7 @@ void CStage::ActivateObjects() {
 	// すべてのステージ共通のオブジェクト。
 	SINSTANCE(CObjectManager)->GenerationObject<Skybox>(_T("skybox"), OBJECT::PRIORTY::OBJECT3D, false);
 	SINSTANCE(CObjectManager)->GenerationObject<CZBufferSphere>(_T("ZBufferSphere"), OBJECT::PRIORTY::PLAYER, false);
-	SINSTANCE(CObjectManager)->GenerationObject<CBulletPhysics>(_T("BulletPhysics"), OBJECT::PRIORTY::CONFIG, false);
+	//SINSTANCE(CObjectManager)->GenerationObject<CBulletPhysics>(_T("BulletPhysics"), OBJECT::PRIORTY::CONFIG, false);
 	SINSTANCE(CObjectManager)->GenerationObject<CCourceCamera>(_T("Camera"), OBJECT::PRIORTY::CONFIG, false);
 	SINSTANCE(CObjectManager)->GenerationObject<CMapObjectManager>(_T("MapChipManager"), OBJECT::PRIORTY::CONFIG, false);
 	SINSTANCE(CObjectManager)->GenerationObject<CEnemyManager>(_T("EnemyManager"), OBJECT::PRIORTY::ENEMY, false);

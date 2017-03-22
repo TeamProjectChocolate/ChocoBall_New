@@ -35,7 +35,7 @@ void CGameObject::Initialize(){
 }
 
 // コリジョンを生成して当たり判定を開始。
-void CGameObject::ActivateCollision(const D3DXVECTOR3& offset, btCollisionShape* pShape,CollisionType Type, bool isTrigger,float mass,bool isKinematic,bool isAddWorld) {
+void CGameObject::ActivateCollision(const D3DXVECTOR3& offset, btCollisionShape* pShape,Collision::Type Type,Collision::FilterGroup group, bool isTrigger,float mass,bool isKinematic,bool isAddWorld) {
 
 	if(isTrigger){
 		// コリジョンのみ生成。
@@ -45,7 +45,7 @@ void CGameObject::ActivateCollision(const D3DXVECTOR3& offset, btCollisionShape*
 		// 剛体生成。
 		m_CollisionObject.reset(new CRigidbody);
 	}
-	m_CollisionObject->InitCollision(this, m_transform, offset, pShape, Type, mass, isKinematic, isAddWorld);
+	m_CollisionObject->InitCollision(this, m_transform, offset, pShape, Type, group, mass, isKinematic, isAddWorld);
 }
 
 void CGameObject::InitInstancing(int num,bool isNull){

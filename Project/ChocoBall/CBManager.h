@@ -41,7 +41,7 @@ public:
 	void Draw()override;
 	void DrawShadow(CCamera*)override;
 	void Draw_EM(CCamera*)override;
-	void OnTriggerStay(btCollisionObject* pCollision)override;
+	void OnTriggerStay(const btCollisionObject* pCollision)override;
 
 	void SetRenderState()override{
 		m_RenderingState = RENDER::TYPE::Instancing;
@@ -146,4 +146,6 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	CEnemy_Boss* m_pBoss = nullptr;
 	bool m_IsBossDamage = true;	// ボスにダメージを与えられるかのフラグ。
+
+	bool m_isFirst = true;
  };

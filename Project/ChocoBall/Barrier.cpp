@@ -27,14 +27,14 @@ void CBarrier::Initialize()
 
 void CBarrier::Build(const D3DXVECTOR3& pos,float radius) {
 	m_transform.position = pos;
-	m_transform.scale = D3DXVECTOR3(0.0f,0.0f,0.0f);
+	m_transform.scale = Vector3::Zero;
 	m_MaxRadius = radius;
 	// „‘Ì¶¬B
 	{
 		btScalar Radius = radius * 0.5f * 0.5f;
-		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 1.0f),new btSphereShape(Radius), CollisionType::Boss_Barrier,false,0.0f,true,false);
-		m_CollisionObject->BitMask_AllOn();
-		m_CollisionObject->BitMask_Off(CollisionType::Chocoball);
+		ActivateCollision(Vector3::Front,new btSphereShape(Radius), Collision::Type::Boss_Barrier,Collision::FilterGroup::Barrier,false,0.0f,true,false);
+		m_CollisionObject->BitMask_AllOff();
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 	}
 }
 

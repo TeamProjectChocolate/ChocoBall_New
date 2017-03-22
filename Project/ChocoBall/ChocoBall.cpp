@@ -21,15 +21,14 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	btSphereShape* Shape = new btSphereShape(0.3f);
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Chocoball, false, 1.0f, false,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Chocoball, Collision::FilterGroup::Chocoball,false, 1.0f, false,true);
 	m_CollisionObject->BitMask_AllOff();
-	m_CollisionObject->BitMask_On(CollisionType::Player);
-	m_CollisionObject->BitMask_On(CollisionType::Map);
-	m_CollisionObject->BitMask_On(CollisionType::Wall);
-	m_CollisionObject->BitMask_On(CollisionType::Floor);
-	m_CollisionObject->BitMask_On(CollisionType::Boss);
-	m_CollisionObject->BitMask_On(CollisionType::Boss_Barrier);
-	m_CollisionObject->BitMask_On(CollisionType::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Barrier);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 
 	m_moveSpeed.x = 0.05f;
 	m_moveSpeed.z = 0.05f;

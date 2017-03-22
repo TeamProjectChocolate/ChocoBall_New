@@ -171,13 +171,16 @@ void CCBManager::Draw_EM(CCamera* camera){
 #endif
 }
 
-void CCBManager::OnTriggerStay(btCollisionObject* pCollision) {
-	if (pCollision->getUserIndex() == static_cast<int>(CollisionType::Player)) {
-		// チョコボール生成開始。
-		this->Initialize();
-		this->SetAlive(true);
-		// チョコボールトリガーのコリジョンをコリジョンワールドから除外。
-		m_CollisionObject->RemoveWorld();
+void CCBManager::OnTriggerStay(const btCollisionObject* pCollision) {
+	if (pCollision->getUserIndex() == static_cast<int>(Collision::Type::Player)) {
+		if (m_isFirst) {
+			// チョコボール生成開始。
+			this->Initialize();
+			this->SetAlive(true);
+			// チョコボールトリガーのコリジョンをコリジョンワールドから除外。
+			//m_CollisionObject->RemoveWorld();
+			m_isFirst = false;
+		}
 	}
 }
 

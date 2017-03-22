@@ -24,7 +24,12 @@ void Bullet::Initialize()
 	m_moveSpeed.z = 0.0f;
 	m_moveSpeed.y = 0.0f;
 	this->Build();
-	//m_IsIntersect.Initialize(&m_transform.position, m_radius,CollisionType_Bullet);
+
+	float mass = 0.0f;
+	ActivateCollision(Vector3::Zero, new btSphereShape(m_radius), Collision::Type::Bullet, Collision::FilterGroup::Chocoball, false, mass, true, true);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
 }
 
 void Bullet::Update()
@@ -34,7 +39,6 @@ void Bullet::Update()
 	m_transform.position.y = m_transform.position.y + m_dir.y*m_Speed;
 	m_transform.position.z = m_transform.position.z + m_dir.z*m_Speed;
 
-	//m_IsIntersect.Intersect2(&m_transform.position, &m_moveSpeed);
 
 	float length = D3DXVec3Length(&D3DXVECTOR3(m_transform.position - m_StartPos));
 	if (length >= m_Range) {

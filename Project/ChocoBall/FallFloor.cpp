@@ -14,11 +14,11 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 	m_transform.scale = scale;
 	m_transform.angle = rot;
 	m_MaxSpeed = 0.1f;
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.5f * scale.z * 0.5f)), CollisionType::Floor, false, 0.0f, true,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.5f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
 	m_CollisionObject->BitMask_AllOff();
-	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
-	m_CollisionObject->BitMask_On(CollisionType::Player);
-	m_CollisionObject->BitMask_On(CollisionType::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
 
 	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 

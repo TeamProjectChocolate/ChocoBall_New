@@ -29,7 +29,8 @@ void CCollisionInterface::InitCollision(
 	const SH_ENGINE::TRANSFORM& Transform,
 	const D3DXVECTOR3& offset,
 	btCollisionShape* pShape,
-	CollisionType Type,
+	Collision::Type Type,
+	Collision::FilterGroup group,
 	float mass,
 	bool flg,
 	bool isAddWorld)
@@ -39,10 +40,10 @@ void CCollisionInterface::InitCollision(
 	//ここで剛体の形状を決定。
 	m_collisionShape.reset(pShape);
 
-	// コリジョンの属性を属性形式で保存。
-	SetMyType(Type);
-	// bit形式で保存。
-	SetFilterGroup(TypeToBitType(Type));
+	// コリジョンの属性保存。
+	SetCollisionType(Type);
+	// フィルターグループ保存。
+	SetFilterGroup(group);
 	// デフォルトではすべての属性のコリジョンと当たり判定を取る。
 	// ※ただしすべてのものと当たり判定を行うと重いため、状況に応じて外部からマスクを設定してください。
 	this->BitMask_AllOn();

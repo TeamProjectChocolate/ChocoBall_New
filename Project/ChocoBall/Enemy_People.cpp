@@ -29,14 +29,13 @@ void CEnemy_People::Initialize() {
 
 	btSphereShape* shape = new btSphereShape(1.0f);
 	float mass = 1.0f;
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, CollisionType::Enemy, false, mass, false, false);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, Collision::Type::Enemy,Collision::FilterGroup::Enemy, false, mass, false, false);
 	m_CollisionObject->BitMask_AllOff();
-	m_CollisionObject->BitMask_On(CollisionType::Boss);
-	m_CollisionObject->BitMask_On(CollisionType::Map);
-	m_CollisionObject->BitMask_On(CollisionType::Wall);
-	m_CollisionObject->BitMask_On(CollisionType::Floor);
-	m_CollisionObject->BitMask_On(CollisionType::Player);
-	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 
 	//第一引数は質量、第二引数は回転のしやすさ。
 	static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
@@ -89,26 +88,13 @@ void CEnemy_People::HitReaction(D3DXVECTOR3 Dir) {
 		float Power = 1000.0f;
 		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir + (Vector3::Up * Power));//チョコボールに当たって吹っ飛ぶ力を設定
 		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+		// キネマティック解除。
+		static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
 	}
 }
 
 void CEnemy_People::RollingEnemy()
 {
-	btRigidBody* rb = m_IsIntersect.GetRigidBody();//エネミーの剛体を取得
-
-												   //物理エンジンで計算した移動をエネミーに反映
-	btVector3 pos = rb->getWorldTransform().getOrigin();
-	m_transform.position.x = pos.x();
-	m_transform.position.y = pos.y();
-	m_transform.position.z = pos.z();
-
-	//物理エンジンで計算した回転をエネミーに反映
-	btQuaternion rot = rb->getWorldTransform().getRotation();
-	m_transform.angle.x = rot.x();
-	m_transform.angle.y = rot.y();
-	m_transform.angle.z = rot.z();
-	m_transform.angle.w = rot.w();
-
 	//死亡までの待機時間の設定
 	m_deadTimer += 1.0 / 60.0f;
 	if (m_deadTimer >= 2.0f) {

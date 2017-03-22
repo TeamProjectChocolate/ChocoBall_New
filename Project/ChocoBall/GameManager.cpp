@@ -44,8 +44,8 @@ void CGameManager::SetNextScene(){
 	if (!strcmp(m_NowSceneName, m_NextSceneName)){
 		return;
 	}
-	// 一番最初に物理ワールドを削除。
-	SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics")));
+	//// 一番最初に物理ワールドを削除。
+	//SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics")));
 
 	SINSTANCE(CShadowRender)->CleanManager();
 	SINSTANCE(CObjectManager)->CleanManager();

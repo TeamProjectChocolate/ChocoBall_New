@@ -99,7 +99,7 @@ struct ContactResult : public btCollisionWorld::ContactResultCallback
 	// 何かのコリジョンに当たったか。
 	bool isHit = false;
 	// 当たったコリジョンのタイプを格納。
-	CollisionType hitCollisionType;
+	Collision::Type hitCollisionType;
 	// 衝突点。
 	D3DXVECTOR3 hitPos;
 	// 押し戻す向き。
@@ -150,7 +150,7 @@ struct ContactResult : public btCollisionWorld::ContactResultCallback
 		Length = D3DXVec3Length(&Direction);
 		D3DXVec3Normalize(&Direction, &Direction);
 
-		hitCollisionType = static_cast<CollisionType>(colObj1Wrap->getCollisionObject()->getUserIndex());
+		hitCollisionType = static_cast<Collision::Type>(colObj1Wrap->getCollisionObject()->getUserIndex());
 
 		if (isFirstCallback) {
 			// 一度の当たり判定で一度しかこの処理を行わない。

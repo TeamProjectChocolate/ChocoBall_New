@@ -10,7 +10,7 @@ CIsIntersect::CIsIntersect()
 {
 	m_isHitGround = false;
 	m_Jumpflag = false;
-	for (int idx = 0; idx < static_cast<int>(CollisionType::Max); idx++) {
+	for (int idx = 0; idx < static_cast<int>(Collision::Type::Max); idx++) {
 		m_MaskCollisionTypes.push_back(false);
 	}
 }
@@ -21,9 +21,9 @@ CIsIntersect::~CIsIntersect()
 }
 
 //剛体(当たり判定のある物体)の初期化
-void CIsIntersect::Initialize(btRigidBody* Rigidbody)
+void CIsIntersect::Initialize(CCollisionInterface* Collision)
 {
-	m_rigidBody = Rigidbody;
+	m_CollisionObject = Collision;
 }
 
 //物理エンジンを使った当たり判定処理&ジャンプ処理
@@ -50,12 +50,12 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 		end.setIdentity();
 		start.setOrigin(btVector3(position->x, position->y, position->z));
 		D3DXVECTOR3 newPos;
-		SweepResult_Collision callback(static_cast<CGameObject*>(m_rigidBody->getUserPointer()));
+		SweepResult_Collision callback(static_cast<CGameObject*>(m_CollisionObject->GetUserPointer()));
 		callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
 		if (D3DXVec3Length(&addPos) > 0.0001f) {
 			newPos = (*position + addPos);
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 		}
 	}
 	// 物理ワールドでの当たり判定。
@@ -77,11 +77,11 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 					newPos = (*position + addPosXZ);
 					end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
 					// 衝突した場合のコールバックを定義。
-					SweepResult_XZ callback(static_cast<CGameObject*>(m_rigidBody->getUserPointer()), m_isFirstCallback);
+					SweepResult_XZ callback(static_cast<CGameObject*>(m_CollisionObject->GetUserPointer()), m_isFirstCallback);
 					// 無視する当たりの属性を設定。
 					callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
 					// 生成した情報で当たり判定。
-					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
+					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 					if (callback.isHit) {
 						//当たった。
 						//壁。
@@ -95,7 +95,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 						D3DXVec3Normalize(&t, &t);
 						//D3DXVec3Normalize(&t, &addPos);
 						//半径分押し戻す。
-						float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+						float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
 						t *= radius;
 						addPos += t;
 						//続いて壁に沿って滑らせる。
@@ -133,7 +133,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 				start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
 #endif
 				D3DXVECTOR3 endPos;
-				SweepResult_Y callback(static_cast<CGameObject*>(m_rigidBody->getUserPointer()), m_isFirstCallback);
+				SweepResult_Y callback(static_cast<CGameObject*>(m_CollisionObject->GetUserPointer()), m_isFirstCallback);
 				callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
 
 				//D3DXVECTOR3 pos = m_rigidBody->getWorldTransform().getOrigin();
@@ -169,7 +169,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 				}
 				end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 
-				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
+				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 				if (callback.isHit) {
 					//当たった。
 					//地面。
@@ -186,7 +186,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 					D3DXVECTOR3 v = Circle - callback.hitPos;
 					x = D3DXVec3Length(&v);//物体の角とプレイヤーの中心との距離が求まる。
 
-					float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+					float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
 					//offset = radius - x;
 					offset = sqrt(radius * radius - x * x);//yの平方根を求める。
 
@@ -205,9 +205,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 
 	*position += addPos;
 
-	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
-
-	m_rigidBody->getWorldTransform().setOrigin(btVector3(position->x, position->y, position->z));
+	m_CollisionObject->SetPos(*position);
 }
 
 void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
@@ -234,7 +232,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			newPos.y += addPos.y + m_radius;
 #endif
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 		}
 		if (callback.isHit) {
 			//当たった。
@@ -249,7 +247,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			D3DXVECTOR3 v = Circle - callback.hitPos;
 			x = D3DXVec3Length(&v);//物体の角とプレイヤーの間の横幅の距離が求まる。
 
-			float radius = m_rigidBody->getCollisionShape()->getLocalScaling().getX();
+			float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
 			offset = sqrt(radius * radius - x * x);//yの平方根を求める。
 
 			moveSpeed->y = 0.0f;
@@ -263,7 +261,5 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 
 	*position += addPos;
 
-	const btVector3& rPos = m_rigidBody->getWorldTransform().getOrigin();
-
-	m_rigidBody->getWorldTransform().setOrigin(btVector3(position->x, position->y, position->z));
+	m_CollisionObject->SetPos(*position);
 }

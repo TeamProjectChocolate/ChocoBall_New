@@ -31,7 +31,7 @@ public:
 	//			質量(isKinematicがtrue、もしくはisTriggerがtrueならば自動的に0.0fになる)。
 	//			オブジェクトが物理挙動を無視するか(isTriggerがfalseのときのみ、このフラグがfalseなら物理挙動する)。
 	//			生成した後この関数内でワールドに登録するか(trueで登録)。
-	void ActivateCollision(const D3DXVECTOR3&,btCollisionShape*,CollisionType,bool,float,bool,bool);
+	void ActivateCollision(const D3DXVECTOR3&,btCollisionShape*,Collision::Type,Collision::FilterGroup,bool,float,bool,bool);
 
 	// インスタンシング描画用の初期化関数。
 	void InitInstancing(int,bool);
@@ -138,7 +138,7 @@ public:
 	// 引数は当たっているコリジョン。
 	// ※自身のコリジョンを物理ワールドに登録していなければ呼ばれない。
 	// ※中身の処理は継承先で実装してください。
-	virtual void OnCollisionStay(btCollisionObject* pCollision) {
+	virtual void OnCollisionStay(const btCollisionObject* pCollision) {
 
 	}
 
@@ -146,11 +146,11 @@ public:
 	// 引数は当たっているコリジョン。
 	// ※自身のコリジョンをコリジョンワールドに登録していなければ呼ばれない。
 	// ※中身の処理は継承先で実装してください。
-	virtual void OnTriggerStay(btCollisionObject* pCollision) {
+	virtual void OnTriggerStay(const btCollisionObject* pCollision) {
 
 	}
 
-	virtual inline btCollisionObject* GetCollisionObject() const {
+	virtual inline const btCollisionObject* GetCollisionObject() const {
 		return m_CollisionObject->GetCollision();
 	}
 

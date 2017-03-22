@@ -140,10 +140,10 @@ void CBossCourceDef::Initialize() {
 			// ボックスコリジョンを定義(中心から見たサイズなので半分)。
 			btVector3 size = btVector3(CourceDef[num].Range.x / 2, CourceDef[num].Range.y / 2, CourceDef[num].Range.z / 2);
 			// 上記で決定した値でボックスコリジョン作成。
-			pBossBlockCollision->CollisionObject->InitCollision(nullptr, tr, D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(size),CollisionType::Boss_Cource,0.0f,true,true);
+			pBossBlockCollision->CollisionObject->InitCollision(nullptr, tr, D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(size),Collision::Type::Boss_Cource,Collision::FilterGroup::Boss_Cource,0.0f,true,true);
 			// コース判定用のボスのコリジョンとのみ衝突判定を行う。
-			pBossBlockCollision->CollisionObject->BitMask_AllOn();
-			pBossBlockCollision->CollisionObject->BitMask_Off(CollisionType::Boss_Gost);
+			pBossBlockCollision->CollisionObject->BitMask_AllOff();
+			pBossBlockCollision->CollisionObject->BitMask_On(Collision::FilterGroup::Boss_Ghost);
 			// フラグ初期化。
 			pBossBlockCollision->IsHit = false;
 			// コースコリジョン配列に追加。
@@ -153,13 +153,13 @@ void CBossCourceDef::Initialize() {
 	}
 }
 
-bool CBossCourceDef::FindCource(btCollisionObject* CollisionObject, vector<Cource::BOSS_COURCE_BLOCK*>* CourceBlocks) {
+bool CBossCourceDef::FindCource(const btCollisionObject* CollisionObject, vector<Cource::BOSS_COURCE_BLOCK*>* CourceBlocks) {
 	CourceBlocks->clear();
 	int size = m_Collisions.size();
 	bool IsNowCourceChange = false;	// 接触しているコースが前回から変化したか。
 	for (int idx = 0; idx < size; idx++) {
 		ContactResult CallBack;
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->GetCollisionWorld()->contactPairTest(CollisionObject, m_Collisions[idx]->CollisionObject->GetCollision(), CallBack);
+		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->GetCollisionWorld()->contactPairTest(const_cast<btCollisionObject*>(CollisionObject), const_cast<btCollisionObject*>(m_Collisions[idx]->CollisionObject->GetCollision()), CallBack);
 		if (CallBack.isHit) {
 			if (!(m_Collisions[idx]->IsHit)) {
 				// 前のフレームの時点でこの剛体が衝突していなかった。

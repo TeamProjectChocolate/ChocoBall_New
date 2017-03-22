@@ -19,7 +19,7 @@ CRigidbody::~CRigidbody()
 	// 絶対に消すな。
 	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
 	// 禁止事項の詳細は基底クラスのデストラクタに記載。
-	//this->RemoveWorld();
+	this->RemoveWorld();
 }
 
 void CRigidbody::Build(const btTransform& transform, float mass, bool isKinematic) 

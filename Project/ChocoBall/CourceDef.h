@@ -67,7 +67,7 @@ public:
 	CBossCourceDef() { m_courceNum = 0; }
 	~CBossCourceDef();
 	void Initialize();
-	bool FindCource(btCollisionObject*,vector<Cource::BOSS_COURCE_BLOCK*>*);
+	bool FindCource(const btCollisionObject*,vector<Cource::BOSS_COURCE_BLOCK*>*);
 	int GetCourceMax() {
 		return m_courceNum;
 	}

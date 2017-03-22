@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "CollisionType.h"
 #include "BulletPhysics.h"
+#include "CollisionInterface.h"
 
 class CAudio;
 
@@ -10,25 +11,25 @@ class CIsIntersect
 public:
 	CIsIntersect();
 	~CIsIntersect();
-	void Initialize(btRigidBody*);
+	void Initialize(CCollisionInterface*);
 	void Intersect(D3DXVECTOR3* position, D3DXVECTOR3* m_moveSpeed, bool Jumpflag);
 	void IntersectCamera(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed);
 	inline bool GetIsHitGround()
 	{
 		return m_isHitGround;
 	}
-	inline btRigidBody* GetRigidBody()
+	inline CCollisionInterface* GetRigidBody()
 	{
-		return m_rigidBody;
+		return m_CollisionObject;
 	}
-	inline btCollisionShape* GetSphereShape()
+	inline const btCollisionShape* GetSphereShape()
 	{
-		return m_rigidBody->getCollisionShape();
+		return m_CollisionObject->GetCollisionShape();
 	}
-	void OnMask(CollisionType type) {
+	void OnMask(Collision::Type type) {
 		m_MaskCollisionTypes[static_cast<int>(type)] = true;
 	}
-	void OffMask(CollisionType type) {
+	void OffMask(Collision::Type type) {
 		m_MaskCollisionTypes[static_cast<int>(type)] = false;
 	}
 	const vector<bool>& GetMasks() const
@@ -37,8 +38,7 @@ public:
 	}
 private:
 	//ここからBulletPhysicsで衝突判定を行うためのメンバ変数。
-	btGhostObject*		m_ghostObject = nullptr;		//!<ゴースト。剛体の変わりになるもの。完全に物理挙動に任せたいものは剛体を使う。
-	btRigidBody*			m_rigidBody = nullptr;
+	CCollisionInterface*			m_CollisionObject = nullptr;
 	btDefaultMotionState*	m_myMotionState = nullptr;
 
 	//D3DXVECTOR3		m_moveSpeed;		//移動速度。

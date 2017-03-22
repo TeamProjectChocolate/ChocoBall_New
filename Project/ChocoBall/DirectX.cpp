@@ -234,8 +234,8 @@ void AddScene(){	// ゲームで使用するシーンを登録
 	SINSTANCE(CGameManager)->AddScene(&SceneResult, _T("Result"));
 }
 
-//// 物理エンジンを扱うためのクラス。
-//CBulletPhysics g_BulletPhysics;
+// 物理エンジンを扱うためのクラス。
+CBulletPhysics g_BulletPhysics;
 
 void Initialize()
 {
@@ -261,7 +261,8 @@ void Initialize()
 	SINSTANCE(CGameManager)->SetAudio(pAudio);
 	AddScene();
 	SINSTANCE(CGameManager)->ChangeScene(_T("Title"/*"Main"*/));
-	//SINSTANCE(CObjectManager)->AddObject(&g_BulletPhysics, _T("BulletPhysics"),OBJECT::PRIORTY::CONFIG, true);
+	// コリジョンワールドを持つクラスのインスタンスを登録(シーン切り替えで削除されない)。
+	SINSTANCE(CObjectManager)->AddObject(&g_BulletPhysics, _T("BulletPhysics"),OBJECT::PRIORTY::CONFIG, true);
 	//SINSTANCE(CObjectManager)->GenerationObject<CIcon>(_T("Kill_Icon"), PRIORTY::OBJECT2D_ALPHA, true);
 	//SINSTANCE(CObjectManager)->GenerationObject<CIcon>(_T("Clear_Icon"), PRIORTY::OBJECT2D_ALPHA, true)->SetFileName(_T("Image/CLEAR_icon.png"));
 	SINSTANCE(CGameManager)->SetNextScene();
@@ -291,7 +292,7 @@ void Draw()
 		SINSTANCE(CGameManager)->Draw();		// シーン描画
 #ifdef TEISYUTU_YOU
 #else
-		//SINSTANCE(CDirectFont)->Draw(g_text.c_str(), 730, 20);
+		SINSTANCE(CDirectFont)->Draw(g_text.c_str(), 730, 20);
 #endif
 		(*graphicsDevice()).EndScene();
 	}

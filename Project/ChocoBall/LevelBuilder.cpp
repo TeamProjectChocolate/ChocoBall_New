@@ -248,9 +248,9 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		// チョコボールトリガーの回転をセット。
 		m_chocoballMgrList[i]->SetQuaternion(D3DXQUATERNION(collision.rotation.x, collision.rotation.y, collision.rotation.z, collision.rotation.w));
 		// チョコボールトリガーのコリジョンを生成。
-		m_chocoballMgrList[i]->ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f)), CollisionType::ChocoballTrigger, true, 0.0f, true,true);
-		m_chocoballMgrList[i]->GetCollision()->BitMask_AllOn();
-		m_chocoballMgrList[i]->GetCollision()->BitMask_Off(CollisionType::Player);
+		m_chocoballMgrList[i]->ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f)), Collision::Type::ChocoballTrigger,Collision::FilterGroup::Ghost, true, 0.0f, true,true);
+		m_chocoballMgrList[i]->GetCollision()->BitMask_AllOff();
+		m_chocoballMgrList[i]->GetCollision()->BitMask_On(Collision::FilterGroup::Player);
 	}
 	m_chocoballMgrList.clear();
 

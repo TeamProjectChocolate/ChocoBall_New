@@ -19,7 +19,7 @@ CCollisionObject::~CCollisionObject()
 	// 絶対に消すな。
 	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
 	// 禁止事項の詳細は基底クラスのデストラクタに記載。
-	//this->RemoveWorld();
+	this->RemoveWorld();
 }
 
 void CCollisionObject::Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) {

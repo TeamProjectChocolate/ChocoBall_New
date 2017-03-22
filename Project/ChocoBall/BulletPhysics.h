@@ -289,7 +289,7 @@ namespace {
 		// 何かのコリジョンに当たったか。
 		bool isHit = false;
 		// 当たったコリジョンのタイプを格納。
-		CollisionType hitCollisionType;
+		Collision::Type hitCollisionType;
 		virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1)
 		{
 			//if(colObj1Wrap->getCollisionObject()->getUserIndex())
@@ -325,7 +325,7 @@ namespace {
 
 			isHit = true;
 			// コリジョンオブジェクト2の属性。
-			hitCollisionType = static_cast<CollisionType>(colObj1Wrap->getCollisionObject()->getUserIndex());
+			hitCollisionType = static_cast<Collision::Type>(colObj1Wrap->getCollisionObject()->getUserIndex());
 			return 0.0f;
 		}
 	};
@@ -338,9 +338,8 @@ namespace {
 		{
 			UserPointer = userPointer;
 			if (UserPointer) {
-				btBroadphaseProxy* bp = UserPointer->GetCollisionObject()->getBroadphaseHandle();
-				this->m_collisionFilterGroup = bp->m_collisionFilterGroup;
-				this->m_collisionFilterMask = bp->m_collisionFilterMask;
+				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
 			}
 			isFirstCallback = isFirstCallBack;
 			isHit = false;
@@ -357,7 +356,7 @@ namespace {
 		D3DXVECTOR3 startPos;
 		float dist = FLT_MAX;
 		// 当たったコリジョンのタイプを格納。
-		CollisionType hitCollisionType;
+		Collision::Type hitCollisionType;
 
 		vector<bool>  m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
@@ -391,7 +390,7 @@ namespace {
 					dist = fDistTmp;
 				}
 			}
-			hitCollisionType = static_cast<CollisionType>(convexResult.m_hitCollisionObject->getUserIndex());
+			hitCollisionType = static_cast<Collision::Type>(convexResult.m_hitCollisionObject->getUserIndex());
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
@@ -414,9 +413,8 @@ namespace {
 		{
 			UserPointer = userPointer;
 			if (UserPointer) {
-				btBroadphaseProxy* bp = UserPointer->GetCollisionObject()->getBroadphaseHandle();
-				this->m_collisionFilterGroup = bp->m_collisionFilterGroup;
-				this->m_collisionFilterMask = bp->m_collisionFilterMask;
+				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
 			}
 			isFirstCallback = isFirstCallBack;
 			isHit = false;
@@ -427,7 +425,7 @@ namespace {
 		// 何かのコリジョンに当たったか。
 		bool isHit = false;
 		// 当たったコリジョンのタイプを格納。
-		CollisionType hitCollisionType;
+		Collision::Type hitCollisionType;
 		// 衝突点。
 		D3DXVECTOR3 hitPos;
 
@@ -464,7 +462,7 @@ namespace {
 			hitPos.y = convexResult.m_hitPointLocal.y();
 			hitPos.z = convexResult.m_hitPointLocal.z();
 
-			hitCollisionType = static_cast<CollisionType>(convexResult.m_hitCollisionObject->getUserIndex());
+			hitCollisionType = static_cast<Collision::Type>(convexResult.m_hitCollisionObject->getUserIndex());
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
@@ -496,7 +494,7 @@ namespace {
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject->getUserIndex() != static_cast<int>(CollisionType::Map))
+			if (convexResult.m_hitCollisionObject->getUserIndex() != static_cast<int>(Collision::Type::Map))
 			{
 				//無視。
 				return 0.0f;
@@ -545,7 +543,7 @@ namespace {
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			if (convexResult.m_hitCollisionObject->getUserIndex() != static_cast<int>(CollisionType::Map))
+			if (convexResult.m_hitCollisionObject->getUserIndex() != static_cast<int>(Collision::Type::Map))
 			{
 				//無視。
 				return 0.0f;

@@ -71,8 +71,8 @@ public:
 	{
 		return m_isDead;
 	}
-	void SetCollisionType(CollisionType type) {
-		m_CollisionObject->ConfigCollisionType(type);
+	void SetCollisionType(Collision::Type type) {
+		m_CollisionObject->SetCollisionType(type);
 	}
 private:
 	//q‹Ÿ‚ğİ’èB

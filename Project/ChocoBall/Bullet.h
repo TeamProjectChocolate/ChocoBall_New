@@ -69,7 +69,6 @@ private:
 	D3DXVECTOR3		m_moveSpeed;//移動速度。
 	float m_Range;	// 弾の飛距離。
 	bool			Shotflag;	//弾が発射されているのかのフラグ
-	CIsIntersect	m_IsIntersect;	//CIsIntersectのインスタンス
 	float			m_radius;
 	D3DXVECTOR3		m_dir;
 

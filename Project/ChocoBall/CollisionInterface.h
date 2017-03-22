@@ -21,6 +21,7 @@ public:
 	//			 モデルの原点とコリジョンの中心の差分。
 	//			 外部で定義したコリジョンの形状。
 	//			 コリジョンの属性(内部でBulletPhysicsのUserIndexに登録される)。
+	//			 このコリジョンのフィルターグループ(Collision::FilterGroupの値を設定)。
 	//			 質量(isKinematicがtrueならば自動的に0.0fになる)。
 	//			 フラグ(継承先で詳細決定)。
 	//			 生成した後この関数内でワールドに登録するか(trueで登録)。
@@ -30,7 +31,8 @@ public:
 		const SH_ENGINE::TRANSFORM& Transform,
 		const D3DXVECTOR3& offset,
 		btCollisionShape* pShape,
-		CollisionType Type,
+		Collision::Type Type,
+		Collision::FilterGroup group,
 		float mass,
 		bool,
 		bool isAddWorld);
@@ -51,11 +53,11 @@ public:
 
 	// 指定したコリジョンタイプのレイヤーマスクオフ。
 	// 指定したコリジョンとの衝突無視。
-	__inline void BitMask_Off(CollisionType type) {
+	__inline void BitMask_Off(Collision::FilterGroup group) {
 		// type桁目のビットを0にしてマスクをオフにする。
 		int mask = 0x00000001;	// 0x00000001。
 		// type桁分左シフトしていったん目的のbitを1にする。
-		mask = mask << static_cast<int>(type);	// 0x00000001。
+		mask = mask << static_cast<int>(group);	// 0x00000001。
 		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
 		mask = ~mask;	// 0xfffffffe。
 
@@ -64,28 +66,14 @@ public:
 	}
 
 	// 指定したコリジョンタイプのレイヤーマスクオン。
-	__inline void BitMask_On(CollisionType type) {
+	__inline void BitMask_On(Collision::FilterGroup group) {
 		// type桁目のビットを1にしてマスクをオフにする。
 		int mask = 0x00000001;	// 0x00000001。
 		// type桁分左シフト。
-		mask = mask << static_cast<int>(type);
+		mask = mask << static_cast<int>(group);
 
 		// OR演算で元のマスクに加算。
 		SetLayerMask(GetLayerMask() | mask);
-	}
-
-
-	// 外部からコリジョンの属性を設定。
-	// ※剛体やコリジョンオブジェクトへの属性設定は必ずこの関数で行ってください。
-	// ※直接btCollisionObjectのsetUserIndex関数を呼ばないように！
-	__inline void ConfigCollisionType(CollisionType type){
-		// コリジョンタイプ形式で保存。
-		SetMyType(type);
-		// bit形式に変換して保存。
-		int bitType = TypeToBitType(type);
-		SetFilterGroup(bitType);
-		// BulletPhysicsに自分の属性を設定。
-		ConfigCollisionFilterGroup();
 	}
 
 
@@ -96,9 +84,51 @@ public:
 	virtual void RemoveWorld() = 0;
 
 
+	// ユーザーポインター返却。
+	inline CGameObject* GetUserPointer() const
+	{
+		return static_cast<CGameObject*>(m_collisionObject->getUserPointer());
+	}
+
+	// コリジョンの属性設定。
+	// ※この引数がbtCollisionObjectのuserIndexに設定される。
+	// ※コリジョンへの属性設定は必ずこの関数で行うように。
+	inline void SetCollisionType(Collision::Type type) {
+		m_MyType = type;
+		if (m_collisionObject) {
+			m_collisionObject->setUserIndex(static_cast<int>(type));
+		}
+	}
+	// コリジョンの属性取得。
+	inline Collision::Type GetCollisionType() const
+	{
+		return m_MyType;
+	}
+
+	// ※剛体やコリジョンオブジェクトへのフィルターグループ設定は必ずこの関数で行ってください。
+	// ※直接btCollisionObjectの値を変更しないように！。
+	inline void SetFilterGroup(Collision::FilterGroup group) {
+		m_UserFilterGroup = group;
+		// bit形式に変換して保存。
+		m_FilterGroup = TypeToBit(group);
+		// BulletPhysicsに自分の属性を設定。
+		ConfigCollisionFilterGroup();
+	}
+	// フィルターグループ取得。
+	inline Collision::FilterGroup SetFilterGroup() const
+	{
+		return m_UserFilterGroup;
+	}
+
 	// コリジョンオブジェクト本体を返却。
-	inline btCollisionObject* GetCollision() const {
+	inline const btCollisionObject* GetCollision() const {
 		return m_collisionObject.get();
+	}
+
+	// コリジョン形状を返却。
+	inline btCollisionShape* GetCollisionShape() const
+	{
+		return m_collisionShape.get();
 	}
 
 	// レイヤーマスク返却。
@@ -126,7 +156,7 @@ protected:
 			btBroadphaseProxy* Proxy = m_collisionObject->getBroadphaseHandle();
 			if (Proxy) {
 				// ブロードフェーズハンドルが生成されている。
-				if (m_MyType == CollisionType::Map || m_MyType == CollisionType::Player) {
+				if (m_MyType == Collision::Type::Map || m_MyType == Collision::Type::Player) {
 					OutputDebugString("マップもしくはプレイヤーのレイヤーマスク設定。");
 				}
 				// キャラクター剛体とキネマティック剛体もあたりを取る。
@@ -144,10 +174,10 @@ protected:
 			btBroadphaseProxy* Proxy = m_collisionObject->getBroadphaseHandle();
 			if (Proxy) {
 				// ブロードフェーズハンドルが生成されている。
-				if (m_MyType == CollisionType::Map || m_MyType == CollisionType::Player) {
+				if (m_MyType == Collision::Type::Map || m_MyType == Collision::Type::Player) {
 					OutputDebugString("マップもしくはプレイヤーのフィルターグループ設定。");
 				}
-				Proxy->m_collisionFilterGroup = m_MyBitGroup;
+				Proxy->m_collisionFilterGroup = m_FilterGroup;
 			}
 		}
 	}
@@ -163,7 +193,7 @@ private:
 
 
 	// 受け取ったコリジョンの属性をビット上での属性に変換して返却。
-	__inline int TypeToBitType(CollisionType type) {
+	__inline int TypeToBit(Collision::FilterGroup group) {
 		//if (static_cast<int>(type) >= 10) {
 		//	// マスクに設定できるのはデフォルトのマスクを除いて26bitまで。
 		//	//abort();
@@ -171,26 +201,8 @@ private:
 		//}
 		int ret = 0x00000001;
 		// タイプの数字分左シフト。
-		ret = ret << static_cast<int>(type);
+		ret = ret << static_cast<int>(group);
 		return ret;
-	}
-
-
-	// コリジョンの属性を属性形式で保存。
-	inline void SetMyType(CollisionType type) {
-		//if (static_cast<int>(type) >= 9) {
-		//	// マスクに設定できるのはデフォルトのマスクを除いて26bitまで。
-		//	OutputDebugString("タイプがオーバー。");
-		//	//abort();
-		//}
-		m_MyType = type;
-	}
-	// コリジョンの属性をbit形式で保存。
-	// 引数はbit形式。
-	// ※この関数を呼んだら引数の値がフィルターグループとしてBulletPhysicsに通知されます。
-	__inline void SetFilterGroup(int bit) {
-		m_MyBitGroup = bit;
-		ConfigCollisionFilterGroup();
 	}
 
 	// レイヤーマスクセット。
@@ -205,10 +217,9 @@ protected:
 	btVector3 m_OriginOffset;		// オブジェクトの中心と剛体の中心の差分。
 	unique_ptr<btCollisionShape>	m_collisionShape;	//コリジョンの形状。
 	unique_ptr<btCollisionObject>		m_collisionObject;		//剛体。
-	CollisionType m_MyType = CollisionType::None;
-	// このコリジョンの属性(bit)。
-	// ※コリジョンをワールドに登録したときにはじめて通知する。
-	int m_MyBitGroup = 0x0000;
+	Collision::Type m_MyType = Collision::Type::None;	// コリジョンの属性。
+	Collision::FilterGroup m_UserFilterGroup = Collision::FilterGroup::None;	// コリジョンのフィルターグループ(ユーザーが設定)。
+	int m_FilterGroup = 0x00000000;	// コリジョンのフィルターグループ(このクラス内でのみ使用)。
 	// あたりを無視する属性をbit情報で格納(衝突する属性のbitに1を立てる)。
 	// ※コリジョンをワールドに登録したときにはじめて通知する。
 	int m_LayerMask = btBroadphaseProxy::CollisionFilterGroups::AllFilter;

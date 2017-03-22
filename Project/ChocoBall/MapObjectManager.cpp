@@ -107,15 +107,16 @@ void CMapObjectManager::Build() {
 				tr,
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				new btBoxShape(btVector3(collision.scale.x*0.5f, collision.scale.y*0.5f, collision.scale.z*0.5f)),
-				CollisionType::Map,
+				Collision::Type::Map,
+				Collision::FilterGroup::Map,
 				0.0f,
 				true,
 				true);
 			work->BitMask_AllOff();
-			work->BitMask_On(CollisionType::Player);
-			work->BitMask_On(CollisionType::Chocoball);
-			work->BitMask_On(CollisionType::Camera);
-			work->BitMask_On(CollisionType::Enemy);
+			work->BitMask_On(Collision::FilterGroup::Player);
+			work->BitMask_On(Collision::FilterGroup::Chocoball);
+			work->BitMask_On(Collision::FilterGroup::Camera);
+			work->BitMask_On(Collision::FilterGroup::Enemy);
 
 			m_rigidBodys.push_back(work);
 		}

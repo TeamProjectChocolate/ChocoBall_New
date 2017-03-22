@@ -98,10 +98,10 @@ void CCourceCamera::Update(){
 			m_NowPos = m_TargetPos;
 			m_transform.position = m_NowPos;
 			btSphereShape* shape = new btSphereShape(2.8f);
-			ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape,CollisionType::Camera, false, 0.0f, true,true);
-			//m_CollisionObject->BitMask_AllOn();
-			//m_CollisionObject->BitMask_Off(CollisionType::Map);
-			m_Isintersect.Initialize(static_cast<btRigidBody*>(m_CollisionObject->GetCollision()));
+			ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape,Collision::Type::Camera, Collision::FilterGroup::Camera,false, 0.0f, true,true);
+			m_CollisionObject->BitMask_AllOff();
+			m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
+			m_Isintersect.Initialize(m_CollisionObject.get());
 			m_TargetViewAngle = D3DXToRadian(45.0f);
 			m_NowViewAngle = m_TargetViewAngle;
 			m_camera.SetViewAngle(m_NowViewAngle);

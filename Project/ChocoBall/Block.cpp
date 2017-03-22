@@ -44,12 +44,13 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_transform.angle = rot;
 
+	float mass = 0.0f;
 	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)), CollisionType::Wall, false, 0.0f, true,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)), Collision::Type::Wall,Collision::FilterGroup::Gimmick, false, mass, true,true);
 	m_CollisionObject->BitMask_AllOff();
-	m_CollisionObject->BitMask_On(CollisionType::Player);
-	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
-	m_CollisionObject->BitMask_On(CollisionType::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
 
 	SetAlive(true);
 
