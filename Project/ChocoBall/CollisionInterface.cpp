@@ -4,6 +4,8 @@
 #include "BulletPhysics.h"
 #include "Infomation.h"
 
+int CCollisionInterface::testDelete = 0;
+
 CCollisionInterface::CCollisionInterface()
 {
 	// オブジェクトマネージャーからBulletPhysicsクラスのインスタンスを保存。
@@ -66,6 +68,3 @@ void CCollisionInterface::InitCollision(
 	m_collisionObject->activate();
 }
 
-void CCollisionInterface::Draw() {
-
-}

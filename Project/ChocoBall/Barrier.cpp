@@ -33,6 +33,8 @@ void CBarrier::Build(const D3DXVECTOR3& pos,float radius) {
 	{
 		btScalar Radius = radius * 0.5f * 0.5f;
 		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 1.0f),new btSphereShape(Radius), CollisionType::Boss_Barrier,false,0.0f,true,false);
+		m_CollisionObject->BitMask_AllOn();
+		m_CollisionObject->BitMask_Off(CollisionType::Chocoball);
 	}
 }
 

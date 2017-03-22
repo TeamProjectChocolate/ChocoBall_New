@@ -59,6 +59,12 @@
     <Filter Include="Game\Field">
       <UniqueIdentifier>{ee506a1b-276a-4cbd-ab58-c6352c8c2075}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Enemy\Boss">
+      <UniqueIdentifier>{208e1801-c924-4b04-ac10-65c8d08c9ae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Enemy\Boss\HFSM">
+      <UniqueIdentifier>{b2302e14-44cd-43a1-921c-a437cc42f2be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -394,50 +400,14 @@
     <ClInclude Include="MapObjectManager.h">
       <Filter>Game\Field</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy_Boss.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="HadBar.h">
       <Filter>Game\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="WaitState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveState.h">
-      <Filter>Game\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="AttackState.h">
       <Filter>Game\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="EscapeState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="ShotState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="TransState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="RotateState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="DivisionWall.h">
       <Filter>Game\Gimmick</Filter>
-    </ClInclude>
-    <ClInclude Include="SleepState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Barrier.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="ShotAttackState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="RushAttackState.h">
-      <Filter>Game\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="IsRepulsion.h" />
     <ClInclude Include="CollisionObject.h">
@@ -447,6 +417,42 @@
       <Filter>Game\Phisics</Filter>
     </ClInclude>
     <ClInclude Include="CollisionRender.h" />
+    <ClInclude Include="Enemy_Boss.h">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Barrier.h">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="EscapeState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="RushAttackState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotAttackState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="SleepState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="TransState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
+    <ClInclude Include="WaitState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -752,47 +758,14 @@
     <ClCompile Include="MapObjectManager.cpp">
       <Filter>Game\Field</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy_Boss.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="HadBar.cpp">
       <Filter>Game\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="WaitState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveState.cpp">
-      <Filter>Game\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="AttackState.cpp">
       <Filter>Game\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="EscapeState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="ShotState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="TransState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="DivisionWall.cpp">
       <Filter>Game\Gimmick</Filter>
-    </ClCompile>
-    <ClCompile Include="SleepState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Barrier.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="RushAttackState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="ShotAttackState.cpp">
-      <Filter>Game\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="IsRepulsion.cpp" />
     <ClCompile Include="CollisionObject.cpp">
@@ -802,6 +775,39 @@
       <Filter>Game\Phisics</Filter>
     </ClCompile>
     <ClCompile Include="CollisionRender.cpp" />
+    <ClCompile Include="Enemy_Boss.cpp">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Barrier.cpp">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="EscapeState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="RushAttackState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotAttackState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="SleepState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="TransState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
+    <ClCompile Include="WaitState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

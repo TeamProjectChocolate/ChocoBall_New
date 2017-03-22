@@ -61,6 +61,15 @@ public:
 	*/
 	~CBulletPhysics()
 	{
+		//for (auto rigid : m_Collisions_Dynamic) {
+		//	m_dynamicWorld->removeCollisionObject(rigid);
+		//}
+		//m_Collisions_Dynamic.clear();
+		//for (auto collision : m_Collisions) {
+		//	m_CollisionWorld->removeCollisionObject(collision);
+		//}
+		//m_Collisions.clear();
+
 		// 物理ワールド。
 		m_dynamicWorld.reset(nullptr);
 		m_constraintSolver.reset(nullptr);
@@ -242,6 +251,13 @@ namespace {
 	// コールバック(コリジョンワールド)
 	struct SweepResult_Collision : public btCollisionWorld::ConvexResultCallback
 	{
+		SweepResult_Collision(CGameObject* userPointer) {
+			UserPointer = userPointer;
+			if (userPointer) {
+				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
+			}
+		}
 		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
@@ -263,16 +279,17 @@ namespace {
 
 	// コリジョンワールド。
 	struct ContactResult : public btCollisionWorld::ContactResultCallback {
+		ContactResult()
+		{
+			isHit = false;
+		}
+		
 		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
 
 		// 何かのコリジョンに当たったか。
 		bool isHit = false;
 		// 当たったコリジョンのタイプを格納。
 		CollisionType hitCollisionType;
-		ContactResult()
-		{
-			isHit = false;
-		}
 		virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1)
 		{
 			//if(colObj1Wrap->getCollisionObject()->getUserIndex())
@@ -317,8 +334,15 @@ namespace {
 	// ※移動した結果当たったかの判定に用いる。
 	struct SweepResult_Y : public btCollisionWorld::ConvexResultCallback
 	{
-		SweepResult_Y()
+		SweepResult_Y(CGameObject* userPointer,bool isFirstCallBack)
 		{
+			UserPointer = userPointer;
+			if (UserPointer) {
+				btBroadphaseProxy* bp = UserPointer->GetCollisionObject()->getBroadphaseHandle();
+				this->m_collisionFilterGroup = bp->m_collisionFilterGroup;
+				this->m_collisionFilterMask = bp->m_collisionFilterMask;
+			}
+			isFirstCallback = isFirstCallBack;
 			isHit = false;
 			//fMin = FLT_MAX;
 		}
@@ -341,6 +365,7 @@ namespace {
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+
 			int idx = convexResult.m_hitCollisionObject->getUserIndex();
 			if (m_MaskCollisionTypes[idx]) {
 				return 0.0f;
@@ -385,6 +410,18 @@ namespace {
 	// ※移動した結果当たったかの判定に用いる。
 	struct SweepResult_XZ : public btCollisionWorld::ConvexResultCallback
 	{
+		SweepResult_XZ(CGameObject* userPointer, bool isFirstCallBack)
+		{
+			UserPointer = userPointer;
+			if (UserPointer) {
+				btBroadphaseProxy* bp = UserPointer->GetCollisionObject()->getBroadphaseHandle();
+				this->m_collisionFilterGroup = bp->m_collisionFilterGroup;
+				this->m_collisionFilterMask = bp->m_collisionFilterMask;
+			}
+			isFirstCallback = isFirstCallBack;
+			isHit = false;
+		}
+
 		// 衝突した点の法線(XZ成分)。
 		D3DXVECTOR3 hitNormalXZ;
 		// 何かのコリジョンに当たったか。
@@ -393,10 +430,6 @@ namespace {
 		CollisionType hitCollisionType;
 		// 衝突点。
 		D3DXVECTOR3 hitPos;
-		SweepResult_XZ()
-		{
-			isHit = false;
-		}
 
 		vector<bool>  m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
@@ -404,6 +437,7 @@ namespace {
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
+
 			int idx = convexResult.m_hitCollisionObject->getUserIndex();
 			if (m_MaskCollisionTypes[idx]) {
 				return 0.0f;
@@ -449,16 +483,16 @@ namespace {
 	// カメラ用コールバック
 	struct SweepResultGround_Camera : public btCollisionWorld::ConvexResultCallback
 	{
-		bool isHit;
-		D3DXVECTOR3 hitPos;
-		D3DXVECTOR3 startPos;
-		float fMin;
-
 		SweepResultGround_Camera()
 		{
 			isHit = false;
 			fMin = FLT_MAX;
 		}
+
+		bool isHit;
+		D3DXVECTOR3 hitPos;
+		D3DXVECTOR3 startPos;
+		float fMin;
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
@@ -498,16 +532,16 @@ namespace {
 	};
 
 	struct SweepResultCeiling_Camera : public btCollisionWorld::ConvexResultCallback {
-		bool isHit;
-		D3DXVECTOR3 hitPos;
-		D3DXVECTOR3 startPos;
-		float fMin;
-
 		SweepResultCeiling_Camera()
 		{
 			isHit = false;
 			fMin = FLT_MAX;
 		}
+
+		bool isHit;
+		D3DXVECTOR3 hitPos;
+		D3DXVECTOR3 startPos;
+		float fMin;
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{

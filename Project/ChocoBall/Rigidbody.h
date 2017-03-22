@@ -51,6 +51,11 @@ public:
 	void AddWorld()override;
 	// この剛体オブジェクトを物理ワールドから削除する。
 	void RemoveWorld()override;
+
+
+	bool GetIsKinematic() {
+		return m_IsKinematic;
+	}
 private:
 	// パラメータを参照して剛体生成。
 	// 引数：オブジェクトのトランスフォーム情報。

@@ -84,11 +84,11 @@ void CPlayer::Initialize()
 
 	m_radius = 1.0f;
 	//// test
-	m_radius = 1.3f;
+	m_radius = 1.0f;
 	btCollisionShape* Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
 
 
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Player, false, 0.1f, true/*false*/,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Player, false, 1.0f, /*true*/true,true);
 	m_CollisionObject->BitMask_AllOn();
 	m_CollisionObject->BitMask_Off(CollisionType::Map);
 	//m_CollisionObject->BitMask_Off(CollisionType::Boss);
@@ -256,7 +256,12 @@ void CPlayer::Update()
 			IsJump = true;
 		}
 		//プレイヤーの位置情報更新。
-		m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, IsJump);
+		//if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
+			m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, IsJump);
+		//}
+		//else {
+		//	static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(m_moveSpeed * 10.0f);
+		//}
 	}
 
 	// アニメーション再生関数を呼び出す
@@ -320,6 +325,10 @@ void CPlayer::OnTriggerStay(btCollisionObject* pCollision) {
 			m_pAudio->PlayCue("Chocoball", true, nullptr);//チョコ落下Audio
 		}
 	}
+}
+
+void CPlayer::OnCollisionStay(btCollisionObject* pCollision) {
+
 }
 
 void CPlayer::MoveStateManaged(){

@@ -44,7 +44,8 @@ public:
 	}
 
 	void OnTriggerStay(btCollisionObject* pCollision)override;
-
+	void OnCollisionStay(btCollisionObject* pCollision)override;
+	
 	// チョコボールとの当たりのコールバック関数。
 	void ChocoHit();
 

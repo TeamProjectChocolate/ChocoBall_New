@@ -31,7 +31,7 @@ CBulletPhysics::CBulletPhysics()
 			m_collisionConfig_Dynamic.get()
 		));
 		m_dynamicWorld->setGravity(btVector3(0, -10, 0));
-		// フィルターによる衝突ペアの生成を上書き。
+		//// フィルターによる衝突ペアの生成を上書き。
 		m_dynamicWorld->getPairCache()->setOverlapFilterCallback(&m_FilterCallback);
 	}
 	// コリジョンワールド作成。
@@ -40,7 +40,7 @@ CBulletPhysics::CBulletPhysics()
 		m_CollisionDispatcher.reset(new btCollisionDispatcher(m_CollisionConfig.get()));
 		m_OverlappingPairCache.reset(new btDbvtBroadphase());
 		m_CollisionWorld.reset(new btCollisionWorld(m_CollisionDispatcher.get(), m_OverlappingPairCache.get(), m_CollisionConfig.get()));
-		// フィルターによる衝突ペアの生成を上書き。
+		//// フィルターによる衝突ペアの生成を上書き。
 		m_CollisionWorld->getPairCache()->setOverlapFilterCallback(&m_FilterCallback);
 	}
 

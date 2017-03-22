@@ -44,6 +44,9 @@ void CGameManager::SetNextScene(){
 	if (!strcmp(m_NowSceneName, m_NextSceneName)){
 		return;
 	}
+	// ˆê”ÔÅ‰‚É•¨—ƒ[ƒ‹ƒh‚ðíœB
+	SINSTANCE(CObjectManager)->DeleteGameObjectImmediate(SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics")));
+
 	SINSTANCE(CShadowRender)->CleanManager();
 	SINSTANCE(CObjectManager)->CleanManager();
 	SINSTANCE(CShadowRender)->ExcuteDeleteObjects();

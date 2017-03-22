@@ -27,6 +27,7 @@ CEnemy_Boss::CEnemy_Boss()
 
 CEnemy_Boss::~CEnemy_Boss()
 {
+	this->OnDestroy();
 }
 
 void CEnemy_Boss::InitState() {
@@ -206,8 +207,8 @@ void CEnemy_Boss::DivisionWallOpen() {
 void CEnemy_Boss::OnDestroy()
 {
 	SINSTANCE(CShadowRender)->DeleteObjectImidieit(this);
-	m_CollisionObject->RemoveWorld();
-	m_CourceCollision.RemoveWorld();
+	m_CollisionObject.reset();
+	//m_CourceCollision.RemoveWorld();
 }
 
 void CEnemy_Boss::ConfigLight() {

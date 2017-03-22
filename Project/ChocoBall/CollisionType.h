@@ -3,7 +3,7 @@
 //namespace {
 	enum class CollisionType {
 		None = -1,
-		Player = 0,			//プレイヤーのコリジョン。
+		Player = 6,			//プレイヤーのコリジョン。
 		Map,				//地形コリジョン。
 		Chocoball,		//チョコボール。
 		ChocoballTrigger,	//チョコボール起動コリジョン。

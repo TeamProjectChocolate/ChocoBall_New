@@ -111,8 +111,8 @@ void CMapObjectManager::Build() {
 				0.0f,
 				true,
 				true);
-			//work->BitMask_AllOn();
-			//work->BitMask_Off(CollisionType::Player);
+			work->BitMask_AllOn();
+			work->BitMask_Off(CollisionType::Player);
 			m_rigidBodys.push_back(work);
 		}
 	}

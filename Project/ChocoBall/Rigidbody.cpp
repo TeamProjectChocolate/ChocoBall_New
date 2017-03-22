@@ -7,14 +7,19 @@
 
 CRigidbody::CRigidbody()
 {
+	testDelete++;
 }
 
 CRigidbody::~CRigidbody()
 {
+	testDelete--;
+	if (testDelete <= 0) {
+		OutputDebugString("デストラクタきちんと呼ばれてる。");
+	}
 	// 絶対に消すな。
 	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
 	// 禁止事項の詳細は基底クラスのデストラクタに記載。
-	this->RemoveWorld();
+	//this->RemoveWorld();
 }
 
 void CRigidbody::Build(const btTransform& transform, float mass, bool isKinematic) 
@@ -29,8 +34,8 @@ void CRigidbody::Build(const btTransform& transform, float mass, bool isKinemati
 	m_collisionObject.reset(new btRigidBody(rbInfo));
 
 	if (isKinematic) {
-		// 剛体をキネマティック剛体に設定。
-		m_collisionObject->setCollisionFlags(m_collisionObject->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+		//// 剛体をキネマティック剛体に設定。
+		//m_collisionObject->setCollisionFlags(/*btCollisionObject::CF_CHARACTER_OBJECT*/  btCollisionObject::CF_CHARACTER_OBJECT);
 	}
 }
 
@@ -59,12 +64,17 @@ void CRigidbody::Update(D3DXVECTOR3* pos,D3DXQUATERNION* rot)
 // この剛体オブジェクトを物理ワールドに追加する。
 void CRigidbody::AddWorld(){
 	if (m_collisionObject.get()) {
-		m_pBulletPhysics->AddRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()),m_MyBitGroup,m_LayerMask);
+		//m_pBulletPhysics->AddRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()),m_MyBitGroup,m_LayerMask);
+		m_pBulletPhysics->AddRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()));
+		ConfigCollisionFilterGroup();
+		ConfigCollisionFilterMask();
 	}
 }
 // この剛体オブジェクトを物理ワールドから削除する。
 void CRigidbody::RemoveWorld(){
 	if (m_collisionObject.get()) {
-		m_pBulletPhysics->RemoveRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()));
+		if (m_pBulletPhysics) {
+			m_pBulletPhysics->RemoveRigidBody_Dynamic(static_cast<btRigidBody*>(m_collisionObject.get()));
+		}
 	}
 }

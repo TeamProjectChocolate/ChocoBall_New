@@ -26,6 +26,7 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	m_CollisionObject->BitMask_Off(CollisionType::Player);
 	m_CollisionObject->BitMask_Off(CollisionType::Map);
 	m_CollisionObject->BitMask_Off(CollisionType::Wall);
+	m_CollisionObject->BitMask_Off(CollisionType::Floor);
 	m_CollisionObject->BitMask_Off(CollisionType::Boss);
 	m_CollisionObject->BitMask_Off(CollisionType::Boss_Barrier);
 

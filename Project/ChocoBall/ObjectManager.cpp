@@ -59,6 +59,9 @@ void CObjectManager::DeleteGameObject(CGameObject* pObject){
 
 void CObjectManager::DeleteGameObjectImmediate(CGameObject* pObject)
 {
+	if (pObject == nullptr) {
+		return;
+	}
 	pObject->OnDestroy();
 	vector<OBJECT_DATA*>::iterator itr;
 	int size = m_GameObjects.size();
