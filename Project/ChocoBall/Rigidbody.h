@@ -23,6 +23,13 @@ public:
 	{
 		static_cast<btRigidBody*>(m_collisionObject.get())->applyForce(btVector3(force.x, force.y, force.z), btVector3(1.0f, 1.0f, 1.0f));
 	}
+	// 剛体に力を加える。
+	// 引数:	向き付きの力の大きさ。
+	//			???。
+	inline void ApplyForce(const D3DXVECTOR3& force,const D3DXVECTOR3& rel_pos)
+	{
+		static_cast<btRigidBody*>(m_collisionObject.get())->applyForce(btVector3(force.x, force.y, force.z), btVector3(rel_pos.x, rel_pos.y, rel_pos.z));
+	}
 	// 剛体に質量と回転のしやすさを設定。
 	// 引数：	質量。
 	//			第二引数は回転のしやすさ。
@@ -37,7 +44,7 @@ public:
 	// 剛体をキネマティック化。
 	void OnKinematic() {
 		m_IsKinematic = true;
-		m_collisionObject->setCollisionFlags(m_collisionObject->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+		m_collisionObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 		m_collisionObject->setActivationState(DISABLE_DEACTIVATION);
 	}
 	//// 剛体を静的化。

@@ -42,10 +42,10 @@ void CCollisionInterface::InitCollision(
 	// コリジョンの属性を属性形式で保存。
 	SetMyType(Type);
 	// bit形式で保存。
-	SetMyBitGroup(TypeToBitType(Type));
+	SetFilterGroup(TypeToBitType(Type));
 	// デフォルトではすべての属性のコリジョンと当たり判定を取る。
 	// ※ただしすべてのものと当たり判定を行うと重いため、状況に応じて外部からマスクを設定してください。
-	this->BitMask_AllOff();
+	this->BitMask_AllOn();
 
 	btTransform rbTransform;
 	rbTransform.setIdentity();

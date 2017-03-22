@@ -46,8 +46,11 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 
 	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
 	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)), CollisionType::Wall, false, 0.0f, true,true);
-	m_CollisionObject->BitMask_AllOn();
-	m_CollisionObject->BitMask_Off(CollisionType::Player);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(CollisionType::Player);
+	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+	m_CollisionObject->BitMask_On(CollisionType::Enemy);
+
 	SetAlive(true);
 
 #ifdef NOT_INSTANCING

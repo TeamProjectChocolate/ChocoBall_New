@@ -24,7 +24,6 @@ CIsIntersect::~CIsIntersect()
 void CIsIntersect::Initialize(btRigidBody* Rigidbody)
 {
 	m_rigidBody = Rigidbody;
-	m_collisionShape = m_rigidBody->getCollisionShape();
 }
 
 //物理エンジンを使った当たり判定処理&ジャンプ処理
@@ -56,7 +55,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 		if (D3DXVec3Length(&addPos) > 0.0001f) {
 			newPos = (*position + addPos);
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
 		}
 	}
 	// 物理ワールドでの当たり判定。
@@ -82,7 +81,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 					// 無視する当たりの属性を設定。
 					callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
 					// 生成した情報で当たり判定。
-					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
 					if (callback.isHit) {
 						//当たった。
 						//壁。
@@ -170,7 +169,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 				}
 				end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 
-				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
 				if (callback.isHit) {
 					//当たった。
 					//地面。
@@ -235,7 +234,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			newPos.y += addPos.y + m_radius;
 #endif
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
-			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_collisionShape), start, end, callback);
+			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_rigidBody->getCollisionShape()), start, end, callback);
 		}
 		if (callback.isHit) {
 			//当たった。

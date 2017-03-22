@@ -106,16 +106,16 @@ void CEnemy_Boss::Initialize() {
 		//ここで剛体の形状を決定。
 		btCapsuleShapeZ* pShape = new btCapsuleShapeZ(Radius, Height);
 		ActivateCollision(D3DXVECTOR3(0.0f, -0.25f, 0.0f),pShape,CollisionType::Boss,false,0.0f,true,true);
-		m_CollisionObject->BitMask_AllOn();
-		m_CollisionObject->BitMask_Off(CollisionType::Player);
-		m_CollisionObject->BitMask_Off(CollisionType::Chocoball);
+		m_CollisionObject->BitMask_AllOff();
+		m_CollisionObject->BitMask_On(CollisionType::Player);
+		m_CollisionObject->BitMask_On(CollisionType::Chocoball);
 	}
 
 	// コース判定用のコリジョンを生成。
 	{
 		m_CourceCollision.InitCollision(this,m_transform,Vector3::Zero, new btBoxShape(btVector3(1.0f / 2.0f, 1.0f / 2.0f, 1.0f / 2.0f)),CollisionType::Boss_Gost,0.0f,true,true);
-		m_CourceCollision.BitMask_AllOn();
-		m_CourceCollision.BitMask_Off(CollisionType::Boss_Cource);
+		m_CourceCollision.BitMask_AllOff();
+		m_CourceCollision.BitMask_On(CollisionType::Boss_Cource);
 	}
 
 	// コース定義初期化。

@@ -23,7 +23,7 @@ public:
 	}
 	inline btCollisionShape* GetSphereShape()
 	{
-		return m_collisionShape;
+		return m_rigidBody->getCollisionShape();
 	}
 	void OnMask(CollisionType type) {
 		m_MaskCollisionTypes[static_cast<int>(type)] = true;
@@ -38,7 +38,6 @@ public:
 private:
 	//ここからBulletPhysicsで衝突判定を行うためのメンバ変数。
 	btGhostObject*		m_ghostObject = nullptr;		//!<ゴースト。剛体の変わりになるもの。完全に物理挙動に任せたいものは剛体を使う。
-	btCollisionShape*		m_collisionShape = nullptr;	//!<コリジョン形状。
 	btRigidBody*			m_rigidBody = nullptr;
 	btDefaultMotionState*	m_myMotionState = nullptr;
 

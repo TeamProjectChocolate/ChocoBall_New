@@ -111,8 +111,12 @@ void CMapObjectManager::Build() {
 				0.0f,
 				true,
 				true);
-			work->BitMask_AllOn();
-			work->BitMask_Off(CollisionType::Player);
+			work->BitMask_AllOff();
+			work->BitMask_On(CollisionType::Player);
+			work->BitMask_On(CollisionType::Chocoball);
+			work->BitMask_On(CollisionType::Camera);
+			work->BitMask_On(CollisionType::Enemy);
+
 			m_rigidBodys.push_back(work);
 		}
 	}

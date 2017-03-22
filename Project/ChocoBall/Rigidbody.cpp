@@ -34,8 +34,8 @@ void CRigidbody::Build(const btTransform& transform, float mass, bool isKinemati
 	m_collisionObject.reset(new btRigidBody(rbInfo));
 
 	if (isKinematic) {
-		//// 剛体をキネマティック剛体に設定。
-		//m_collisionObject->setCollisionFlags(/*btCollisionObject::CF_CHARACTER_OBJECT*/  btCollisionObject::CF_CHARACTER_OBJECT);
+		// 剛体をキャラクター剛体(Unityでいうキネマティック?)に設定。
+		m_collisionObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 	}
 }
 

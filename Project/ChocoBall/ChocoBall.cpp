@@ -22,13 +22,14 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	btSphereShape* Shape = new btSphereShape(0.3f);
 	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Chocoball, false, 1.0f, false,true);
-	m_CollisionObject->BitMask_AllOn();
-	m_CollisionObject->BitMask_Off(CollisionType::Player);
-	m_CollisionObject->BitMask_Off(CollisionType::Map);
-	m_CollisionObject->BitMask_Off(CollisionType::Wall);
-	m_CollisionObject->BitMask_Off(CollisionType::Floor);
-	m_CollisionObject->BitMask_Off(CollisionType::Boss);
-	m_CollisionObject->BitMask_Off(CollisionType::Boss_Barrier);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(CollisionType::Player);
+	m_CollisionObject->BitMask_On(CollisionType::Map);
+	m_CollisionObject->BitMask_On(CollisionType::Wall);
+	m_CollisionObject->BitMask_On(CollisionType::Floor);
+	m_CollisionObject->BitMask_On(CollisionType::Boss);
+	m_CollisionObject->BitMask_On(CollisionType::Boss_Barrier);
+	m_CollisionObject->BitMask_On(CollisionType::Enemy);
 
 	m_moveSpeed.x = 0.05f;
 	m_moveSpeed.z = 0.05f;

@@ -21,9 +21,10 @@ void CUpFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale
 	else{
 		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.0f * scale.z * 0.5f)), CollisionType::Floor, false, 0.0f, true,true);
 	}
-	m_CollisionObject->BitMask_AllOn();
-	m_CollisionObject->BitMask_Off(CollisionType::Chocoball);
-	m_CollisionObject->BitMask_Off(CollisionType::Player);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+	m_CollisionObject->BitMask_On(CollisionType::Player);
+	m_CollisionObject->BitMask_On(CollisionType::Enemy);
 
 	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 

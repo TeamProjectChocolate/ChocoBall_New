@@ -88,20 +88,14 @@ void CPlayer::Initialize()
 	btCollisionShape* Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
 
 
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Player, false, 1.0f, /*true*/true,true);
-	m_CollisionObject->BitMask_AllOn();
-	m_CollisionObject->BitMask_Off(CollisionType::Map);
-	//m_CollisionObject->BitMask_Off(CollisionType::Boss);
-	//m_CollisionObject->BitMask_Off(CollisionType::Wall);
-
-
-	//m_CollisionObject->BitMask_On(CollisionType::Player);
-	//m_CollisionObject->BitMask_On(CollisionType::Chocoball);
-	//m_CollisionObject->BitMask_On(CollisionType::Enemy);
-	//m_CollisionObject->BitMask_On(CollisionType::Boss_Barrier);
-	//m_CollisionObject->BitMask_On(CollisionType::Boss_Cource);
-	//m_CollisionObject->BitMask_On(CollisionType::Camera);
-	//m_CollisionObject->BitMask_On(CollisionType::Bullet);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, CollisionType::Player, false, 0.0f, true,true);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(CollisionType::Map);
+	m_CollisionObject->BitMask_On(CollisionType::Boss);
+	m_CollisionObject->BitMask_On(CollisionType::Wall);
+	m_CollisionObject->BitMask_On(CollisionType::Floor);
+	m_CollisionObject->BitMask_On(CollisionType::ChocoballTrigger);
+	m_CollisionObject->BitMask_On(CollisionType::Enemy);
 
 	m_IsIntersect.Initialize(static_cast<btRigidBody*>(this->GetCollisionObject()));
 	// あたりを無視する属性をセットしていく。
@@ -752,24 +746,39 @@ void CPlayer::ChocoHit()
 		m_ActiveKeyState = false;
 		m_pEmitter->SetEmitFlg(false);
 		m_AnimState = ANIMATION_STATE::WALK;
-		btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
-		m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
-		rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f)/*btVector3(0.1f, 0.1f, 0.1f)*/);//第一引数は質量、第二引数は回転のしやすさ
+
 		m_pModel->GetAnimation()->SetAnimSpeed(5.0f);//アニメーション再生速度を設定
+
+		// 剛体が流せるように設定。
+		{
+			// チョコボールの影響を受けるよう設定。
+			m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+			//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
+			m_CollisionObject->SetScale(D3DXVECTOR3(0.3f, 0.3f, 0.3f));
+			float mass = 1.0f;
+			//第一引数は質量、第二引数は回転のしやすさ。
+			static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.1f, 0.1f, 0.1f));
+		}
 	}
 }
-void CPlayer::EnemyBulletHit( D3DXVECTOR3 moveDir )
+void CPlayer::EnemyBulletHit(D3DXVECTOR3 moveDir)
 {
 	m_State = MOVE::STATE::Fly;
 	m_AnimState = ANIMATION_STATE::WAIT;
 	m_ActiveKeyState = false;
 	m_pAudio->PlayCue("スポッ１", false, this);
-	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
-	rb->setMassProps(1.0f, btVector3(0.01f, 0.01f, 0.01f));//第一引数は質量、第二引数は回転のしやすさ
-	moveDir *= 750.0f;
-	rb->applyForce(btVector3(moveDir.x, moveDir.y + 1000.0f, moveDir.z), btVector3(1.0f, 1.0f, 1.0f));//チョコボールに当たって吹っ飛ぶ力を設定
-	rb->setAngularVelocity(btVector3(5.0f, 5.0f, 5.0f));
 	m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
+
+	// 剛体が吹っ飛ぶよう設定。
+	{
+		float mass = 1.0f;
+		//第一引数は質量、第二引数は回転のしやすさ。
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
+		moveDir *= 750.0f;
+		float Power = 1000.0f;
+		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(moveDir + (Vector3::Up * Power), Vector3::One);//チョコボールに当たって吹っ飛ぶ力を設定
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+	}
 }
 void CPlayer::RollingPlayer()
 {
@@ -779,7 +788,7 @@ void CPlayer::RollingPlayer()
 
 	btRigidBody* rb = m_IsIntersect.GetRigidBody();//プレイヤーの剛体を取得
 	m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
-	rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f)/*btVector3(0.1f, 0.1f, 0.1f)*/);//第一引数は質量、第二引数は回転のしやすさ
+	rb->setMassProps(1.0f, btVector3(0.1f, 0.1f, 0.1f)/*btVector3(0.1f, 0.1f, 0.1f)*/);
 
 	//物理エンジンで計算した移動をプレイヤーに反映
 	btVector3 pos = rb->getWorldTransform().getOrigin();

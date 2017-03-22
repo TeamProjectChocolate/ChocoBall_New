@@ -37,61 +37,41 @@ public:
 
 	virtual void Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) = 0;
 
-	// 全レイヤーマスクオン。
-	__inline void BitMask_AllOn() {
-		SetLayerMask(0);
+	// 全レイヤーマスクオフ。
+	// すべての衝突を無視。
+	__inline void BitMask_AllOff() {
+		SetLayerMask(0x00000000);
 	}
 
-	// 全レイヤーマスクオフ。
+	// 全レイヤーマスクオン。
 	// すべてのコリジョンと当たり判定を行う。
-	__inline void BitMask_AllOff() {
+	__inline void BitMask_AllOn() {
 		SetLayerMask(btBroadphaseProxy::CollisionFilterGroups::AllFilter);
 	}
 
-	// 指定したコリジョンタイプのレイヤーマスクオン。
-	__inline void BitMask_On(CollisionType type) {
-		// type桁目のビットを0にしてマスクをオンにする。
+	// 指定したコリジョンタイプのレイヤーマスクオフ。
+	// 指定したコリジョンとの衝突無視。
+	__inline void BitMask_Off(CollisionType type) {
+		// type桁目のビットを0にしてマスクをオフにする。
 		int mask = 0x00000001;	// 0x00000001。
 		// type桁分左シフトしていったん目的のbitを1にする。
 		mask = mask << static_cast<int>(type);	// 0x00000001。
 		// すべてのbitを反転し、目的のビットのみ0、他は1にする。
 		mask = ~mask;	// 0xfffffffe。
 
-		////// 最上位ビットは符号ビットのため0にする。
-		////int work = 0xffffffff;
-		////mask = mask & work;	// 0x7ffffffe。
-
-		//if (m_LayerMask != -1) {
-		//	int test = m_LayerMask | mask;	// 消したいbitが1だった場合はtestの値は0xffffffffとなる。
-		//	if (test != 0xffffffff) {
-		//		// 消したいbitがもともと0だった。
-		//		return;
-		//	}
-		//}
-		//else {
-		//	//// 0xffffffffとなっているため、符号ビット以外を立ててから編集。
-		//	//m_LayerMask = 0x7fffffff;
-		//	// 設定時にあらかじめBulletPhysics内で宣言されていた分は左シフトするため、こちらでは逆の処理を行う。
-		//	m_LayerMask = (m_LayerMask >> 1) / btBroadphaseProxy::CharacterFilter;
-		//}
 		// AND演算で最終的なマスクbitを算出。
 		SetLayerMask(GetLayerMask() & mask);
 	}
 
-	// 指定したコリジョンタイプのレイヤーマスクオフ。
-	__inline void BitMask_Off(CollisionType type) {
+	// 指定したコリジョンタイプのレイヤーマスクオン。
+	__inline void BitMask_On(CollisionType type) {
 		// type桁目のビットを1にしてマスクをオフにする。
 		int mask = 0x00000001;	// 0x00000001。
 		// type桁分左シフト。
 		mask = mask << static_cast<int>(type);
-		// OR演算で元のマスクに加算。
 
-		int bit = GetLayerMask();
-		//if (bit != btBroadphaseProxy::CollisionFilterGroups::AllFilter && bit != 0x80000000/*0*/) {
-		//	// すでにBulletPhysics内部で使用する値に変換しているため、いったん元に戻してからマスクを加算する。
-		//	bit = (GetLayerMask() >> 1) / btBroadphaseProxy::CollisionFilterGroups::CharacterFilter;
-		//}
-		SetLayerMask(bit | mask);
+		// OR演算で元のマスクに加算。
+		SetLayerMask(GetLayerMask() | mask);
 	}
 
 
@@ -103,7 +83,7 @@ public:
 		SetMyType(type);
 		// bit形式に変換して保存。
 		int bitType = TypeToBitType(type);
-		SetMyBitGroup(bitType);
+		SetFilterGroup(bitType);
 		// BulletPhysicsに自分の属性を設定。
 		ConfigCollisionFilterGroup();
 	}
@@ -132,6 +112,10 @@ public:
 		m_collisionObject->getWorldTransform().setOrigin(btVector3(pos.x, pos.y, pos.z));
 	}
 
+	// コリジョン形状本体にコリジョンサイズ設定。
+	inline void SetScale(const D3DXVECTOR3& scale) {
+		m_collisionObject->getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
+	}
 
 protected:
 
@@ -146,7 +130,7 @@ protected:
 					OutputDebugString("マップもしくはプレイヤーのレイヤーマスク設定。");
 				}
 				// キャラクター剛体とキネマティック剛体もあたりを取る。
-				Proxy->m_collisionFilterMask = m_LayerMask/* | btBroadphaseProxy::CollisionFilterGroups::KinematicFilter | btBroadphaseProxy::CollisionFilterGroups::CharacterFilter*/;
+				Proxy->m_collisionFilterMask = m_LayerMask;
 			}
 		}
 	}
@@ -185,7 +169,7 @@ private:
 		//	//abort();
 		//	type = CollisionType::Boss_Cource;
 		//}
-		int ret = 0x0001;
+		int ret = 0x00000001;
 		// タイプの数字分左シフト。
 		ret = ret << static_cast<int>(type);
 		return ret;
@@ -194,38 +178,25 @@ private:
 
 	// コリジョンの属性を属性形式で保存。
 	inline void SetMyType(CollisionType type) {
-		if (static_cast<int>(type) >= 9) {
-			// マスクに設定できるのはデフォルトのマスクを除いて26bitまで。
-			OutputDebugString("タイプがオーバー。");
-			//abort();
-			//type = CollisionType::Boss_Cource;
-		}
+		//if (static_cast<int>(type) >= 9) {
+		//	// マスクに設定できるのはデフォルトのマスクを除いて26bitまで。
+		//	OutputDebugString("タイプがオーバー。");
+		//	//abort();
+		//}
 		m_MyType = type;
 	}
 	// コリジョンの属性をbit形式で保存。
-	__inline void SetMyBitGroup(int bit) {
-		//if (bit > 512) {
-		//	// マスクに設定できるのはデフォルトのマスクを除いて26bitまで。
-		//	//abort();
-		//	bit = 512;
-		//}
-
-		// 内部的にされている値は使用できないため、其の分左シフト変換して設定。
-		//if (bit != btBroadphaseProxy::CollisionFilterGroups::AllFilter && bit != 0x80000000/*0*/) {
-		//	// BulletPhysicsで既に使用されている列挙体を上書きするため、元の列挙子の最高値に2以上をかけて一つ左のbitを立てる。
-		//	bit = (bit << 1) * btBroadphaseProxy::CharacterFilter;
-		//}
+	// 引数はbit形式。
+	// ※この関数を呼んだら引数の値がフィルターグループとしてBulletPhysicsに通知されます。
+	__inline void SetFilterGroup(int bit) {
 		m_MyBitGroup = bit;
+		ConfigCollisionFilterGroup();
 	}
+
 	// レイヤーマスクセット。
 	// 引数はbit形式のマスク。
+	// ※この関数を呼んだら引数の値がレイヤーマスクとしてBulletPhysicsに通知されます。
 	__inline void SetLayerMask(int mask) {
-		//if (mask != btBroadphaseProxy::CollisionFilterGroups::AllFilter && mask != 0x80000000/*0*/) {
-		//	// BulletPhysicsで既に使用されている列挙体を上書きするため、元の列挙子の最高値に2以上をかけて一つ左のbitを立てる。
-		//	mask = (mask << 1) * btBroadphaseProxy::CharacterFilter;
-		//}
-		//// 符号ビットを立ててから代入。
-		//mask = mask | 0x8000;
 		m_LayerMask = mask;
 		ConfigCollisionFilterMask();
 	}

@@ -26,6 +26,20 @@ void CEnemy_People::Initialize() {
 	}
 	m_pModel->GetAnimation()->Play(-1, 0.0f,true);
 	ConfigLight();
+
+	btSphereShape* shape = new btSphereShape(1.0f);
+	float mass = 1.0f;
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, CollisionType::Enemy, false, mass, false, false);
+	m_CollisionObject->BitMask_AllOff();
+	m_CollisionObject->BitMask_On(CollisionType::Boss);
+	m_CollisionObject->BitMask_On(CollisionType::Map);
+	m_CollisionObject->BitMask_On(CollisionType::Wall);
+	m_CollisionObject->BitMask_On(CollisionType::Floor);
+	m_CollisionObject->BitMask_On(CollisionType::Player);
+	m_CollisionObject->BitMask_On(CollisionType::Chocoball);
+
+	//第一引数は質量、第二引数は回転のしやすさ。
+	static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
 }
 
 void CEnemy_People::Update() {
@@ -65,16 +79,17 @@ void CEnemy_People::Update() {
 }
 
 void CEnemy_People::HitReaction(D3DXVECTOR3 Dir) {
-	btSphereShape* shape = new btSphereShape(1.0f);
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, CollisionType::Enemy, false, 0.0f, true,true);
 	m_State = MOVE::STATE::Fly;
-	//m_IsIntersect.GetSphereShape()->setLocalScaling(btVector3(0.3f, 0.3f, 0.3f));//エネミーの球を小さく設定し、チョコボールに埋もれるようにしている。
-	CRigidbody* RBody = static_cast<CRigidbody*>(m_CollisionObject.get());
-	RBody->SetMassProps(1.0f, D3DXVECTOR3(0.01f, 0.01f, 0.01f));//第一引数は質量、第二引数は回転のしやすさ
-	Dir *= 750.0f;
-	RBody->ApplyForce(Dir + D3DXVECTOR3(0.0f,1000.0f,0.0f));//チョコボールに当たって吹っ飛ぶ力を設定
-	RBody->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
 	m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
+
+	// 剛体設定。
+	{
+		m_CollisionObject->AddWorld();
+		Dir *= 750.0f;
+		float Power = 1000.0f;
+		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir + (Vector3::Up * Power));//チョコボールに当たって吹っ飛ぶ力を設定
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+	}
 }
 
 void CEnemy_People::RollingEnemy()
