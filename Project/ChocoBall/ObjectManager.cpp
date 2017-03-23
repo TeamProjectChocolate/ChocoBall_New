@@ -52,7 +52,6 @@ void CObjectManager::DeleteGameObject(LPCSTR ObjectName){
 }
 
 void CObjectManager::DeleteGameObject(CGameObject* pObject){
-	int size = m_GameObjects.size();
 	pObject->OnDestroy();
 	m_DeleteObjects.push_back(pObject);
 }
@@ -63,20 +62,26 @@ void CObjectManager::DeleteGameObjectImmediate(CGameObject* pObject)
 		return;
 	}
 	pObject->OnDestroy();
-	vector<OBJECT_DATA*>::iterator itr;
 	int size = m_GameObjects.size();
 	for(int idx = 0;idx < size;idx++){
-		for (itr = m_GameObjects[idx].begin(); itr != m_GameObjects[idx].end(); itr++) {
+		for (auto itr = m_GameObjects[idx].begin(); itr != m_GameObjects[idx].end(); itr++) {
 			if (pObject == (*itr)->object) {
 				if ((*itr)->object->GetManagerNewFlg()) {
-					SAFE_DELETE(pObject);
+					SAFE_DELETE((*itr)->object);
 				}
+				else {
+					(*itr)->object = nullptr;
+				}
+				SAFE_DELETE((*itr));
+
+				pObject = nullptr;
 				itr = m_GameObjects[idx].erase(itr);
-				break;
+				return;
 			}
 		}
 	}
 }
+
 void CObjectManager::CleanManager(){
 	int size = m_GameObjects.size();
 	for (int idx = 0; idx < size; idx++){
@@ -100,8 +105,12 @@ void CObjectManager::ExcuteDeleteObjects(){
 				if ((*itr2) == (*itr)->object) {
 					if ((*itr)->object->GetManagerNewFlg()) {
 						SAFE_DELETE((*itr)->object);
-						SAFE_DELETE((*itr));
 					}
+					else {
+						(*itr)->object = nullptr;
+					}
+					SAFE_DELETE((*itr));
+
 					itr = m_GameObjects[priorty].erase(itr);
 					itr2 = m_DeleteObjects.erase(itr2);
 					inclimentFlg = false;
@@ -177,7 +186,7 @@ void CObjectManager::Draw(){
 			}
 		}
 		// 蓄積したデータでインスタンシング描画(不透明)。
-		vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing);
+		const vector<CRenderContext::RENDER_DATA*>& datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing);
 		for (auto data : datas){
 			data->render->Draw();
 		}
@@ -201,7 +210,7 @@ void CObjectManager::Draw(){
 			}
 		}
 		// 蓄積したデータでインスタンシング描画(半透明)。
-		vector<CRenderContext::RENDER_DATA*> datas_alpha = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing_Alpha);
+		const vector<CRenderContext::RENDER_DATA*>& datas_alpha = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::Instancing_Alpha);
 		for (auto data : datas_alpha) {
 			data->render->Draw();
 		}

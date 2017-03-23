@@ -47,16 +47,16 @@ void CChocoBall::Update()
 	static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Force);
 	if (m_IsBurst) {
 		if (m_TimeCounter >= m_DeathTime) {
-			// チョコボールを破裂させる。
-			m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, true, true);
-			D3DXVECTOR3 ThisToCameraVec = SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos() - m_transform.position;
-			D3DXVec3Normalize(&ThisToCameraVec, &ThisToCameraVec);
-			m_pEmitter->SetEmitPos(m_transform.position - (ThisToCameraVec * 0.5f));
-			//m_pEmitter->SetEmitFlg(true);
-			m_pEmitter->SetIsUseCource(false);
-			// 指定した時間後にエミッターを自発的に削除させる。
-			// nullptrが返ってくるためそれを格納。
-			m_pEmitter = m_pEmitter->SentenceOfDeath(0.5f);
+			//// チョコボールを破裂させる。
+			//m_pEmitter = CParticleEmitter::EmitterCreate(_T("ChocoParticle"), PARTICLE_TYPE::CHOCOBALL_BURST, m_transform.position, SINSTANCE(CRenderContext)->GetCurrentCamera(), m_StageID, true, true);
+			//D3DXVECTOR3 ThisToCameraVec = SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos() - m_transform.position;
+			//D3DXVec3Normalize(&ThisToCameraVec, &ThisToCameraVec);
+			//m_pEmitter->SetEmitPos(m_transform.position - (ThisToCameraVec * 0.5f));
+			////m_pEmitter->SetEmitFlg(true);
+			//m_pEmitter->SetIsUseCource(false);
+			//// 指定した時間後にエミッターを自発的に削除させる。
+			//// nullptrが返ってくるためそれを格納。
+			//m_pEmitter = m_pEmitter->SentenceOfDeath(0.25f);
 			SetAlive(false);
 		}
 		m_TimeCounter += 1.0f / 60.0f;

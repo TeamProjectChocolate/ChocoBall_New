@@ -7,7 +7,6 @@
 CParticleEmitter::CParticleEmitter()
 {
 	m_camera = nullptr;
-	m_param = nullptr;
 	m_timer = 0.0f;
 	m_count = 0;
 }
@@ -23,12 +22,11 @@ void CParticleEmitter::Initialize(){
 	m_timer = 0.0f;
 	m_random.Init(0.1);
 	SetAlive(true);
-	D3DXVec3Normalize(&m_emitDirection,&(m_param->initVelocity));
-	strcpy(m_ParticleName, m_param->texturePath);
+	D3DXVec3Normalize(&m_emitDirection,&(m_param.initVelocity));
+	strcpy(m_ParticleName, m_param.texturePath);
 	m_CourceDef.SetStageID(m_Stage_ID);
 	m_CourceDef.Initialize();
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
-	m_TailPosition = nullptr;
 	m_Residual = false;
 	m_CourceLange = 0;
 	m_ParticleList.clear();
@@ -45,6 +43,10 @@ void CParticleEmitter::Update(){
 	while (itr != m_ParticleList.end()){
 		if (!((*itr)->GetAlive())){
 			// ※絶対消すな。
+			if (m_pTailParticle == *itr) {
+				// 最後に生成したパーティクル。
+				m_pTailParticle = nullptr;
+			}
 			SINSTANCE(CObjectManager)->DeleteGameObject(*itr);
 			itr = m_ParticleList.erase(itr);
 			m_count--;
@@ -56,9 +58,6 @@ void CParticleEmitter::Update(){
 	if (m_pTailParticle != nullptr) {
 		m_Residual = false;
 	}
-
-	//// エミッター削除関連。
-	//DeathCount();
 }
 
 // パーティクル生成。
@@ -72,16 +71,14 @@ void CParticleEmitter::EmitParticle() {
 		}
 	}
 	if (m_EmitFlg) {
-		if (m_timer >= m_param->intervalTime) {
-			for (int idx = 0; idx < m_param->EmitNum; idx++) {
+		if (m_timer >= m_param.intervalTime) {
+			for (int idx = 0; idx < m_param.EmitNum; idx++) {
 				CParticle* p = SINSTANCE(CObjectManager)->GenerationObject<CParticle>(static_cast<LPCSTR>(m_ParticleName), OBJECT::PRIORTY::PARTICLE_ALPHA, false);
 				// パーティクルを発生させる方向を上書きする。
-				p->InitParticle(m_random, *m_camera, m_param, m_emitPosition, m_emitDirection);
+				p->InitParticle(m_random, *m_camera, &m_param, m_emitPosition, m_emitDirection);
 				m_timer = 0.0f;
 				m_ParticleList.push_back(p);
 				m_pTailParticle = p;
-				m_pTailParticle->SetTailParticle(&m_pTailParticle);
-				m_TailPosition = p->GetPosRef();
 				m_Residual = true;
 				m_count++;
 			}

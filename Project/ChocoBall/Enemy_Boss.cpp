@@ -32,19 +32,19 @@ CEnemy_Boss::~CEnemy_Boss()
 
 void CEnemy_Boss::InitState() {
 	// ボスのステートをすべて登録していく。
-	m_States.push_back(shared_ptr<CState>(new CSleepState(this)));
-	m_States.push_back(shared_ptr<CState>(new CWaitState(this)));
-	m_States.push_back(shared_ptr<CState>(new CMoveState(this)));
-	m_States.push_back(shared_ptr<CState>(new CAttackState(this)));
-	m_States.push_back(shared_ptr<CState>(new CEscapeState(this)));
-	m_States.push_back(shared_ptr<CState>(new CShotAttackState(this)));
-	m_States.push_back(shared_ptr<CState>(new CRushAttackState(this)));
-	m_States.push_back(shared_ptr<CState>(new CShotState(this)));
-	m_States.push_back(shared_ptr<CState>(new CTransState(this)));
-	m_States.push_back(shared_ptr<CState>(new CRotateState(this)));
+	m_States.push_back(unique_ptr<CState>(new CSleepState(this)));
+	m_States.push_back(unique_ptr<CState>(new CWaitState(this)));
+	m_States.push_back(unique_ptr<CState>(new CMoveState(this)));
+	m_States.push_back(unique_ptr<CState>(new CAttackState(this)));
+	m_States.push_back(unique_ptr<CState>(new CEscapeState(this)));
+	m_States.push_back(unique_ptr<CState>(new CShotAttackState(this)));
+	m_States.push_back(unique_ptr<CState>(new CRushAttackState(this)));
+	m_States.push_back(unique_ptr<CState>(new CShotState(this)));
+	m_States.push_back(unique_ptr<CState>(new CTransState(this)));
+	m_States.push_back(unique_ptr<CState>(new CRotateState(this)));
 
 	// 何もしないステート。
-	m_States.push_back(shared_ptr<CState>(new CState(this)));
+	m_States.push_back(unique_ptr<CState>(new CState(this)));
 }
 
 void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)

@@ -85,7 +85,7 @@ void CShadowRender::Draw(){
 		}
 	}
 	// インスタンシング
-	vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::_3D_ShadowSample_I);
+	const vector<CRenderContext::RENDER_DATA*>& datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::_3D_ShadowSample_I);
 	for (auto data : datas){
 			data->render->Draw();
 	}

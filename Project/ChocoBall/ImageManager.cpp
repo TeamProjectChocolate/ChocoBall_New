@@ -77,7 +77,10 @@ void CImageManager::DeleteAll(){
 	}
 	m_OriginalMeshDataList.clear();
 	for (int idx = 0, size = m_ImageList.size(); idx < size; idx++){
-		SAFE_DELETE(m_ImageList[idx]->pTex);
+		if (m_ImageList[idx]->pTex) {
+			m_ImageList[idx]->pTex->Release();
+			m_ImageList[idx]->pTex = nullptr;
+		}
 		SAFE_DELETE(m_ImageList[idx]);
 	}
 	m_ImageList.clear();

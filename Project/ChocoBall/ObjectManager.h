@@ -9,7 +9,7 @@
 // ゲームオブジェクト構造体
 typedef struct OBJECT_DATA{
 	CHAR objectname[OBJECTNAME_MAX + 1];	// 生成するオブジェクト名
-	CGameObject* object;	// ゲームオブジェクトのポインタ
+	CGameObject* object = nullptr;	// ゲームオブジェクトのポインタ
 }OBJECT_DATA;
 
 class CObjectManager

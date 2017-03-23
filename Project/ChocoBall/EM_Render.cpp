@@ -39,7 +39,7 @@ void CEM_Render::Draw()
 		(*graphicsDevice()).GetRenderTarget(0, &RenderingTarget);
 		(*graphicsDevice()).GetDepthStencilSurface(&m_SavedMapZ);
 
-		vector<vector<OBJECT_DATA*>> Objects = SINSTANCE(CObjectManager)->GetObjectList();
+		const vector<vector<OBJECT_DATA*>>& Objects = SINSTANCE(CObjectManager)->GetObjectList();
 		for (short hexa_idx = 0; hexa_idx < HEXA; hexa_idx++){
 			// カメラのポジション設定。
 			m_Cameras[hexa_idx].SetPos(m_CameraPos);
@@ -61,7 +61,7 @@ void CEM_Render::Draw()
 					}
 				}
 				// 蓄積したデータでインスタンシング描画
-				vector<CRenderContext::RENDER_DATA*> datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::EM_Sampling_I);
+				const vector<CRenderContext::RENDER_DATA*>& datas = SINSTANCE(CRenderContext)->GetRenderArray(RENDER::TYPE::EM_Sampling_I);
 				for (auto data : datas){
 					data->render->Draw();
 				}

@@ -100,7 +100,7 @@ void CRenderContext::RenderingStart(){
 	// 深度を書き込むときに参照するピントを計算
 	m_DofRender->MathPinto();
 
-	for (auto renders : m_Renders){
+	for (auto& renders : m_Renders){
 		for (auto render : renders){
 			render->render->SetDepthFarNear(m_DofRender->GetDepthFarNear());
 		}

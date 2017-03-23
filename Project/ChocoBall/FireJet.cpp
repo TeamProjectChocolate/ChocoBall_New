@@ -32,20 +32,20 @@ bool CFireJet::IsCollision(D3DXVECTOR3 pos, float radius){
 	if(m_pEmitter == nullptr){
 		return false;
 	}
-	SParticleEmitParameter* param = m_pEmitter->GetEmitParameter();
+	SParticleEmitParameter param = m_pEmitter->GetEmitParameter();
 	float timer;
-	if (m_pEmitter->GetEmitFlg() && m_JetCounter <= param->life && m_pEmitter->GetResidual()/*エミットフラグのみだとこちらの更新の方が速いためnullアクセスが発生する*/){
+	if (m_pEmitter->GetEmitFlg() && m_JetCounter <= param.life && m_pEmitter->GetResidual()/*エミットフラグのみだとこちらの更新の方が速いためnullアクセスが発生する*/){
 		timer = m_JetCounter;
 	}
 	else if (m_pEmitter->GetResidual()){
-		timer = param->life;
+		timer = param.life;
 	}
 	else{
 		// パーティクルが生成されておらず、残留もしていないため当たり判定を行わない
 		return false;
 	}
 
-	D3DXVECTOR3 work = D3DXVec3Length(&(param->initVelocity)) * m_pEmitter->GetDirection();
+	D3DXVECTOR3 work = D3DXVec3Length(&(param.initVelocity)) * m_pEmitter->GetDirection();
 	D3DXVECTOR3 Vec = (m_pEmitter->GetEmitPos() + work * timer) - m_pEmitter->GetTailPos();
 	D3DXVECTOR3 Vec2 = pos - m_pEmitter->GetEmitPos();
 	D3DXVECTOR3 RealVec = pos - m_pEmitter->GetTailPos();
@@ -60,9 +60,9 @@ bool CFireJet::IsCollision(D3DXVECTOR3 pos, float radius){
 		float rad = fabsf(acosf(D3DXVec3Dot(&Vec, &RealVec)));
 		if (rad <= D3DXToRadian(90.0f)){
 			D3DXVECTOR3 work2;
-			work2.x = work.x + (param->initVelocityVelocityRandomMargin.x * 0.6f);
-			work2.y = work.y + (param->initVelocityVelocityRandomMargin.y * 0.6f);
-			work2.z = work.z + (param->initVelocityVelocityRandomMargin.z * 0.6f);
+			work2.x = work.x + (param.initVelocityVelocityRandomMargin.x * 0.6f);
+			work2.y = work.y + (param.initVelocityVelocityRandomMargin.y * 0.6f);
+			work2.z = work.z + (param.initVelocityVelocityRandomMargin.z * 0.6f);
 			D3DXVECTOR3 Vec3 = (m_pEmitter->GetEmitPos() + work2) - m_pEmitter->GetEmitPos();
 			D3DXVec3Normalize(&Vec3, &Vec3);
 			D3DXVec3Normalize(&Vec2, &Vec2);

@@ -18,10 +18,6 @@ CParticle::CParticle()
 
 CParticle::~CParticle()
 {
-	if (*m_pTailParticle == this) {
-		// 自分が最後に生成したパーティクルなら、最後に生成したパーティクルのポインタ変数にnullを入れる。
-		*m_pTailParticle = nullptr;
-	}
 }
 
 void CParticle::Initialize(){
@@ -77,7 +73,6 @@ void CParticle::Draw(){
 	//SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pEffect);
 	//ここで固定描画と同じように、ローカル座標に設定された頂点群をデバイスに渡す。通常と同じ方法。
 	//	メッシュも同じく、マテリアルやテクスチャを設定
-	//DrawSubset()を呼び出して描画
 
 	// 板ポリ生成。
 	m_Primitive->CreatePorygon(m_width, m_hight, m_uv);
@@ -269,7 +264,11 @@ void CParticle::SetupMatrices(){
 void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEmitParameter* param, const D3DXVECTOR3& emitPosition,D3DXVECTOR3 dir){
 
 	UseModel<C2DImage>();
+	CH_ASSERT(strlen(param->texturePath) <= MAX_FILENAME);
+	strcpy(m_pFileName, param->texturePath);
 	m_pModel->SetFileName(param->texturePath);
+	m_pModel->SetImage();
+
 	m_pRender = SINSTANCE(CRenderContext)->SelectRender(RENDER::TYPE::_2D,_T(""),false,m_pModel);
 	m_pEMSamplingRender = SINSTANCE(CRenderContext)->SelectRender(RENDER::TYPE::EM_Sampling, _T(""), false, m_pModel);
 
@@ -296,9 +295,6 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 		m_uv = param->uvTable[0];
 	}
 
-	CH_ASSERT(strlen(param->texturePath) <= MAX_FILENAME);
-	strcpy(m_pFileName, param->texturePath);
-	m_pModel->SetImage();
 	m_camera = &camera;
 	m_random = &random;
 	m_life = param->life;

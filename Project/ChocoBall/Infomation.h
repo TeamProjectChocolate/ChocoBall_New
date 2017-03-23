@@ -49,7 +49,7 @@ namespace MODEL{
 	// 2DÉÇÉfÉãèÓïÒäiî[ópç\ë¢ëÃ
 	typedef struct IMAGE2D {
 		CHAR pFileName[MAX_FILENAME + 1];
-		LPDIRECT3DTEXTURE9 pTex;
+		LPDIRECT3DTEXTURE9 pTex = nullptr;
 		TEXTURE_SIZE RealSize;
 		TEXTURE_SIZE UnRealSize;
 	}IMAGE2D;

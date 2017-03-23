@@ -49,15 +49,15 @@ public:
 		m_camera = camera;
 	}
 	void SetEmitParameter(SParticleEmitParameter* param){
-		m_param = param;
+		m_param = *param;
 	}
-	SParticleEmitParameter* GetEmitParameter(){
+	const SParticleEmitParameter& GetEmitParameter()const{
 		return m_param;
 	}
-	void SetEmitPos(D3DXVECTOR3 pos){
+	void SetEmitPos(const D3DXVECTOR3& pos){
 		m_emitPosition = pos;
 	}
-	D3DXVECTOR3 GetEmitPos(){
+	const D3DXVECTOR3& GetEmitPos() const{
 		return m_emitPosition;
 	}
 	void SetEmitterName(LPCSTR name){
@@ -67,7 +67,7 @@ public:
 	void SetEmitFlg(bool flg){
 		m_EmitFlg = flg;
 	}
-	bool GetEmitFlg(){
+	bool GetEmitFlg()const{
 		return m_EmitFlg;
 	}
 	void SetDirection(const D3DXVECTOR3& dir){
@@ -76,31 +76,31 @@ public:
 	const D3DXVECTOR3& GetDirection()override{
 		return m_emitDirection;
 	}
-	D3DXVECTOR3 GetTailPos(){
-		return *m_TailPosition;
+	const D3DXVECTOR3& GetTailPos()const{
+		return m_pTailParticle->GetPos();
 	}
-	bool GetResidual(){
+	bool GetResidual()const{
 		return m_Residual;
 	}
 	void SetStageID(STAGE_ID id){
 		m_Stage_ID = id;
 	}
-	int GetCourceNo(){
+	int GetCourceNo()const{
 		return m_CurrentCourceNo;
 	}
-	int GetPlayerCourceNo(){
+	int GetPlayerCourceNo()const{
 		return m_NowPlayerCourceNo;
 	}
 	void SetCourceLange(int lange){
 		m_CourceLange = lange;
 	}
-	int GetCourceLange(){
+	int GetCourceLange()const{
 		return m_CourceLange; 
 	}
 	void SetIsUseCource(bool flg){
 		m_IsUseCource = flg;
 	}
-	inline bool GetIsUseDeathTime() {
+	inline bool GetIsUseDeathTime()const {
 		return m_IsUseDeathTime;
 	}
 public:
@@ -122,7 +122,7 @@ private:
 	float m_timer;
 	CRandom m_random;
 	CCamera* m_camera;
-	SParticleEmitParameter* m_param;
+	SParticleEmitParameter m_param;
 	D3DXVECTOR3 m_emitPosition;
 	D3DXVECTOR3 m_emitDirection;	// パーティクルを発生させる向き(オブジェクトの方向を表すものとは別物として定義)。
 	list<CParticle*> m_ParticleList;
@@ -134,8 +134,7 @@ private:
 	int m_NowPlayerCourceNo;
 	CCourceDef m_CourceDef;
 	CPlayer* m_pPlayer;
-	D3DXVECTOR3* m_TailPosition;	// 最後に生成したプリミティブのポジションを追跡するためのポインタ
-	CParticle* m_pTailParticle;		// 最後に生成したパーティクルのポインタ
+	CParticle* m_pTailParticle = nullptr;		// 最後に生成したパーティクルのポインタ
 	bool m_Residual;			// 最後に生成したパーティクルが残留しているか
 	int m_CourceLange;			// プレイヤーとパーティクルの発生位置がどれくらい離れていれば発生させないか
 	float m_DeathTime;	// エミッターの寿命(SentenceOfDeath関数が呼ばれた直後からカウント)。

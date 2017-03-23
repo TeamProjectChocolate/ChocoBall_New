@@ -113,7 +113,7 @@ private:
 
 	int m_DamageCounter = 0;
 	CState* m_pCurrentState = nullptr;
-	vector<shared_ptr<CState>> m_States;	// ボスのステートすべてを格納。
+	vector<unique_ptr<CState>> m_States;	// ボスのステートすべてを格納。
 
 	vector<CDivisionWall*>* m_Walls;
 	int m_WallsIdx = 0;	// Wallsの添え字。

@@ -47,12 +47,6 @@ public:
 		CH_ASSERT(strlen(name) <= MAX_FILENAME);
 		strcpy(m_pFileName, name);
 	}
-	D3DXVECTOR3* GetPosRef(){
-		return &(m_ParticleData.position);
-	}
-	void SetTailParticle(CParticle** p) {
-		m_pTailParticle = p;
-	}
 public:
 // 静的メンバ関数
 	// パーティクルクラスで使用するプリミティブ生成。
@@ -75,8 +69,6 @@ private:
 	float m_brightness;		// 輝度。ブルームが有効なら強くすると光があふれる
 	int m_alphaBlendMode;		// 半透明合成、1加算合成
 	float m_deltaTime;
-
-	CParticle** m_pTailParticle = nullptr;	// 最後に生成したパーティクルの入ったポインタ。
 
 	// 板ポリのサイズ。
 	float m_width;

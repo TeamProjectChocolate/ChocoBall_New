@@ -70,9 +70,9 @@ public:
 
 private:
 	// 頂点バッファ生成。
-	void VertexBufferCreate(int, int, const void*);
+	void VertexBufferCreate(int, int);
 	// インデックスバッファ生成。
-	void IndexBufferCreate(int, D3DFORMAT, const void*);
+	void IndexBufferCreate(int, D3DFORMAT);
 	// 頂点定義作成。
 	void VertexDeclCreate(LPDIRECT3DVERTEXDECLARATION9 decl, const D3DVERTEXELEMENT9* element);
 

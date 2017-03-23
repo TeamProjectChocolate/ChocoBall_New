@@ -54,8 +54,8 @@ void CPrimitive::Create(
 	m_numIndex = numIndex;
 
 	//Release();
-	VertexBufferCreate(m_numVertex, m_vertexStride, nullptr);
-	IndexBufferCreate(m_numIndex, indexFormat, nullptr);
+	VertexBufferCreate(m_numVertex, m_vertexStride);
+	IndexBufferCreate(m_numIndex, indexFormat);
 	VertexDeclCreate(nullptr, vertexLayout);
 	if (m_type == eTriangleList) {
 		m_numPolygon = m_numIndex / 3;
@@ -99,7 +99,7 @@ void CPrimitive::Release() {
 	}
 }
 
-void CPrimitive::VertexBufferCreate(int numVertex, int stride,const void* pSrcVertexBuffer){
+void CPrimitive::VertexBufferCreate(int numVertex, int stride){
 	LPDIRECT3DVERTEXBUFFER9 pVB;
 
 	int l_size = numVertex * stride;
@@ -112,12 +112,9 @@ void CPrimitive::VertexBufferCreate(int numVertex, int stride,const void* pSrcVe
 
 	// 作成した頂点バッファを保存。
 	m_vertexBuffer = pVB;
-
-	// 頂点バッファに受け取ったデータを転送。
-	this->CopyVertexData(pSrcVertexBuffer);
 }
 
-void CPrimitive::IndexBufferCreate(int numIndex, D3DFORMAT format, const void* pSrcIndexBuffer){
+void CPrimitive::IndexBufferCreate(int numIndex, D3DFORMAT format){
 	LPDIRECT3DINDEXBUFFER9 pIB;
 
 	// 渡されたインデックスバッファのフォーマットを適応。
@@ -145,9 +142,6 @@ void CPrimitive::IndexBufferCreate(int numIndex, D3DFORMAT format, const void* p
 
 	// 生成したインデックスバッファを保存。
 	m_indexBuffer = pIB;
-
-	// インデックスバッファに受け取ったデータを転送。
-	this->CopyIndexData(pSrcIndexBuffer);
 }
 
 void CPrimitive::VertexDeclCreate(LPDIRECT3DVERTEXDECLARATION9 decl, const D3DVERTEXELEMENT9* element) {
