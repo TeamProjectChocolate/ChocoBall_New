@@ -134,8 +134,8 @@ namespace PARTICLE{
 
 namespace PRIMITIVE {
 	struct SShapeVertex_PT {
-		float		pos[4];
-		float		uv[2];
+		D3DXVECTOR4	pos;
+		D3DXVECTOR2	uv;
 	};
 }
 

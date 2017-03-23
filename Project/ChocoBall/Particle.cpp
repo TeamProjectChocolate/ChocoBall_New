@@ -5,10 +5,13 @@
 #include "RenderContext.h"
 #include "C2DRender.h"
 
-LPDIRECT3DVERTEXDECLARATION9 CParticle::m_VertexDecl = nullptr;
+// 静的メンバ。
+unique_ptr<CPrimitive> CParticle::m_Primitive;
 
 CParticle::CParticle()
 {
+	// パーティクルで使用するプリミティブ作成。
+	CParticle::CreatePrimitive();
 	m_applyFource = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	strcpy(m_pFileName,"image/test.png");
 }
@@ -76,9 +79,9 @@ void CParticle::Draw(){
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
 
-	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
-	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
-	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
+	(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
+	(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
+	(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
 
 
 	SetUpTechnique();
@@ -162,9 +165,9 @@ void CParticle::Draw_EM(CCamera* camera){
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
 
-	(*graphicsDevice()).SetStreamSource(0, m_Primitive.GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
-	(*graphicsDevice()).SetIndices(m_Primitive.GetIndexBuffer());
-	(*graphicsDevice()).SetVertexDeclaration(m_Primitive.GetVertexDecl());
+	(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
+	(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
+	(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
 
 	static_cast<CEM_SamplingRender*>(m_pEMSamplingRender)->SetCamera(camera);
 	EM_SetUpTechnique();
@@ -276,8 +279,6 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 
 	m_transform.scale = D3DXVECTOR3(width, hight, 1.0f);
 
-	float halfW = param->w * 0.5f;
-	float halfH = param->h * 0.5f;
 	CH_ASSERT(param->uvTableSize <= ARRAYSIZE(param->uvTable));
 	D3DXVECTOR4 uv;
 	if (param->uvTableSize > 0){
@@ -287,30 +288,8 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 		uv = param->uvTable[0];
 	}
 
-	PRIMITIVE::SShapeVertex_PT vp[] = {
-		{ -halfW, halfH, 0.0f, 1.0f, uv.x, uv.y },
-		{ halfW, halfH, 0.0f, 1.0f, uv.z, uv.y },
-		{ -halfW, -halfH, 0.0f, 1.0f, uv.x, uv.w },
-		{ halfW, -halfH, 0.0f, 1.0f, uv.z, uv.w }
-	};
-	short index[]{
-		0, 1, 2, 3
-	};
-
-	// 頂点定義作成。
-	CreateVertexDecl();
-
-	// プリミティブ作成。
-	m_Primitive.Create(
-		EType::eTriangleStrip,
-		4,
-		sizeof(PRIMITIVE::SShapeVertex_PT),
-		m_VertexDecl,
-		scShapeVertex_PT_Element,
-		vp,
-		4,
-		D3DFMT_INDEX16,
-		index);
+	// 板ポリ生成。
+	m_Primitive->CreatePorygon(param->w, param->h, uv);
 
 	CH_ASSERT(strlen(param->texturePath) <= MAX_FILENAME);
 	strcpy(m_pFileName, param->texturePath);
@@ -342,4 +321,24 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	m_deltaTime = 1.0f / 60.0f;
 	
 	SetAlive(true);
+}
+
+void CParticle::CreatePrimitive() {
+	if (m_Primitive.get() == nullptr) {
+		// プリミティブが生成されていない。
+		m_Primitive.reset(new CPrimitive);
+		// プリミティブ作成。
+		// 頂点数。
+		int numVertex = 4;
+		// インデックスのサイズ。
+		int numIndex = 4;
+
+		m_Primitive->Create(
+			EType::eTriangleStrip,
+			numVertex,
+			sizeof(PRIMITIVE::SShapeVertex_PT),
+			scShapeVertex_PT_Element,
+			numIndex,
+			D3DFMT_INDEX16);
+	}
 }

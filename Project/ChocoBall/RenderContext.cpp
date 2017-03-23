@@ -23,39 +23,20 @@ void CRenderContext::CreateRenderingTerget(){
 		m_Renders.push_back(vector<RENDER_DATA*>());
 	}
 
-
-	static PRIMITIVE::SShapeVertex_PT vertex[]{
-		{
-			-1.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f
-		},
-		{
-			1.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 0.0f
-		},
-		{
-			-1.0f, -1.0f, 0.0f, 1.0f,
-			0.0f, 1.0f
-		},
-		{
-			1.0f, -1.0f, 0.0f, 1.0f,
-			1.0f, 1.0f
-		},
-	};
-	static unsigned short index[] = {
-		0, 1, 2, 3
-	};
-	m_copyBackBufferPrim.Create(
+	float size_W, size_H;
+	size_W = size_H = 2.0f;
+	// î¬É|Éäê∂ê¨ÅB
+	m_copyBackBufferPrim.Initialize(
+		size_W,
+		size_H,
+		D3DXVECTOR4(0.0f,0.0f,1.0f,1.0f),
 		EType::eTriangleStrip,
 		4,
 		sizeof(PRIMITIVE::SShapeVertex_PT),
-		nullptr,
 		scShapeVertex_PT_Element,
-		vertex,
 		4,
-		D3DFMT_INDEX16,
-		index
-		);
+		D3DFMT_INDEX16
+	);
 
 	m_bufferSize_Width = WINDOW_WIDTH * 2;
 	m_bufferSize_Height = WINDOW_HEIGHT * 2;

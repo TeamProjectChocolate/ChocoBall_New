@@ -19,17 +19,34 @@ class CPrimitive
 public:
 	CPrimitive();
 	~CPrimitive();
+
+	// 板ポリとプリミティブ生成関数。
+	// 引数:	板ポリサイズ横。
+	//			板ポリサイズ縦。
+	//			uv(xが左上のU、xが左上のV、xが右下のU、xが右下のV)。
+	//			インデックスバッファの形式。
+	//			頂点数。
+	//			1つの頂点のサイズ。
+	//			頂点レイアウト(1つの頂点の構成を示す設計図のようなもの。第四引数がnullptrだった場合はこれを参照して頂点定義を作成する)。
+	//			インデックスバッファのサイズ。
+	//			インデックスバッファのフォーマット。
+	void Initialize(float PrimitiveSize_W, float PrimitiveSize_H, const D3DXVECTOR4& uv,EType, int, int, const D3DVERTEXELEMENT9*, int, D3DFORMAT);
+
 	// プリミティブ生成関数。
 	// 引数:	インデックスバッファの形式。
 	//			頂点数。
 	//			1つの頂点のサイズ。
-	//			頂点定義(外部から頂点定義を指定する場合はここに入れる。nullptrを入れるとクラス内で生成される)。
 	//			頂点レイアウト(1つの頂点の構成を示す設計図のようなもの。第四引数がnullptrだった場合はこれを参照して頂点定義を作成する)。
-	//			頂点バッファに渡す頂点情報。
 	//			インデックスバッファのサイズ。
 	//			インデックスバッファのフォーマット。
-	//			インデックスバッファに設定する値。
-	void Create(EType, int, int, LPDIRECT3DVERTEXDECLARATION9 ,const D3DVERTEXELEMENT9*, void*, int, D3DFORMAT, void*);
+	void Create(EType, int, int, const D3DVERTEXELEMENT9*, int, D3DFORMAT);
+
+	// 板ポリ生成関数。
+	// 引数:	板ポリサイズ横。
+	//			板ポリサイズ縦。
+	//			uv(xが左上のU、yが左上のV、zが右下のU、wが右下のV)。
+	void CreatePorygon(float PrimitiveSize_W, float PrimitiveSize_H, const D3DXVECTOR4& uv);
+
 	void Release();
 	LPDIRECT3DVERTEXBUFFER9 GetVertexBuffer(){
 		return m_vertexBuffer;
@@ -46,17 +63,29 @@ public:
 	int GetNumpolygon()const{
 		return m_numPolygon;
 	}
-	void VertexBufferCreate(int, int, const void*);
-	void IndexBufferCreate(int, D3DFORMAT, const void*);
-	void VertexDeclCreate(LPDIRECT3DVERTEXDECLARATION9 decl, const D3DVERTEXELEMENT9* element);
-		// 頂点定義の取得
-	IDirect3DVertexDeclaration9* GetVertexDecl(){
+	// 頂点定義の取得
+	IDirect3DVertexDeclaration9* GetVertexDecl() {
 		return m_pVertexDecl;
 	}
+
 private:
-	int m_numVertex;
-	int m_numIndex;
-	int m_vertexStride;
+	// 頂点バッファ生成。
+	void VertexBufferCreate(int, int, const void*);
+	// インデックスバッファ生成。
+	void IndexBufferCreate(int, D3DFORMAT, const void*);
+	// 頂点定義作成。
+	void VertexDeclCreate(LPDIRECT3DVERTEXDECLARATION9 decl, const D3DVERTEXELEMENT9* element);
+
+	// 頂点バッファにデータを転送。
+	void CopyVertexData(const void* data);
+	// インデックスバッファにデータを転送。
+	void CopyIndexData(const void* data);
+
+private:
+	int m_numVertex;	// 頂点バッファの要素数。
+	int m_vertexStride;	// 頂点バッファの一要素のサイズ。
+	int m_numIndex;	// インデックスバッファの要素数。
+	int m_indexStride;	// インデックスバッファの一要素のサイズ。
 	int m_numPolygon;
 	LPDIRECT3DVERTEXBUFFER9 m_vertexBuffer = nullptr;
 	LPDIRECT3DINDEXBUFFER9 m_indexBuffer = nullptr;
