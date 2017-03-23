@@ -70,5 +70,5 @@ private:
 	float m_TimeCounter;
 	bool m_IsBurst = false;
 	STAGE_ID m_StageID;
-	CParticleEmitter* m_pEmitter;
+	CParticleEmitter* m_pEmitter = nullptr;
 };

@@ -101,15 +101,19 @@ public:
 		m_IsUseCource = flg;
 	}
 	inline bool GetIsUseDeathTime() {
-		return m_IsUseCource;
+		return m_IsUseDeathTime;
 	}
 public:
 	// エミッターに死の宣告を与える関数。
 	// 指定した時間後にエミッターを削除する。
-	inline void SentenceOfDeath(float DeathTime) {
+	// 引数:	削除までの猶予時間。
+	// 戻り値:	呼び出し元のインスタンスに格納することで解放済みのアドレスを参照しない。
+	// ※この関数を呼ぶとエミッターは自発的に削除を行います。
+	inline CParticleEmitter* SentenceOfDeath(float DeathTime) {
 		m_DeathTime = DeathTime;
 		m_DeathCounter = 0.0f;
 		m_IsUseDeathTime = true;
+		return nullptr;
 	}
 private:
 	void EmitParticle();

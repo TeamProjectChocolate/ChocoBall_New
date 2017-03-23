@@ -22,15 +22,15 @@ void CCBManager::Initialize()
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/ball.x");
 	CGameObject::Initialize();
-		InitInstancing(m_CBManagerNum * CHOCO_NUM,true);
-		SINSTANCE(CShadowRender)->Entry(this);	// チョコボールはインスタンシング描画のため自身を登録する
-		m_pModel->m_alpha = 1.0f;
-		m_pModel->m_luminance = 0.0f;
-		m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::EARTH];
+	InitInstancing(m_CBManagerNum * CHOCO_NUM, true);
+	SINSTANCE(CShadowRender)->Entry(this);	// チョコボールはインスタンシング描画のため自身を登録する
+	m_pModel->m_alpha = 1.0f;
+	m_pModel->m_luminance = 0.0f;
+	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::EARTH];
 #endif
-		// 当たり判定を行うオブジェクトを登録。
-		m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
-		m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
+	// 当たり判定を行うオブジェクトを登録。
+	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
+	m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
 }
 
 void CCBManager::ActivateShadowRender(){
@@ -77,7 +77,7 @@ void CCBManager::CreateChocoBall() {
 		if (m_interval < m_timer) {
 			int createCount = 0;
 			while (true) {
-				if (m_Choco.size() >= CHOCO_NUM) {
+				if (m_numCreate >= CHOCO_NUM) {
 					// チョコボールの数が目標数に到達。
 					m_IsFirst = false;
 					break;
@@ -106,6 +106,7 @@ void CCBManager::CreateChocoBall() {
 				SINSTANCE(CShadowRender)->Entry(ptr.get());
 #endif
 				createCount++;
+				m_numCreate++;
 			}
 		}
 	}

@@ -131,6 +131,7 @@ public:
 private:
 	void CreateChocoBall();
 private:
+	int m_numCreate = 0;	// チョコボール生成数。
 	D3DXVECTOR3			m_pos;			//生成される場所のポジション。
 	D3DXVECTOR3			m_posG;			//流れていく先(ゴール)のポジション。
 	vector<CChocoBall*>	m_Choco;

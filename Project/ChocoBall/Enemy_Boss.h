@@ -104,9 +104,6 @@ private:
 	float m_CapsuleRadius = 3.5f;	// コリジョンサイズ(直径)。
 	float m_CapsuleHeight = 30.0f;	// コリジョンサイズ(高さ)。
 	CCollisionObject m_CourceCollision;
-	//btVector3 m_CollisionSize;
-	//unique_ptr<btBoxShape> m_pBoxShape_Cource;	// コリジョンの形状(今回は箱)。
-	//unique_ptr<btCollisionObject> m_pCollision;	// コリジョン。
 
 	// コース定義。
 	CBossCourceDef m_CourceDef;
