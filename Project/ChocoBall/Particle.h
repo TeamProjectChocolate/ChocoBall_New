@@ -78,6 +78,10 @@ private:
 
 	CParticle** m_pTailParticle = nullptr;	// 最後に生成したパーティクルの入ったポインタ。
 
+	// 板ポリのサイズ。
+	float m_width;
+	float m_hight;
+	D3DXVECTOR4 m_uv;	// 板ポリのUV。
 private:
 	// 静的メンバ変数。
 	static unique_ptr<CPrimitive> m_Primitive;	// このクラスで使用するプリミティブは全く同じ頂点情報を使用するため1つでいい。

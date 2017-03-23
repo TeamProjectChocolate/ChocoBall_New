@@ -79,6 +79,9 @@ void CParticle::Draw(){
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
 
+	// 板ポリ生成。
+	m_Primitive->CreatePorygon(m_width, m_hight, m_uv);
+
 	(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 	(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
 	(*graphicsDevice()).SetVertexDeclaration(m_Primitive->GetVertexDecl());
@@ -164,6 +167,9 @@ void CParticle::Draw_EM(CCamera* camera){
 	//ここで固定描画と同じように、ローカル座標に設定された頂点群をデバイスに渡す。通常と同じ方法。
 	//	メッシュも同じく、マテリアルやテクスチャを設定
 	//DrawSubset()を呼び出して描画
+
+	// 板ポリ生成。
+	m_Primitive->CreatePorygon(m_width, m_hight, m_uv);
 
 	(*graphicsDevice()).SetStreamSource(0, m_Primitive->GetVertexBuffer(), 0, sizeof(PRIMITIVE::SShapeVertex_PT));
 	(*graphicsDevice()).SetIndices(m_Primitive->GetIndexBuffer());
@@ -274,22 +280,21 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	}
 	float rand = (static_cast<float>(random.GetRandDouble()) * (param->size_randMax - param->size_randMin)) + param->size_randMin;
 
-	float width = param->w * rand;
-	float hight = param->h * rand;
+	// 板ポリのサイズを保存。
+	// Drawで板ポリを生成する際に使用。
+	// ※m_Primitiveは静的メンバのため、初期化時に板ポリを生成すると最後に生成したもので上書きされてしまう。
+	m_width = param->w;
+	m_hight = param->h;
 
-	m_transform.scale = D3DXVECTOR3(width, hight, 1.0f);
+	m_transform.scale = D3DXVECTOR3(m_width * rand, m_hight* rand, 1.0f);
 
 	CH_ASSERT(param->uvTableSize <= ARRAYSIZE(param->uvTable));
-	D3DXVECTOR4 uv;
 	if (param->uvTableSize > 0){
-		uv = param->uvTable[random.GetRandInt() % param->uvTableSize];
+		m_uv = param->uvTable[random.GetRandInt() % param->uvTableSize];
 	}
 	else{
-		uv = param->uvTable[0];
+		m_uv = param->uvTable[0];
 	}
-
-	// 板ポリ生成。
-	m_Primitive->CreatePorygon(param->w, param->h, uv);
 
 	CH_ASSERT(strlen(param->texturePath) <= MAX_FILENAME);
 	strcpy(m_pFileName, param->texturePath);
