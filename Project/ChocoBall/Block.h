@@ -25,6 +25,7 @@ public:
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot);
 	void Update();
 	void Draw();
+
 	void BeginDraw();
 	void EndDraw();
 
@@ -54,6 +55,10 @@ public:
 	bool GetLife(){
 		return m_life;
 	}
+
+	// チョコ壁を飛ばす。
+	void Throw(const D3DXVECTOR3& dir, float Power);
+
 	//親が死んだときに呼ばれる処理。
 	void OnDestroyParent();
 
@@ -68,6 +73,14 @@ public:
 			m_parent = NULL;
 		}
 	}
+
+	// 死の宣告を与える関数。
+	// 引数:	削除までの猶予時間。
+	inline void SentenceOfDeath(float DeathTime) {
+		m_DeathTime = DeathTime;
+		m_DeathCounter = 0.0f;
+	}
+
 	bool IsDead()
 	{
 		return m_isDead;
@@ -83,19 +96,33 @@ public:
 		m_Player = Obj;
 	}
 
+	inline void SetBulletPhisics(CBulletPhysics* BP){
+		m_pBulletPhysics = BP;
+	}
 private:
 	// プレイヤーとの衝突判定。
 	void CollisionPlayer();
+	// 死亡までカウント。
+	void DeathCount();
 	//子供を設定。
 	void SetChild(CBlock* child)
 	{
 		m_child = child;
 	}
+	// 子との縁を切る。
+	inline void RemoveChild() {
+		m_child = nullptr;
+	}
+	// 親との縁を切る。
+	inline void RemoveParent() {
+		m_parent = nullptr;
+	}
 private:
-	enum EnState{
+	enum EnState {
 		enState_Normal,	//通常状態。
 		enState_Broken,	//壊れた。
 		enState_Fall,	//落下中。
+		enState_Crumble,	// 自壊。
 	};
 	CBlock*			m_parent;		//親ブロック
 	CBlock*			m_child;		//子供
@@ -108,5 +135,11 @@ private:
 	D3DXHANDLE m_hShaderTecnique;	//シェーダーテクニックのハンドル。
 	bool m_IsThrow = false;
 
+	CBulletPhysics* m_pBulletPhysics = nullptr;
+
 	CPlayer* m_Player;
+	float m_ThrowTime = 0.0f;
+	float m_ThrowCounter = 0.0f;
+	float m_DeathTime = 0.0f;
+	float m_DeathCounter = 0.0f;
 };

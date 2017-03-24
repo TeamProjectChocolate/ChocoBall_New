@@ -18,7 +18,8 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 {
 	// プレイヤーのインスタンス取得。
 	CPlayer* Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
-
+	// バレットフィジクスインスタンス取得。
+	CBulletPhysics* BP = SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"));
 	for (int i = 0; i < BUILD_H; i++){
 		for (int j = 0; j < BUILD_W; j++){
 			D3DXVECTOR4 offset(j*BLOCK_W, 0.0f, 0.0f, 1.0f);
@@ -32,6 +33,7 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 
 			m_blocks[i][j].Initialize(_pos, rot);
 			m_blocks[i][j].SetPlayer(Player);
+			m_blocks[i][j].SetBulletPhisics(BP);
 		}
 	}
 	//親子関係の構築。
@@ -158,4 +160,12 @@ void CBuildBlock::Draw_EM(CCamera* camera){
 			}
 		}
 #endif
+}
+
+void CBuildBlock::ThrowBlock(const D3DXVECTOR3& dir, float Power) {
+	for (short row = 0; row < BUILD_H; row++) {
+		for (short col = 0; col < BUILD_W; col++) {
+			m_blocks[row][col].Throw(dir,Power);
+		}
+	}
 }

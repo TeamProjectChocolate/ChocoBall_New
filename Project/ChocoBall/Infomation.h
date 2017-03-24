@@ -58,6 +58,7 @@ namespace MODEL{
 namespace Vector3 {
 	const D3DXVECTOR3 Zero = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DXVECTOR3 One = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	const D3DXVECTOR3 One_Minus = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
 
 	const D3DXVECTOR3 Up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	const D3DXVECTOR3 Down = D3DXVECTOR3(0.0f, -1.0f, 0.0f);

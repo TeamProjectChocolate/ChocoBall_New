@@ -37,12 +37,12 @@ public:
 		static_cast<btRigidBody*>(m_collisionObject.get())->setMassProps(mass,btVector3(inertia.x, inertia.y, inertia.z));
 	}
 	// 剛体を動的化。
-	void OnDynamic() {
+	inline void OnDynamic() {
 		m_IsKinematic = false;
 		m_collisionObject->setCollisionFlags(0);
 	}
 	// 剛体をキネマティック化。
-	void OnKinematic() {
+	inline void OnKinematic() {
 		m_IsKinematic = true;
 		m_collisionObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 		m_collisionObject->setActivationState(DISABLE_DEACTIVATION);

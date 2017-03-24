@@ -47,7 +47,7 @@ void CBlock::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot)
 
 	float mass = 0.0f;
 	//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)/*btVector3(1.0f, 1.0f, 1.0f)*/), Collision::Type::Wall,Collision::FilterGroup::Gimmick, false, mass, true,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.0f*0.5f, 1.0f*0.5f, 1.0f*0.5f)), Collision::Type::Wall,Collision::FilterGroup::Gimmick, false, mass, true,true);
 	m_CollisionObject->BitMask_AllOff();
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
@@ -76,12 +76,63 @@ void CBlock::Update()
 			m_eState = enState_Normal;
 		}
 		break;
+	case enState_Crumble:
+		int randPtern = 8;
+		int rnd_x = (rand() % randPtern) - (randPtern / 2);
+		int rnd_y = (rand() % randPtern) - (randPtern / 2);
+		int rnd_z = (rand() % randPtern) - (randPtern / 2);
+
+		// 崩れ方をいい感じにばらけさせる(力の向きと大きさ)。
+		float Power = 100.0f;
+		float Volume = 0.1f;
+		D3DXVECTOR3 Vel = m_Velocity;
+		Vel.x += (Volume * static_cast<float>(rnd_x));
+		Vel.y += (Volume * static_cast<float>(rnd_y));
+		Vel.z += (Volume * static_cast<float>(rnd_z));
+		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Vel * Power);
+
+		// 崩れ方をいい感じにばらけさせる(回転のしやすさ)。
+		float mass = 1.0f;
+		D3DXVECTOR3 Inertia = Vector3::One;
+		Inertia.x += (Volume * static_cast<float>(rnd_x));
+		Inertia.y += (Volume * static_cast<float>(rnd_y));
+		Inertia.z += (Volume * static_cast<float>(rnd_z));
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, Inertia);
+
+		// 死亡判定。
+		this->DeathCount();
+		break;
 	}
 
 	if (m_IsThrow) {
 		// 指定された方向に進む。
 		m_transform.position += m_Velocity;
+		// 衝突判定。
 		CollisionPlayer();
+
+		if (m_ThrowCounter >= m_ThrowTime) {
+			// 指定された時間を過ぎた。
+
+			int randPtern = 8;
+			int rnd = (rand() % randPtern) - (randPtern / 2);
+			this->SentenceOfDeath(2.0f + (0.05f * static_cast<float>(rnd)));
+
+			// 物理挙動オン。
+			static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
+
+			// 崩すためにチョコ壁との衝突判定も開始。
+			m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
+
+			// 親子の縁を切る。
+			this->RemoveChild();
+			this->RemoveParent();
+
+			m_IsThrow = false;
+
+			m_eState = EnState::enState_Crumble;
+		}
+		float deltaTime = 1.0f / 60.0f;
+		m_ThrowCounter += deltaTime;
 	}
 	
 	CGameObject::Update();
@@ -98,60 +149,43 @@ void CBlock::CollisionPlayer() {
 	Start = btTransform(btQuaternion(Rotation.x, Rotation.y, Rotation.z, Rotation.w), btVector3(StartPos.x, StartPos.y, StartPos.z));
 	End = btTransform(btQuaternion(Rotation.x, Rotation.y, Rotation.z, Rotation.w), btVector3(EndPos.x, EndPos.y, EndPos.z));
 
-	SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()),Start,End,callback);
+	m_pBulletPhysics->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()),Start,End,callback);
 	
 	if (callback.isHit) {
+		// 衝突。
 		if (callback.hitCollisionType != Collision::Type::Player) {
 			// プレイヤー以外無視。
 			return;
 		}
-		// 衝突。
-		OutputDebugString("当たったよ。\n");
 
-		// 自分からプレイヤーへの向きベクトル算出。
-		D3DXVECTOR3 ThisToPlayer;
-		//ThisToPlayer = callback.hitPos - m_CollisionObject->GetPos();
-		ThisToPlayer = m_Player->GetCollision()->GetPos() - callback.hitPos;
-		D3DXVec3Normalize(&ThisToPlayer, &ThisToPlayer);
-		D3DXVECTOR3 addDir;
-		D3DXVec3Normalize(&addDir, &m_Velocity);
+		// ブロックの淵にコリジョンが引っ掛かる挙動への対策。
+		{
+			// 自分からプレイヤーへの向きベクトル算出。
+			D3DXVECTOR3 ThisToPlayer;
+			//ThisToPlayer = callback.hitPos - m_CollisionObject->GetPos();
+			ThisToPlayer = m_Player->GetCollision()->GetPos() - callback.hitPos;
+			D3DXVec3Normalize(&ThisToPlayer, &ThisToPlayer);
+			D3DXVECTOR3 addDir;
+			D3DXVec3Normalize(&addDir, &m_Velocity);
 
-		float rad = fabsf((acosf(D3DXVec3Dot(&addDir, &ThisToPlayer))));
+			float rad = fabsf((acosf(D3DXVec3Dot(&addDir, &ThisToPlayer))));
 
-		if (rad >= D3DXToRadian(30.0f)) {
-			return;
+			if (rad >= D3DXToRadian(30.0f)) {
+				return;
+			}
 		}
 
-		//D3DXVECTOR3 addPosXZ = addPos;
-		//addPosXZ.y = 0.0f;
-
-		//D3DXVECTOR3 t;
-		//t.x = -addPos.x;
-		//t.y = 0.0f;
-		//t.z = -addPos.z;
-		//D3DXVec3Normalize(&t, &t);
-		////D3DXVec3Normalize(&t, &addPos);
-		////半径分押し戻す。
-		//float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
-		//t *= radius;
-		//addPos += t;
-		////続いて壁に沿って滑らせる。
-		////滑らせる方向を計算。
-		//D3DXVec3Cross(&t, &callback.hitNormalXZ, &Vector3::Up);
-		//D3DXVec3Normalize(&t, &t);
-		////D3DXVec3Normalize(&t, &addPos);
-		//t *= D3DXVec3Dot(&t, &addPosXZ);
-		//addPos += t;	//滑らせるベクトルを加算。
-
-		// isIntersectクラスでデルタタイムにより除算されるため、60掛けてから渡す。
-		// ブロック進行方向算出。
-		//D3DXVECTOR3 Dir;
-		//D3DXVec3Normalize(&Dir,&m_Velocity);
-		//// このブロックの力に対して真っ向から抵抗している力を算出。
-		//float Power = D3DXVec3Dot(&-Dir, &m_Player->GetMoveSpeed());
-
-		m_Player->SetRepulsion(/*addPos*/m_Velocity * 60.0f);
+		// IsIntersectクラスでdeltaTimeにより除算されるため、60掛ける。
+		m_Player->SetRepulsion(m_Velocity * 60.0f);
 	}
+}
+
+void CBlock::DeathCount() {
+	if (m_DeathCounter >= m_DeathTime) {
+		// 指定された時間が過ぎたので自分を殺す。
+		SetAlive(false);
+	}
+	m_DeathCounter += 1.0f / 60.0f;
 }
 
 void CBlock::Draw()
@@ -179,4 +213,11 @@ void CBlock::EndDraw()
 {
 	m_pRender->GetEffect()->EndPass();
 	m_pRender->GetEffect()->End();
+}
+
+void CBlock::Throw(const D3DXVECTOR3& dir, float Power) {
+	m_CollisionObject->SetCollisionType(Collision::Type::AttackWall);
+	m_IsThrow = true;
+	this->SetVelocity(dir * Power);
+	m_ThrowTime = 3.0f;	// チョコ壁が飛ぶ時間を設定。
 }

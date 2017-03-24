@@ -428,6 +428,8 @@ namespace {
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
 		bool isFirstCallback = false;		// 一回の当たり判定で最初に呼ばれたコールバックか。
 
+		const btCollisionObject* hitCollisionObject = nullptr;
+
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 
@@ -456,7 +458,9 @@ namespace {
 					dist = fDistTmp;
 				}
 			}
+
 			hitCollisionType = static_cast<Collision::Type>(convexResult.m_hitCollisionObject->getUserIndex());
+			hitCollisionObject = convexResult.m_hitCollisionObject;
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
@@ -499,6 +503,8 @@ namespace {
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
 		bool isFirstCallback = false;		// 一回の当たり判定で最初に呼ばれたコールバックか。
 
+		const btCollisionObject* hitCollisionObject = nullptr;
+
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			if (m_MaskCollisionTypes.size() > 0) {
@@ -531,6 +537,7 @@ namespace {
 			hitPos.z = convexResult.m_hitPointLocal.z();
 
 			hitCollisionType = static_cast<Collision::Type>(convexResult.m_hitCollisionObject->getUserIndex());
+			hitCollisionObject = convexResult.m_hitCollisionObject;
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。

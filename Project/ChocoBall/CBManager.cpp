@@ -254,7 +254,7 @@ void CCBManager::OnBurst(float DeathTime) {
 	for (int i = 0; i < m_Choco.size(); i++)
 	{
 		// Ž€–S‚·‚é‚Ü‚Å‚ÌŽžŠÔ‚ðƒ‰ƒ“ƒ_ƒ€‚Å‚Î‚ç‚·B
-		float TimeOffset = 0.07f;	// Ž€–SŽžŠÔ‚ð‚¸‚ç‚·Š´Šo‚Ì’PˆÊB
+		float TimeOffset = 0.07f;	// Ž€–SŽžŠÔ‚ð‚¸‚ç‚·ŠÔŠu‚Ì’PˆÊB
 		int rnd = rand() % 8;
 		m_Choco[i]->SetDeathTime(DeathTime + (TimeOffset * static_cast<float>(rnd)));
 		m_Choco[i]->SetIsBurst(true);

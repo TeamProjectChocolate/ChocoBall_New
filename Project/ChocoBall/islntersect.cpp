@@ -84,7 +84,15 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 					if (callback.isHit) {
 						//当たった。
-						//壁。
+						if (callback.hitCollisionObject->getCollisionFlags() == 0) {
+							// 物理挙動している剛体からは押し戻されない。
+							if (callback.hitCollisionObject->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) {
+								OutputDebugString("ち");
+							}
+							return;
+						}
+
+						//XZ。
 						addPos.x = callback.hitPos.x - position->x;
 						addPos.z = callback.hitPos.z - position->z;
 
@@ -172,7 +180,17 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 				SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 				if (callback.isHit) {
 					//当たった。
-					//地面。
+					m_isHitGround = true;
+
+					if (callback.hitCollisionObject->getCollisionFlags() == 0) {
+						if (callback.hitCollisionObject->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) {
+							OutputDebugString("ち");
+						}
+						// 物理挙動している剛体からは押し戻されない。
+						return;
+					}
+					
+					//Y。
 
 					D3DXVECTOR3 Circle;
 					float x = 0.0f;
@@ -192,7 +210,6 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 
 					//moveSpeed->y = 0.0f;
 					addPos.y = callback.hitPos.y - position->y;
-					m_isHitGround = true;
 #ifdef ORIGIN_CENTER
 					addPos.y += offset;
 #endif
