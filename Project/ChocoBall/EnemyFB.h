@@ -32,4 +32,5 @@ private:
 	CCourceDef		m_Courcedef;
 
 	float V0;
+	float m_moveSpeed;
 };

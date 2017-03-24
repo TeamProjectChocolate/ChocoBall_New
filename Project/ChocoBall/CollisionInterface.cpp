@@ -4,12 +4,11 @@
 #include "BulletPhysics.h"
 #include "Infomation.h"
 
-int CCollisionInterface::testDelete = 0;
-
 CCollisionInterface::CCollisionInterface()
 {
 	// オブジェクトマネージャーからBulletPhysicsクラスのインスタンスを保存。
 	m_pBulletPhysics = SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"));
+	m_transform.Identity();
 }
 
 CCollisionInterface::~CCollisionInterface()
@@ -52,6 +51,10 @@ void CCollisionInterface::InitCollision(
 	rbTransform.setIdentity();
 	rbTransform.setOrigin(btVector3(Transform.position.x, Transform.position.y, Transform.position.z) + m_OriginOffset);
 	rbTransform.setRotation(btQuaternion(Transform.angle.x, Transform.angle.y, Transform.angle.z, Transform.angle.w));
+
+	// Transform情報を保存。
+	m_transform = Transform;
+	m_transform.scale = D3DXVECTOR3(pShape->getLocalScaling());
 	{
 		// 純粋仮想関数。
 		Build(rbTransform, mass, flg);

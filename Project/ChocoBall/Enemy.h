@@ -40,4 +40,6 @@ private:
 	D3DXVECTOR3 m_EnemyToPlayerVec;
 
 	CPlayer* m_pPlayer;
+	float m_moveSpeed;
+
 };

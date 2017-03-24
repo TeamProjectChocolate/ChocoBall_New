@@ -7,15 +7,10 @@
 
 CCollisionObject::CCollisionObject()
 {
-	testDelete++;
 }
 
 CCollisionObject::~CCollisionObject()
 {
-	testDelete--;
-	if (testDelete <= 0) {
-		OutputDebugString("デストラクタきちんと呼ばれてる。");
-	}
 	// 絶対に消すな。
 	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
 	// 禁止事項の詳細は基底クラスのデストラクタに記載。

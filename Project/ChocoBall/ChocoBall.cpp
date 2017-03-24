@@ -21,7 +21,7 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
 	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	btSphereShape* Shape = new btSphereShape(0.3f);
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Chocoball, Collision::FilterGroup::Chocoball,false, 1.0f, false,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Chocoball, Collision::FilterGroup::Chocoball,false, 1.0f, /*true*/false,true);
 	m_CollisionObject->BitMask_AllOff();
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
@@ -43,8 +43,13 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 
 void CChocoBall::Update()
 {
-	D3DXVECTOR3 Force = m_Vector2 * 5.0f;
-	static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Force);
+	if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
+		m_transform.position.y -= 0.5f;
+	}
+	else {
+		D3DXVECTOR3 Force = m_Vector2 * 5.0f;
+		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Force);
+	}
 	if (m_IsBurst) {
 		if (m_TimeCounter >= m_DeathTime) {
 			//// チョコボールを破裂させる。

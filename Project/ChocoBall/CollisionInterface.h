@@ -76,7 +76,10 @@ public:
 		SetLayerMask(GetLayerMask() | mask);
 	}
 
-
+	// コリジョンをアクティベート。
+	inline void Activate() {
+		m_collisionObject->activate();
+	}
 	// このコリジョンをワールドに追加する。
 	virtual void AddWorld() = 0;
 
@@ -121,7 +124,7 @@ public:
 	}
 
 	// コリジョンオブジェクト本体を返却。
-	inline const btCollisionObject* GetCollision() const {
+	inline const btCollisionObject* GetCollisionObject() const {
 		return m_collisionObject.get();
 	}
 
@@ -133,28 +136,38 @@ public:
 
 	// レイヤーマスク返却。
 	// 戻り値はbit形式のマスク。
-	inline int GetLayerMask() const{
+	inline int GetLayerMask() const {
 		return m_LayerMask;
+	}
+
+	// Transform情報取得。
+	inline const SH_ENGINE::TRANSFORM& GetTransform() const{
+		return m_transform;
 	}
 
 	// コリジョン本体に位置情報設定。
 	inline void SetPos(const D3DXVECTOR3& pos) {
+		m_transform.position = pos;
 		m_collisionObject->getWorldTransform().setOrigin(btVector3(pos.x, pos.y, pos.z));
 	}
 	// コリジョン本体の位置情報(中心点)返却。
 	inline const D3DXVECTOR3& GetPos() const {
-		D3DXVECTOR3 pos = m_collisionObject->getWorldTransform().getOrigin();
-		return pos;
+		return 	m_transform.position;
+	}
+
+	// コリジョン本体の回転情報取得。
+	inline const D3DXQUATERNION& GetRotation()const {
+		return m_transform.angle;
 	}
 
 	// コリジョン形状本体にコリジョンサイズ設定。
 	inline void SetScale(const D3DXVECTOR3& scale) {
+		m_transform.scale = scale;
 		m_collisionObject->getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
 	}
 	// コリジョン形状本体にコリジョンサイズ返却(半分)。
 	inline const D3DXVECTOR3& GetScale()const {
-		D3DXVECTOR3 scale = m_collisionObject->getCollisionShape()->getLocalScaling();
-		return scale;
+		return 	m_transform.scale;
 	}
 
 protected:
@@ -227,8 +240,6 @@ protected:
 	// ※コリジョンをワールドに登録したときにはじめて通知する。
 	int m_LayerMask = btBroadphaseProxy::CollisionFilterGroups::AllFilter;
 	CBulletPhysics* m_pBulletPhysics;	// 物理ワールドとコリジョンワールドを持つクラス。
-	protected:
-		static int testRemove;
-		static int testDelete;
-		int addTest = 0;
+protected:
+	SH_ENGINE::TRANSFORM m_transform;
 };

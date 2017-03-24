@@ -11,9 +11,6 @@ namespace {
 		// return true when pairs need collision
 		virtual bool	needBroadphaseCollision(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1) const
 		{
-			if(((proxy0->m_collisionFilterGroup == 32768 || proxy0->m_collisionFilterGroup == -32768) && (proxy1->m_collisionFilterGroup == 8192)) || ((proxy1->m_collisionFilterGroup == 32768 || proxy1->m_collisionFilterGroup == -32768) && (proxy0->m_collisionFilterGroup == 8192))){
-				OutputDebugString("バリア");
-			}
 			bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
 			collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
 
@@ -175,6 +172,8 @@ public:
 		//RemoveCollision(collision);
 	}
 
+
+
 	// 指定した剛体が物理ワールドで何かに接触したか調べる関数。
 	// ※この判定は物理ワールドに登録しているものの当たり判定である。
 	void ContactTest_Dynamic(
@@ -190,6 +189,23 @@ public:
 		}
 		m_dynamicWorld->contactTest(const_cast<btCollisionObject*>(Collision), resultCallback);
 	}
+
+	// 指定した剛体同士が接触しているか調べる関数。
+	void ContactPairTest_Dynamic(
+		const btCollisionObject* CollisionA,
+		const btCollisionObject* CollisionB,
+		btCollisionWorld::ContactResultCallback& resultCallback
+	)
+	{
+		//// 引数で指定されたコリジョンオブジェクトのフィルターグループとフィルターマスクをコールバックに設定。
+		//// ※これをしないとコールバックに最初から設定されているデフォルトの値が渡される。
+		//{
+			//resultCallback.m_collisionFilterGroup = Collision->getBroadphaseHandle()->m_collisionFilterGroup;
+			//resultCallback.m_collisionFilterMask = Collision->getBroadphaseHandle()->m_collisionFilterMask;
+		//}
+		m_dynamicWorld->contactPairTest(const_cast<btCollisionObject*>(CollisionA), const_cast<btCollisionObject*>(CollisionB), resultCallback);
+	}
+
 
 	// 移動前のTransform情報と移動後のTransform情報を渡し、その間で当たりが発生したかを調べる。
 	// ※この判定は物理ワールドに登録しているものの当たり判定である。
@@ -216,6 +232,8 @@ public:
 	{
 		m_CollisionWorld->convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, allowedCcdPenetration);
 	}
+
+
 
 	btDiscreteDynamicsWorld* GetDynamicWorld() {
 		return m_dynamicWorld.get();
@@ -290,12 +308,22 @@ namespace {
 			isHit = false;
 		}
 		
-		D3DXVECTOR3 hitPoint = Vector3::Zero;
+		// 衝突点の位置。
+		D3DXVECTOR3 hitPoint_A = Vector3::Zero;
+		D3DXVECTOR3 hitPoint_B = Vector3::Zero;
+		// 衝突点から衝突点への向きベクトル。
+		D3DXVECTOR3 Direction_AtoB = Vector3::Zero;
+		D3DXVECTOR3 Direction_BtoA = Vector3::Zero;
+		// 衝突点と衝突点の距離。
+		float Length = 0.0f;
 
 		// 何かのコリジョンに当たったか。
 		bool isHit = false;
 		// 当たったコリジョンのタイプを格納。
-		Collision::Type hitCollisionType;
+		Collision::Type hitCollisionType_A;
+		// 当たったコリジョンのタイプを格納。
+		Collision::Type hitCollisionType_B;
+
 		virtual	btScalar	addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap, int partId1, int index1)
 		{
 			//if(colObj1Wrap->getCollisionObject()->getUserIndex())
@@ -319,6 +347,11 @@ namespace {
 			//	// マスクの値なら無視。
 			//	return 0.0f;
 			//}
+
+			if ((colObj0Wrap->getCollisionObject()->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) || (colObj1Wrap->getCollisionObject()->getUserIndex() == static_cast<int>(Collision::Type::AttackWall))) {
+				OutputDebugString("動く壁。\n");
+			}
+
 			void* UserPointer;
 			UserPointer = colObj0Wrap->getCollisionObject()->getUserPointer();
 			if (UserPointer) {
@@ -330,11 +363,35 @@ namespace {
 			}
 
 			isHit = true;
+
 			// 衝突点を格納。
-			btVector3 point = cp.m_positionWorldOnB;
-			hitPoint = D3DXVECTOR3(point.getX(), point.getY(), point.getZ());
-			// コリジョンオブジェクト2の属性。
-			hitCollisionType = static_cast<Collision::Type>(colObj1Wrap->getCollisionObject()->getUserIndex());
+			//btVector3 point_A = cp.m_positionWorldOnA;
+			//btVector3 point_B = cp.m_positionWorldOnB;
+			btVector3 point_A = cp.m_localPointA;
+			btVector3 point_B = cp.m_localPointB;
+			btTransform InvTransformA = colObj0Wrap->getWorldTransform()/*.inverse()*/;
+			btTransform InvTransformB = colObj1Wrap->getWorldTransform()/*.inverse()*/;
+
+			point_A = InvTransformA.invXform(point_A);
+			point_B = InvTransformB.invXform(point_B);
+
+			D3DXVECTOR3 Vec = D3DXVECTOR3(point_B - point_A);
+			Length = D3DXVec3Length(&Vec);
+			D3DXVec3Normalize(&Direction_AtoB, &Vec);
+			Direction_BtoA = Direction_AtoB * -1.0f;
+
+			//point_A += InvTransformA.getOrigin();
+			//point_A = InvTransformA.getBasis().transpose() * point_A;
+			//point_B += InvTransformB.getOrigin();
+			//point_B = InvTransformB.getBasis().transpose() * point_B;
+
+			hitPoint_A = D3DXVECTOR3(point_A.getX(), point_A.getY(), point_A.getZ());
+			hitPoint_B = D3DXVECTOR3(point_B.getX(), point_B.getY(), point_B.getZ());
+
+			// 衝突したコリジョンオブジェクトの属性を格納。
+			hitCollisionType_A = static_cast<Collision::Type>(colObj0Wrap->getCollisionObject()->getUserIndex());
+			hitCollisionType_B = static_cast<Collision::Type>(colObj1Wrap->getCollisionObject()->getUserIndex());
+
 			return 0.0f;
 		}
 	};
@@ -438,16 +495,18 @@ namespace {
 		// 衝突点。
 		D3DXVECTOR3 hitPos;
 
-		vector<bool>  m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
+		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
 		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
 		bool isFirstCallback = false;		// 一回の当たり判定で最初に呼ばれたコールバックか。
 
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-
-			int idx = convexResult.m_hitCollisionObject->getUserIndex();
-			if (m_MaskCollisionTypes[idx]) {
-				return 0.0f;
+			if (m_MaskCollisionTypes.size() > 0) {
+				// マスクが設定されている。
+				int idx = convexResult.m_hitCollisionObject->getUserIndex();
+				if (m_MaskCollisionTypes[idx]) {
+					return 0.0f;
+				}
 			}
 
 			D3DXVECTOR3 hitPointNormal;

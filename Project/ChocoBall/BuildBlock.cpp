@@ -16,6 +16,8 @@ CBuildBlock::~CBuildBlock(){
 
 void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 {
+	// プレイヤーのインスタンス取得。
+	CPlayer* Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 
 	for (int i = 0; i < BUILD_H; i++){
 		for (int j = 0; j < BUILD_W; j++){
@@ -29,6 +31,7 @@ void CBuildBlock::Initialize(D3DVECTOR pos, D3DXQUATERNION rot)
 			_pos.z = pos.z + offset.z;
 
 			m_blocks[i][j].Initialize(_pos, rot);
+			m_blocks[i][j].SetPlayer(Player);
 		}
 	}
 	//親子関係の構築。
@@ -69,10 +72,6 @@ void CBuildBlock::Update()
 				continue;
 			}
 			if (m_blocks[i][j].GetAlive()){
-				if (m_IsThrow) {
-					// 指定された方向に進む。
-					m_blocks[i][j].SetPos(m_blocks[i][j].GetPos() + m_Direction * m_ThrowPower);
-				}
 				m_blocks[i][j].Update();
 			}
 			else

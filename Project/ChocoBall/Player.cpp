@@ -83,12 +83,10 @@ void CPlayer::Initialize()
 	this->ConfigLight();
 
 	m_radius = 1.0f;
-	//// test
-	m_radius = 1.0f;
 	btCollisionShape* Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
 
-
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Player,Collision::FilterGroup::Player, false, 0.0f, true,true);
+	float mass = 0.5f;
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Player,Collision::FilterGroup::Player, false, mass, true,true);
 	m_CollisionObject->BitMask_AllOff();
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
@@ -106,7 +104,7 @@ void CPlayer::Initialize()
 	m_IsIntersect.OnMask(Collision::Type::Boss_Cource);
 	m_IsIntersect.OnMask(Collision::Type::Camera);
 	m_IsIntersect.OnMask(Collision::Type::Bullet);
-	//m_IsIntersect.OnMask(CollisionType_AttackWall);
+	//m_IsIntersect.OnMask(Collision::Type::AttackWall);
 	
 	deadTimer = 0.0f;
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
@@ -159,6 +157,19 @@ void CPlayer::Initialize()
 	m_AnimInterpolation = 0.05f;
 	m_RunningCounter = 0.0f;
 	m_RunningRange = 0.5f;
+
+
+	m_Repulsion = Vector3::Zero;
+
+	//TestEmitter = CParticleEmitter::EmitterCreate(_T("ParticleEmitterStart"),
+	//	PARTICLE_TYPE::STAR,
+	//	m_CollisionObject->GetPos(),
+	//	m_pCamera->GetCamera(),
+	//	m_StageID,
+	//	true,
+	//	true
+	//);
+	//TestEmitter->SetIsUseCource(false);
 }
 
 void CPlayer::SetParent(MoveFloor* parent)
@@ -191,6 +202,7 @@ void CPlayer::SetParent(MoveFloor* parent)
 
 void CPlayer::Update()
 {
+	m_CollisionObject->Activate();
 	// 毎フレームの初期化。
 	{
 		m_ShotFlg = false;
@@ -251,10 +263,31 @@ void CPlayer::Update()
 		//プレイヤーの位置情報更新。
 		if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
 			// キネマティック剛体ならこちらを通る。
-			// 他のオブジェクトがプレイヤーに与える影響を処理。
-			m_IsRepulsion.Repulsion(&m_moveSpeed);
+			//// 他のオブジェクトがプレイヤーに与える影響を処理。
+			//m_IsRepulsion.Repulsion(&m_moveSpeed);
+
+			// 外部のコリジョンがプレイヤーに与える力を加算。
+			{
+				D3DXVECTOR3 work = m_moveSpeed;
+				//work.y = 0.0f;
+				if (D3DXVec3Length(&work) >= 0.01f) {
+					// プレイヤーが移動している場合、斥力に抵抗しているかを算出。
+					D3DXVECTOR3 Dir;
+					D3DXVec3Normalize(&Dir, &m_Repulsion);
+					// このブロックの力に対して真っ向から抵抗している力を算出。
+					float Power = D3DXVec3Dot(&-Dir, &work);
+					// 抵抗力分斥力に加算することで抵抗を無効にする。
+					m_moveSpeed += (Dir * Power);
+				}
+				m_moveSpeed += m_Repulsion;
+				m_Repulsion = Vector3::Zero; 
+			}
+
 			// プレイヤーが移動した結果コリジョンに当たっている場合の処理。
-			m_IsIntersect.Intersect(&m_transform.position, &m_moveSpeed, IsJump);
+			m_IsIntersect.Intersect(&m_transform.position, m_moveSpeed, IsJump);
+		}
+		else {
+			static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(m_moveSpeed * 100.0f);
 		}
 	}
 
@@ -271,6 +304,9 @@ void CPlayer::Update()
 	{
 		CGameObject::Update();
 	}
+
+	//// コリジョンの中心。
+	//TestEmitter->SetEmitPos(m_CollisionObject->GetPos());
 }
 
 void CPlayer::Draw(){

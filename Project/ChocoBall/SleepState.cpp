@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SleepState.h"
+#include "Player.h"
 
 CSleepState::~CSleepState()
 {

@@ -27,7 +27,7 @@ void CIsIntersect::Initialize(CCollisionInterface* Collision)
 }
 
 //物理エンジンを使った当たり判定処理&ジャンプ処理
-void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool Jumpflag)
+void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,bool Jumpflag)
 {
 	m_isFirstCallback = true;
 	m_isHitGround = false;
@@ -36,10 +36,9 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 	static D3DXVECTOR3 gravity(0.0f, -40.0f, 0.0f);	//重力	
 	D3DXVECTOR3 addGravity = gravity;	
 	addGravity *= (deltaTime);			//0.16秒事に加速(1フレームの重力加速度)。
-	// 速度に加速度を加算。
-	*moveSpeed += (addGravity);	//落下速度
-	D3DXVECTOR3 addPos;
-	addPos = *moveSpeed;
+	D3DXVECTOR3 addPos = moveSpeed;
+	// 速度に重力加速度を加算。
+	addPos += (addGravity);
 	addPos *= (deltaTime);	
 	D3DXVECTOR3 Up(0.0f, 1.0f, 0.0f);
 
@@ -64,6 +63,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 		{
 			int loopCount = 0;
 			while (true) {
+				D3DXVECTOR3 OriginScale = m_CollisionObject->GetScale();
 				D3DXVECTOR3 addPosXZ = addPos;
 				addPosXZ.y = 0.0f;
 				if (D3DXVec3Length(&addPosXZ) > 0.0001f) {
@@ -79,7 +79,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 					// 衝突した場合のコールバックを定義。
 					SweepResult_XZ callback(static_cast<CGameObject*>(m_CollisionObject->GetUserPointer()), m_isFirstCallback);
 					// 無視する当たりの属性を設定。
-					callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
+					callback.m_MaskCollisionTypes = GetMasks();
 					// 生成した情報で当たり判定。
 					SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest_Dynamic(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 					if (callback.isHit) {
@@ -134,7 +134,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 #endif
 				D3DXVECTOR3 endPos;
 				SweepResult_Y callback(static_cast<CGameObject*>(m_CollisionObject->GetUserPointer()), m_isFirstCallback);
-				callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
+				callback.m_MaskCollisionTypes = GetMasks();
 
 				//D3DXVECTOR3 pos = m_rigidBody->getWorldTransform().getOrigin();
 
@@ -186,11 +186,11 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed,bool 
 					D3DXVECTOR3 v = Circle - callback.hitPos;
 					x = D3DXVec3Length(&v);//物体の角とプレイヤーの中心との距離が求まる。
 
-					float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
+					float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getY();
 					//offset = radius - x;
 					offset = sqrt(radius * radius - x * x);//yの平方根を求める。
 
-					moveSpeed->y = 0.0f;
+					//moveSpeed->y = 0.0f;
 					addPos.y = callback.hitPos.y - position->y;
 					m_isHitGround = true;
 #ifdef ORIGIN_CENTER

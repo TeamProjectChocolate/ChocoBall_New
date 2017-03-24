@@ -7,15 +7,10 @@
 
 CRigidbody::CRigidbody()
 {
-	testDelete++;
 }
 
 CRigidbody::~CRigidbody()
 {
-	testDelete--;
-	if (testDelete <= 0) {
-		OutputDebugString("デストラクタきちんと呼ばれてる。");
-	}
 	// 絶対に消すな。
 	// ※共通処理だが継承クラスのデストラクタが先に呼ばれるため、ここに書く。
 	// 禁止事項の詳細は基底クラスのデストラクタに記載。
@@ -48,6 +43,11 @@ void CRigidbody::Update(D3DXVECTOR3* pos,D3DXQUATERNION* rot)
 			// 受け取ったオブジェクトの位置情報と回転情報を剛体に格納。
 			m_collisionObject->getWorldTransform().setOrigin(btVector3(pos->x, pos->y, pos->z) + m_OriginOffset);
 			m_collisionObject->getWorldTransform().setRotation(btQuaternion(rot->x, rot->y, rot->z, rot->w));
+
+			// 現在のTransform情報を保存。
+			m_transform.position = *pos;
+			m_transform.angle = *rot;
+			m_transform.scale = D3DXVECTOR3(m_collisionShape->getLocalScaling());
 		}
 		else {
 			// オブジェクトが物理挙動する。
@@ -57,6 +57,11 @@ void CRigidbody::Update(D3DXVECTOR3* pos,D3DXQUATERNION* rot)
 			*pos -= D3DXVECTOR3(m_OriginOffset);
 			const btQuaternion& quat = m_collisionObject->getWorldTransform().getRotation();
 			*rot = D3DXQUATERNION(quat.getX(), quat.getY(), quat.getZ(), quat.getW());
+
+			// 現在のTransform情報を保存。
+			m_transform.position = *pos;
+			m_transform.angle = *rot;
+			m_transform.scale = D3DXVECTOR3(m_collisionShape->getLocalScaling());
 		}
 	}
 }

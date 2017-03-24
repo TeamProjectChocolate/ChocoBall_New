@@ -4,7 +4,8 @@
 #include "Particle.h"
 #include "ParticleParameterTable.h"
 #include "ObjectManager.h"
-#include "Player.h"
+
+class CPlayer;
 
 #define MAX_NAME 256
 

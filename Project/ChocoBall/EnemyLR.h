@@ -28,4 +28,5 @@ private:
 
 	CIsIntersect	m_IsIntersect;		//CIsIntersectのインスタンス
 	CCourceDef		m_Courcedef;
+	float m_moveSpeed;
 };

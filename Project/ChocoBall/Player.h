@@ -116,6 +116,18 @@ public:
 	const D3DXVECTOR3& GetSize() {
 		return m_size;
 	}
+
+	inline const D3DXVECTOR3& GetMoveSpeed()const {
+		return m_moveSpeed;
+	}
+
+	inline void SetRepulsion(const D3DXVECTOR3& power) {
+		test = true;
+		m_Repulsion = power;
+	}
+	inline void AddRepulsion(const D3DXVECTOR3& power) {
+		m_Repulsion += power;
+	}
 private:
 	enum ANIMATION_STATE{ WAIT = 0, WALK,JUMP_START,JUMP_NOW,JUMP_END, DAMAGE};
 	enum JUMP_STATE{J_NULL,J_EINS,J_ZWEI,J_DREI};
@@ -189,6 +201,8 @@ private:
 	STAGE_ID m_StageID;
 	CCourceCamera* m_pCamera;
 	CAudio* m_pAudio;//SE使用
+
+	D3DXVECTOR3 m_Repulsion;	// 外部から自分に加わった力。
 private:
 	// ゲームステータス管理。
 	void StateManaged();
@@ -204,6 +218,10 @@ private:
 	void Collisions();
 	// キー判定。
 	void KeyState();
+
+
+	bool test = false;
+	//CParticleEmitter* TestEmitter = nullptr;
 };
 
 extern CPlayer* g_player;

@@ -33,5 +33,6 @@ private:
 private:
 	// ì‹Æ—p•Ï”B
 	float m_Length;	// ˆÚ“®‚µ‚½—ÊB
+	float m_moveSpeed;
 };
 

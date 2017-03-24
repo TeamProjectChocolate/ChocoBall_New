@@ -32,7 +32,7 @@ bool CRushAttackState::Update() {
 			m_pObject->GetQuaternion()
 		);
 		// ƒ`ƒ‡ƒR•Ç‚ð”ò‚Î‚·B
-		BB->ThrowBlock(m_pObject->GetDirection(), 0.25f);
+		BB->ThrowBlock(m_pObject->GetDirection(), 0.1f);
 	}
 	if (m_TimeCounter >= m_AttackTime) {
 		if (m_IsFirst) {

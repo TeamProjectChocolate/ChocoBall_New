@@ -32,4 +32,5 @@ private:
 
 	float m_DeltaTime;
 	float m_WaitTime;
+	float m_moveSpeed;
 };

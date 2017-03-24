@@ -159,7 +159,7 @@ bool CBossCourceDef::FindCource(const btCollisionObject* CollisionObject, vector
 	bool IsNowCourceChange = false;	// 接触しているコースが前回から変化したか。
 	for (int idx = 0; idx < size; idx++) {
 		ContactResult CallBack;
-		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->GetCollisionWorld()->contactPairTest(const_cast<btCollisionObject*>(CollisionObject), const_cast<btCollisionObject*>(m_Collisions[idx]->CollisionObject->GetCollision()), CallBack);
+		SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->GetCollisionWorld()->contactPairTest(const_cast<btCollisionObject*>(CollisionObject), const_cast<btCollisionObject*>(m_Collisions[idx]->CollisionObject->GetCollisionObject()), CallBack);
 		if (CallBack.isHit) {
 			if (!(m_Collisions[idx]->IsHit)) {
 				// 前のフレームの時点でこの剛体が衝突していなかった。

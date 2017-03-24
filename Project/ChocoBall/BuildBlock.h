@@ -90,12 +90,11 @@ public:
 
 	// ƒ`ƒ‡ƒR•Ç‚ğ”ò‚Î‚·ŠÖ”B
 	void ThrowBlock(const D3DXVECTOR3& dir,float Power) {
-		m_IsThrow = true;
-		m_ThrowPower = Power;
-		m_Direction = dir;
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
 				m_blocks[row][col].SetCollisionType(Collision::Type::AttackWall);
+				m_blocks[row][col].SetIsThrow(true);
+				m_blocks[row][col].SetVelocity(dir * Power);
 			}
 		}
 	}

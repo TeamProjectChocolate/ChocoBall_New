@@ -2,7 +2,7 @@
 #include "ParticleEmitter.h"
 #include "ObjectManager.h"
 #include "RenderContext.h"
-
+#include "Player.h"
 
 CParticleEmitter::CParticleEmitter()
 {

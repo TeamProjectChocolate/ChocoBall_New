@@ -62,4 +62,6 @@ private:
 	CAudio* m_pAudio;
 	bool m_IamFlgKeeper;
 	static bool m_IsPlayCue;
+	float m_moveSpeed;
+
 };

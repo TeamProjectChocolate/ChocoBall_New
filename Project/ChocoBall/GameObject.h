@@ -151,7 +151,7 @@ public:
 	}
 
 	virtual inline const btCollisionObject* GetCollisionObject() const {
-		return m_CollisionObject->GetCollision();
+		return m_CollisionObject->GetCollisionObject();
 	}
 
 	virtual inline CCollisionInterface* GetCollision() const
@@ -208,10 +208,10 @@ public:
 		D3DXQuaternionRotationAxis(&(m_transform.angle), &axis, rota);
 	}
 
-	float GetmoveSpeed()
-	{
-		return m_moveSpeed;
-	}
+	//float GetmoveSpeed()
+	//{
+	//	return m_moveSpeed;
+	//}
 	void SetCommon(bool common){
 		m_common = common;
 	}
@@ -244,6 +244,13 @@ public:
 	inline float GetAlpha() {
 		return m_pModel->GetAlpha();
 	}
+
+	inline void SetVelocity(const D3DXVECTOR3& vel) {
+		m_Velocity = vel;
+	}
+	inline const D3DXVECTOR3& GetVelocity()const {
+		return m_Velocity;
+	}
 protected:
 	CModel* m_pModel;
 	CRender* m_pRender;
@@ -253,7 +260,7 @@ protected:
 	RENDER::TYPE m_RenderingState;	// どのレンダーを使うか
 	RENDER::TYPE m_ShadowRenderingState;
 	RENDER::TYPE m_EMRenderingState;
-	float m_moveSpeed;
+	//float m_moveSpeed;
 	SH_ENGINE::TRANSFORM m_transform;
 	CHAR m_pFileName[MAX_FILENAME + 1];	// モデルファイルの名前(継承先で指定)
 	CHAR m_pRenderName[MAX_FILENAME + 1];	// レンダーの識別名(デフォルトでは共通レンダーを使いまわすようになっている)
@@ -264,6 +271,7 @@ protected:
 protected:
 	// コリジョン。
 	unique_ptr<CCollisionInterface> m_CollisionObject;
+	D3DXVECTOR3 m_Velocity;	// 向きを持った移動量。
 private:
 	D3DXVECTOR3 m_Direction;
 

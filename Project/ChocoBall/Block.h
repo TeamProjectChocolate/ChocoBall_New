@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "C3DObjectRender_S.h"
 
+#include "ParticleEmitter.h"
 
 class CBlock : public CGameObject{
 public:
@@ -74,7 +75,17 @@ public:
 	void SetCollisionType(Collision::Type type) {
 		m_CollisionObject->SetCollisionType(type);
 	}
+	// このチョコ壁が飛ばされているかのフラグを設定。
+	inline void SetIsThrow(bool flg) {
+		m_IsThrow = flg;
+	}
+	inline void SetPlayer(CPlayer* Obj) {
+		m_Player = Obj;
+	}
+
 private:
+	// プレイヤーとの衝突判定。
+	void CollisionPlayer();
 	//子供を設定。
 	void SetChild(CBlock* child)
 	{
@@ -95,4 +106,7 @@ private:
 	float				m_fallPosY;	//落下位置。
 	bool m_isDead;
 	D3DXHANDLE m_hShaderTecnique;	//シェーダーテクニックのハンドル。
+	bool m_IsThrow = false;
+
+	CPlayer* m_Player;
 };

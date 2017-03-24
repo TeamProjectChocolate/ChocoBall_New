@@ -55,13 +55,15 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	// コース判定用のコリジョンにポジションを設定。
 	m_CourceCollision.SetPos(pos);
 	// 現在のコース取得。
-	m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollision(), &m_NowCource);
+	m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollisionObject(), &m_NowCource);
 	// バリア初期化。
 	m_pBarrier = SINSTANCE(CObjectManager)->GenerationObject<CBarrier>(_T("Barrier"), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 	m_pBarrier->Initialize();
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
-	this->ChangeState(BOSS_STATE::Sleep);
+	//this->ChangeState(BOSS_STATE::Sleep);
+	this->ChangeState(BOSS_STATE::RushAttack);
+
 }
 
 void CEnemy_Boss::Initialize() {
@@ -130,7 +132,7 @@ void CEnemy_Boss::Update() {
 
 	if (m_IsUpdateCource) {
 		// 当たり判定の結果で現在いるコースを更新。
-		m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollision(), &m_NowCource);
+		m_IsNowCourceChange = m_CourceDef.FindCource(m_CourceCollision.GetCollisionObject(), &m_NowCource);
 	}
 
 	// 現在のステートを更新。

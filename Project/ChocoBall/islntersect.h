@@ -12,7 +12,7 @@ public:
 	CIsIntersect();
 	~CIsIntersect();
 	void Initialize(CCollisionInterface*);
-	void Intersect(D3DXVECTOR3* position, D3DXVECTOR3* m_moveSpeed, bool Jumpflag);
+	void Intersect(D3DXVECTOR3* position, const D3DXVECTOR3& m_moveSpeed, bool Jumpflag);
 	void IntersectCamera(D3DXVECTOR3* position, D3DXVECTOR3* moveSpeed);
 	inline bool GetIsHitGround()
 	{
