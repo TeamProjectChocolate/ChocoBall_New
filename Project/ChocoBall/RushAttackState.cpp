@@ -45,21 +45,8 @@ bool CRushAttackState::Update() {
 			CBM->Initialize();
 			CBM->SetStartPosition(m_pObject->GetPos() + D3DXVECTOR3(0.0f, 3.0f, 0.0f));
 			CBM->SetEndPosition(m_pObject->GetPos());
-			//CBM->FindCource();
+			CBM->FindCource();
 			CBM->SetAlive(true);
-			//try{
-				// なぜか以下の関数を呼ぶと応答しなくなる。
-				// コース定義を参照した削除処理を行わない。
-				CBM->SetIsUseCourceNo(false);
-			//}
-			//catch {
-				//	// 例外発生。
-				//	OutputDebugString("例外発生。\n");
-			//}
-			//catch(exception){
-			//	// 例外発生。
-			//	OutputDebugString("例外発生。\n");
-			//}
 			m_IsFirst = false;
 			m_SumTimeCounter = 0.0f;
 			return false;

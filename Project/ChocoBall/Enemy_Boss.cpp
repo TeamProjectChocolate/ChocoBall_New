@@ -94,13 +94,13 @@ void CEnemy_Boss::Initialize() {
 	m_HP = 2700;
 	m_pModel->SetAlpha(1.0f);
 
-	//// HPバー生成。
-	//m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),OBJECT::PRIORTY::OBJECT2D,false);
-	//vector<BarColor> ColorArray;
-	//ColorArray.push_back(BarColor::Green);
-	//ColorArray.push_back(BarColor::Yellow);
-	//ColorArray.push_back(BarColor::Red);
-	//m_pHPBar->Initialize(this,ColorArray,m_HP,m_HP);
+	// HPバー生成。
+	m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),OBJECT::PRIORTY::OBJECT2D,false);
+	vector<BarColor> ColorArray;
+	ColorArray.push_back(BarColor::Green);
+	ColorArray.push_back(BarColor::Yellow);
+	ColorArray.push_back(BarColor::Red);
+	m_pHPBar->Initialize(this,ColorArray,m_HP,m_HP);
 
 	// 剛体を生成。
 	{
@@ -195,7 +195,7 @@ void CEnemy_Boss::ChocoHit(CCBManager* HitChocoManager) {
 			this->ChangeState(BOSS_STATE::Escape);
 			static_cast<CEscapeState*>(m_pCurrentState)->SetHitCBManager(HitChocoManager);
 		}
-		//m_pHPBar->SetValue(m_HP);
+		m_pHPBar->SetValue(m_HP);
 	}
 }
 

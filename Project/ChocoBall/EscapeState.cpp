@@ -46,7 +46,6 @@ bool CEscapeState::Update() {
 					// 逃走するためにコースの属性をMoveに変更。
 					vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
 					now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
-					m_pObject->SetIsBreak(false);
 				}
 				D3DXVECTOR3 dir = now[0]->ActionPos - m_pObject->GetPos();
 				float length = D3DXVec3Length(&dir);
@@ -70,12 +69,17 @@ bool CEscapeState::Update() {
 	case Escape_Stage::ReturnActionPoint:
 		// ボス復帰処理。
 		if (m_pCurrentLocalState->Update()) {
-			if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
+			if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd && !(m_pObject->GetIsBreak())) {
 				// 最後のコース。
+				// 攻撃によりHPバーがブレイクしていない。
 				// もう一度待ち状態に戻った後、攻撃に移行。
 				m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BWait);
 			}
 			else {
+				// ボスのHPバーがブレイクしたかのフラグをオフ。
+				// コースの終端でブレイクしていれば行う処理をすでに行った。
+				// 終端でない、もしくはブレイクしていなければ最初からオフ。
+				m_pObject->SetIsBreak(false);
 				// ボス復帰終了。
 				m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
 				return true;

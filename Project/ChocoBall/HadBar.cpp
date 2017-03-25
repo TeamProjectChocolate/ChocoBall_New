@@ -124,42 +124,49 @@ void CHadBar::Update() {
 void CHadBar::SetValue(float value) {
 	float work = static_cast<int>(value) % (static_cast<int>(m_MaxValue) / m_MaxBarNum);	// 一本のバーにセットする値を算出。
 
+	bool isBreak = false;	// 1ゲージ以上削っているか。
+
 	float Difference = m_Varue - value;	// 一瞬前の値との差分を算出。
-	//if(Difference >= 0.0001f){
+	if(Difference >= 0.0001f){
 		// 一瞬前の値と違う値が設定された。
 		while (true) {
 			float nowBarValue = m_NowSettingBar->GetTargetValue();
 			if (nowBarValue <= Difference) {
-				// 1ゲージ削った際のアクション。
+				// 1ゲージ以上削った。
+				// ブレイク時のイベント。
 				this->BreakEvent();
-
-				if (nowBarValue < Difference) {
-					// あふれる場合は処理を続行。
-					m_NowSettingBar->SetValue(0.0f);
-					m_NowSettingNum++;
-					if (m_NowSettingNum < m_MaxBarNum) {
-						// 次のバーがあればそちらにターゲットを変更。
-						m_NowSettingBar = m_BarElement[m_NowSettingNum];
-						// 今の値を次のフレームでの一瞬前の値に設定。
-						Difference -= nowBarValue;
+				// とりあえず今のバーの値を0にする。
+				m_NowSettingBar->SetValue(0.0f);
+				m_NowSettingNum++;
+				if (m_NowSettingNum < m_MaxBarNum) {
+					// 次のバーがあればそちらにターゲットを変更。
+					m_NowSettingBar = m_BarElement[m_NowSettingNum];
+					// 設定した値を差分から引き、新しい差分を設定。
+					Difference -= nowBarValue;
+					if (nowBarValue < Difference) {
+						// 1ゲージ以上あふれる場合は処理を続行。
 						continue;
 					}
 					else {
-						// 次のバーがなければ処理を終了。
-						m_NowSettingNum--;
+						// ちょうど1ゲージ使った。
 						break;
 					}
 				}
 				else {
-					// あふれない場合はバーに入れて処理を終了。
-					m_NowSettingBar->SetValue(work);
+					// 次のバーがなければ処理を終了。
+					m_NowSettingNum--;
 					break;
 				}
 			}
+			else {
+				// あふれない場合はバーに入れて処理を終了。
+				m_NowSettingBar->SetValue(work);
+				break;
+			}
 		}
-	//}
-	// 全体としての値を更新。
-	m_Varue = value;
+		// 全体としての値を更新。
+		m_Varue = value;
+	}
 }
 
 void CHadBar::Draw() {
