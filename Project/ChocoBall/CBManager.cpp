@@ -31,6 +31,8 @@ void CCBManager::Initialize()
 	// 当たり判定を行うオブジェクトを登録。
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
 	m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
+
+	m_IsUseCource = true;
 }
 
 void CCBManager::ActivateShadowRender(){
@@ -45,6 +47,7 @@ void CCBManager::Update()
 {
 	CreateChocoBall();
 
+	// チョコボールの衝突判定。
 	IsHit();
 
 	for (auto itr = m_Choco.begin();itr != m_Choco.end();)
@@ -61,10 +64,23 @@ void CCBManager::Update()
 	}
 
 	// 削除処理。
-	int no = m_pPlayer->GetNowCourceNo();
-	if (no != -1) {
-		if (no - m_InitPosOfCourceNo >= 5) {
+	if (!m_IsFirst) {
+		// チョコボール生成がいったん終了している。
+		if (m_Choco.size() == 0) {
 			this->NonActivate();
+			return;
+		}
+	}
+
+	if (m_IsUseCource) {
+		// コース定義を参照して削除処理を行う。
+		int no = m_pPlayer->GetNowCourceNo();
+		if (no != -1) {
+			if (m_InitPosOfCourceNo != -1) {
+				if (no - m_InitPosOfCourceNo >= 5) {
+					this->NonActivate();
+				}
+			}
 		}
 	}
 }

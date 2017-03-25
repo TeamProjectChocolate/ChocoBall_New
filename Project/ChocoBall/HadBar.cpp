@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "HadBar.h"
-
+#include "Enemy_Boss.h"
 
 // CBarFrame。
 void CBarFrame::Initialize() {
@@ -86,7 +86,7 @@ CHadBar::~CHadBar()
 {
 }
 
-void CHadBar::Initialize(const vector<BarColor>& BarColorArray,float max,float value) {
+void CHadBar::Initialize(CGameObject* Object,const vector<BarColor>& BarColorArray,float max,float value) {
 	SetAlive(true);
 	m_transform.position = D3DXVECTOR3(480.0f, 27.0f, 1.0f);
 	SetRotation(0.0f);
@@ -103,6 +103,7 @@ void CHadBar::Initialize(const vector<BarColor>& BarColorArray,float max,float v
 
 	m_MaxValue = max;
 	m_Varue = value;
+	m_pObject = Object;
 }
 
 void CHadBar::Update() {
@@ -124,30 +125,39 @@ void CHadBar::SetValue(float value) {
 	float work = static_cast<int>(value) % (static_cast<int>(m_MaxValue) / m_MaxBarNum);	// 一本のバーにセットする値を算出。
 
 	float Difference = m_Varue - value;	// 一瞬前の値との差分を算出。
-	while (true) {
-		float nowBarValue = m_NowSettingBar->GetTargetValue();
-		if (nowBarValue < Difference) {
-			// あふれる場合は処理を続行。
-			m_NowSettingBar->SetValue(0.0f);
-			m_NowSettingNum++;
-			if (m_NowSettingNum < m_MaxBarNum) {
-				// 次のバーがあればそちらにターゲットを変更。
-				m_NowSettingBar = m_BarElement[m_NowSettingNum];
-				Difference -= nowBarValue;
-				continue;
-			}
-			else {
-				// 次のバーがなければ処理を終了。
-				m_NowSettingNum--;
-				break;
+	//if(Difference >= 0.0001f){
+		// 一瞬前の値と違う値が設定された。
+		while (true) {
+			float nowBarValue = m_NowSettingBar->GetTargetValue();
+			if (nowBarValue <= Difference) {
+				// 1ゲージ削った際のアクション。
+				this->BreakEvent();
+
+				if (nowBarValue < Difference) {
+					// あふれる場合は処理を続行。
+					m_NowSettingBar->SetValue(0.0f);
+					m_NowSettingNum++;
+					if (m_NowSettingNum < m_MaxBarNum) {
+						// 次のバーがあればそちらにターゲットを変更。
+						m_NowSettingBar = m_BarElement[m_NowSettingNum];
+						// 今の値を次のフレームでの一瞬前の値に設定。
+						Difference -= nowBarValue;
+						continue;
+					}
+					else {
+						// 次のバーがなければ処理を終了。
+						m_NowSettingNum--;
+						break;
+					}
+				}
+				else {
+					// あふれない場合はバーに入れて処理を終了。
+					m_NowSettingBar->SetValue(work);
+					break;
+				}
 			}
 		}
-		else {
-			// あふれない場合はバーに入れて処理を終了。
-			m_NowSettingBar->SetValue(work);
-			break;
-		}
-	}
+	//}
 	// 全体としての値を更新。
 	m_Varue = value;
 }
@@ -175,5 +185,5 @@ void CHadBar::ActiveBarColor(const vector<BarColor>& BarColorArray,float max,flo
 }
 
 void CHadBar::BreakEvent() {
-
+	static_cast<CEnemy_Boss*>(m_pObject)->BreakEventCallBack();
 }

@@ -16,7 +16,8 @@ public:
 private:
 	float m_AttackTime;	// 攻撃時間。
 	float m_IntervalTime;	// 攻撃間隔。
-	float m_TimeCounter;	// 作業用(時間を数える)。
+	float m_TimeCounter = 0.0f;	// 作業用(時間を数える)。
+	float m_SumTimeCounter = 0.0f;	// 数えた時間の合計。
 	bool m_IsFirst = true;
 };
 

@@ -90,6 +90,14 @@ public:
 		return m_pAudio;
 	}
 
+	inline void SetIsBreak(bool flg) {
+		m_IsBreak = flg;
+	}
+	inline bool GetIsBreak()const {
+		return m_IsBreak;
+	}
+
+	void BreakEventCallBack();
 	void DivisionWallOpen();
 private:
 	short m_HP;	// ヒットポイント。
@@ -122,6 +130,7 @@ private:
 	CBarrier* m_pBarrier = nullptr;
 
 	CAudio* m_pAudio = nullptr;
+	bool m_IsBreak = false;	// HPバーがブレイクしたか。
 };
 
 #define Max_AnimNum 6

@@ -9,9 +9,21 @@ CAttackState::~CAttackState()
 }
 
 void CAttackState::Entry() {
-	//ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
-	ChangeLocalState(CEnemy_Boss::BOSS_STATE::RushAttack);
 
+	//if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
+	//	// 最後のコース定義(ランダムでいずれかの攻撃)。
+	//	int rnd = rand() % static_cast<int>(Attack_State::Max);
+	//	switch (static_cast<Attack_State>(rnd)) {
+	//	case Attack_State::Rush:
+			ChangeLocalState(CEnemy_Boss::BOSS_STATE::RushAttack);
+	//		break;
+	//	case Attack_State::Shot:
+	//		ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
+	//	}
+	//}
+	//else {
+	//	ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
+	//}
 	// バリアオフ。
 	m_pObject->GetBarrier()->OffBarrier();
 	// コース判定を一時的にオフ。

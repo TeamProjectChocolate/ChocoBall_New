@@ -68,7 +68,7 @@ public:
 	//void Initialize()override;
 	/// ※第二引数はバーの最大値。
 	/// ※第三引数は現在の値。
-	void Initialize(const vector<BarColor>&, float max, float value);
+	void Initialize(CGameObject* Object,const vector<BarColor>&, float max, float value);
 	void Update()override;
 	void Draw()override;
 	// どの順番でどの色を表示するかを決めた配列を渡し、CBarElementのインスタンスを生成する関数。
@@ -90,4 +90,5 @@ private:
 	float m_MaxValue;		// 全バー合わせての最大値。
 	CBarElement* m_NowSettingBar;	// 現在先行入力中のバー。
 	short m_NowSettingNum;		// 現在先行入力中のバーを表す添え字。
+	CGameObject* m_pObject = nullptr;	// このバーを持つゲームオブジェクト。
 };

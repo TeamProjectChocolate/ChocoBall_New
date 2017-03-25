@@ -32,7 +32,7 @@ public:
 	~CCBManager(){
 #ifdef NOT_INSTANCING
 #else
-		SINSTANCE(CShadowRender)->DeleteObjectImidieit(this);
+		this->NonActivate();
 		m_CBManagerNum--;
 #endif
 	};
@@ -122,10 +122,13 @@ public:
 #endif
 	}
 
-	void SetIsBossDamage(bool flg) {
+	inline void SetIsBossDamage(bool flg) {
 		m_IsBossDamage = flg;
 	}
 
+	inline void SetIsUseCourceNo(bool flg) {
+		m_IsUseCource = flg;
+	}
 	// チョコボールを時間差で破裂させる。
 	void OnBurst(float);
 private:
@@ -147,4 +150,6 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	CEnemy_Boss* m_pBoss = nullptr;
 	bool m_IsBossDamage = true;	// ボスにダメージを与えられるかのフラグ。
+	bool m_IsUseCource = true;		// コース定義を参照した削除処理を行うか。
+
  };

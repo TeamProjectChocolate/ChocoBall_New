@@ -403,9 +403,6 @@
     <ClInclude Include="HadBar.h">
       <Filter>Game\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="AttackState.h">
-      <Filter>Game\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="DivisionWall.h">
       <Filter>Game\Gimmick</Filter>
     </ClInclude>
@@ -454,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="IsRepulsion.h">
       <Filter>Game\Phisics</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackState.h">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -763,9 +763,6 @@
     <ClCompile Include="HadBar.cpp">
       <Filter>Game\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="AttackState.cpp">
-      <Filter>Game\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="DivisionWall.cpp">
       <Filter>Game\Gimmick</Filter>
     </ClCompile>
@@ -811,6 +808,9 @@
     </ClCompile>
     <ClCompile Include="IsRepulsion.cpp">
       <Filter>Game\Phisics</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ class CAttackState :
 	public CState
 {
 private:
-	enum Attack_State { Shot = 0,Rush};
+	enum class Attack_State { Shot = 0,Rush,Max};
 public:
 	CAttackState(CEnemy_Boss* obj) :CState(obj) {};
 	~CAttackState();

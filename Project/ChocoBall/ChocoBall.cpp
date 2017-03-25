@@ -16,10 +16,9 @@ void CChocoBall::Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos)
 	m_pModel->m_luminance = 0.0f;
 	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::CHOCOLATE];
 #endif
+	m_transform.Identity();
 	m_transform.position = Spos; 
 	SetVector(m_transform.position, Epos);
-	SetRotation(D3DXVECTOR3(0, 0, 0), 0.1f);
-	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	btSphereShape* Shape = new btSphereShape(0.3f);
 	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Chocoball, Collision::FilterGroup::Chocoball,false, 1.0f, /*true*/false,true);
 	m_CollisionObject->BitMask_AllOff();

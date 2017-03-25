@@ -50,7 +50,7 @@
 {
 	D3DXVECTOR3(10.53f, 5.91f, 71.47f), //Start
 	D3DXVECTOR3(17.01f, 4.08f, 77.57f), //End
-	D3DXVECTOR3(11.61f, 9.84f, 39.70f), //Range
+	D3DXVECTOR3(11.61f, 12.82f, 42.11f), //Range
 	D3DXVECTOR3(16.39f, 5.18f, 70.39f), //RangePos
 	D3DXQUATERNION(0.09f, 0.39f, -0.04f, 0.91f), //Rotation
 	D3DXVECTOR3(-0.69f, 0.00f, 0.73f), //ActionTargetDir
@@ -69,4 +69,28 @@
 	D3DXVECTOR3(32.02f, 7.42f, 65.09f), //ActionPos
 	2, //CourceType
 	true, //IsEnd
+},
+//Boss_CourceDef (5)
+{
+	D3DXVECTOR3(149.70f, 13.30f, 74.35f), //Start
+	D3DXVECTOR3(159.70f, 13.30f, 74.51f), //End
+	D3DXVECTOR3(11.61f, 13.51f, 42.36f), //Range
+	D3DXVECTOR3(153.38f, 13.30f, 69.61f), //RangePos
+	D3DXQUATERNION(0.00f, 0.70f, 0.00f, 0.71f), //Rotation
+	D3DXVECTOR3(-0.99f, 0.00f, 0.11f), //ActionTargetDir
+	D3DXVECTOR3(140.82f, 16.24f, 67.29f), //ActionPos
+	2, //CourceType
+	true, //IsEnd
+},
+//Boss_CourceDef (6)
+{
+	D3DXVECTOR3(181.70f, 12.80f, 76.05f), //Start
+	D3DXVECTOR3(191.70f, 12.80f, 76.21f), //End
+	D3DXVECTOR3(11.61f, 13.51f, 42.36f), //Range
+	D3DXVECTOR3(185.38f, 12.80f, 71.31f), //RangePos
+	D3DXQUATERNION(0.00f, 0.70f, 0.00f, 0.71f), //Rotation
+	D3DXVECTOR3(-0.99f, 0.00f, 0.11f), //ActionTargetDir
+	D3DXVECTOR3(172.82f, 15.74f, 68.99f), //ActionPos
+	1, //CourceType
+	false, //IsEnd
 },

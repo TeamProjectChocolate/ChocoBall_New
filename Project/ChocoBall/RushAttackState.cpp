@@ -9,15 +9,17 @@ CRushAttackState::~CRushAttackState()
 
 void CRushAttackState::Entry() {
 	m_TimeCounter = 0.0f;
-	m_IntervalTime = 0.5f;
-	m_AttackTime = 9.0f;
+	m_SumTimeCounter = 0.0f;
+	m_IntervalTime = 1.0f;
+	m_AttackTime = 5.0f;
 	m_IsFirst = true;
 }
 
 bool CRushAttackState::Update() {
-
-	m_TimeCounter += 1.0f / 60.0f;
-	if ((m_TimeCounter / m_IntervalTime) - static_cast<int>(m_TimeCounter / m_IntervalTime) <= 0.01f) {
+	const float deltaTime = 1.0f / 60.0f;
+	m_TimeCounter += deltaTime;
+	m_SumTimeCounter += deltaTime;
+	if (m_TimeCounter >= m_IntervalTime) {
 		// 攻撃処理。
 		// チョコ壁を生成していく。
 		string txt = "B_Block";
@@ -32,9 +34,10 @@ bool CRushAttackState::Update() {
 			m_pObject->GetQuaternion()
 		);
 		// チョコ壁を飛ばす。
-		BB->ThrowBlock(m_pObject->GetDirection(), 0.1f);
+		BB->ThrowBlock(m_pObject->GetDirection(), 0.3f);
+		m_TimeCounter = 0.0f;
 	}
-	if (m_TimeCounter >= m_AttackTime) {
+	if (m_SumTimeCounter >= m_AttackTime) {
 		if (m_IsFirst) {
 			// ボスの頭上にチョコボール生成(自爆)。
 			m_pObject->GetAudio()->PlayCue("Chocoball", true, nullptr);//チョコ落下Audio
@@ -42,8 +45,23 @@ bool CRushAttackState::Update() {
 			CBM->Initialize();
 			CBM->SetStartPosition(m_pObject->GetPos() + D3DXVECTOR3(0.0f, 3.0f, 0.0f));
 			CBM->SetEndPosition(m_pObject->GetPos());
+			//CBM->FindCource();
 			CBM->SetAlive(true);
+			//try{
+				// なぜか以下の関数を呼ぶと応答しなくなる。
+				// コース定義を参照した削除処理を行わない。
+				CBM->SetIsUseCourceNo(false);
+			//}
+			//catch {
+				//	// 例外発生。
+				//	OutputDebugString("例外発生。\n");
+			//}
+			//catch(exception){
+			//	// 例外発生。
+			//	OutputDebugString("例外発生。\n");
+			//}
 			m_IsFirst = false;
+			m_SumTimeCounter = 0.0f;
 			return false;
 		}
 	}
