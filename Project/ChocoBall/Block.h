@@ -57,7 +57,7 @@ public:
 	}
 
 	// チョコ壁を飛ばす。
-	void Throw(const D3DXVECTOR3& dir, float Power);
+	void Throw(const D3DXVECTOR3& dir, float Power,float Time);
 
 	//親が死んだときに呼ばれる処理。
 	void OnDestroyParent();

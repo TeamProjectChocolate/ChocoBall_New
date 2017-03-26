@@ -117,6 +117,13 @@ void CCBManager::CreateChocoBall() {
 				CChocoBall* choco = SINSTANCE(CObjectManager)->GenerationObject<CChocoBall>(_T("Choco"),OBJECT::PRIORTY::OBJECT3D, false);
 				choco->SetStageID(m_StageID);
 				choco->Initialize(pos, Epos);
+				if (m_IsBurst) {
+					choco->SetIsBurst(true);
+					// Ž€–S‚·‚é‚Ü‚Å‚ÌŽžŠÔ‚ðƒ‰ƒ“ƒ_ƒ€‚Å‚Î‚ç‚·B
+					float TimeOffset = 0.07f;	// Ž€–SŽžŠÔ‚ð‚¸‚ç‚·ŠÔŠu‚Ì’PˆÊB
+					int rnd = rand() % 8;
+					choco->SetDeathTime(m_CBDeathTime + (TimeOffset * static_cast<float>(rnd)));
+				}
 				m_Choco.push_back(choco);
 #ifdef NOT_INSTANCING
 				SINSTANCE(CShadowRender)->Entry(ptr.get());
@@ -275,6 +282,8 @@ void CCBManager::OnBurst(float DeathTime) {
 		m_Choco[i]->SetDeathTime(DeathTime + (TimeOffset * static_cast<float>(rnd)));
 		m_Choco[i]->SetIsBurst(true);
 	}
+	m_IsBurst = true;
+	m_CBDeathTime = DeathTime;
 }
 
 void CCBManager::FindCource(){

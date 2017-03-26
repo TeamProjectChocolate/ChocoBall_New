@@ -162,10 +162,10 @@ void CBuildBlock::Draw_EM(CCamera* camera){
 #endif
 }
 
-void CBuildBlock::ThrowBlock(const D3DXVECTOR3& dir, float Power) {
+void CBuildBlock::ThrowBlock(const D3DXVECTOR3& dir, float Power,float Time) {
 	for (short row = 0; row < BUILD_H; row++) {
 		for (short col = 0; col < BUILD_W; col++) {
-			m_blocks[row][col].Throw(dir,Power);
+			m_blocks[row][col].Throw(dir,Power, Time);
 		}
 	}
 }

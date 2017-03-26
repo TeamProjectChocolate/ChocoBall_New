@@ -79,14 +79,23 @@ namespace Quaternion {
 namespace SH_ENGINE{
 	// 座標格納構造体。
 	typedef struct TRANSFORM{
-		D3DXVECTOR3 position;
-		D3DXQUATERNION angle;
-		D3DXVECTOR3 scale;
+		D3DXVECTOR3 position;	// 位置情報。
+		D3DXQUATERNION angle;	// 回転情報。
+		D3DXVECTOR3 scale;		// 拡縮情報。
+
+		D3DXVECTOR3 right = Vector3::Right;	// 右方向(ワールド)。
+		D3DXVECTOR3 up = Vector3::Up;	// 上方向(ワールド)。
+		D3DXVECTOR3 forward = Vector3::Front;	// 奥方向(ワールド)。
 		// 初期化関数。
 		void Identity() {
 			position = Vector3::Zero;
 			angle = Quaternion::Identity;
 			scale = Vector3::One;
+
+			right = Vector3::Right;
+			up = Vector3::Up;
+			forward = Vector3::Front;
+
 			//*this = identity;
 		};
 	//private:

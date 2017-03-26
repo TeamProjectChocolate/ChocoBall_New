@@ -251,6 +251,9 @@ public:
 	inline const D3DXVECTOR3& GetVelocity()const {
 		return m_Velocity;
 	}
+	inline const SH_ENGINE::TRANSFORM& GetTransform()const {
+		return m_transform;
+	}
 protected:
 	CModel* m_pModel;
 	CRender* m_pRender;
@@ -274,6 +277,7 @@ protected:
 	D3DXVECTOR3 m_Velocity;	// 向きを持った移動量。
 private:
 	D3DXVECTOR3 m_Direction;
+	D3DXVECTOR3 m_Right;
 
 	bool m_ManagerNewFlg;	// ObjectManagerクラスでnewされたものか判定する変数
 	bool m_alive;			// 生存フラグ(trueなら生存、falseなら死亡)

@@ -71,7 +71,9 @@ void CGameObject::Update(){
 	m_pModel->Update(m_transform);
 	// 向きベクトルに回転行列のZ成分を格納。
 	D3DXMATRIX rota = m_pModel->GetRotation();
-	m_Direction = D3DXVECTOR3(rota.m[2][0], rota.m[2][1], rota.m[2][2]);
+	m_transform.forward = m_Direction = D3DXVECTOR3(rota.m[2][0], rota.m[2][1], rota.m[2][2]);
+	m_transform.right = m_Right = D3DXVECTOR3(rota.m[0][0], rota.m[0][1], rota.m[0][2]);
+	m_transform.up = D3DXVECTOR3(rota.m[1][0], rota.m[1][1], rota.m[1][2]);
 	if (m_HasMyLight) {
 		// 女優ライトを使用する場合はワールド行列でライトを更新する。
 		static_cast<CActreLight*>(m_pLight)->Update(m_pModel->m_World);

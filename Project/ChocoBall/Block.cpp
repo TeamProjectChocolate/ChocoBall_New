@@ -19,14 +19,20 @@ void CBlock::OnDestroy(){
 void CBlock::OnDestroyParent()
 {
 	m_eState = enState_Fall;
-	m_fallPosY = m_parent->GetPos().y;
-	SetParent(m_parent->m_parent);
+	if (m_parent) {
+		m_fallPosY = m_parent->GetPos().y;
+		SetParent(m_parent->m_parent);
+	}
 	//自分の子供を落下させる。
-	CBlock* child = m_child;
-	while (child != NULL){
-		child->m_fallPosY = child->m_parent->GetPos().y;
-		child->m_eState = enState_Fall;
-		child = child->m_child;
+	if (m_child) {
+		CBlock* child = m_child;
+		while (child != NULL) {
+			if (m_child) {
+				child->m_fallPosY = child->m_parent->GetPos().y;
+			}
+			child->m_eState = enState_Fall;
+			child = child->m_child;
+		}
 	}
 }
 
@@ -215,9 +221,9 @@ void CBlock::EndDraw()
 	m_pRender->GetEffect()->End();
 }
 
-void CBlock::Throw(const D3DXVECTOR3& dir, float Power) {
+void CBlock::Throw(const D3DXVECTOR3& dir, float Power,float Time) {
 	m_CollisionObject->SetCollisionType(Collision::Type::AttackWall);
 	m_IsThrow = true;
 	this->SetVelocity(dir * Power);
-	m_ThrowTime = 3.0f;	// チョコ壁が飛ぶ時間を設定。
+	m_ThrowTime = Time;	// チョコ壁が飛ぶ時間を設定。
 }

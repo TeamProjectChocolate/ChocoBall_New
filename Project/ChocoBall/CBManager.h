@@ -152,4 +152,6 @@ private:
 	bool m_IsBossDamage = true;	// ボスにダメージを与えられるかのフラグ。
 	bool m_IsUseCource = true;		// コース定義を参照した削除処理を行うか。
 
+	bool m_IsBurst;	// チョコボールを爆散させるか。
+	float m_CBDeathTime;	// チョコボールが死ぬ時間。
  };

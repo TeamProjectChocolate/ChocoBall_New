@@ -89,7 +89,7 @@ public:
 	}
 
 	// ƒ`ƒ‡ƒR•Ç‚ğ”ò‚Î‚·ŠÖ”B
-	void ThrowBlock(const D3DXVECTOR3& dir, float Power);
+	void ThrowBlock(const D3DXVECTOR3& dir, float Power,float Time);
 
 	static int GetBBManagerNum() {
 		return m_BBManagerNum;
