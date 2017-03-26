@@ -48,7 +48,7 @@ public:
 	void OnCollisionStay(const btCollisionObject* pCollision)override;
 	
 	// チョコボールとの当たりのコールバック関数。
-	void ChocoHit();
+	void ChocoHit(const D3DXVECTOR3& Dir);
 
 	// エネミーと当たった時のコールバック。
 	void EnemyHit();

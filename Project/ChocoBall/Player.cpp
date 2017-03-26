@@ -775,7 +775,7 @@ void CPlayer::BulletShot()
 	}
 }
 
-void CPlayer::ChocoHit()
+void CPlayer::ChocoHit(const D3DXVECTOR3& Dir)
 {
 	if (m_State != MOVE::STATE::Flow || m_State != MOVE::STATE::Fly) {
 		m_State = MOVE::STATE::Flow;
@@ -793,7 +793,8 @@ void CPlayer::ChocoHit()
 			m_CollisionObject->SetScale(D3DXVECTOR3(0.3f, 0.3f, 0.3f));
 			float mass = 1.0f;
 			//第一引数は質量、第二引数は回転のしやすさ。
-			static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f)/*D3DXVECTOR3(0.1f, 0.1f, 0.1f)*/);
+			static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, Vector3::One/*D3DXVECTOR3(0.01f, 0.01f, 0.01f)*//*D3DXVECTOR3(0.1f, 0.1f, 0.1f)*/);
+			static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir);
 			// キネマティック解除。
 			static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
 		}
@@ -822,14 +823,6 @@ void CPlayer::EnemyBulletHit(D3DXVECTOR3 moveDir)
 }
 void CPlayer::RollingPlayer()
 {
-	//m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
-
-	//m_CollisionObject->SetScale(D3DXVECTOR3(0.3f, 0.3f, 0.3f));//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
-	//float mass = 1.0f;
-	//static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass,D3DXVECTOR3(0.1f,0.1f,0.1f));
-	//// キネマティック解除。
-	//static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
-
 	//ゲームオーバーになるまでの待機時間の設定
 	deadTimer += 1.0f / 60.0f;
 	if (deadTimer >= 2.0f){

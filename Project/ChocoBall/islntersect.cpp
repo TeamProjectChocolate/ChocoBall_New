@@ -85,10 +85,6 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 					if (callback.isHit) {
 						//“–‚½‚Á‚½B
 						if (callback.hitCollisionObject->getCollisionFlags() == 0) {
-							// •¨—‹““®‚µ‚Ä‚¢‚é„‘Ì‚©‚ç‚Í‰Ÿ‚µ–ß‚³‚ê‚È‚¢B
-							if (callback.hitCollisionObject->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) {
-								OutputDebugString("‚¿");
-							}
 							return;
 						}
 
@@ -183,9 +179,6 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 					m_isHitGround = true;
 
 					if (callback.hitCollisionObject->getCollisionFlags() == 0) {
-						if (callback.hitCollisionObject->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) {
-							OutputDebugString("‚¿");
-						}
 						// •¨—‹““®‚µ‚Ä‚¢‚é„‘Ì‚©‚ç‚Í‰Ÿ‚µ–ß‚³‚ê‚È‚¢B
 						return;
 					}

@@ -45,7 +45,9 @@ void CCBManager::ActivateShadowRender(){
 
 void CCBManager::Update()
 {
-	CreateChocoBall();
+	//if (m_pPlayer->GetGameState() == GAMEEND::CONTINUE) {
+		CreateChocoBall();
+	//}
 
 	// チョコボールの衝突判定。
 	IsHit();
@@ -233,7 +235,7 @@ void CCBManager::IsHit()
 					chocoPos.y < MaxSize.y&&
 					chocoPos.z < MaxSize.z)
 				{
-					m_pPlayer->ChocoHit();
+					m_pPlayer->ChocoHit(m_Choco[i]->GetVector());
 					IsPlayerHit = true;
 				}
 			}
@@ -299,13 +301,7 @@ void CCBManager::NonActivate(){
 		SINSTANCE(CShadowRender)->DeleteObjectImidieit(choco.get());
 	}
 #else
-	for (auto choco : m_Choco) {
-		// 存在するチョコボールを削除。
-		SINSTANCE(CObjectManager)->DeleteGameObject(choco);
-	}
-	m_Choco.clear();
 	// 自分を削除する。
 	SINSTANCE(CShadowRender)->DeleteObject(this);
 #endif
-	SetAlive(false);
 }

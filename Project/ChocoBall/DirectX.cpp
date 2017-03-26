@@ -90,8 +90,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 			Update();
 			Draw();	
 			SINSTANCE(CShadowRender)->ExcuteDeleteObjects();
-			SINSTANCE(CGameManager)->SetNextScene();
 			SINSTANCE(CObjectManager)->ExcuteDeleteObjects();
+
+			SINSTANCE(CGameManager)->SetNextScene();
 
 			
 			//MessageBox(nullptr, text, _T("メッセージ"), MB_OK);

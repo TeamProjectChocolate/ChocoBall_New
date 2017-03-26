@@ -90,7 +90,7 @@ bool CRushAttackState::Update() {
 				CBM->SetStartPosition(BallPos);
 				CBM->SetEndPosition(BallPos + m_pObject->GetDirection() * offset);
 				CBM->SetIsUseCourceNo(false);
-				CBM->OnBurst(3.0f);
+				CBM->OnBurst(4.0f);
 				CBM->SetAlive(true);
 				m_CreateCBNum--;
 			}

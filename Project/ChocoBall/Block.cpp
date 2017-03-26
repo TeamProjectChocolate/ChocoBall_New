@@ -113,8 +113,6 @@ void CBlock::Update()
 	if (m_IsThrow) {
 		// 指定された方向に進む。
 		m_transform.position += m_Velocity;
-		// 衝突判定。
-		CollisionPlayer();
 
 		if (m_ThrowCounter >= m_ThrowTime) {
 			// 指定された時間を過ぎた。
@@ -137,6 +135,10 @@ void CBlock::Update()
 
 			m_eState = EnState::enState_Crumble;
 		}
+
+		// 衝突判定。
+		CollisionPlayer();
+
 		float deltaTime = 1.0f / 60.0f;
 		m_ThrowCounter += deltaTime;
 	}

@@ -101,7 +101,7 @@ public:
 	void DivisionWallOpen();
 private:
 	short m_HP;	// ヒットポイント。
-	CHadBar* m_pHPBar;	// HPバー。
+	CHadBar* m_pHPBar = nullptr;	// HPバー。
 
 	BOSS_STATE m_State;
 	ANIMATION::PLAYING_STATE m_PlayingState;

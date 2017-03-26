@@ -83,12 +83,12 @@ private:
 private:
 	short m_MaxBarNum;	// 何ゲージ分重ねるか。
 	CBarFrame m_Frame;	// バーの枠。
-	vector<CBarElement*> m_BarElement;	// バー。
-	CBarElement* m_NowBar;	// 現在更新中のバー。
+	vector<unique_ptr<CBarElement>> m_BarElement;	// バー。
+	CBarElement* m_NowBar = nullptr;	// 現在更新中のバー。
 	short m_NowBarNum;	// 現在更新中のバーを表す添え字。
 	float m_Varue;		// 全バー合わせての値。
 	float m_MaxValue;		// 全バー合わせての最大値。
-	CBarElement* m_NowSettingBar;	// 現在先行入力中のバー。
+	CBarElement* m_NowSettingBar = nullptr;	// 現在先行入力中のバー。
 	short m_NowSettingNum;		// 現在先行入力中のバーを表す添え字。
 	CGameObject* m_pObject = nullptr;	// このバーを持つゲームオブジェクト。
 };

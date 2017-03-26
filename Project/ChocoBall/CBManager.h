@@ -32,7 +32,12 @@ public:
 	~CCBManager(){
 #ifdef NOT_INSTANCING
 #else
-		this->NonActivate();
+		for (auto choco : m_Choco) {
+			// 存在するチョコボールを削除。
+			SINSTANCE(CObjectManager)->DeleteGameObject(choco);
+		}
+		m_Choco.clear();
+
 		m_CBManagerNum--;
 #endif
 	};

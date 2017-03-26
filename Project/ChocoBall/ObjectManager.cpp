@@ -83,12 +83,17 @@ void CObjectManager::DeleteGameObjectImmediate(CGameObject* pObject)
 }
 
 void CObjectManager::CleanManager(){
+	bool test = true;
 	int size = m_GameObjects.size();
 	for (int idx = 0; idx < size; idx++){
 		int size2 = m_GameObjects[idx].size();
 		for (int idx2 = 0; idx2 < size2; idx2++) {
 			if (!m_GameObjects[idx][idx2]->object->GetCommon()) {
 				m_GameObjects[idx][idx2]->object->OnDestroy();
+				if (test) {
+					test = false;
+					OutputDebugString("‚ ");
+				}
 				m_DeleteObjects.push_back(m_GameObjects[idx][idx2]->object);
 			}
 		}

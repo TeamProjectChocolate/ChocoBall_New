@@ -99,7 +99,7 @@ void CHadBar::Initialize(CGameObject* Object,const vector<BarColor>& BarColorArr
 	ActiveBarColor(BarColorArray,max,value);
 	// 最初のバーを決定。
 	m_NowBarNum = m_NowSettingNum = 0;
-	m_NowBar = m_NowSettingBar = m_BarElement[m_NowBarNum];
+	m_NowBar = m_NowSettingBar = m_BarElement[m_NowBarNum].get();
 
 	m_MaxValue = max;
 	m_Varue = value;
@@ -116,7 +116,7 @@ void CHadBar::Update() {
 		}
 		if (m_NowBarNum < m_MaxBarNum) {
 			// 更新中のバーを変更。
-			m_NowBar = m_BarElement[m_NowBarNum];
+			m_NowBar = m_BarElement[m_NowBarNum].get();
 		}
 	}
 }
@@ -140,7 +140,7 @@ void CHadBar::SetValue(float value) {
 				m_NowSettingNum++;
 				if (m_NowSettingNum < m_MaxBarNum) {
 					// 次のバーがあればそちらにターゲットを変更。
-					m_NowSettingBar = m_BarElement[m_NowSettingNum];
+					m_NowSettingBar = m_BarElement[m_NowSettingNum].get();
 					// 設定した値を差分から引き、新しい差分を設定。
 					Difference -= nowBarValue;
 					if (nowBarValue < Difference) {
@@ -180,14 +180,14 @@ void CHadBar::Draw() {
 void CHadBar::ActiveBarColor(const vector<BarColor>& BarColorArray,float max,float value) {
 	m_MaxBarNum = BarColorArray.size();
 	for (auto BarColor : BarColorArray) {
-		CBarElement* bar = new CBarElement;
+		unique_ptr<CBarElement> bar(new CBarElement);
 		// 親子関係。
 		bar->SetPos(m_transform.position);
 		bar->SetQuaternion(m_transform.angle);
 		// バーを重ねる場合は値を重ねるバーの数分だけ分割する。
 		bar->Initialize(BarColor, max / m_MaxBarNum, value / m_MaxBarNum);
 		bar->Update();
-		m_BarElement.push_back(bar);
+		m_BarElement.push_back(move(bar));
 	}
 }
 
