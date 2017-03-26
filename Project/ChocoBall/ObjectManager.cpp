@@ -100,36 +100,43 @@ void CObjectManager::CleanManager(){
 	}
 }
 
-void CObjectManager::ExcuteDeleteObjects(){
-	vector<OBJECT_DATA*>::iterator itr;
-	vector<CGameObject*>::iterator itr2;
-	for (int priorty = OBJECT::PRIORTY::MAX_PRIORTY - 1; priorty >= 0; priorty--) {
-		for (itr = m_GameObjects[priorty].begin(); itr != m_GameObjects[priorty].end();) {
-			bool inclimentFlg = true;
-			for (itr2 = m_DeleteObjects.begin(); itr2 != m_DeleteObjects.end();) {
-				if ((*itr2) == (*itr)->object) {
-					if ((*itr)->object->GetManagerNewFlg()) {
-						SAFE_DELETE((*itr)->object);
-					}
-					else {
-						(*itr)->object = nullptr;
-					}
-					SAFE_DELETE((*itr));
 
+void CObjectManager::ExcuteDeleteObjects(){
+
+	for (int priorty = OBJECT::PRIORTY::MAX_PRIORTY - 1; priorty >= 0; priorty--) {
+		for (auto itr = m_GameObjects[priorty].begin(); itr != m_GameObjects[priorty].end();) {
+			// 登録されているオブジェクトで削除配列を検索。
+			auto DeleteItr = find(m_DeleteObjects.begin(), m_DeleteObjects.end(), (*itr)->object);
+
+			if (DeleteItr != m_DeleteObjects.end()) {
+				// 削除配列に積まれている。
+				// 削除する要素をいったん退避。
+				OBJECT_DATA* DeleteObject = *itr;
+
+				// 二重削除、削除済み領域参照の対策。
+				{
+					// イテレーターを先に進める。
 					itr = m_GameObjects[priorty].erase(itr);
-					itr2 = m_DeleteObjects.erase(itr2);
-					inclimentFlg = false;
-					break;
+					//// itrに同じ要素が入っていた場合はそちらも削除。
+					//m_GameObjects[priorty].erase(remove_if(m_GameObjects[priorty].begin(), m_GameObjects[priorty].end(), callback.CallBack));
+
+					// m_DeleteObjectsの要素を削除(同じアドレスが複数入っていた場合はそちらも消される)。
+					m_DeleteObjects.erase(std::remove(m_DeleteObjects.begin(), m_DeleteObjects.end(), DeleteObject->object));
+				}
+
+				// 削除実行。
+				if (DeleteObject->object->GetManagerNewFlg()) {
+					// GameObjectのメモリ領域開放
+					SAFE_DELETE(DeleteObject->object);
 				}
 				else {
-					itr2++;
+					// マネージャでメモリ確保されたものではないため配列から取り除くだけ。
+					DeleteObject->object = nullptr;
 				}
+				SAFE_DELETE(DeleteObject);
 			}
-			int size = m_DeleteObjects.size();
-			if (size == 0) {
-				return;
-			}
-			if (inclimentFlg) {
+			else {
+				// 削除配列にない。
 				itr++;
 			}
 		}

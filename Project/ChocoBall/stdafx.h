@@ -37,6 +37,7 @@
 #include <list>
 #include <memory>
 #include <locale.h>
+#include <algorithm>
 
 //#define TEISYUTU_YOU	// 提出用ビルドのスイッチ(定義で提出用になる)。
 
