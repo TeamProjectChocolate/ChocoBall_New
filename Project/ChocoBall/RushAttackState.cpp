@@ -59,15 +59,21 @@ bool CRushAttackState::Update() {
 				float offsetY = 2.65f;
 				WallPos.y += offsetY;
 
+				float Volum = BLOCK_W * (BUILD_W * 0.5f);
+				float OffsetX = Volum - (BLOCK_W  * 0.5f);	
+
+				// まずは出現位置が中心になるようにする。
+				WallPos -= m_pObject->GetTransform().right * Volum;
+
 				// 位置を何パターンかに分ける。
-				float Volum = BLOCK_W * (BUILD_W / 2);
-				int randPtern = 2;
+				// いい感じにばらけさせる。
+				int randPtern = 3;
 				int rnd = (rand() % randPtern) - (randPtern / 2);
 				WallPos += m_pObject->GetTransform().right * (Volum * rnd);
 				// ボスの鼻先くらいから出現するよう調整。
-				float offsetXZ = 8.0f;
+				float offsetZ = 8.0f;
 				BB->Initialize(
-					WallPos + (m_pObject->GetDirection() * offsetXZ),
+					WallPos + (m_pObject->GetDirection() * offsetZ),
 					m_pObject->GetQuaternion()
 				);
 				// チョコ壁を飛ばす。

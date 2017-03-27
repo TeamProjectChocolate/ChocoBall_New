@@ -195,8 +195,8 @@ void CCBManager::Draw_EM(CCamera* camera){
 #endif
 }
 
-void CCBManager::OnTriggerStay(const btCollisionObject* pCollision) {
-	if (pCollision->getUserIndex() == static_cast<int>(Collision::Type::Player)) {
+void CCBManager::OnTriggerStay(CCollisionInterface* pCollision) {
+	if (pCollision->GetCollisionType() == Collision::Type::Player) {
 		// チョコボール生成開始。
 		this->Initialize();
 		this->SetAlive(true);

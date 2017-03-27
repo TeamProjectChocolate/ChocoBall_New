@@ -131,7 +131,11 @@ static LPCSTR Stage_BGM[] = {
 	"lastStage",
 	"Modern",
 #endif
-	//"Modern",
+};
+
+// ボス戦用のBGM。
+static LPCSTR Boss_BGM[] = {
+	"BossStage",
 	"BossBattle",
 };
 

@@ -292,10 +292,12 @@ namespace {
 				return 0.0f;
 			}
 			if (UserPointer) {
-				UserPointer->OnTriggerStay(const_cast<btCollisionObject*>(convexResult.m_hitCollisionObject));
+				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 			}
-			if (convexResult.m_hitCollisionObject->getUserPointer()) {
-				static_cast<CGameObject*>(convexResult.m_hitCollisionObject->getUserPointer())->OnTriggerStay(UserPointer->GetCollisionObject());
+
+			CGameObject* pObject = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
+			if (pObject) {
+				pObject->OnTriggerStay(UserPointer->GetCollision());
 			}
 			return 0;
 		}
@@ -352,14 +354,13 @@ namespace {
 				OutputDebugString("動く壁。\n");
 			}
 
-			void* UserPointer;
-			UserPointer = colObj0Wrap->getCollisionObject()->getUserPointer();
+			CGameObject* UserPointer = static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer())->GetGameObject();
 			if (UserPointer) {
-				static_cast<CGameObject*>(UserPointer)->OnTriggerStay(const_cast<btCollisionObject*>(colObj1Wrap->getCollisionObject()));
+				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer()));
 			}
-			UserPointer = colObj1Wrap->getCollisionObject()->getUserPointer();
+			UserPointer = static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer())->GetGameObject();
 			if (UserPointer) {
-				static_cast<CGameObject*>(UserPointer)->OnTriggerStay(const_cast<btCollisionObject*>(colObj0Wrap->getCollisionObject()));
+				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer()));
 			}
 
 			isHit = true;
@@ -465,10 +466,12 @@ namespace {
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
 				if (UserPointer) {
-					UserPointer->OnCollisionStay(const_cast<btCollisionObject*>(convexResult.m_hitCollisionObject));
+					UserPointer->OnCollisionStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 				}
-				if (convexResult.m_hitCollisionObject->getUserPointer()) {
-					static_cast<CGameObject*>(convexResult.m_hitCollisionObject->getUserPointer())->OnCollisionStay(UserPointer->GetCollisionObject());
+
+				CGameObject* Object = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
+				if (Object) {
+					Object->OnCollisionStay(UserPointer->GetCollision());
 				}
 			}
 			return 0;
@@ -542,10 +545,11 @@ namespace {
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
 				if (UserPointer) {
-					UserPointer->OnCollisionStay(const_cast<btCollisionObject*>(convexResult.m_hitCollisionObject));
+					UserPointer->OnCollisionStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 				}
-				if (convexResult.m_hitCollisionObject->getUserPointer()) {
-					static_cast<CGameObject*>(convexResult.m_hitCollisionObject->getUserPointer())->OnCollisionStay(UserPointer->GetCollisionObject());
+				CGameObject* Object = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
+				if (Object) {
+					Object->OnCollisionStay(UserPointer->GetCollision());
 				}
 			}
 			return 0.0f;

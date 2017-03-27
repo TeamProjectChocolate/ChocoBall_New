@@ -46,7 +46,7 @@ public:
 	void Draw()override;
 	void DrawShadow(CCamera*)override;
 	void Draw_EM(CCamera*)override;
-	void OnTriggerStay(const btCollisionObject* pCollision)override;
+	void OnTriggerStay(CCollisionInterface* pCollision)override;
 
 	void SetRenderState()override{
 		m_RenderingState = RENDER::TYPE::Instancing;

@@ -3,6 +3,7 @@
 #include "EnemyBase.h"
 #include "Audio.h"
 #include "DivisionWall.h"
+#include "CollisionObject.h"
 
 #define MaxCollision 100
 

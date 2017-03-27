@@ -66,7 +66,8 @@ void CCollisionInterface::InitCollision(
 	}
 
 	// コリジョンを持つオブジェクトのポインタを設定。
-	m_collisionObject->setUserPointer(pObject);
+	m_GameObject = pObject;
+	m_collisionObject->setUserPointer(this);
 	m_collisionObject->setUserIndex(static_cast<int>(m_MyType));
 	m_collisionObject->setActivationState(DISABLE_DEACTIVATION);
 	m_collisionObject->activate();

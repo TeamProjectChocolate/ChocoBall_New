@@ -157,7 +157,10 @@ void CMapObjectManager::Build() {
 			else {
 				WorkObj->SetPos(MapObjects[idx].Position);
 			}
-			WorkObj->SetQuaternion(MapObjects[idx].Rotation);
+			D3DXQUATERNION rot = MapObjects[idx].Rotation;
+			rot.x *= -1;
+			rot.z *= -1;
+			WorkObj->SetQuaternion(rot);
 			D3DXVECTOR3 scale = MapObjects[idx].Scale;
 			WorkObj->SetScale(MapObjects[idx].Scale);
 			if (static_cast<FRESNEL::REFRACTIVES>(MapObjects[idx].RType) == FRESNEL::REFRACTIVES::NONE) {

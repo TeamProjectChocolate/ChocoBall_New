@@ -138,7 +138,7 @@ public:
 	// 引数は当たっているコリジョン。
 	// ※自身のコリジョンを物理ワールドに登録していなければ呼ばれない。
 	// ※中身の処理は継承先で実装してください。
-	virtual void OnCollisionStay(const btCollisionObject* pCollision) {
+	virtual void OnCollisionStay(CCollisionInterface* pCollision) {
 
 	}
 
@@ -146,7 +146,7 @@ public:
 	// 引数は当たっているコリジョン。
 	// ※自身のコリジョンをコリジョンワールドに登録していなければ呼ばれない。
 	// ※中身の処理は継承先で実装してください。
-	virtual void OnTriggerStay(const btCollisionObject* pCollision) {
+	virtual void OnTriggerStay(CCollisionInterface* pCollision) {
 
 	}
 

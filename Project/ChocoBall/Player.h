@@ -13,6 +13,7 @@
 #include "Vibration.h"
 #include "CourceCamera.h"
 #include "Audio.h"
+#include "GameAudio.h"
 
 class CLockOn;
 class CCBManager;
@@ -44,8 +45,8 @@ public:
 		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
 	}
 
-	void OnTriggerStay(const btCollisionObject* pCollision)override;
-	void OnCollisionStay(const btCollisionObject* pCollision)override;
+	void OnTriggerStay(CCollisionInterface* pCollision)override;
+	void OnCollisionStay(CCollisionInterface* pCollision)override;
 	
 	// チョコボールとの当たりのコールバック関数。
 	void ChocoHit(const D3DXVECTOR3& Dir);
@@ -109,6 +110,9 @@ public:
 	
 	void SetAudio(CAudio* audio){
 		m_pAudio = audio;
+	}
+	inline void SetBossAudio(CGameAudio* bossAudio) {
+		m_BossAudio = bossAudio;
 	}
 	int GetNowCourceNo() {
 		return m_NowCourceNo;
@@ -201,6 +205,9 @@ private:
 	STAGE_ID m_StageID;
 	CCourceCamera* m_pCamera;
 	CAudio* m_pAudio;//SE使用
+
+	CGameAudio* m_BossAudio = nullptr;	// ボス戦用。
+	int m_BossBGMIdx = 0;	// 現在のボス戦のBGM(トリガーとの衝突時に加算)。
 
 	D3DXVECTOR3 m_Repulsion;	// 外部から自分に加わった力。
 private:

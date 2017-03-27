@@ -87,7 +87,8 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 		// Xactプロジェクトのファイルを紛失したため、苦渋の決断。	
 		m_BossAudio = SINSTANCE(CObjectManager)->GenerationObject<CGameAudio>(_T("BossAudio"), OBJECT::PRIORTY::CONFIG, false);
 		m_BossAudio->Initialize("Audio/GameChocoball.xgs", "Audio/Boss.xwb", "Audio/Boss.xsb");
-		m_BossAudio->Play(Stage_BGM[m_Stage_ID], false, this);	// 音楽再生
+		m_BossAudio->Play(Boss_BGM[0], false, nullptr);	// 音楽再生
+		m_pPlayer->SetBossAudio(m_BossAudio);
 	}
 	else {
 		m_pAudio->PlayCue(Stage_BGM[m_Stage_ID], false, this);	// 音楽再生

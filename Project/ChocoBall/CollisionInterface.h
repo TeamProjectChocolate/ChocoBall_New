@@ -87,10 +87,10 @@ public:
 	virtual void RemoveWorld() = 0;
 
 
-	// ユーザーポインター返却。
-	inline CGameObject* GetUserPointer() const
+	// このコリジョンを持つゲームオブジェクトを返却。
+	inline CGameObject* GetGameObject() const
 	{
-		return static_cast<CGameObject*>(m_collisionObject->getUserPointer());
+		return m_GameObject;
 	}
 
 	// コリジョンの属性設定。
@@ -239,7 +239,9 @@ protected:
 	// あたりを無視する属性をbit情報で格納(衝突する属性のbitに1を立てる)。
 	// ※コリジョンをワールドに登録したときにはじめて通知する。
 	int m_LayerMask = btBroadphaseProxy::CollisionFilterGroups::AllFilter;
-	CBulletPhysics* m_pBulletPhysics;	// 物理ワールドとコリジョンワールドを持つクラス。
 protected:
+	CBulletPhysics* m_pBulletPhysics;	// 物理ワールドとコリジョンワールドを持つクラス。
+
+	CGameObject* m_GameObject = nullptr;
 	SH_ENGINE::TRANSFORM m_transform;
 };

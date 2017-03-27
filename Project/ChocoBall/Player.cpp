@@ -161,15 +161,7 @@ void CPlayer::Initialize()
 
 	m_Repulsion = Vector3::Zero;
 
-	//TestEmitter = CParticleEmitter::EmitterCreate(_T("ParticleEmitterStart"),
-	//	PARTICLE_TYPE::STAR,
-	//	m_CollisionObject->GetPos(),
-	//	m_pCamera->GetCamera(),
-	//	m_StageID,
-	//	true,
-	//	true
-	//);
-	//TestEmitter->SetIsUseCource(false);
+	m_BossBGMIdx = 0; 
 }
 
 void CPlayer::SetParent(MoveFloor* parent)
@@ -347,17 +339,26 @@ void CPlayer::ConfigLight(){
 	//SINSTANCE(CRenderContext)->SetCurrentLight(&m_light);
 }
 
-void CPlayer::OnTriggerStay(const btCollisionObject* pCollision) {
-	if (pCollision->getUserIndex() == static_cast<int>(Collision::Type::ChocoballTrigger)) {
+void CPlayer::OnTriggerStay(CCollisionInterface* pCollision) {
+	if (pCollision->GetCollisionType() == Collision::Type::ChocoballTrigger) {
 		// 当たったものがチョコボールトリガーならチョコボール生成。
-		CCBManager* mgr = (CCBManager*)pCollision->getUserPointer();
+		CCBManager* mgr = (CCBManager*)pCollision->GetGameObject();
 		if (!mgr->GetAlive()) {
 			m_pAudio->PlayCue("Chocoball", true, nullptr);//チョコ落下Audio
 		}
 	}
+	else if (pCollision->GetCollisionType() == Collision::Type::BGM_Changer){
+		// 当たったものがBGM変更トリガー。
+		m_BossAudio->Stop(Boss_BGM[m_BossBGMIdx], false, nullptr);
+		m_BossBGMIdx++;
+		m_BossAudio->Play(Boss_BGM[m_BossBGMIdx], false, nullptr);
+
+		// このトリガーはクラス化されていないため、ここでワールドから削除する。
+		pCollision->RemoveWorld();
+	}
 }
 
-void CPlayer::OnCollisionStay(const btCollisionObject* pCollision) {
+void CPlayer::OnCollisionStay(CCollisionInterface* pCollision) {
 
 }
 
