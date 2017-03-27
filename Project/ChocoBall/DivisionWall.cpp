@@ -14,7 +14,7 @@ CDivisionWall::~CDivisionWall()
 void CDivisionWall::Build(const D3DXVECTOR3& pos, const D3DXQUATERNION& Rotation) {
 	m_transform.position = pos;
 	m_transform.angle = Rotation;
-	m_transform.scale = D3DXVECTOR3(5.0f, 6.0f, 1.0f);
+	m_transform.scale = D3DXVECTOR3(6.0f, 6.0f, 1.0f);
 
 	// çÑëÃê∂ê¨ÅB
 	{

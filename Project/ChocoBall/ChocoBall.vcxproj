@@ -145,6 +145,7 @@
     <ClInclude Include="FallFloor.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="FireJet.h" />
+    <ClInclude Include="GameAudio.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GamePad.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="FallFloor.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="FireJet.cpp" />
+    <ClCompile Include="GameAudio.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />

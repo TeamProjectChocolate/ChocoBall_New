@@ -8,6 +8,7 @@
 #include "EnemyManager.h"
 #include "Skybox.h"
 #include "ZBufferSphere.h"
+#include "GameAudio.h"
 
 
 
@@ -35,17 +36,18 @@ protected:
 	STAGE_ID m_Stage_ID = STAGE_ID::STAGE_NONE;
 private:
 	CLight m_Light;
-	CPlayer* m_pPlayer;
-	CParticleEmitter* m_pEmitter;
-	CLevelBuilder* m_CLevelBuilder;
+	CPlayer* m_pPlayer = nullptr;
+	CParticleEmitter* m_pEmitter = nullptr;
+	CLevelBuilder* m_CLevelBuilder = nullptr;
 	bool m_isGameContinue = true;
 	GAMEEND::ID m_GameState = GAMEEND::ID::CONTINUE;
 
 	CScore m_score;	
-	CCourceCamera* m_pCamera;
-	CEnemyManager* m_pEnemyManager;
+	CCourceCamera* m_pCamera = nullptr;
+	CEnemyManager* m_pEnemyManager = nullptr;
 	Skybox m_skybox;
 	CZBufferSphere m_zbuffersphere;
-	CNumber* m_StageClearNum;
+	CNumber* m_StageClearNum = nullptr;
+	CGameAudio* m_BossAudio = nullptr;
 };
 

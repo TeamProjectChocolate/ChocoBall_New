@@ -11,6 +11,7 @@ enum GimmickType{
 	GimmickType_FireJet,
 	GimmickType_SmokeJet,
 	GimmickType_DivisionWall,
+	GimmickType_BGM_Changer,	// ボス戦以外で使うな。
 	GimmickType_None = 999
 };
 
@@ -130,7 +131,8 @@ static LPCSTR Stage_BGM[] = {
 	"lastStage",
 	"Modern",
 #endif
-	"Modern",
+	//"Modern",
+	"BossBattle",
 };
 
 enum STAGE_ID{

@@ -21,6 +21,7 @@ public:
 	}
 private:
 	std::vector<CCBManager*>	m_chocoballMgrList;			//チョコボールマネージャのリスト。
+	vector<CCollisionObject*> m_BGM_Changers;	// BGM変更判定用コリジョン。
 	STAGE_ID m_IsStage;
 	int m_ChocoWallNum;
 	int m_FireJetNum;

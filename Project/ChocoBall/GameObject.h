@@ -255,11 +255,11 @@ public:
 		return m_transform;
 	}
 protected:
-	CModel* m_pModel;
-	CRender* m_pRender;
+	CModel* m_pModel = nullptr;
+	CRender* m_pRender = nullptr;
 	CLight* m_pLight = nullptr;
-	CRender* m_pShadowRender;
-	CRender* m_pEMSamplingRender;
+	CRender* m_pShadowRender = nullptr;
+	CRender* m_pEMSamplingRender = nullptr;
 	RENDER::TYPE m_RenderingState;	// ‚Ç‚ÌƒŒƒ“ƒ_[‚ğg‚¤‚©
 	RENDER::TYPE m_ShadowRenderingState;
 	RENDER::TYPE m_EMRenderingState;

@@ -175,7 +175,7 @@ namespace FRESNEL{
 // グラフィックテクニックのスイッチ。
 //#define NOT_VSM // 定義でソフトシャドウをオフ。
 //#define NOT_BLOOM	// 定義でブルームをオフ。
-#define NOT_DOF	// 定義で被写界深度をオフ。
+//#define NOT_DOF	// 定義で被写界深度をオフ。
 //#define NOT_EM		// 定義で環境マップオフ。
 
 // デバッグ用。

@@ -34,8 +34,6 @@ public:
 	HRESULT CreateSoundBank(const char*);
 	//XACTエンジンの周期的タスク実行用
 	void Run();
-	//XACT終了関数
-	void CleanupXACT();
 
 	//キュー再生関数
 	//引き数:const char*型 サウンド名
@@ -45,6 +43,16 @@ public:
 	//キュー停止関数
 	void StopCue(const char*,bool,void*);
 
+	void DeleteAll() {
+		for (vector<SOUND_DATA*>::iterator itr = m_SoundDataArray.begin(); itr != m_SoundDataArray.end();) {
+			(*itr)->Pointer = nullptr;
+			SAFE_DELETE(*itr);
+			itr = m_SoundDataArray.erase(itr);
+		}
+		m_SoundDataArray.clear();
+	}
+
+private:
 	void AddSound(LPCSTR name,void* pointer){
 		SOUND_DATA* work = new SOUND_DATA;
 		strcpy(work->Name, name);
@@ -72,14 +80,6 @@ public:
 		return false;
 	}
 
-	void DeleteAll(){
-		for (vector<SOUND_DATA*>::iterator itr = m_SoundDataArray.begin(); itr != m_SoundDataArray.end();){
-			(*itr)->Pointer = nullptr;
-			SAFE_DELETE(*itr);
-			itr = m_SoundDataArray.erase(itr);
-		}
-		m_SoundDataArray.clear();
-	}
 
 	bool FindSound(LPCSTR name,void* pointer){
 		int size = m_SoundDataArray.size();
@@ -92,6 +92,10 @@ public:
 		}
 		return false;
 	}
+
+	//XACT終了関数
+	void CleanupXACT();
+
 private:
 	AUDIO_SET m_audio;	//XACTデータ用
 	vector<SOUND_DATA*> m_SoundDataArray;

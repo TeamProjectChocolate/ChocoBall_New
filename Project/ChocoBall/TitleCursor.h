@@ -18,8 +18,8 @@ public:
 		m_pAudio = audio;
 	}
 private:
-	CAudio* m_pAudio;
-	CInterface*	m_pInput;
+	CAudio* m_pAudio = nullptr;
+	CInterface*	m_pInput = nullptr;
 	short dir;
 	bool isup;
 	bool isdown;

@@ -83,17 +83,12 @@ void CObjectManager::DeleteGameObjectImmediate(CGameObject* pObject)
 }
 
 void CObjectManager::CleanManager(){
-	bool test = true;
 	int size = m_GameObjects.size();
 	for (int idx = 0; idx < size; idx++){
 		int size2 = m_GameObjects[idx].size();
 		for (int idx2 = 0; idx2 < size2; idx2++) {
 			if (!m_GameObjects[idx][idx2]->object->GetCommon()) {
 				m_GameObjects[idx][idx2]->object->OnDestroy();
-				if (test) {
-					test = false;
-					OutputDebugString("あ");
-				}
 				m_DeleteObjects.push_back(m_GameObjects[idx][idx2]->object);
 			}
 		}
@@ -121,7 +116,7 @@ void CObjectManager::ExcuteDeleteObjects(){
 					//m_GameObjects[priorty].erase(remove_if(m_GameObjects[priorty].begin(), m_GameObjects[priorty].end(), callback.CallBack));
 
 					// m_DeleteObjectsの要素を削除(同じアドレスが複数入っていた場合はそちらも消される)。
-					m_DeleteObjects.erase(std::remove(m_DeleteObjects.begin(), m_DeleteObjects.end(), DeleteObject->object));
+					m_DeleteObjects.erase(remove(m_DeleteObjects.begin(), m_DeleteObjects.end(), DeleteObject->object),m_DeleteObjects.end());
 				}
 
 				// 削除実行。

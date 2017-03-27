@@ -31,6 +31,10 @@ CLevelBuilder::CLevelBuilder()
 CLevelBuilder::~CLevelBuilder()
 {
 	m_DivisionWalls.clear();
+	for (auto coll : m_BGM_Changers) {
+		SAFE_DELETE(coll);
+	}
+	m_BGM_Changers.clear();
 }
 
 void CLevelBuilder::Build(CAudio* pAudio)
@@ -229,7 +233,19 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			Wall->Build(D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),rot);
 			m_DivisionWalls.push_back(Wall);
 		}
+		else if (info.gimmickType == GimmickType_BGM_Changer) {
+			// BGM変更判定用のコリジョン。
 
+			CCollisionObject* collision = new CCollisionObject;
+			SH_ENGINE::TRANSFORM Transform;
+			Transform.Identity();
+			Transform.position = D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z);
+			Transform.angle = D3DXQUATERNION(pInfo[i].rot.x, pInfo[i].rot.y, pInfo[i].rot.z, pInfo[i].rot.w);
+			collision->InitCollision(nullptr,Transform,Vector3::Zero,new btBoxShape(btVector3(pInfo[i].scale.x, pInfo[i].scale.y, pInfo[i].scale.z)),Collision::Type::BGM_Changer,Collision::FilterGroup::Ghost,0.0f,true,true);
+			collision->BitMask_AllOff();
+			collision->BitMask_On(Collision::FilterGroup::Player);
+			m_BGM_Changers.push_back(collision);
+		}
 	}
 
 	//この引数に渡すのはボックスのhalfsizeなので、0.5倍する。

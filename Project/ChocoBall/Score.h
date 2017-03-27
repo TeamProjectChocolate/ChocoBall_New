@@ -14,6 +14,6 @@ public:
 	void Update();
 private:
 	int score;
-	CPlayer* m_player;
-	CNumber* m_number;
+	CPlayer* m_player = nullptr;
+	CNumber* m_number = nullptr;
 };

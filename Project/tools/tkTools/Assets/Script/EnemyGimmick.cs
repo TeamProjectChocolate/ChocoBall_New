@@ -4,7 +4,7 @@ using System.Collections;
 
 public class EnemyGimmick : MonoBehaviour {
     public enum ENEMY_TYPE{ LR = 0, FB, Jamp, Bullet, Boss, None = 999};
-    public enum GIMMICK_TYPE{ Chocoball = 0, Wall, FallFloor, MoveFloor, UpFloor, FireJet, SmoekJet, DivisionWall, None = 999};
+    public enum GIMMICK_TYPE{ Chocoball = 0, Wall, FallFloor, MoveFloor, UpFloor, FireJet, SmoekJet, DivisionWall, BGM_Changer　/*ボス戦のみ、ほかで使うな。*/,None = 999};
     public ENEMY_TYPE enemyType = ENEMY_TYPE.None;
     public GIMMICK_TYPE gimmickType = GIMMICK_TYPE.None;
     public float MaxMove = 0;

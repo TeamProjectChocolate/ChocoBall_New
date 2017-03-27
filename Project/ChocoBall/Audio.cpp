@@ -167,10 +167,12 @@ void CAudio::CleanupXACT(){
 	if (m_audio.pbWaveBank){
 		UnmapViewOfFile(m_audio.pbWaveBank);    //ウェーブバンクのビューをアンマップ    
 	}
-	m_audio.pbWaveBank = NULL;
 
-	m_audio.pWaveBank->Destroy();
-	m_audio.pSoundBank->Destroy();
+	// 必ず死ぬからとりあえずコメントアウト。
+	//m_audio.pWaveBank->Destroy();
+	m_audio.pbWaveBank = nullptr;
+	// 必ず死ぬからとりあえずコメントアウト。
+	//m_audio.pSoundBank->Destroy();
 	CoUninitialize();
 }
 

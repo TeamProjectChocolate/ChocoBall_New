@@ -67,66 +67,66 @@
 	D3DXQUATERNION(-0.01f, 0.98f, 0.07f, 0.18f), //Rotation
 	D3DXVECTOR3(-0.29f, 0.95f, -0.14f), //ActionTargetDir
 	D3DXVECTOR3(32.02f, 7.42f, 65.09f), //ActionPos
-	2, //CourceType
+	0, //CourceType
 	true, //IsEnd
 },
 //Boss_CourceDef (5)
 {
-	D3DXVECTOR3(152.20f, 12.10f, 74.35f), //Start
-	D3DXVECTOR3(162.20f, 12.10f, 74.51f), //End
+	D3DXVECTOR3(84.60f, 12.10f, 72.45f), //Start
+	D3DXVECTOR3(94.60f, 12.10f, 72.61f), //End
 	D3DXVECTOR3(11.61f, 13.51f, 42.36f), //Range
-	D3DXVECTOR3(155.88f, 12.10f, 69.61f), //RangePos
+	D3DXVECTOR3(88.28f, 12.10f, 67.71f), //RangePos
 	D3DXQUATERNION(0.00f, 0.70f, 0.00f, 0.71f), //Rotation
-	D3DXVECTOR3(-1.00f, 0.00f, -0.02f), //ActionTargetDir
-	D3DXVECTOR3(143.32f, 15.04f, 67.29f), //ActionPos
+	D3DXVECTOR3(-1.00f, 0.00f, 0.01f), //ActionTargetDir
+	D3DXVECTOR3(78.88f, 15.04f, 67.65f), //ActionPos
 	2, //CourceType
 	true, //IsEnd
 },
 //Boss_CourceDef (6)
 {
-	D3DXVECTOR3(184.71f, 16.30f, 72.07f), //Start
-	D3DXVECTOR3(193.49f, 21.10f, 72.19f), //End
+	D3DXVECTOR3(117.11f, 16.30f, 73.07f), //Start
+	D3DXVECTOR3(125.89f, 21.10f, 73.19f), //End
 	D3DXVECTOR3(11.61f, 13.51f, 42.36f), //Range
-	D3DXVECTOR3(187.92f, 18.07f, 67.31f), //RangePos
+	D3DXVECTOR3(120.32f, 18.07f, 68.31f), //RangePos
 	D3DXQUATERNION(0.17f, -0.68f, -0.18f, -0.69f), //Rotation
 	D3DXVECTOR3(-0.87f, -0.48f, 0.11f), //ActionTargetDir
-	D3DXVECTOR3(175.47f, 14.61f, 65.07f), //ActionPos
+	D3DXVECTOR3(107.87f, 14.61f, 66.07f), //ActionPos
 	1, //CourceType
 	false, //IsEnd
 },
 //Boss_CourceDef (5)
 {
-	D3DXVECTOR3(216.80f, 25.60f, 101.45f), //Start
-	D3DXVECTOR3(226.80f, 25.60f, 101.61f), //End
+	D3DXVECTOR3(149.20f, 25.60f, 102.25f), //Start
+	D3DXVECTOR3(159.20f, 25.60f, 102.41f), //End
 	D3DXVECTOR3(70.29f, 13.51f, 42.36f), //Range
-	D3DXVECTOR3(220.48f, 25.60f, 96.71f), //RangePos
+	D3DXVECTOR3(152.88f, 25.60f, 97.51f), //RangePos
 	D3DXQUATERNION(0.00f, 0.70f, 0.00f, 0.71f), //Rotation
 	D3DXVECTOR3(-1.00f, 0.00f, -0.02f), //ActionTargetDir
-	D3DXVECTOR3(216.82f, 28.54f, 94.54f), //ActionPos
+	D3DXVECTOR3(151.82f, 28.54f, 95.39f), //ActionPos
 	2, //CourceType
 	true, //IsEnd
 },
 //Boss_CourceDef (8)
 {
-	D3DXVECTOR3(247.81f, 33.30f, 99.57f), //Start
-	D3DXVECTOR3(256.59f, 38.10f, 99.69f), //End
+	D3DXVECTOR3(184.31f, 33.30f, 100.37f), //Start
+	D3DXVECTOR3(193.09f, 38.10f, 100.49f), //End
 	D3DXVECTOR3(11.61f, 13.51f, 42.36f), //Range
-	D3DXVECTOR3(251.02f, 35.07f, 94.81f), //RangePos
+	D3DXVECTOR3(187.52f, 35.07f, 95.61f), //RangePos
 	D3DXQUATERNION(0.17f, -0.68f, -0.18f, -0.69f), //Rotation
 	D3DXVECTOR3(-0.87f, -0.48f, 0.11f), //ActionTargetDir
-	D3DXVECTOR3(238.57f, 31.61f, 92.57f), //ActionPos
+	D3DXVECTOR3(175.07f, 31.61f, 93.37f), //ActionPos
 	1, //CourceType
 	false, //IsEnd
 },
 //Boss_CourceDef (5)
 {
-	D3DXVECTOR3(273.20f, 45.30f, 121.75f), //Start
-	D3DXVECTOR3(283.20f, 45.30f, 121.91f), //End
+	D3DXVECTOR3(209.70f, 45.30f, 122.55f), //Start
+	D3DXVECTOR3(219.70f, 45.30f, 122.71f), //End
 	D3DXVECTOR3(55.24f, 13.51f, 42.36f), //Range
-	D3DXVECTOR3(276.88f, 45.30f, 117.01f), //RangePos
+	D3DXVECTOR3(213.38f, 45.30f, 117.81f), //RangePos
 	D3DXQUATERNION(0.00f, 0.70f, 0.00f, 0.71f), //Rotation
 	D3DXVECTOR3(-1.00f, 0.00f, -0.02f), //ActionTargetDir
-	D3DXVECTOR3(264.32f, 48.24f, 114.69f), //ActionPos
+	D3DXVECTOR3(200.82f, 48.24f, 115.49f), //ActionPos
 	2, //CourceType
 	true, //IsEnd
 },

@@ -12,7 +12,7 @@ public:
 		m_pAudio = nullptr;
 		m_pInput = nullptr;
 	};
-	~CScene(){};
+	virtual ~CScene(){};
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
@@ -24,8 +24,8 @@ public:
 		m_pAudio = audio;
 	}
 protected:
-	CAudio* m_pAudio;
-	CInterface* m_pInput;
+	CAudio* m_pAudio = nullptr;
+	CInterface* m_pInput = nullptr;
 private:
 	bool m_ManagerNewFlg;	// ObjectManagerƒNƒ‰ƒX‚Ånew‚³‚ê‚½‚à‚Ì‚©”»’è‚·‚é•Ï”
 };

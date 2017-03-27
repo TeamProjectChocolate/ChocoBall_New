@@ -19,6 +19,7 @@ namespace Collision{
 		AttackWall,		// ボスが発生させたチョコ壁。
 		Bullet,				//弾のコリジョン。
 		Enemy,	// 雑魚エネミー。
+		BGM_Changer,	// BGM変更判定用。ボス戦以外で使うな。
 		Max
 	};
 

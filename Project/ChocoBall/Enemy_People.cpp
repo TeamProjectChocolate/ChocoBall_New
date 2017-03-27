@@ -29,16 +29,8 @@ void CEnemy_People::Initialize() {
 
 	btSphereShape* shape = new btSphereShape(1.0f);
 	float mass = 1.0f;
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, Collision::Type::Enemy,Collision::FilterGroup::Enemy, false, mass, false, false);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), shape, Collision::Type::Enemy,Collision::FilterGroup::Enemy, false, mass, true, true);
 	m_CollisionObject->BitMask_AllOff();
-	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
-	m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
-	m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
-	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
-	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
-
-	//第一引数は質量、第二引数は回転のしやすさ。
-	static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
 }
 
 void CEnemy_People::Update() {
@@ -83,13 +75,24 @@ void CEnemy_People::HitReaction(D3DXVECTOR3 Dir) {
 
 	// 剛体設定。
 	{
-		m_CollisionObject->AddWorld();
-		Dir *= 750.0f;
-		float Power = 1000.0f;
-		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir + (Vector3::Up * Power));//チョコボールに当たって吹っ飛ぶ力を設定
-		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
+		m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
 		// キネマティック解除。
 		static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
+
+		float mass = 1.0f;
+		//第一引数は質量、第二引数は回転のしやすさ。
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
+
+		float Power = 750.0f;
+		Dir *= Power;
+		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir + (Vector3::Up * (500.0f)));//チョコボールに当たって吹っ飛ぶ力を設定
+		// 回転する力を加える。
+		float rad = D3DXToRadian(2800.0f);
+		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(rad, rad, rad));
 	}
 }
 

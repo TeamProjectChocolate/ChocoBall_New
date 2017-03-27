@@ -70,6 +70,7 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(),m_Stage_ID,true,true);
 
 	// レベル生成。
+	// 敵やギミックを配置。
 	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), OBJECT::PRIORTY::EMITTER, false);
 	m_CLevelBuilder->SetIsStage(m_Stage_ID);
 	m_CLevelBuilder->Build(pAudio);
@@ -81,7 +82,16 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	this->ConfigLight();
 
 	m_pAudio = pAudio;
-	m_pAudio->PlayCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽再生
+	if (m_Stage_ID == STAGE_ID::BOSS) {
+		// ボス戦BGMはこっち。
+		// Xactプロジェクトのファイルを紛失したため、苦渋の決断。	
+		m_BossAudio = SINSTANCE(CObjectManager)->GenerationObject<CGameAudio>(_T("BossAudio"), OBJECT::PRIORTY::CONFIG, false);
+		m_BossAudio->Initialize("Audio/GameChocoball.xgs", "Audio/Boss.xwb", "Audio/Boss.xsb");
+		m_BossAudio->Play(Stage_BGM[m_Stage_ID], false, this);	// 音楽再生
+	}
+	else {
+		m_pAudio->PlayCue(Stage_BGM[m_Stage_ID], false, this);	// 音楽再生
+	}
 	m_GameState = GAMEEND::ID::CONTINUE;
 	m_isGameContinue = true;
 }

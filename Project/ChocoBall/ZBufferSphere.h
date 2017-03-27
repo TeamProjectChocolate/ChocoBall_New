@@ -23,8 +23,8 @@ public:
 		return m_pZBufferSphereShadow;
 	}
 private:
-	CGameCamera* GameCamera;
-	CPlayer* Player;
+	CGameCamera* GameCamera = nullptr;
+	CPlayer* Player = nullptr;
 	LPDIRECT3DSURFACE9 m_pMapZ = nullptr;			// 深度バッファ
 	LPDIRECT3DTEXTURE9 m_pZBufferSphereShadow = nullptr;		// 影を落とすためのテクスチャ
 	LPDIRECT3DSURFACE9 m_pOriginalSurf = nullptr;	// サーフェス

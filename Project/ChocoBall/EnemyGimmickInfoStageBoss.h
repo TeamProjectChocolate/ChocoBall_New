@@ -120,7 +120,7 @@
 },
 //Wall
 {
-	D3DXVECTOR3(154.16f, 12.92f, 92.72f),             //平行移動
+	D3DXVECTOR3(86.60f, 12.92f, 92.72f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.71f, 0.00f, 0.71f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(1.00f, 0.00f, 0.00f),             //Zの向きベクトル
@@ -128,41 +128,111 @@
 	1,//ギミックタイプ
 	0.00f,//最大移動量
 },
-//Boss (2)
+//UnMove (3)
 {
-	D3DXVECTOR3(140.60f, 15.20f, 67.50f),             //平行移動
+	D3DXVECTOR3(67.00f, 12.00f, 67.60f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(12.00f, 2.80f, 12.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	4,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//UnMove (13)
+{
+	D3DXVECTOR3(63.92f, 14.96f, 70.90f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(2.00f, 1.00f, 2.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	4,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//UnMove (14)
+{
+	D3DXVECTOR3(70.02f, 14.96f, 70.90f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(2.00f, 1.00f, 2.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	4,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//UnMove (11)
+{
+	D3DXVECTOR3(63.92f, 14.96f, 64.30f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(2.00f, 1.00f, 2.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	4,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//UnMove (12)
+{
+	D3DXVECTOR3(70.02f, 14.96f, 64.30f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(2.00f, 1.00f, 2.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	4,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//EnemyBullet
+{
+	D3DXVECTOR3(63.92f, 16.07f, 70.90f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
-	4,//エネミータイプ
+	3,//エネミータイプ
 	999,//ギミックタイプ
 	0.00f,//最大移動量
 },
-//UnMove (3)
+//EnemyBullet (1)
 {
-	D3DXVECTOR3(132.60f, 12.00f, 67.40f),             //平行移動
+	D3DXVECTOR3(70.02f, 16.07f, 70.90f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(14.00f, 2.80f, 14.00f ),            //拡大
+	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
-	999,//エネミータイプ
-	4,//ギミックタイプ
+	3,//エネミータイプ
+	999,//ギミックタイプ
 	0.00f,//最大移動量
 },
-//Up
+//EnemyBullet (2)
 {
-	D3DXVECTOR3(202.60f, 25.50f, 94.50f),             //平行移動
+	D3DXVECTOR3(63.92f, 16.07f, 64.30f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(5.00f, 1.00f, 5.00f ),            //拡大
+	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	3,//エネミータイプ
+	999,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//EnemyBullet (3)
+{
+	D3DXVECTOR3(70.02f, 16.07f, 64.30f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	3,//エネミータイプ
+	999,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//Down
+{
+	D3DXVECTOR3(136.80f, 25.50f, 95.30f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(4.00f, 1.00f, 4.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	999,//エネミータイプ
-	4,//ギミックタイプ
+	2,//ギミックタイプ
 	2.00f,//最大移動量
 },
 //UnMove (8)
 {
-	D3DXVECTOR3(202.60f, 25.50f, 100.90f),             //平行移動
+	D3DXVECTOR3(136.80f, 25.50f, 103.40f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(5.00f, 1.00f, 5.00f ),            //拡大
+	D3DXVECTOR3(4.00f, 1.00f, 4.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	999,//エネミータイプ
 	2,//ギミックタイプ
@@ -170,9 +240,9 @@
 },
 //UnMove (9)
 {
-	D3DXVECTOR3(202.60f, 25.50f, 88.10f),             //平行移動
+	D3DXVECTOR3(136.80f, 25.50f, 87.00f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(5.00f, 1.00f, 5.00f ),            //拡大
+	D3DXVECTOR3(4.00f, 1.00f, 4.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	999,//エネミータイプ
 	4,//ギミックタイプ
@@ -180,27 +250,27 @@
 },
 //UnMove (10)
 {
-	D3DXVECTOR3(196.40f, 25.50f, 94.50f),             //平行移動
+	D3DXVECTOR3(128.80f, 25.50f, 95.30f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(5.00f, 1.00f, 5.00f ),            //拡大
+	D3DXVECTOR3(4.00f, 1.00f, 4.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	999,//エネミータイプ
 	4,//ギミックタイプ
 	0.00f,//最大移動量
 },
-//Down
+//Up
 {
-	D3DXVECTOR3(208.70f, 25.50f, 94.50f),             //平行移動
+	D3DXVECTOR3(145.20f, 25.50f, 95.30f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(5.00f, 1.00f, 5.00f ),            //拡大
+	D3DXVECTOR3(4.00f, 1.00f, 4.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	999,//エネミータイプ
-	2,//ギミックタイプ
+	4,//ギミックタイプ
 	2.00f,//最大移動量
 },
 //UnMove (4)
 {
-	D3DXVECTOR3(253.60f, 45.20f, 114.80f),             //平行移動
+	D3DXVECTOR3(190.10f, 45.20f, 115.60f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(14.00f, 2.80f, 14.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -210,7 +280,7 @@
 },
 //Up
 {
-	D3DXVECTOR3(188.10f, 11.86f, 94.50f),             //平行移動
+	D3DXVECTOR3(120.50f, 11.86f, 95.10f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(5.00f, 2.00f, 5.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -220,7 +290,7 @@
 },
 //DivisionWall (3)
 {
-	D3DXVECTOR3(142.40f, 15.20f, 79.33f),             //平行移動
+	D3DXVECTOR3(74.80f, 15.20f, 79.33f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -230,7 +300,7 @@
 },
 //Wall (1)
 {
-	D3DXVECTOR3(182.30f, 12.92f, 92.72f),             //平行移動
+	D3DXVECTOR3(114.70f, 12.92f, 92.72f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.71f, 0.00f, 0.71f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(1.00f, 0.00f, 0.00f),             //Zの向きベクトル
@@ -240,7 +310,7 @@
 },
 //EnemyLR
 {
-	D3DXVECTOR3(179.54f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(111.90f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -250,7 +320,7 @@
 },
 //EnemyFB
 {
-	D3DXVECTOR3(179.54f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(111.90f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -260,7 +330,7 @@
 },
 //EnemyFB
 {
-	D3DXVECTOR3(179.54f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(111.90f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -270,7 +340,7 @@
 },
 //EnemyFB (1)
 {
-	D3DXVECTOR3(177.57f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(110.00f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -280,7 +350,7 @@
 },
 //EnemyFB (2)
 {
-	D3DXVECTOR3(177.57f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(110.00f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -290,7 +360,7 @@
 },
 //EnemyLR (1)
 {
-	D3DXVECTOR3(177.57f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(110.00f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -300,7 +370,7 @@
 },
 //EnemyLR (2)
 {
-	D3DXVECTOR3(175.69f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(108.10f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -310,7 +380,7 @@
 },
 //EnemyFB (3)
 {
-	D3DXVECTOR3(175.69f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(108.10f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -320,7 +390,7 @@
 },
 //EnemyFB (4)
 {
-	D3DXVECTOR3(175.69f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(108.10f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -330,7 +400,7 @@
 },
 //EnemyFB (5)
 {
-	D3DXVECTOR3(169.88f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(102.30f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -340,7 +410,7 @@
 },
 //EnemyFB (6)
 {
-	D3DXVECTOR3(169.88f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(102.30f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -350,7 +420,7 @@
 },
 //EnemyLR (3)
 {
-	D3DXVECTOR3(169.88f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(102.30f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -360,7 +430,7 @@
 },
 //EnemyLR (4)
 {
-	D3DXVECTOR3(171.76f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(104.20f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -370,7 +440,7 @@
 },
 //EnemyFB (7)
 {
-	D3DXVECTOR3(171.76f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(104.20f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -380,7 +450,7 @@
 },
 //EnemyFB (8)
 {
-	D3DXVECTOR3(171.76f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(104.20f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -390,7 +460,7 @@
 },
 //EnemyFB (9)
 {
-	D3DXVECTOR3(173.73f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(106.10f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -400,7 +470,7 @@
 },
 //EnemyFB (10)
 {
-	D3DXVECTOR3(173.73f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(106.10f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -410,7 +480,7 @@
 },
 //EnemyLR (5)
 {
-	D3DXVECTOR3(173.73f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(106.10f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -420,7 +490,7 @@
 },
 //EnemyLR (6)
 {
-	D3DXVECTOR3(162.23f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(94.60f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -430,7 +500,7 @@
 },
 //EnemyFB (11)
 {
-	D3DXVECTOR3(162.23f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(94.60f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -440,7 +510,7 @@
 },
 //EnemyFB (12)
 {
-	D3DXVECTOR3(162.23f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(94.60f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -450,7 +520,7 @@
 },
 //EnemyFB (13)
 {
-	D3DXVECTOR3(160.23f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(92.60f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -460,7 +530,7 @@
 },
 //EnemyFB (14)
 {
-	D3DXVECTOR3(160.23f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(92.60f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -470,7 +540,7 @@
 },
 //EnemyLR (7)
 {
-	D3DXVECTOR3(160.23f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(92.60f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -480,7 +550,7 @@
 },
 //EnemyLR (8)
 {
-	D3DXVECTOR3(158.43f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(90.80f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -490,7 +560,7 @@
 },
 //EnemyFB (15)
 {
-	D3DXVECTOR3(158.43f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(90.80f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -500,7 +570,7 @@
 },
 //EnemyFB (16)
 {
-	D3DXVECTOR3(158.43f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(90.80f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -510,7 +580,7 @@
 },
 //EnemyFB (17)
 {
-	D3DXVECTOR3(164.23f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(96.60f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -520,7 +590,7 @@
 },
 //EnemyFB (18)
 {
-	D3DXVECTOR3(164.23f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(96.60f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -530,7 +600,7 @@
 },
 //EnemyLR (9)
 {
-	D3DXVECTOR3(164.23f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(96.60f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -540,7 +610,7 @@
 },
 //EnemyLR (10)
 {
-	D3DXVECTOR3(166.13f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(98.50f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -550,7 +620,7 @@
 },
 //EnemyFB (19)
 {
-	D3DXVECTOR3(166.13f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(98.50f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -560,7 +630,7 @@
 },
 //EnemyFB (20)
 {
-	D3DXVECTOR3(166.13f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(98.50f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -570,7 +640,7 @@
 },
 //EnemyFB (21)
 {
-	D3DXVECTOR3(168.03f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(100.40f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -580,7 +650,7 @@
 },
 //EnemyFB (22)
 {
-	D3DXVECTOR3(168.03f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(100.40f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -590,7 +660,7 @@
 },
 //EnemyLR (11)
 {
-	D3DXVECTOR3(168.03f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(100.40f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -600,7 +670,7 @@
 },
 //EnemyFB (23)
 {
-	D3DXVECTOR3(156.49f, 12.92f, 96.83f),             //平行移動
+	D3DXVECTOR3(88.90f, 12.92f, 96.83f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -610,7 +680,7 @@
 },
 //EnemyFB (24)
 {
-	D3DXVECTOR3(156.49f, 12.92f, 93.55f),             //平行移動
+	D3DXVECTOR3(88.90f, 12.92f, 93.55f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
@@ -620,11 +690,31 @@
 },
 //EnemyLR (12)
 {
-	D3DXVECTOR3(156.49f, 12.92f, 95.18f),             //平行移動
+	D3DXVECTOR3(88.90f, 12.92f, 95.18f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
 	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
 	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
 	0,//エネミータイプ
 	999,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//Boss (3)
+{
+	D3DXVECTOR3(153.60f, 28.40f, 95.48f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	4,//エネミータイプ
+	999,//ギミックタイプ
+	0.00f,//最大移動量
+},
+//BGM_Changer
+{
+	D3DXVECTOR3(137.00f, 28.94f, 95.20f),             //平行移動
+	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
+	D3DXVECTOR3(30.00f, 10.00f, 30.00f ),            //拡大
+	D3DXVECTOR3(0.00f, 0.00f, 1.00f),             //Zの向きベクトル
+	999,//エネミータイプ
+	8,//ギミックタイプ
 	0.00f,//最大移動量
 },

@@ -19,7 +19,6 @@ public:
 		m_fallPosY = 0.0f;
 	}
 	~CBlock() {
-		//this->OnDestroy();
 	}
 	void OnDestroy()override;
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot);

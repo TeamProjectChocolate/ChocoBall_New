@@ -10,7 +10,6 @@ class CChocoBall : public CGameObject {
 public:
 	CChocoBall(){}
 	~CChocoBall(){
-		this->OnDestroy();
 	}
 
 	void Initialize(const D3DXVECTOR3& Spos, const D3DXVECTOR3& Epos);

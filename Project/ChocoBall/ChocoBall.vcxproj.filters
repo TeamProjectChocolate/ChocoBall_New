@@ -455,6 +455,7 @@
     <ClInclude Include="AttackState.h">
       <Filter>Game\Enemy\Boss\HFSM</Filter>
     </ClInclude>
+    <ClInclude Include="GameAudio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -812,6 +813,7 @@
     <ClCompile Include="AttackState.cpp">
       <Filter>Game\Enemy\Boss\HFSM</Filter>
     </ClCompile>
+    <ClCompile Include="GameAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">
