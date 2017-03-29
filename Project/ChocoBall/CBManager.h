@@ -131,9 +131,6 @@ public:
 		m_IsBossDamage = flg;
 	}
 
-	inline void SetIsUseCourceNo(bool flg) {
-		m_IsUseCource = flg;
-	}
 	// チョコボールを時間差で破裂させる。
 	void OnBurst(float);
 private:
@@ -155,7 +152,6 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 	CEnemy_Boss* m_pBoss = nullptr;
 	bool m_IsBossDamage = true;	// ボスにダメージを与えられるかのフラグ。
-	bool m_IsUseCource = true;		// コース定義を参照した削除処理を行うか。
 
 	bool m_IsBurst;	// チョコボールを爆散させるか。
 	float m_CBDeathTime;	// チョコボールが死ぬ時間。

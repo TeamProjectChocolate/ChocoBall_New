@@ -91,7 +91,7 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 		m_pPlayer->SetBossAudio(m_BossAudio);
 	}
 	else {
-		m_pAudio->PlayCue(Stage_BGM[m_Stage_ID], false, this);	// 音楽再生
+		m_pAudio->PlayCue(Stage_BGM[m_Stage_ID], false, nullptr);	// 音楽再生
 	}
 	m_GameState = GAMEEND::ID::CONTINUE;
 	m_isGameContinue = true;
@@ -125,13 +125,23 @@ void CStage::Update()
 		if (m_GameState == GAMEEND::ID::CLEAR){
 			if (SINSTANCE(CObjectManager)->FindGameObject<CClearText>(_T("Clear"))->GetIsEnd() && m_pCamera->GetIsEnd()){
 				SINSTANCE(CStageManager)->SetContinueStage(static_cast<STAGE_ID>(m_Stage_ID + 1));
-				m_pAudio->StopCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽ストップ
+				if (m_Stage_ID == STAGE_ID::BOSS) {
+					m_BossAudio->Stop(Boss_BGM[m_pPlayer->GetBossBGMNum()], false, nullptr);
+				}
+				else {
+					m_pAudio->StopCue(Stage_BGM[m_Stage_ID], false, nullptr);	// 音楽ストップ
+				}
 				SINSTANCE(CGameManager)->ChangeScene(_T("Result"));
 			}
 		}
 		else if (m_GameState == GAMEEND::ID::OVER){
 			if (SINSTANCE(CObjectManager)->FindGameObject<CGameOver>(_T("GameOver"))->GetIsEnd()){
-				m_pAudio->StopCue(Stage_BGM[m_Stage_ID],false,this);	// 音楽ストップ
+				if (m_Stage_ID == STAGE_ID::BOSS) {
+					m_BossAudio->Stop(Boss_BGM[m_pPlayer->GetBossBGMNum()], false, nullptr);
+				}
+				else {
+					m_pAudio->StopCue(Stage_BGM[m_Stage_ID], false, nullptr);	// 音楽ストップ
+				}
 				SINSTANCE(CGameManager)->ChangeScene(_T("Result"));
 			}
 		}

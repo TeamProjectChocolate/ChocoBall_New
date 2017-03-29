@@ -175,7 +175,13 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			// ã¸°
 			CUpFloor* upfloor = SINSTANCE(CObjectManager)->GenerationObject<CUpFloor>(_T("movefloor"), OBJECT::PRIORTY::OBJECT3D, false);
 			upfloor->SetAudio(pAudio);
-			D3DXQUATERNION rot(-pInfo[i].rot.x, pInfo[i].rot.y, -pInfo[i].rot.z,pInfo[i].rot.w);
+			D3DXQUATERNION rot = pInfo[i].rot;
+			//if (StageID == STAGE_ID::BOSS) {
+			//	rot = D3DXQUATERNION(-pInfo[i].rot.x, -pInfo[i].rot.y, -pInfo[i].rot.z, pInfo[i].rot.w);
+			//}
+			//else {
+			//	rot = D3DXQUATERNION(-pInfo[i].rot.x, pInfo[i].rot.y, -pInfo[i].rot.z, pInfo[i].rot.w);
+			//}
 			upfloor->Initialize(
 				D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),
 				rot,

@@ -47,12 +47,19 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
-		start.setOrigin(btVector3(position->x, position->y, position->z));
+
+		D3DXVECTOR3 Pos = m_CollisionObject->GetPos();
+		start.setOrigin(btVector3(Pos.x, Pos.y, Pos.z));
+		//start.setOrigin(btVector3(position->x, position->y, position->z));
+
 		D3DXVECTOR3 newPos;
-		SweepResult_Collision callback(m_CollisionObject->GetGameObject());
+		SweepResult_Collision callback(m_CollisionObject);
 		callback.m_MaskCollisionTypes = m_MaskCollisionTypes;
 		if (D3DXVec3Length(&addPos) > 0.0001f) {
-			newPos = (*position + addPos);
+			m_CollisionObject->Activate();
+			newPos = (Pos + addPos);
+			//newPos = (*position + addPos);
+
 			end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
 			SINSTANCE(CObjectManager)->FindGameObject<CBulletPhysics>(_T("BulletPhysics"))->ConvexSweepTest(static_cast<btConvexShape*>(m_CollisionObject->GetCollisionShape()), start, end, callback);
 		}
@@ -77,7 +84,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 					newPos = (*position + addPosXZ);
 					end.setOrigin(btVector3(newPos.x, newPos.y, newPos.z));
 					// 衝突した場合のコールバックを定義。
-					SweepResult_XZ callback(m_CollisionObject->GetGameObject(), m_isFirstCallback);
+					SweepResult_XZ callback(m_CollisionObject, m_isFirstCallback);
 					// 無視する当たりの属性を設定。
 					callback.m_MaskCollisionTypes = GetMasks();
 					// 生成した情報で当たり判定。
@@ -137,7 +144,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 				start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
 #endif
 				D3DXVECTOR3 endPos;
-				SweepResult_Y callback(m_CollisionObject->GetGameObject(), m_isFirstCallback);
+				SweepResult_Y callback(m_CollisionObject, m_isFirstCallback);
 				callback.m_MaskCollisionTypes = GetMasks();
 
 				//D3DXVECTOR3 pos = m_rigidBody->getWorldTransform().getOrigin();

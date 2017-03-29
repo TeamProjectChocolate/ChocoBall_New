@@ -125,6 +125,10 @@ public:
 		return m_moveSpeed;
 	}
 
+	inline int GetBossBGMNum()const {
+		return m_BossBGMIdx;
+	}
+
 	inline void SetRepulsion(const D3DXVECTOR3& power) {
 		test = true;
 		m_Repulsion = power;

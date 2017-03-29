@@ -197,12 +197,6 @@ public:
 		btCollisionWorld::ContactResultCallback& resultCallback
 	)
 	{
-		//// 引数で指定されたコリジョンオブジェクトのフィルターグループとフィルターマスクをコールバックに設定。
-		//// ※これをしないとコールバックに最初から設定されているデフォルトの値が渡される。
-		//{
-			//resultCallback.m_collisionFilterGroup = Collision->getBroadphaseHandle()->m_collisionFilterGroup;
-			//resultCallback.m_collisionFilterMask = Collision->getBroadphaseHandle()->m_collisionFilterMask;
-		//}
 		m_dynamicWorld->contactPairTest(const_cast<btCollisionObject*>(CollisionA), const_cast<btCollisionObject*>(CollisionB), resultCallback);
 	}
 
@@ -275,15 +269,16 @@ namespace {
 	// コールバック(コリジョンワールド)
 	struct SweepResult_Collision : public btCollisionWorld::ConvexResultCallback
 	{
-		SweepResult_Collision(CGameObject* userPointer) {
-			UserPointer = userPointer;
-			if (userPointer) {
-				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
-				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
+		// 判定するコリジョンを設定。
+		SweepResult_Collision(CCollisionInterface* Collision) {
+			this->Collision = Collision;
+			if (Collision) {
+				this->m_collisionFilterGroup = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
 			}
 		}
 		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
-		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
+		CCollisionInterface* Collision = nullptr;		// isIntersectクラスで判定したいオブジェクトのコリジョン。
 		virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
 			int idx = convexResult.m_hitCollisionObject->getUserIndex();
@@ -291,14 +286,10 @@ namespace {
 				// マスクの値なら無視。
 				return 0.0f;
 			}
-			if (UserPointer) {
-				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
+			if (Collision) {
+				Collision->OnTriggerStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 			}
-
-			CGameObject* pObject = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
-			if (pObject) {
-				pObject->OnTriggerStay(UserPointer->GetCollision());
-			}
+			static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->OnTriggerStay(Collision);
 			return 0;
 		}
 	};
@@ -354,11 +345,11 @@ namespace {
 				OutputDebugString("動く壁。\n");
 			}
 
-			CGameObject* UserPointer = static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer())->GetGameObject();
+			CCollisionInterface* UserPointer = static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer());
 			if (UserPointer) {
 				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer()));
 			}
-			UserPointer = static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer())->GetGameObject();
+			UserPointer = static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer());
 			if (UserPointer) {
 				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer()));
 			}
@@ -401,12 +392,12 @@ namespace {
 	// ※移動した結果当たったかの判定に用いる。
 	struct SweepResult_Y : public btCollisionWorld::ConvexResultCallback
 	{
-		SweepResult_Y(CGameObject* userPointer,bool isFirstCallBack)
+		SweepResult_Y(CCollisionInterface* userPointer,bool isFirstCallBack)
 		{
-			UserPointer = userPointer;
-			if (UserPointer) {
-				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
-				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
+			Collision = userPointer;
+			if (Collision) {
+				this->m_collisionFilterGroup = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
 			}
 			isFirstCallback = isFirstCallBack;
 			isHit = false;
@@ -426,7 +417,7 @@ namespace {
 		Collision::Type hitCollisionType;
 
 		vector<bool>  m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
-		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
+		CCollisionInterface* Collision = nullptr;		// isIntersectクラスで判定したいオブジェクトのコリジョン。
 		bool isFirstCallback = false;		// 一回の当たり判定で最初に呼ばれたコールバックか。
 
 		const btCollisionObject* hitCollisionObject = nullptr;
@@ -465,13 +456,13 @@ namespace {
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
-				if (UserPointer) {
-					UserPointer->OnCollisionStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
+				if (Collision) {
+					Collision->OnCollisionStay_Y(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 				}
 
-				CGameObject* Object = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
-				if (Object) {
-					Object->OnCollisionStay(UserPointer->GetCollision());
+				CCollisionInterface* Coll = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer());
+				if (Coll) {
+					Coll->OnCollisionStay_Y(Collision);
 				}
 			}
 			return 0;
@@ -482,12 +473,12 @@ namespace {
 	// ※移動した結果当たったかの判定に用いる。
 	struct SweepResult_XZ : public btCollisionWorld::ConvexResultCallback
 	{
-		SweepResult_XZ(CGameObject* userPointer, bool isFirstCallBack)
+		SweepResult_XZ(CCollisionInterface* userPointer, bool isFirstCallBack)
 		{
-			UserPointer = userPointer;
-			if (UserPointer) {
-				this->m_collisionFilterGroup = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
-				this->m_collisionFilterMask = UserPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
+			Collision = userPointer;
+			if (Collision) {
+				this->m_collisionFilterGroup = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = Collision->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
 			}
 			isFirstCallback = isFirstCallBack;
 			isHit = false;
@@ -503,7 +494,7 @@ namespace {
 		D3DXVECTOR3 hitPos;
 
 		vector<bool> m_MaskCollisionTypes;	// このクラスのインスタンスを持つオブジェクトが、そのCollisionTypeのあたりを無視するかのフラグを格納(trueなら無視)。
-		CGameObject* UserPointer = nullptr;		// isIntersectクラスのインスタンスを保持しているオブジェクトを格納せよ。
+		CCollisionInterface* Collision = nullptr;		// isIntersectクラスで判定したいオブジェクトのコリジョン。
 		bool isFirstCallback = false;		// 一回の当たり判定で最初に呼ばれたコールバックか。
 
 		const btCollisionObject* hitCollisionObject = nullptr;
@@ -544,12 +535,12 @@ namespace {
 
 			if (isFirstCallback) {
 				// 一度の当たり判定で一度しかこの処理を行わない。
-				if (UserPointer) {
-					UserPointer->OnCollisionStay(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
+				if (Collision) {
+					Collision->OnCollisionStay_XZ(static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer()));
 				}
-				CGameObject* Object = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer())->GetGameObject();
-				if (Object) {
-					Object->OnCollisionStay(UserPointer->GetCollision());
+				CCollisionInterface* Coll = static_cast<CCollisionInterface*>(convexResult.m_hitCollisionObject->getUserPointer());
+				if (Coll) {
+					Coll->OnCollisionStay_XZ(Collision);
 				}
 			}
 			return 0.0f;

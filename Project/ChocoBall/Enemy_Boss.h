@@ -13,8 +13,6 @@ class CHadBar;
 class CChocoBall;
 class CCBManager;
 
-#define BossDmage 10
-
 class CEnemy_Boss :
 	public CGameObject
 {
@@ -44,6 +42,10 @@ public:
 	void EM_SetUpTechnique()override {
 		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
 	}
+	void SetUpShadowTechnique()override {
+		m_pShadowRender->SetUpTechnique("BoneShadowMapping");
+	}
+
 	void SetAnimationState(BOSS_ANIMATION anim) {
 		m_AnimState = anim;
 	}

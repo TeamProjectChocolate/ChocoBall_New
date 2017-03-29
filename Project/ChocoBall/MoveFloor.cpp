@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MoveFloor.h"
-
+#include "ShadowRender.h"
 
 bool MoveFloor::m_IsPlayCue = false;
 
@@ -18,6 +18,7 @@ MoveFloor::~MoveFloor()
 void MoveFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale)
 {
 	UseModel<C3DImage>();
+	SINSTANCE(CShadowRender)->Entry(this);
 	m_pModel->SetFileName("image/down_block.x");
 	CGameObject::Initialize();
 	//D3DXMatrixInverse()

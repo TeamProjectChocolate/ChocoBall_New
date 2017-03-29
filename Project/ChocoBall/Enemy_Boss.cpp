@@ -61,9 +61,8 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	m_pBarrier->Initialize();
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
-	//this->ChangeState(BOSS_STATE::Sleep);
-	//this->ChangeState(BOSS_STATE::RushAttack);
-	this->ChangeState(BOSS_STATE::BMove);
+	this->ChangeState(BOSS_STATE::Sleep);
+	//this->ChangeState(BOSS_STATE::BMove);
 
 }
 
@@ -91,12 +90,14 @@ void CEnemy_Boss::Initialize() {
 	//m_pModel->GetAnimation()->PlayAnimation(m_AnimState, 0.0f);
 	ConfigLight();
 	SetAlive(true);
-	m_HP = 2700;
+	m_HP = 7200.0f;
 	m_pModel->SetAlpha(1.0f);
 
 	// HPバー生成。
 	m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),OBJECT::PRIORTY::OBJECT2D,false);
+
 	vector<BarColor> ColorArray;
+	ColorArray.push_back(BarColor::Blue);
 	ColorArray.push_back(BarColor::Green);
 	ColorArray.push_back(BarColor::Yellow);
 	ColorArray.push_back(BarColor::Red);
@@ -181,17 +182,49 @@ void CEnemy_Boss::Draw() {
 
 void CEnemy_Boss::ChocoHit(CCBManager* HitChocoManager) {
 	if (m_pCurrentState->IsPossibleDamage()) {
-		m_HP -= BossDmage;
-		m_DamageCounter += BossDmage;
+		// 今のステートはボスにダメージを与えられる。
+
+		float BossDamage;	// 一粒のチョコボールがボスに与えるダメージ。
+		float MaxDamage;	// 一つのチョコボールマネージャーがボスに与えられる最大ダメージ。
+
+		switch (static_cast<HPBarNo>(m_pHPBar->GetNowBarNum())) {
+		case HPBarNo::One:
+			// 第一ゲージ。
+			// 単純計算3回。
+			BossDamage = 20.0f;
+			MaxDamage = 600.0f;
+			break;
+		case HPBarNo::Two:
+			// 第二ゲージ。
+			// 単純計算4回。
+			BossDamage = 15.0f;
+			MaxDamage = 450.0f;
+			break;
+		case HPBarNo::Three:
+			// 第三ゲージ。
+			// 単純計算3回。
+			BossDamage = 20.0f;
+			MaxDamage = 600.0f;
+			break;
+		case HPBarNo::Last:
+			// 最終ゲージ。
+			// 単純計算5回。
+			BossDamage = 12.0f;
+			MaxDamage = 360.0f;
+			break;
+		}
+
+		m_HP -= BossDamage;
+		m_DamageCounter += BossDamage;
 		if (m_HP <= 0) {
 			// 暫定処理。
 			m_HP = 0;
 			SetAlive(false);
 			this->DivisionWallOpen();
 		}
-		else if (m_DamageCounter >= BossDmage * 30) {
+		else if (m_DamageCounter >= MaxDamage) {
 			HitChocoManager->SetIsBossDamage(false);
-			m_DamageCounter = 0;
+			m_DamageCounter = 0.0f;
 			this->ChangeState(BOSS_STATE::Escape);
 			static_cast<CEscapeState*>(m_pCurrentState)->SetHitCBManager(HitChocoManager);
 		}

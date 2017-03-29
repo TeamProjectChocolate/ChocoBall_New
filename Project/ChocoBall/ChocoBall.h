@@ -49,6 +49,12 @@ public:
 	inline void SetStageID(STAGE_ID id) {
 		m_StageID = id;
 	}
+	inline void SetIsBossDamage(bool flg) {
+		m_IsBossDamage = flg;
+	}
+	inline bool GetIsBossDamage()const {
+		return m_IsBossDamage;
+	}
 	inline void SetDeathTime(float t) {
 		m_DeathTime = t;
 		m_TimeCounter = 0.0f;
@@ -64,6 +70,9 @@ private:
 	float					m_life;
 	float					m_radius;
 	D3DXVECTOR3				m_moveSpeed;		//移動速度。
+
+	bool m_IsBossDamage = true;	// ボスにダメージを与えられるか。
+
 	// チョコボールを時間差で破裂。
 	float m_DeathTime;
 	float m_TimeCounter;

@@ -18,7 +18,9 @@ CCollisionObject::~CCollisionObject()
 }
 
 void CCollisionObject::Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) {
-
+	if (m_collisionObject.get()) {
+		CCollisionInterface::Update(pos, rot);
+	}
 }
 
 void CCollisionObject::Build(const btTransform& transform, float mass, bool flg) {

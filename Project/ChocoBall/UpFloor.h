@@ -16,6 +16,9 @@ public:
 	void Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale);
 	void Update()override;
 	void Draw()override;
+
+	void OnCollisionStay(CCollisionInterface* pCollision)override;
+
 	void SetUpTechnique()override{
 #ifdef NOT_VSM
 		m_pRender->SetUpTechnique("Boneless_Tex_Shadow");
@@ -56,9 +59,11 @@ private:
 	D3DXVECTOR3			PlayerPos;
 	D3DXMATRIX			m_WorldMatrix;
 	D3DXMATRIX			m_InvWorld;
-	CPlayer*			m_player;
+	CPlayer*			m_player = nullptr;
 	float m_MaxMove;			// ˆÚ“®ŒÀŠE—Ê
-	CAudio* m_pAudio;
+	CAudio* m_pAudio = nullptr;
 	bool m_IamFlgKeeper;
 	static bool m_IsPlayCue;
+
+	bool m_IsHitPlayer = false;
 };

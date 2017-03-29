@@ -7,6 +7,9 @@ CShotAttackState::~CShotAttackState()
 }
 
 void CShotAttackState::Entry() {
+	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::FastsSwim);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
+
 	m_ShotState = Shot_State::Ready;
 	ChangeLocalState(CEnemy_Boss::BOSS_STATE::Trans);
 	static_cast<CTransState*>(m_pCurrentLocalState)->SetMoveSpeed(0.125f);

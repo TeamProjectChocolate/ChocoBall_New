@@ -63,6 +63,7 @@ void CRigidbody::Update(D3DXVECTOR3* pos,D3DXQUATERNION* rot)
 			m_transform.angle = *rot;
 			m_transform.scale = D3DXVECTOR3(m_collisionShape->getLocalScaling());
 		}
+		CCollisionInterface::Update(pos, rot);
 	}
 }
 

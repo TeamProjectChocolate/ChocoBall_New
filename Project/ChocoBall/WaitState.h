@@ -1,7 +1,7 @@
 #pragma once
 #include "State.h"
 
-#define WAIT_RANGE 20.0f	// この距離までプレイヤーが近づけば待つのをやめる。
+#define WAIT_RANGE 30.0f	// この距離までプレイヤーが近づけば待つのをやめる。
 
 namespace State_Wait {
 	enum WaitStage {Rotate = 0,WaitNow};

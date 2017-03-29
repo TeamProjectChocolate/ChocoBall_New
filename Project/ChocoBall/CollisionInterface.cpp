@@ -73,3 +73,28 @@ void CCollisionInterface::InitCollision(
 	m_collisionObject->activate();
 }
 
+void CCollisionInterface::Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) {
+	// –ˆƒtƒŒ[ƒ€‰Šú‰»B
+	m_OnCollisionXZ = false;
+	m_OnCollisionY = false;
+}
+
+void CCollisionInterface::OnCollisionStay_XZ(CCollisionInterface* pCollision) {
+	m_OnCollisionXZ = true;
+	if (m_GameObject) {
+		m_GameObject->OnCollisionStay(pCollision);
+	}
+}
+
+void CCollisionInterface::OnCollisionStay_Y(CCollisionInterface* pCollision) {
+	m_OnCollisionY = true;
+	if (m_GameObject) {
+		m_GameObject->OnCollisionStay(pCollision);
+	}
+}
+
+void CCollisionInterface::OnTriggerStay(CCollisionInterface* pCollision) {
+	if (m_GameObject) {
+		m_GameObject->OnTriggerStay(pCollision);
+	}
+}

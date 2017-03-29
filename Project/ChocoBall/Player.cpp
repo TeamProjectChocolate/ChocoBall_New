@@ -714,7 +714,8 @@ void CPlayer::StateManaged()
 	//}
 
 	//落下死ゲームオーバー処理。
-	if (m_transform.position.y <= -15.0f)
+	float DeathLine = -15.0f;	// 落下死判定ライン。
+	if (m_transform.position.y <= DeathLine)
 	{
 		m_GameState = GAMEEND::ID::OVER;
 		return;

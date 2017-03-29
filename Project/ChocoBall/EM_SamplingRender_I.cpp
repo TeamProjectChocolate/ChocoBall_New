@@ -18,6 +18,10 @@ CEM_SamplingRender_I::~CEM_SamplingRender_I()
 {
 	m_worldMatrix.clear();
 	m_RotationMatrix.clear();
+
+	m_WorldMatrixBuffer->Release();
+	m_RotationMatrixBuffer->Release();
+	m_VertexDecl->Release();
 	//SAFE_DELETE(m_WorldMatrixBuffer);
 	//SAFE_DELETE(m_RotationMatrixBuffer);
 	//SAFE_DELETE(m_VertexDecl);

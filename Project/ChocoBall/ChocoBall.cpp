@@ -65,6 +65,12 @@ void CChocoBall::Update()
 		}
 		m_TimeCounter += 1.0f / 60.0f;
 	}
+	else {
+		float DeathLine = -15.0f;	// 落下死判定ライン(この値よりも下にチョコボールが落下したら自分を殺す)。
+		if (m_transform.position.y <= DeathLine) {
+			SetAlive(false);
+		}
+	}
 	CGameObject::Update();
 }
 

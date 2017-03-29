@@ -37,7 +37,14 @@ public:
 		bool,
 		bool isAddWorld);
 
-	virtual void Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) = 0;
+	virtual void Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot);
+
+	// 物理ワールドで衝突したら呼ばれるコールバック(XZ方向)。
+	void OnCollisionStay_XZ(CCollisionInterface* pCollision);
+	// 物理ワールドで衝突したら呼ばれるコールバック(Y方向)。
+	void OnCollisionStay_Y(CCollisionInterface* pCollision);
+	// コリジョンワールドで衝突したら呼ばれるコールバック。
+	void OnTriggerStay(CCollisionInterface* pCollision);
 
 	// 全レイヤーマスクオフ。
 	// すべての衝突を無視。
@@ -91,6 +98,14 @@ public:
 	inline CGameObject* GetGameObject() const
 	{
 		return m_GameObject;
+	}
+	// 横あたりかを取得。
+	inline bool GetIsCollisionXZ() const {
+		return m_OnCollisionXZ;
+	}
+	// 縦あたりかを取得。
+	inline bool GetIsCollisionY() const {
+		return m_OnCollisionY;
 	}
 
 	// コリジョンの属性設定。
@@ -241,6 +256,8 @@ protected:
 	int m_LayerMask = btBroadphaseProxy::CollisionFilterGroups::AllFilter;
 protected:
 	CBulletPhysics* m_pBulletPhysics;	// 物理ワールドとコリジョンワールドを持つクラス。
+	bool m_OnCollisionXZ = false;	// XZ方向で衝突したか。
+	bool m_OnCollisionY = false;	// Y方向で衝突したか。
 
 	CGameObject* m_GameObject = nullptr;
 	SH_ENGINE::TRANSFORM m_transform;

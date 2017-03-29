@@ -147,7 +147,7 @@ void CBlock::Update()
 }
 
 void CBlock::CollisionPlayer() {
-	SweepResult_XZ callback(this,true);
+	SweepResult_XZ callback(this->GetCollision(),true);
 
 	D3DXVECTOR3 StartPos = m_CollisionObject->GetPos();
 	D3DXVECTOR3 EndPos = StartPos + m_Velocity;

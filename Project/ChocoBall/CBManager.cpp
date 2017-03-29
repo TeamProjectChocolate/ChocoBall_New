@@ -31,8 +31,6 @@ void CCBManager::Initialize()
 	// 当たり判定を行うオブジェクトを登録。
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
 	m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
-
-	m_IsUseCource = true;
 }
 
 void CCBManager::ActivateShadowRender(){
@@ -46,13 +44,13 @@ void CCBManager::ActivateShadowRender(){
 void CCBManager::Update()
 {
 	//if (m_pPlayer->GetGameState() == GAMEEND::CONTINUE) {
-		CreateChocoBall();
+	CreateChocoBall();
 	//}
 
 	// チョコボールの衝突判定。
 	IsHit();
 
-	for (auto itr = m_Choco.begin();itr != m_Choco.end();)
+	for (auto itr = m_Choco.begin(); itr != m_Choco.end();)
 	{
 		if ((*itr)->GetAlive()) {
 			(*itr)->Update();
@@ -71,18 +69,6 @@ void CCBManager::Update()
 		if (m_Choco.size() == 0) {
 			this->NonActivate();
 			return;
-		}
-	}
-
-	if (m_IsUseCource) {
-		// コース定義を参照して削除処理を行う。
-		int no = m_pPlayer->GetNowCourceNo();
-		if (no != -1) {
-			if (m_InitPosOfCourceNo != -1) {
-				if (no - m_InitPosOfCourceNo >= 5) {
-					this->NonActivate();
-				}
-			}
 		}
 	}
 }
@@ -119,13 +105,6 @@ void CCBManager::CreateChocoBall() {
 				CChocoBall* choco = SINSTANCE(CObjectManager)->GenerationObject<CChocoBall>(_T("Choco"),OBJECT::PRIORTY::OBJECT3D, false);
 				choco->SetStageID(m_StageID);
 				choco->Initialize(pos, Epos);
-				if (m_IsBurst) {
-					choco->SetIsBurst(true);
-					// 死亡するまでの時間をランダムでばらす。
-					float TimeOffset = 0.07f;	// 死亡時間をずらす間隔の単位。
-					int rnd = rand() % 8;
-					choco->SetDeathTime(m_CBDeathTime + (TimeOffset * static_cast<float>(rnd)));
-				}
 				m_Choco.push_back(choco);
 #ifdef NOT_INSTANCING
 				SINSTANCE(CShadowRender)->Entry(ptr.get());
@@ -211,7 +190,7 @@ void CCBManager::IsHit()
 	bool isBossHit = false;
 	for (int i = 0; i < m_Choco.size(); i++) {
 		if(!IsPlayerHit){
-			if (m_IsBossDamage) {
+			if (!m_IsBurst) {
 				// プレイヤー用判定。
 				D3DXVECTOR3 MaxSize;//最大値
 				D3DXVECTOR3 MinSize;//最小値
@@ -241,33 +220,38 @@ void CCBManager::IsHit()
 			}
 		}
 		if (m_pBoss) {
-			if (!isBossHit) {
-				// ボス用の当たり
-				if (m_IsBossDamage) {
-					D3DXVECTOR3 MaxSize;//最大値
-					D3DXVECTOR3 MinSize;//最小値
-					const static float Sphereradius = 0.25f;//チョコボールの半径
-					D3DXVECTOR3 size = m_pBoss->GetSize();
-					size *= 0.5f;
-					D3DXVECTOR3 pos = m_pBoss->GetPos();
-					MaxSize.x = pos.x + size.x + Sphereradius;
-					MaxSize.y = pos.y + size.y + Sphereradius;
-					MaxSize.z = pos.z + size.z + Sphereradius;
+			if (m_Choco[i]->GetIsBossDamage()) {
+				// 今見ている一粒がボスにダメージを与えられる。
+				if (!isBossHit) {
+					// ボス用の当たり
+					if (m_IsBossDamage) {
+						D3DXVECTOR3 MaxSize;//最大値
+						D3DXVECTOR3 MinSize;//最小値
+						const static float Sphereradius = 0.25f;//チョコボールの半径
+						D3DXVECTOR3 size = m_pBoss->GetSize();
+						size *= 0.5f;
+						D3DXVECTOR3 pos = m_pBoss->GetPos();
+						MaxSize.x = pos.x + size.x + Sphereradius;
+						MaxSize.y = pos.y + size.y + Sphereradius;
+						MaxSize.z = pos.z + size.z + Sphereradius;
 
-					MinSize.x = pos.x - size.x - Sphereradius;
-					MinSize.y = pos.y - size.y - Sphereradius;
-					MinSize.z = pos.z - size.z - Sphereradius;
-					D3DXVECTOR3 chocoPos = m_Choco[i]->GetPos();
-					//ボックスコライダーにチョコボールの半径分を足した上で、衝突しているチョコボールとの当たり判定を調べる。
-					if (MinSize.x < chocoPos.x&&
-						MinSize.y < chocoPos.y&&
-						MinSize.z < chocoPos.z&&
-						chocoPos.x < MaxSize.x&&
-						chocoPos.y < MaxSize.y&&
-						chocoPos.z < MaxSize.z)
-					{
-						m_pBoss->ChocoHit(this);
-						isBossHit = true;
+						MinSize.x = pos.x - size.x - Sphereradius;
+						MinSize.y = pos.y - size.y - Sphereradius;
+						MinSize.z = pos.z - size.z - Sphereradius;
+						D3DXVECTOR3 chocoPos = m_Choco[i]->GetPos();
+						//ボックスコライダーにチョコボールの半径分を足した上で、衝突しているチョコボールとの当たり判定を調べる。
+						if (MinSize.x < chocoPos.x&&
+							MinSize.y < chocoPos.y&&
+							MinSize.z < chocoPos.z&&
+							chocoPos.x < MaxSize.x&&
+							chocoPos.y < MaxSize.y&&
+							chocoPos.z < MaxSize.z)
+						{
+							// この一粒はもうボスにダメージを与えないようにする。
+							m_Choco[i]->SetIsBossDamage(false);
+							m_pBoss->ChocoHit(this);
+							isBossHit = true;
+						}
 					}
 				}
 			}

@@ -8,6 +8,9 @@ CRushAttackState::~CRushAttackState()
 }
 
 void CRushAttackState::Entry() {
+	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::FastsSwim);
+	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
+
 	m_TimeCounter = 0.0f;
 	m_SumTimeCounter = 0.0f;
 	m_DamageTimeCounter = 0.0f;
@@ -95,9 +98,9 @@ bool CRushAttackState::Update() {
 				BallPos += (m_pObject->GetDirection() * offset);
 				CBM->SetStartPosition(BallPos);
 				CBM->SetEndPosition(BallPos + m_pObject->GetDirection() * offset);
-				CBM->SetIsUseCourceNo(false);
-				CBM->OnBurst(4.0f);
 				CBM->SetAlive(true);
+				// ボスにダメージが入らないよう設定。
+				CBM->SetIsBossDamage(false);
 				m_CreateCBNum--;
 			}
 			m_Count++;

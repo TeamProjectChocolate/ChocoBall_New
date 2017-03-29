@@ -77,6 +77,14 @@ public:
 	//void AddValue(int value) {
 	//	m_NowBar->AddValue(value);
 	//}
+	// 何ゲージ重ねるかを返却。
+	inline short GetMaxBarNum()const {
+		return m_MaxBarNum;
+	}
+	// 今何ゲージ目かを返却。
+	inline short GetNowBarNum()const {
+		return m_NowBarNum;
+	}
 private:
 	// ワンゲージ削った際のイベント。
 	void BreakEvent();

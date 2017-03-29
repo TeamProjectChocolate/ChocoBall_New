@@ -137,6 +137,7 @@ static LPCSTR Stage_BGM[] = {
 static LPCSTR Boss_BGM[] = {
 	"BossStage",
 	"BossBattle",
+	"LastBattle",
 };
 
 enum STAGE_ID{
