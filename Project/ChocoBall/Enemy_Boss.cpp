@@ -62,8 +62,7 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
 	this->ChangeState(BOSS_STATE::Sleep);
-	//this->ChangeState(BOSS_STATE::BMove);
-
+	//this->ChangeState(BOSS_STATE::Attack);
 }
 
 void CEnemy_Boss::Initialize() {

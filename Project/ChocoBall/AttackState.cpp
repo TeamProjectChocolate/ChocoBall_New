@@ -15,6 +15,7 @@ void CAttackState::Entry() {
 		m_IntervalTime = 0.5f;
 		m_TimeCounter = 0.0f;
 		m_ActionState = ActionState::Interval;
+		ChangeLocalState(CEnemy_Boss::BOSS_STATE::NonAction);
 	}
 	else {
 		// バリアオフ。
