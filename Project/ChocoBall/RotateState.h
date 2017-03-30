@@ -14,15 +14,14 @@ public:
 	void SetTargetDirection(const D3DXVECTOR3& dir) {
 		D3DXVec3Normalize(&m_TargetDirection, &dir);
 	}
-	// 回転にかかる時間を設定
-	// 引数は秒。
-	void SetRotationTime(float time) {
-		m_RotationTime = time;
+	// 回転にかかる力を設定
+	// 引数は度。
+	void SetRotationPower(float Power) {
+		m_RotationPower = Power;
 	}
 private:
 	D3DXVECTOR3 m_TargetDirection;
-	float m_RotationTime;	// 回転にかかる時間。
-	float m_TimeCounter;
+	float m_RotationPower;	// 一秒間に回転する量(度)。
 	bool m_IsFirst = true;
 private:
 	// ここから作業用変数。

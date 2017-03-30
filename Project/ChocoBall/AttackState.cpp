@@ -12,39 +12,59 @@ void CAttackState::Entry() {
 
 	if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
 		// 最後のコース定義(ランダムでいずれかの攻撃)。
-		int rnd = rand() % static_cast<int>(Attack_State::Max);
-		switch (static_cast<Attack_State>(rnd)) {
-		case Attack_State::Rush:
-			ChangeLocalState(CEnemy_Boss::BOSS_STATE::RushAttack);
-			break;
-		case Attack_State::Shot:
-			ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
-		}
+		m_IntervalTime = 0.5f;
+		m_TimeCounter = 0.0f;
+		m_ActionState = ActionState::Interval;
 	}
 	else {
+		// バリアオフ。
+		m_pObject->GetBarrier()->OffBarrier();
+		m_ActionState = ActionState::Action;
+
 		ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
 	}
-	// バリアオフ。
-	m_pObject->GetBarrier()->OffBarrier();
 	// コース判定を一時的にオフ。
 	m_pObject->SetIsUpdateCource(false);
+
 }
 
 bool CAttackState::Update() {
-	// 暫定処理。
 	if (m_pCurrentLocalState->Update()) {
-		if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
-			// 最後のコース。
-			// もう一度待ち状態に戻った後、攻撃に移行。
-			m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BWait);
+		if (m_ActionState == ActionState::Interval) {
+			// いい感じに見えるように少し間を開ける。
+			if (m_TimeCounter >= m_IntervalTime) {
+				m_ActionState = ActionState::Action;
+				// バリアオフ。
+				m_pObject->GetBarrier()->OffBarrier();
+
+				int rnd = rand() % static_cast<int>(Attack_State::Max);
+				switch (static_cast<Attack_State>(rnd)) {
+				case Attack_State::Rush:
+					ChangeLocalState(CEnemy_Boss::BOSS_STATE::RushAttack);
+					break;
+				case Attack_State::Shot:
+					ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
+					break;
+				}
+			}
+			m_TimeCounter += 1.0f / 60.0f;
 		}
 		else {
-			// 攻撃が終わったのでコースの属性をMoveに変更して再び移動開始。
-			vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
-			now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
-			m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
+			if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
+				// 最後のコース。
+				// バリアオン。
+				m_pObject->GetBarrier()->OnBarrier();
+				// もう一度待ち状態に戻った後、攻撃に移行。
+				m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BWait);
+			}
+			else {
+				// 攻撃が終わったのでコースの属性をMoveに変更して再び移動開始。
+				vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+				now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
+				m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
+			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 }

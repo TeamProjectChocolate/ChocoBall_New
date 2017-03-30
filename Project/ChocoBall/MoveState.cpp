@@ -35,7 +35,7 @@ void CMoveState::Entry() {
 	this->ChangeLocalState(CEnemy_Boss::BOSS_STATE::Rotate);
 	// コースの向きをターゲットに設定。
 	static_cast<CRotateState*>(m_pCurrentLocalState)->SetTargetDirection(dir);
-	static_cast<CRotateState*>(m_pCurrentLocalState)->SetRotationTime(1.0f);
+	static_cast<CRotateState*>(m_pCurrentLocalState)->SetRotationPower(180.0f);
 
 	// バリア起動。
 	m_pObject->GetBarrier()->OnBarrier();

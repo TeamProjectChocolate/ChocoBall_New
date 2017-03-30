@@ -18,7 +18,9 @@ void CUpFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale
 	m_transform.angle = rot;
 
 	if (scale.z != 1.0f){
-		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.79f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.79f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick ,false, 0.0f, true,true);
+		//ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.79f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.79f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick ,false, 0.0f, true,true);
+		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.9f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.9f * scale.z * 0.5f)), Collision::Type::Floor, Collision::FilterGroup::Gimmick, false, 0.0f, true, true);
+
 	}
 	else{
 		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.0f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);

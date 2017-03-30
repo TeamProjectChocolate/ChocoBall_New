@@ -19,6 +19,11 @@ CCollisionObject::~CCollisionObject()
 
 void CCollisionObject::Update(D3DXVECTOR3* pos, D3DXQUATERNION* rot) {
 	if (m_collisionObject.get()) {
+		// Œ»Ý‚ÌTransformî•ñ‚ð•Û‘¶B
+		m_transform.position = *pos;
+		m_transform.angle = *rot;
+		m_transform.scale = D3DXVECTOR3(m_collisionShape->getLocalScaling());
+
 		CCollisionInterface::Update(pos, rot);
 	}
 }

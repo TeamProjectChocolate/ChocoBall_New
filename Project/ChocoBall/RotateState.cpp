@@ -7,15 +7,13 @@ CRotateState::~CRotateState()
 }
 
 void CRotateState::Entry() {
-	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Wait);
+	m_pObject->SetAnimationState(CEnemy_Boss::BOSS_ANIMATION::Swim);
 	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
-	m_RotationTime = 0.0f;
-	m_TimeCounter = 0.0f;
+	m_RotationPower = 1.0f;
 	m_IsFirst = true;
 }
 
 bool CRotateState::Update() {
-	m_TimeCounter += 1.0f / 60.0f;
 	if (m_IsFirst) {
 		D3DXVECTOR3 InitDirection = m_pObject->GetDirection();
 
@@ -41,12 +39,19 @@ bool CRotateState::Update() {
 		m_Offset = 0.0f;
 		m_IsFirst = false;
 	}
-	// 1ƒtƒŒ[ƒ€‚É‰ñ“]‚·‚éŠ„‡‚ðŽZo‚µ‚Ä‰ÁŽZB
-	m_Offset += (1.0f / 60.0f) / (m_RotationTime);
 
+	bool IsEnd = false;
+
+
+	// 1ƒtƒŒ[ƒ€‚É‰ñ“]‚·‚éŠ„‡‚ðŽZo‚µ‚Ä‰ÁŽZB
+	m_Offset += (D3DXToRadian(m_RotationPower) / 60.0f);
+	if (m_Offset >= m_Angle) {
+		m_Offset = m_Angle;
+		IsEnd = true;
+	}
 	// ŽZo‚µ‚½Š„‡‚Å™X‚É‰ñ“]B
 	D3DXQUATERNION work;
-	D3DXQuaternionRotationAxis(&work, &m_Axis, m_Angle * m_Offset);
+	D3DXQuaternionRotationAxis(&work, &m_Axis, m_Offset);
 	
 
 	D3DXMATRIX mat, mat2;
@@ -89,7 +94,7 @@ bool CRotateState::Update() {
 
 	m_pObject->SetQuaternion(work2);
 
-	if (m_TimeCounter >= m_RotationTime) {
+	if (IsEnd) {
 		return true;
 	}
 	return false;

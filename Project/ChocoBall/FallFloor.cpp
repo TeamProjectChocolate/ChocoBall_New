@@ -15,7 +15,7 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 	m_transform.scale = scale;
 	m_transform.angle = rot;
 	m_MaxSpeed = 0.1f;
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.81f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.81f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.9f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.9f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
 	m_CollisionObject->BitMask_AllOff();
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
@@ -57,15 +57,17 @@ void FallingFloor::Update()
 			}
 		}
 	}
-	else if (m_transform.position.y < StartPos.y)
+	else 
 	{
 		if (m_IamFlgKeeper){
 			m_pAudio->StopCue("Lift",false,this);//ƒŠƒtƒgAudio
 			m_IsPlayCue = false;
 			m_IamFlgKeeper = false;
 		}
-		m_transform.position.y += 0.05f;
-		m_moveSpeed = 0.0f;
+		if (m_transform.position.y < StartPos.y) {
+			m_transform.position.y += 0.05f;
+			m_moveSpeed = 0.0f;
+		}
 	}
 
 	m_IsHitPlayer = false;

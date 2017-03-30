@@ -20,7 +20,7 @@ void CWaitState::Entry() {
 	ChangeLocalState(CEnemy_Boss::BOSS_STATE::Rotate);
 	// 待つ方向をターゲットに指定。
 	static_cast<CRotateState*>(m_pCurrentLocalState)->SetTargetDirection(m_pObject->GetNowCource()[0]->ActionTargetDir);
-	static_cast<CRotateState*>(m_pCurrentLocalState)->SetRotationTime(1.0f);
+	static_cast<CRotateState*>(m_pCurrentLocalState)->SetRotationPower(180.0f);
 
 	// バリア起動。
 	m_pObject->GetBarrier()->OnBarrier();
@@ -37,6 +37,13 @@ bool CWaitState::Update() {
 			if (m_pObject->GetNowCource()[0]->BlockType == Cource::Boss_Cource::BOSS_COURCE_TYPE::Wait) {
 				if (D3DXVec3Length(&(m_pPlayer->GetPos() - m_pObject->GetPos())) <= WAIT_RANGE) {
 					// プレイヤーが一定範囲まで近づいたか。
+
+					vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+					if (now.size() == 1) {
+						// コースの属性をMoveに変更。
+						// これをしないと延々その場で待ち続ける。
+						now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
+					}
 					m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::BMove);
 					return true;
 				}

@@ -7,6 +7,7 @@ class CAttackState :
 {
 private:
 	enum class Attack_State { Shot = 0,Rush,Max};
+	enum class ActionState{Action = 0,Interval};
 public:
 	CAttackState(CEnemy_Boss* obj) :CState(obj) {};
 	~CAttackState();
@@ -17,5 +18,8 @@ private:
 	bool BossRush();
 private:
 	Attack_State m_State;
+	ActionState m_ActionState;
+	float m_IntervalTime;
+	float m_TimeCounter = 0.0f;
 };
 
