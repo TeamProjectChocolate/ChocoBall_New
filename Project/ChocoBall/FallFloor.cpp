@@ -15,7 +15,7 @@ void FallingFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 s
 	m_transform.scale = scale;
 	m_transform.angle = rot;
 	m_MaxSpeed = 0.1f;
-	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.5f * scale.x *0.5f, 0.3f *  scale.y * 0.5f, 1.5f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
+	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(1.81f * scale.x *0.5f, 0.5f *  scale.y * 0.5f, 1.81f * scale.z * 0.5f)), Collision::Type::Floor,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
 	m_CollisionObject->BitMask_AllOff();
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
@@ -56,7 +56,6 @@ void FallingFloor::Update()
 				m_IamFlgKeeper = false;
 			}
 		}
-		m_IsHitPlayer = false;
 	}
 	else if (m_transform.position.y < StartPos.y)
 	{
@@ -68,6 +67,8 @@ void FallingFloor::Update()
 		m_transform.position.y += 0.05f;
 		m_moveSpeed = 0.0f;
 	}
+
+	m_IsHitPlayer = false;
 
 	CGameObject::Update();
 }

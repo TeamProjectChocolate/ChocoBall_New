@@ -82,9 +82,17 @@ void CPlayer::Initialize()
 	// ライト関連の初期化
 	this->ConfigLight();
 
-	m_radius = 1.0f;
-	btCollisionShape* Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
+	btCollisionShape* Shape;
 
+	if (m_StageID == STAGE_ID::BOSS) {
+		m_radius = 0.5f;
+		float Height = 0.5f;
+		Shape = new btCapsuleShape(m_radius,Height);//ここで剛体の形状を決定
+	}
+	else {
+		m_radius = 1.0f;
+		Shape = new btSphereShape(m_radius);//ここで剛体の形状を決定
+	}
 	float mass = 0.5f;
 	ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), Shape, Collision::Type::Player,Collision::FilterGroup::Player, false, mass, true,true);
 	m_CollisionObject->BitMask_AllOff();

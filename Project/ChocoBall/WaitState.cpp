@@ -55,6 +55,10 @@ bool CWaitState::Update() {
 					return false;
 				}
 			}
+			else if (m_pObject->GetNowCource()[0]->BlockType == Cource::Boss_Cource::BOSS_COURCE_TYPE::Sleep) {
+				m_pObject->ChangeState(CEnemy_Boss::BOSS_STATE::Sleep);
+				return false;
+			}
 			break;
 		}
 	}

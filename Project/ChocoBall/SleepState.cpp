@@ -33,4 +33,8 @@ bool CSleepState::Update() {
 void CSleepState::Exit(CEnemy_Boss::BOSS_STATE next) {
 	// エミッター破棄。
 	SINSTANCE(CObjectManager)->DeleteGameObject(m_SleepEmitter);
+
+	// コースの属性をMoveに変更。
+	vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
+	now[0]->BlockType = Cource::Boss_Cource::BOSS_COURCE_TYPE::Move;
 }

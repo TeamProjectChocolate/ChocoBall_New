@@ -20,6 +20,7 @@ public:
 	enum BOSS_ANIMATION { Wait = 0, FastsSwim, Swim, Up, Down, Dive };
 	enum BOSS_STATE { Sleep = 0,BWait, BMove, Attack, Escape, ShotAttack, RushAttack, Shot, Trans, Rotate, NonAction};
 	enum SHOT_STATE { Ready = 0, Action, Post };
+	enum class HPBarNo{One = 0,Two,Three,Last};
 public:
 	CEnemy_Boss();
 	~CEnemy_Boss();
@@ -102,7 +103,7 @@ public:
 	void BreakEventCallBack();
 	void DivisionWallOpen();
 private:
-	short m_HP;	// ヒットポイント。
+	float m_HP;	// ヒットポイント。
 	CHadBar* m_pHPBar = nullptr;	// HPバー。
 
 	BOSS_STATE m_State;
@@ -121,7 +122,7 @@ private:
 	bool m_IsNowCourceChange = false;	// 接触しているコースが前回から変化したか。
 	bool m_IsUpdateCource = true;	// コースとの当たり判定を行うか。
 
-	int m_DamageCounter = 0;
+	float m_DamageCounter = 0.0f;
 	CState* m_pCurrentState = nullptr;
 	vector<unique_ptr<CState>> m_States;	// ボスのステートすべてを格納。
 

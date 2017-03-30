@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "PixTag.h"
 
-enum BarColor {  Red = 0, Yellow,Green};
+enum BarColor {  Red = 0, Yellow,Green,Blue};
 
 class CBarFrame : public CGameObject {
 public:
@@ -57,6 +57,7 @@ static const char* BarFileNameArray[] = {
 	"Image/hp.png",	// 赤ゲージ。
 	"Image/hp_back.png",	// 黄色ゲージ。
 	"Image/hp_Green.png",	// 緑ゲージ。
+	"Image/hp_Blue.png",	// 青ゲージ。
 };
 
 class CHadBar :

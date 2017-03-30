@@ -107,7 +107,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 						//D3DXVec3Normalize(&t, &addPos);
 						//半径分押し戻す。
 						float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
-						t *= radius;
+						t *= radius * 0.5f;
 						addPos += t;
 						//続いて壁に沿って滑らせる。
 						//滑らせる方向を計算。

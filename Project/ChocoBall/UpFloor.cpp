@@ -59,8 +59,6 @@ void CUpFloor::Update()
 				m_IamFlgKeeper = false;
 			}
 		}
-
-		m_IsHitPlayer = false;
 	}
 	else if (m_transform.position.y > StartPos.y)
 	{
@@ -71,6 +69,8 @@ void CUpFloor::Update()
 		}
 		m_transform.position.y -= 0.05f;
 	}
+
+	m_IsHitPlayer = false;
 
 	CGameObject::Update();
 }

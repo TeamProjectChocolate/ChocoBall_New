@@ -1,11 +1,10 @@
-﻿D3DXVECTOR3(-151.80f, 1.70f, -74.50f), //Cube
+﻿D3DXVECTOR3(-151.20f, 1.70f, -101.80f), //Cube
 D3DXVECTOR3(-150.10f, 1.70f, -13.68f), //Cube
 D3DXVECTOR3(-141.61f, 7.21f, -4.34f), //Cube
 D3DXVECTOR3(-123.50f, 7.21f, 12.61f), //Cube
 D3DXVECTOR3(-113.50f, 4.32f, 15.69f), //Cube (1)
 D3DXVECTOR3(-102.38f, 10.81f, 15.74f), //Cube (2)
-D3DXVECTOR3(-90.10f, 16.42f, -1.06f), //Cube (3)
-D3DXVECTOR3(-78.48f, 23.31f, 1.05f), //Cube (4)
+D3DXVECTOR3(-81.45f, 21.11f, 0.54f), //Cube (3)
 D3DXVECTOR3(-62.99f, 29.01f, 6.10f), //Cube (5)
 D3DXVECTOR3(-55.93f, 36.41f, 9.62f), //Cube (6)
 D3DXVECTOR3(-35.58f, 38.12f, 9.39f), //Cube (3)

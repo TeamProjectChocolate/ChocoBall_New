@@ -126,7 +126,7 @@ void CBossCourceDef::Initialize() {
 			SH_ENGINE::TRANSFORM tr;	// コリジョンに渡すTransform情報。
 			tr.Identity();
 			// 位置情報設定。
-			tr.position = CourceDef[num].ActionPos;
+			tr.position = CourceDef[num].RangePos;
 			// Unityの座標系からDirectXの座標系に変換。
 			tr.position.x *= -1.0f;
 			tr.position.z *= -1.0f;

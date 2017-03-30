@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BossCource : MonoBehaviour {
-    public enum CourceType { Wait = 0,Move,Attack };
+    public enum CourceType { Wait = 0,Move,Attack ,Sleep};
 
     [Tooltip("コースの属性(これでボスの行動を決定する)")]
     [SerializeField]

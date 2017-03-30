@@ -16,7 +16,7 @@ namespace Cource{
 
 	// ボス用コースの属性。
 	namespace Boss_Cource {
-		enum BOSS_COURCE_TYPE { Wait = 0, Move, Attack };
+		enum BOSS_COURCE_TYPE { Wait = 0, Move, Attack , Sleep};
 	}
 
 	// ボス用のコース構造体。

@@ -180,15 +180,11 @@ void CAudio::PlayCue(const char* cue,bool Isrepeat,void* pointer){
 	bool work = FindSound(cue, pointer);
 
 	if (!Isrepeat){
+		// 何度も再生してはいけない(重なっちゃだめな音)。
 		if (work){
 			return;
 		}
 		else{
-			AddSound(cue, pointer);
-		}
-	}
-	else{
-		if(!work){
 			AddSound(cue, pointer);
 		}
 	}
@@ -205,7 +201,8 @@ void CAudio::PlayCue(const char* cue,bool Isrepeat,void* pointer){
 }
 
 void CAudio::StopCue(const char* cue,bool Isrepert,void* pointer){
-	if (!Isrepert){
+	if (Isrepert){
+		// 何度も再生してかまわない(重なってもいい音)。
 		if (m_audio.pSoundBank != NULL){
 			// サウンドバンクから指定したキューのキューインデクッス取得
 			m_audio.cueIndex = m_audio.pSoundBank->GetCueIndex(cue);
@@ -216,6 +213,7 @@ void CAudio::StopCue(const char* cue,bool Isrepert,void* pointer){
 		}
 	}
 	else if (DeleteSound(cue, pointer)){
+		// 何度も再生してはいけない(重なっちゃだめな音)。
 		if (m_audio.pSoundBank != NULL){
 			// サウンドバンクから指定したキューのキューインデクッス取得
 			m_audio.cueIndex = m_audio.pSoundBank->GetCueIndex(cue);
