@@ -62,6 +62,12 @@ public:
 	inline void SetIsBurst(bool flg) {
 		m_IsBurst = flg;
 	}
+	inline void SetIsHitBoss(bool flg) {
+		m_IsBossHit = flg;
+	}
+	inline bool GetIsHitBoss()const {
+		return m_IsBossHit;
+	}
 private:
 	//ここからbulletPhysicsの剛体を使用するために必要な変数。
 	D3DXVECTOR3				m_EndPosition;		//目的地
@@ -77,6 +83,8 @@ private:
 	float m_DeathTime;
 	float m_TimeCounter;
 	bool m_IsBurst = false;
+	bool m_IsBossHit = false;	// ボスに命中したか。
+
 	STAGE_ID m_StageID;
 	CParticleEmitter* m_pEmitter = nullptr;
 };

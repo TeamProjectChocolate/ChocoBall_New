@@ -18,7 +18,7 @@ class CEnemy_Boss :
 {
 public:
 	enum BOSS_ANIMATION { Wait = 0, FastsSwim, Swim, Up, Down, Dive };
-	enum BOSS_STATE { Sleep = 0,BWait, BMove, Attack, Escape, ShotAttack, RushAttack, Shot, Trans, Rotate, NonAction};
+	enum BOSS_STATE { Sleep = 0,BWait, BMove, Attack, Escape, ShotAttack, RushAttack, Shot, Trans, Rotate, Death, NonAction};
 	enum SHOT_STATE { Ready = 0, Action, Post };
 	enum class HPBarNo{One = 0,Two,Three,Last};
 public:

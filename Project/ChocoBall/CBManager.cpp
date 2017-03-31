@@ -195,16 +195,16 @@ void CCBManager::IsHit()
 				D3DXVECTOR3 MaxSize;//最大値
 				D3DXVECTOR3 MinSize;//最小値
 				const static float Sphereradius = 0.25f;//チョコボールの半径
-				D3DXVECTOR3 size = m_pPlayer->GetSize();
+				float size = m_pPlayer->GetRadius();
 				size *= 0.5f;
 				D3DXVECTOR3 pos = m_pPlayer->GetPos();
-				MaxSize.x = pos.x + size.x + Sphereradius;
-				MaxSize.y = pos.y + size.y + Sphereradius;
-				MaxSize.z = pos.z + size.z + Sphereradius;
+				MaxSize.x = pos.x + size + Sphereradius;
+				MaxSize.y = pos.y + size + Sphereradius;
+				MaxSize.z = pos.z + size + Sphereradius;
 
-				MinSize.x = pos.x - size.x - Sphereradius;
-				MinSize.y = pos.y - size.y - Sphereradius;
-				MinSize.z = pos.z - size.z - Sphereradius;
+				MinSize.x = pos.x - size - Sphereradius;
+				MinSize.y = pos.y - size - Sphereradius;
+				MinSize.z = pos.z - size - Sphereradius;
 				D3DXVECTOR3 chocoPos = m_Choco[i]->GetPos();
 				//ボックスコライダーにチョコボールの半径分を足した上で、衝突しているチョコボールとの当たり判定を調べる。
 				if (MinSize.x < chocoPos.x&&
@@ -249,6 +249,9 @@ void CCBManager::IsHit()
 						{
 							// この一粒はもうボスにダメージを与えないようにする。
 							m_Choco[i]->SetIsBossDamage(false);
+							// ボスに当たったのでフラグを立てる。
+							// これにより、この粒は爆散する。
+							m_Choco[i]->SetIsHitBoss(true);
 							m_pBoss->ChocoHit(this);
 							isBossHit = true;
 						}
@@ -262,11 +265,14 @@ void CCBManager::IsHit()
 void CCBManager::OnBurst(float DeathTime) {
 	for (int i = 0; i < m_Choco.size(); i++)
 	{
-		// 死亡するまでの時間をランダムでばらす。
-		float TimeOffset = 0.07f;	// 死亡時間をずらす間隔の単位。
-		int rnd = rand() % 8;
-		m_Choco[i]->SetDeathTime(DeathTime + (TimeOffset * static_cast<float>(rnd)));
-		m_Choco[i]->SetIsBurst(true);
+		if (m_Choco[i]->GetIsHitBoss()) {	
+			// ボスに命中していたもののみ破壊する。
+			// 死亡するまでの時間をランダムでばらす。
+			float TimeOffset = 0.07f;	// 死亡時間をずらす間隔の単位。
+			int rnd = rand() % 8;
+			m_Choco[i]->SetDeathTime(DeathTime + (TimeOffset * static_cast<float>(rnd)));
+			m_Choco[i]->SetIsBurst(true);
+		}
 	}
 	m_IsBurst = true;
 	m_CBDeathTime = DeathTime;

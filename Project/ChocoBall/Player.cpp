@@ -300,10 +300,10 @@ void CPlayer::Update()
 	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(1.0f, /*2.0f*/5.0f, 0.0f));
 	//static_cast<CEM_Render*>(SINSTANCE(CRenderContext)->GetEMRender())->SetCameraPos(m_transform.position + -GetDirection() * 1.5f);
 
-	if (m_GameState != GAMEEND::ID::CLEAR)
-	{
+	//if (m_GameState != GAMEEND::ID::CLEAR)
+	//{
 		CGameObject::Update();
-	}
+	//}
 
 	//// コリジョンの中心。
 	//TestEmitter->SetEmitPos(m_CollisionObject->GetPos());
@@ -716,17 +716,14 @@ void CPlayer::Collisions(){
 
 void CPlayer::StateManaged()
 {
-	//if (m_GameState != GAMEEND_ID::CLEAR)
-	//{
-	//	CGameObject::Update();
-	//}
-
-	//落下死ゲームオーバー処理。
-	float DeathLine = -15.0f;	// 落下死判定ライン。
-	if (m_transform.position.y <= DeathLine)
-	{
-		m_GameState = GAMEEND::ID::OVER;
-		return;
+	if (m_IsPossibleDeath) {
+		//落下死ゲームオーバー処理。
+		float DeathLine = -15.0f;	// 落下死判定ライン。
+		if (m_transform.position.y <= DeathLine)
+		{
+			m_GameState = GAMEEND::ID::OVER;
+			return;
+		}
 	}
 
 	//ゲームクリア
@@ -787,55 +784,63 @@ void CPlayer::BulletShot()
 
 void CPlayer::ChocoHit(const D3DXVECTOR3& Dir)
 {
-	if (m_State != MOVE::STATE::Flow || m_State != MOVE::STATE::Fly) {
-		m_State = MOVE::STATE::Flow;
+	if (m_IsPossibleDeath) {
+		if (m_State != MOVE::STATE::Flow || m_State != MOVE::STATE::Fly) {
+			m_State = MOVE::STATE::Flow;
+			m_ActiveKeyState = false;
+			m_pEmitter->SetEmitFlg(false);
+			m_AnimState = ANIMATION_STATE::WALK;
+
+			m_pModel->GetAnimation()->SetAnimSpeed(5.0f);//アニメーション再生速度を設定
+
+			// 剛体が流せるように設定。
+			{
+				// チョコボールの影響を受けるよう設定。
+				m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
+				//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
+				m_CollisionObject->SetScale(D3DXVECTOR3(0.3f, 0.3f, 0.3f));
+				float mass = 1.0f;
+				//第一引数は質量、第二引数は回転のしやすさ。
+				static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, Vector3::One/*D3DXVECTOR3(0.01f, 0.01f, 0.01f)*//*D3DXVECTOR3(0.1f, 0.1f, 0.1f)*/);
+				static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir);
+				// キネマティック解除。
+				static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
+			}
+		}
+	}
+}
+
+void CPlayer::EnemyBulletHit(D3DXVECTOR3 moveDir)
+{
+	if (m_IsPossibleDeath) {
+		m_State = MOVE::STATE::Fly;
+		m_AnimState = ANIMATION_STATE::WAIT;
 		m_ActiveKeyState = false;
-		m_pEmitter->SetEmitFlg(false);
-		m_AnimState = ANIMATION_STATE::WALK;
+		m_pAudio->PlayCue("スポッ１", false, this);
+		m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
 
-		m_pModel->GetAnimation()->SetAnimSpeed(5.0f);//アニメーション再生速度を設定
-
-		// 剛体が流せるように設定。
+		// 剛体が吹っ飛ぶよう設定。
 		{
-			// チョコボールの影響を受けるよう設定。
-			m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
-			//プレイヤーの球を小さく設定し、チョコボールに埋もれるようにしている。
-			m_CollisionObject->SetScale(D3DXVECTOR3(0.3f, 0.3f, 0.3f));
 			float mass = 1.0f;
 			//第一引数は質量、第二引数は回転のしやすさ。
-			static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, Vector3::One/*D3DXVECTOR3(0.01f, 0.01f, 0.01f)*//*D3DXVECTOR3(0.1f, 0.1f, 0.1f)*/);
-			static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(Dir);
+			static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
+			moveDir *= 750.0f;
+			float Power = 1000.0f;
+			static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(moveDir + (Vector3::Up * Power), Vector3::One);//吹っ飛ぶ力を設定
+			static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
 			// キネマティック解除。
 			static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
 		}
 	}
 }
-void CPlayer::EnemyBulletHit(D3DXVECTOR3 moveDir)
-{
-	m_State = MOVE::STATE::Fly;
-	m_AnimState = ANIMATION_STATE::WAIT;
-	m_ActiveKeyState = false;
-	m_pAudio->PlayCue("スポッ１", false, this);
-	m_pModel->GetAnimation()->SetAnimSpeed(2.0f);//アニメーション再生速度を設定
 
-	// 剛体が吹っ飛ぶよう設定。
-	{
-		float mass = 1.0f;
-		//第一引数は質量、第二引数は回転のしやすさ。
-		static_cast<CRigidbody*>(m_CollisionObject.get())->SetMassProps(mass, D3DXVECTOR3(0.01f, 0.01f, 0.01f));
-		moveDir *= 750.0f;
-		float Power = 1000.0f;
-		static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(moveDir + (Vector3::Up * Power), Vector3::One);//吹っ飛ぶ力を設定
-		static_cast<CRigidbody*>(m_CollisionObject.get())->SetAngularVelocity(D3DXVECTOR3(5.0f, 5.0f, 5.0f));
-		// キネマティック解除。
-		static_cast<CRigidbody*>(m_CollisionObject.get())->OnDynamic();
-	}
-}
 void CPlayer::RollingPlayer()
 {
-	//ゲームオーバーになるまでの待機時間の設定
-	deadTimer += 1.0f / 60.0f;
-	if (deadTimer >= 2.0f){
-		m_GameState = GAMEEND::ID::OVER;
+	if (m_IsPossibleDeath) {
+		//ゲームオーバーになるまでの待機時間の設定
+		deadTimer += 1.0f / 60.0f;
+		if (deadTimer >= 2.0f) {
+			m_GameState = GAMEEND::ID::OVER;
+		}
 	}
 }

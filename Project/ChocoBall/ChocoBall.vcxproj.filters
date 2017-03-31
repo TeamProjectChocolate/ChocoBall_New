@@ -458,6 +458,7 @@
     <ClInclude Include="GameAudio.h">
       <Filter>Engine\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="DeathState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -818,6 +819,7 @@
     <ClCompile Include="GameAudio.cpp">
       <Filter>Engine\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="DeathState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

@@ -39,7 +39,6 @@ bool CRushAttackState::Update() {
 				CBM->Initialize();
 				CBM->SetStartPosition(m_pObject->GetPos() + D3DXVECTOR3(0.0f, 3.0f, 0.0f));
 				CBM->SetEndPosition(m_pObject->GetPos());
-				CBM->FindCource();
 				CBM->SetAlive(true);
 				m_IsFirst = false;
 				return false;
@@ -88,7 +87,7 @@ bool CRushAttackState::Update() {
 				CCBManager* CBM = SINSTANCE(CObjectManager)->GenerationObject<CCBManager>(_T("BossDamageChocoBall"), OBJECT::PRIORTY::OBJECT3D, false);
 				CBM->Initialize();
 				D3DXVECTOR3 BallPos = WallPos;	// 一旦壁を生成した位置を格納。
-												// 生成位置がチョコ壁の左右になるよう調整。
+				// 生成位置がチョコ壁の左右になるよう調整。
 				float WallSize = BLOCK_W * BUILD_W;
 				float Volum = 0.5f;
 				int rnd = rand() % 3;

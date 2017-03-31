@@ -63,6 +63,9 @@ public:
 	{
 		m_radius = radius;
 	}
+	inline float GetRadius()const {
+		return m_radius;
+	}
 	bool GetShotflag()
 	{
 		return m_ShotFlg;
@@ -106,6 +109,9 @@ public:
 	{
 		m_GameState = GAMEEND::ID::OVER;
 	}
+	void RequestGameClear() {
+		m_GameState = GAMEEND::ID::CLEAR;
+	}
 	bool IsVibration() ;
 	
 	void SetAudio(CAudio* audio){
@@ -135,6 +141,9 @@ public:
 	}
 	inline void AddRepulsion(const D3DXVECTOR3& power) {
 		m_Repulsion += power;
+	}
+	inline void SetIsPossibleDeath(bool flg) {
+		m_IsPossibleDeath = flg;
 	}
 private:
 	enum ANIMATION_STATE{ WAIT = 0, WALK,JUMP_START,JUMP_NOW,JUMP_END, DAMAGE};
@@ -214,6 +223,8 @@ private:
 	int m_BossBGMIdx = 0;	// 現在のボス戦のBGM(トリガーとの衝突時に加算)。
 
 	D3DXVECTOR3 m_Repulsion;	// 外部から自分に加わった力。
+
+	bool m_IsPossibleDeath = true;	// プレイヤーが死ねる状態か。
 private:
 	// ゲームステータス管理。
 	void StateManaged();
