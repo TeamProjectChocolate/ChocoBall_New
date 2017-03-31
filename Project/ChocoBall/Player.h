@@ -145,6 +145,9 @@ public:
 	inline void SetIsPossibleDeath(bool flg) {
 		m_IsPossibleDeath = flg;
 	}
+	inline void SetActiveKeyState(bool flg) {
+		m_ActiveKeyState = flg;
+	}
 private:
 	enum ANIMATION_STATE{ WAIT = 0, WALK,JUMP_START,JUMP_NOW,JUMP_END, DAMAGE};
 	enum JUMP_STATE{J_NULL,J_EINS,J_ZWEI,J_DREI};

@@ -31,6 +31,9 @@ public:
 	inline void SetPos(const D3DXVECTOR3& pos)override{
 		m_camera.SetPos(pos);
 	}
+	inline void SetTarget(const D3DXVECTOR3& target) {
+		m_camera.SetTarget(target);
+	}
 protected:
 	CCamera m_camera;
 };
