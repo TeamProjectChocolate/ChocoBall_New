@@ -17,10 +17,10 @@ public:
 	inline void SetPos(const D3DXVECTOR3& pos){
 		m_position = pos;
 	}
-	inline D3DXVECTOR3 GetPos(){
+	inline const D3DXVECTOR3& GetPos()const {
 		return m_position;
 	}
-	inline D3DXVECTOR3 GetDir(){
+	inline const D3DXVECTOR3& GetDir(){
 		return m_direction;
 	}
 	inline void SetTarget(const D3DXVECTOR3& target){

@@ -27,7 +27,7 @@ public:
 	void SetPos(const D3DXVECTOR3& pos)override{
 		m_pEmitter->SetEmitPos(pos);
 	}
-	const D3DXVECTOR3& GetPos()override{
+	const const D3DXVECTOR3& GetPos()const override{
 		return m_pEmitter->GetEmitPos();
 	}
 	void SetEmitterName(LPCSTR name){

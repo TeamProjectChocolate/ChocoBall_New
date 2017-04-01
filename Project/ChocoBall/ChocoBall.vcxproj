@@ -121,6 +121,7 @@
     <ClInclude Include="CollisionInterface.h" />
     <ClInclude Include="CollisionObject.h" />
     <ClInclude Include="CollisionRender.h" />
+    <ClInclude Include="CurveBullet.h" />
     <ClInclude Include="DeathState.h" />
     <ClInclude Include="DirectFont.h" />
     <ClInclude Include="DivisionWall.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="CollisionRender.cpp" />
     <ClCompile Include="CourceCamera.cpp" />
     <ClCompile Include="CourceDef.cpp" />
+    <ClCompile Include="CurveBullet.cpp" />
     <ClCompile Include="DeathState.cpp" />
     <ClCompile Include="DirectFont.cpp" />
     <ClCompile Include="DirectInput.cpp" />

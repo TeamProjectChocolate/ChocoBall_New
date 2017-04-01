@@ -39,7 +39,7 @@ public:
 	void SetPos(D3DXVECTOR3 pos){
 		position = pos;
 	}
-	const D3DXVECTOR3& GetPos()override{
+	const D3DXVECTOR3& GetPos()const override{
 		return position;
 	}
 	void SetMaxMove(float max){

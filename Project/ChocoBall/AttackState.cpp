@@ -10,20 +10,20 @@ CAttackState::~CAttackState()
 
 void CAttackState::Entry() {
 
-	if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
-		// 最後のコース定義(ランダムでいずれかの攻撃)。
-		m_IntervalTime = 0.5f;
-		m_TimeCounter = 0.0f;
-		m_ActionState = ActionState::Interval;
-		ChangeLocalState(CEnemy_Boss::BOSS_STATE::NonAction);
-	}
-	else {
+	//if (m_pObject->GetNowCource().size() == 1 && m_pObject->GetNowCource()[0]->IsEnd) {
+	//	// 最後のコース定義(ランダムでいずれかの攻撃)。
+	//	m_IntervalTime = 0.5f;
+	//	m_TimeCounter = 0.0f;
+	//	m_ActionState = ActionState::Interval;
+	//	ChangeLocalState(CEnemy_Boss::BOSS_STATE::NonAction);
+	//}
+	//else {
 		// バリアオフ。
 		m_pObject->GetBarrier()->OffBarrier();
 		m_ActionState = ActionState::Action;
 
 		ChangeLocalState(CEnemy_Boss::BOSS_STATE::ShotAttack);
-	}
+	//}
 	// コース判定を一時的にオフ。
 	m_pObject->SetIsUpdateCource(false);
 

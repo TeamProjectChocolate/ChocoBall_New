@@ -213,7 +213,7 @@ void CBlock::BeginDraw()
 	SINSTANCE(CRenderContext)->GetCurrentCamera()->SetCamera(m_pRender->GetEffect());
 	SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pRender->GetEffect());
 	// 視点をシェーダーに転送
-	m_pRender->GetEffect()->SetVector("EyePosition", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+	m_pRender->GetEffect()->SetVector("EyePosition", &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
 
 	SINSTANCE(CShadowRender)->SetShadowCamera(m_pRender->GetEffect());
 }

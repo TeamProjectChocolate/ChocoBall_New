@@ -15,26 +15,32 @@ CPlayerBullet::~CPlayerBullet()
 }
 
 void CPlayerBullet::Initialize(){
-	Bullet::Initialize();
+	m_Bullet.reset(new Bullet);
+	m_Bullet->Initialize();
 	m_pEnemyManager = SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"));
 	m_pBlockManager = SINSTANCE(CObjectManager)->FindGameObject<CBuildBlock>(_T("B_Block"));
 	m_pNumber = SINSTANCE(CObjectManager)->FindGameObject<CNumber>(_T("NUMBER"));
+	SetAlive(true);
 }
 
 void CPlayerBullet::Update(){
-	Bullet::Update();
+	m_Bullet->Update();
+	BulletCollision();
+	if (m_Bullet->IsDelete()) {
+		SINSTANCE(CObjectManager)->DeleteGameObject(this);
+	}
+
 }
 
 void CPlayerBullet::Draw(){
-	Bullet::Draw();
+	m_Bullet->Draw();
 }
 
 void CPlayerBullet::OnDestroy(){
-	Bullet::OnDestroy();
+	m_Bullet->OnDestroy();
 }
 
 void CPlayerBullet::Build(){
-	Bullet::Build();
 }
 
 void CPlayerBullet::BulletCollision() {
@@ -49,10 +55,10 @@ void CPlayerBullet::BulletCollision() {
 }
 
 bool CPlayerBullet::BulletEnemyCollision(){
-	EnemyBase* NearEnemy = m_LockOn.FindNearEnemy(Bullet::GetPos());
+	EnemyBase* NearEnemy = m_LockOn.FindNearEnemy(m_Bullet->GetPos());
 	if (NearEnemy){
 		D3DXVECTOR3 dist;
-		dist = NearEnemy->GetPos() - Bullet::GetPos();
+		dist = NearEnemy->GetPos() - m_Bullet->GetPos();
 		float L;
 		L = D3DXVec3Length(&dist);//ベクトルの長さを計算
 		
@@ -63,7 +69,7 @@ bool CPlayerBullet::BulletEnemyCollision(){
 				if(NearEnemy->GetMyType() != EnemyBase::Enemy_ModelType::Boss)
 				EnemyDownNum++;
 			}
-			NearEnemy->PlayerBulletHit(Bullet::GetDirection());
+			NearEnemy->PlayerBulletHit(m_Bullet->GetDirection());
 			return true;
 		}
 	}
@@ -83,7 +89,7 @@ bool CPlayerBullet::BulletBlockCollision(){
 			int max_Y = m_pBlockManager->GetNum_Y();
 
 			float blockWidth = m_pBlockManager->GetBlockWidth();
-			float bulletWidth = Bullet::GetWidth();
+			float bulletWidth = m_Bullet->GetWidth();
 
 			D3DXVECTOR3 dist;
 			for (int idx_Y = 0; idx_Y < max_Y; idx_Y++){
@@ -91,7 +97,7 @@ bool CPlayerBullet::BulletBlockCollision(){
 					CBlock* pBlock;
 					pBlock = m_pBlockManager->GetBlocks(idx_X, idx_Y);
 					if (pBlock->GetAlive()){
-						dist = pBlock->GetPos() - Bullet::GetPos();
+						dist = pBlock->GetPos() - m_Bullet->GetPos();
 						float L;
 						L = D3DXVec3Length(&dist);//ベクトルの長さを計算
 						L -= blockWidth / 2;

@@ -7,7 +7,7 @@
 
 class CEnemyManager;
 
-class CPlayerBullet:public Bullet
+class CPlayerBullet:public CGameObject
 {
 public:
 	CPlayerBullet();
@@ -17,13 +17,32 @@ public:
 	void Draw()override;
 	void OnDestroy()override;
 	void Build();
-	void BulletCollision()override;
+	void BulletCollision();
 	void SetAudio(CAudio* audio){
 		m_pAudio = audio;
 	}
 	int GetDownEnemyNum()
 	{
 		return EnemyDownNum;
+	}
+
+	inline void SetStartPos(const D3DXVECTOR3& pos) {
+		m_Bullet->SetStartPos(pos);
+	}
+	inline void SetDir(const D3DXVECTOR3& dir) {
+		m_Bullet->SetDir(dir);
+	}
+	inline void SetBulletSpeed(float speed) {
+		m_Bullet->SetBulletSpeed(speed);
+	}
+	inline void SetRange(float range) {
+		m_Bullet->SetRange(range);
+	}
+	inline void SetPintoPos(const D3DXVECTOR3& pos)override {
+		m_Bullet->SetPintoPos(pos);
+	}
+	inline void SetPintoWorld(const D3DXMATRIX& mat)override {
+		m_Bullet->SetPintoWorld(mat);
 	}
 
 private:
@@ -33,9 +52,10 @@ public:
 	static int		EnemyDownNum;
 private:
 	CLockOn          m_LockOn;
-	CEnemyManager* m_pEnemyManager;
-	CBuildBlock* m_pBlockManager;
-	CAudio* m_pAudio;
-	CNumber* m_pNumber;
+	CEnemyManager* m_pEnemyManager = nullptr;;
+	CBuildBlock* m_pBlockManager = nullptr;;
+	CAudio* m_pAudio = nullptr;;
+	CNumber* m_pNumber = nullptr;
+	unique_ptr<Bullet> m_Bullet;
 };
 

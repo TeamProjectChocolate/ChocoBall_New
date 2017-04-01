@@ -67,8 +67,8 @@ namespace Vector3 {
 	const D3DXVECTOR3 Front = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	const D3DXVECTOR3 Back = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
-	const D3DXVECTOR3 AxisX = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	const D3DXVECTOR3 AxisY = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	const D3DXVECTOR3 AxisX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	const D3DXVECTOR3 AxisY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	const D3DXVECTOR3 AxisZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 }
 

@@ -90,8 +90,8 @@ void C3DObjectRender_S::NonAnimationDrawSimple(ANIMATION::D3DXFRAME_DERIVED* pFr
 	m_pEffect->SetMatrix(m_hWorld/*エフェクトファイル内の変数名*/, &World/*設定したい行列へのポインタ*/);
 
 	// 視点をシェーダーに転送
-	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
-	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
+	m_pEffect->SetVector(m_hEyePosition, &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+	m_pEffect->SetVector("g_EyeDir", &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
 
 	m_pEffect->SetFloat(m_hAlpha, m_pModel->m_alpha);
 	m_pEffect->SetFloat(m_hluminance, m_pModel->m_luminance);

@@ -107,10 +107,14 @@ public:
 	}
 	void RequestGameOver()
 	{
-		m_GameState = GAMEEND::ID::OVER;
+		if (m_GameState == GAMEEND::ID::CONTINUE) {
+			m_GameState = GAMEEND::ID::OVER;
+		}
 	}
 	void RequestGameClear() {
-		m_GameState = GAMEEND::ID::CLEAR;
+		if (m_GameState == GAMEEND::ID::CONTINUE) {
+			m_GameState = GAMEEND::ID::CLEAR;
+		}
 	}
 	bool IsVibration() ;
 	

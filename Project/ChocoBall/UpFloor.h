@@ -39,12 +39,12 @@ public:
 		position = pos;
 	}
 
-	const D3DXVECTOR3& GetPos()override{
+	const const D3DXVECTOR3& GetPos()const override{
 		return position;
 	}
 
 	//ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’è
-	bool IsHitPlayer(D3DXVECTOR3 pos, float radius);
+	bool IsHitPlayer(const D3DXVECTOR3& pos, float radius);
 
 	void SetMaxMove(float max){
 		m_MaxMove = max;

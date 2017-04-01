@@ -12,18 +12,15 @@ void Bullet::Initialize()
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/ball.x");
 	CGameObject::Initialize();
-	m_transform.position = D3DXVECTOR3(0.0f,0.0f,0.0f);
-	SetRotation(D3DXVECTOR3(0, 0, 1), 0.0f);//弾がZ軸回転する
-	m_transform.scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+	m_transform.Identity();
+
 	SetAlive(true);
+
 	m_pModel->m_alpha = 0.75f;//透明度
 	m_pModel->m_luminance = 0.0f;
 	m_pModel->m_Refractive = FRESNEL::g_RefractivesTable[FRESNEL::REFRACTIVES::GOLD];
 	m_radius = 1.0f;
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
-	m_moveSpeed.y = 0.0f;
-	this->Build();
 
 	float mass = 0.0f;
 	ActivateCollision(Vector3::Zero, new btSphereShape(m_radius), Collision::Type::Bullet, Collision::FilterGroup::Chocoball, false, mass, true, true);
@@ -34,34 +31,27 @@ void Bullet::Initialize()
 
 void Bullet::Update()
 {
-	//プレイヤーの向いているベクトルを弾に加算
-	m_transform.position.x = m_transform.position.x + m_dir.x*m_Speed;
-	m_transform.position.y = m_transform.position.y + m_dir.y*m_Speed;
-	m_transform.position.z = m_transform.position.z + m_dir.z*m_Speed;
-
-
-	float length = D3DXVec3Length(&D3DXVECTOR3(m_transform.position - m_StartPos));
-	if (length >= m_Range) {
-		// 弾が飛距離を超えたら。
-		SINSTANCE(CObjectManager)->DeleteGameObject(this);
-		return;
-	}
-
-	BulletCollision();
+	//弾の向きベクトルに加算
+	m_transform.position += m_dir * m_Speed;
 
 	CGameObject::Update();
 }
+
+bool Bullet::IsDelete() {
+	float length = D3DXVec3Length(&D3DXVECTOR3(m_transform.position - m_StartPos));
+	if (length >= m_Range) {
+		// 弾が飛距離を超えたら。
+		return true;
+	}
+	return false;
+}
+
 void Bullet::Draw()
 {
 	CGameObject::Draw();
 }
 
 void Bullet::OnDestroy()
-{
-
-}
-
-void Bullet::Build()
 {
 
 }

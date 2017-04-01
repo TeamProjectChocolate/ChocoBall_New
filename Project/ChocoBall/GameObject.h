@@ -178,17 +178,20 @@ public:
 	bool GetManagerNewFlg(){
 		return m_ManagerNewFlg;
 	}
-	virtual void SetPos(const D3DXVECTOR3& pos){
+	inline virtual void SetPos(const D3DXVECTOR3& pos){
 		m_transform.position = pos;
 	}
-	virtual const D3DXVECTOR3& GetPos()
+	inline virtual const D3DXVECTOR3& GetPos()const
 	{
 		return m_transform.position;
+	}
+	inline virtual D3DXVECTOR3* GetPosRef() {
+		return &m_transform.position;
 	}
 	virtual void SetScale(const D3DXVECTOR3 scale){
 		m_transform.scale = scale;
 	}
-	virtual const D3DXVECTOR3& GetScale(){
+	virtual const D3DXVECTOR3& GetScale()const{
 		return m_transform.scale;
 	}
 	virtual inline const D3DXVECTOR3& GetDirection() {

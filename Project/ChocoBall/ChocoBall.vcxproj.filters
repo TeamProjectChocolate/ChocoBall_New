@@ -458,7 +458,12 @@
     <ClInclude Include="GameAudio.h">
       <Filter>Engine\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="DeathState.h" />
+    <ClInclude Include="CurveBullet.h">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathState.h">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp">
@@ -819,7 +824,12 @@
     <ClCompile Include="GameAudio.cpp">
       <Filter>Engine\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="DeathState.cpp" />
+    <ClCompile Include="CurveBullet.cpp">
+      <Filter>Game\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathState.cpp">
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX.rc">

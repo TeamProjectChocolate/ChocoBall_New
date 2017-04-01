@@ -13,22 +13,28 @@ CEnemyBullet::~CEnemyBullet()
 
 }
 
-void CEnemyBullet::Initialize(){
-	Bullet::Initialize();
+void CEnemyBullet::Initialize() {
+	m_Bullet.reset(new Bullet);
+	m_Bullet->Initialize();
+	SetAlive(true);
 }
 
 void CEnemyBullet::Update(){
-	Bullet::Update();
+	m_Bullet->Update();
+	BulletCollision();
+	if (m_Bullet->IsDelete()) {
+		SINSTANCE(CObjectManager)->DeleteGameObject(this);
+	}
 }
 
 void CEnemyBullet::Draw(){
-	Bullet::Draw();
+	m_Bullet->Draw();
 }
 
 
 void CEnemyBullet::BulletCollision(){
 	D3DXVECTOR3 dist;
-	dist = g_player->GetPos() - Bullet::GetPos();
+	dist = g_player->GetPos() - m_Bullet->GetPos();
 	float E;
 	E = D3DXVec3Length(&dist);//ベクトルの長さを計算
 	if (E <= 1){

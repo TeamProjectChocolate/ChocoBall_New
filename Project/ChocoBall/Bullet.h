@@ -20,6 +20,7 @@ public:
 	~Bullet();
 	void Initialize()override;
 	void Update()override;
+	bool IsDelete();
 	void Draw()override;
 	void SetUpTechnique()override
 	{
@@ -33,9 +34,7 @@ public:
 		m_pEMSamplingRender->SetUpTechnique("Boneless_Tex_Lim");
 	}
 	void OnDestroy();
-	void Build();
-	virtual void BulletCollision() {};
-	inline void SetDir(const D3DXVECTOR3& dir){
+	inline virtual void SetDir(const D3DXVECTOR3& dir){
 		m_dir = dir;
 	}
 	inline const D3DXVECTOR3& GetDirection(){
@@ -64,14 +63,13 @@ public:
 		return m_Range;
 	}
 
-private:
+protected:
 	D3DXVECTOR3 m_StartPos;	// 初期位置。
-	D3DXVECTOR3		m_moveSpeed;//移動速度。
 	float m_Range;	// 弾の飛距離。
 	bool			Shotflag;	//弾が発射されているのかのフラグ
 	float			m_radius;
+private:
 	D3DXVECTOR3		m_dir;
-
 	float m_Speed;//弾のスピード
 };
 

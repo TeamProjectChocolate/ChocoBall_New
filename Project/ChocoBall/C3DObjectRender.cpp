@@ -104,8 +104,8 @@ void C3DObjectRender::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshC
 		m_pEffect->SetMatrixArray(m_hWorldMatrixArray, m_pModel->m_pBoneMatrices, pMeshContainer->NumPaletteEntries);
 
 		// 視点をシェーダーに転送
-		m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
-		m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
+		m_pEffect->SetVector(m_hEyePosition, &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+		m_pEffect->SetVector("g_EyeDir", &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
 
 		SINSTANCE(CShadowRender)->SetShadowCamera(m_pEffect);
 
@@ -175,8 +175,8 @@ void C3DObjectRender::NonAnimationDraw(ANIMATION::D3DXFRAME_DERIVED* pFrame){
 		SINSTANCE(CRenderContext)->GetCurrentLight()->SetLight(m_pEffect);
 	}
 	// 視点をシェーダーに転送
-	m_pEffect->SetVector(m_hEyePosition, reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
-	m_pEffect->SetVector("g_EyeDir", reinterpret_cast<D3DXVECTOR4*>(&SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
+	m_pEffect->SetVector(m_hEyePosition, &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetPos()));
+	m_pEffect->SetVector("g_EyeDir", &static_cast<D3DXVECTOR4>(SINSTANCE(CRenderContext)->GetCurrentCamera()->GetDir()));
 
 	SINSTANCE(CShadowRender)->SetShadowCamera(m_pEffect);
 

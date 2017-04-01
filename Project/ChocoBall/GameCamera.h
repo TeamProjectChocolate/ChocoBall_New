@@ -25,7 +25,7 @@ public:
 	CCamera* GetCamera(){
 		return &m_camera;
 	}
-	inline const D3DXVECTOR3& GetPos()override {
+	inline const D3DXVECTOR3& GetPos()const override {
 		return m_camera.GetPos();
 	}
 	inline void SetPos(const D3DXVECTOR3& pos)override{

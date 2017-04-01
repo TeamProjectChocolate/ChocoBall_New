@@ -721,7 +721,7 @@ void CPlayer::StateManaged()
 		float DeathLine = -15.0f;	// 落下死判定ライン。
 		if (m_transform.position.y <= DeathLine)
 		{
-			m_GameState = GAMEEND::ID::OVER;
+			this->RequestGameOver();
 			return;
 		}
 	}
@@ -738,7 +738,7 @@ void CPlayer::StateManaged()
 		float Kyori = D3DXVec3Dot(&GoalToPlayerVec, &LoadVec);
 		if (Kyori < 0.001f)
 		{
-			m_GameState = GAMEEND::ID::CLEAR;
+			RequestGameClear();
 			return;
 		}
 	}
@@ -840,7 +840,7 @@ void CPlayer::RollingPlayer()
 		//ゲームオーバーになるまでの待機時間の設定
 		deadTimer += 1.0f / 60.0f;
 		if (deadTimer >= 2.0f) {
-			m_GameState = GAMEEND::ID::OVER;
+			this->RequestGameOver();
 		}
 	}
 }
