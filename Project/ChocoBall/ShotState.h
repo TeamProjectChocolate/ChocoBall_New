@@ -16,6 +16,7 @@ private:
 	float m_IntervalTime = 1.0f;	// 弾発射間のインターバル。
 	float m_TimeCounter = 0.0f;
 	CPlayer* m_pPlayer = nullptr;
+	int m_RotationDir = 1;
 };
 
 static D3DXVECTOR3 BuletShotOffsetDir[4] = {

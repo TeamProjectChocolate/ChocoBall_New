@@ -15,6 +15,7 @@ CShotState::~CShotState()
 
 void CShotState::Entry() {
 	m_TimeCounter = 0.0f;
+	m_RotationDir = 1;
 }
 
 bool CShotState::Update() {
@@ -32,14 +33,14 @@ bool CShotState::Update() {
 			D3DXVECTOR3 pos = m_pObject->GetPos() + (BuletShotOffsetDir[idx]) * 3.0f;
 
 			// 回転量設定。
-			float MaxAngle = 0.65f;
+			float MaxAngle = 0.8f;
 
 			// 弾の向き設定。
 			D3DXVECTOR3 Dir;
 			// 角度を用いて弾の向きベクトルを回転。
 			D3DXQUATERNION work;
 			work = Quaternion::Identity;
-			D3DXQuaternionRotationAxis(&work, &Vector3::AxisY, D3DXToRadian(15.0f));
+			D3DXQuaternionRotationAxis(&work, &Vector3::AxisY, D3DXToRadian(15.0f) * m_RotationDir);
 			// クォータニオンから回転行列作成。
 			D3DXMATRIX mat;
 			D3DXMatrixIdentity(&mat);
@@ -58,9 +59,9 @@ bool CShotState::Update() {
 			// 弾の挙動を変更。
 			bullet->ChangeBulletClass(b);
 
-
-			m_TimeCounter = 0.0f;
 		}
+		m_RotationDir *= -1;
+		m_TimeCounter = 0.0f;
 	}
 	if (m_pObject->GetAnimation()->GetIsOnceEnd()) {
 		return true;
