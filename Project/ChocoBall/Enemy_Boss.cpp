@@ -63,9 +63,9 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	m_pBarrier->Initialize();
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
-	//this->ChangeState(BOSS_STATE::Sleep);
+	this->ChangeState(BOSS_STATE::Sleep);
 	//this->ChangeState(BOSS_STATE::Attack);
-	this->ChangeState(BOSS_STATE::BMove);
+	//this->ChangeState(BOSS_STATE::BMove);
 
 }
 
@@ -93,17 +93,20 @@ void CEnemy_Boss::Initialize() {
 	//m_pModel->GetAnimation()->PlayAnimation(m_AnimState, 0.0f);
 	ConfigLight();
 	SetAlive(true);
-	//m_HP = 7200.0f;
-	m_HP = 100.0f;
+	m_HP = 7200.0f;
+	//m_HP = 1800.0f;
+	//m_HP = 10.0f;
 	m_pModel->SetAlpha(1.0f);
+
+	m_Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 
 	// HPバー生成。
 	m_pHPBar = SINSTANCE(CObjectManager)->GenerationObject<CHadBar>(_T("BossHPBar"),OBJECT::PRIORTY::OBJECT2D,false);
 
 	vector<BarColor> ColorArray;
-	//ColorArray.push_back(BarColor::Blue);
-	//ColorArray.push_back(BarColor::Green);
-	//ColorArray.push_back(BarColor::Yellow);
+	ColorArray.push_back(BarColor::Blue);
+	ColorArray.push_back(BarColor::Green);
+	ColorArray.push_back(BarColor::Yellow);
 	ColorArray.push_back(BarColor::Red);
 	m_pHPBar->Initialize(this,ColorArray,m_HP,m_HP);
 
@@ -142,15 +145,7 @@ void CEnemy_Boss::Update() {
 	}
 
 	// 現在のステートを更新。
-	bool IsEnd = m_pCurrentState->Update();
-	if (m_State == BOSS_STATE::Death) {
-		if (IsEnd) {
-			CPlayer* player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
-			// ゲームクリアにする。
-			player->RequestGameClear();
-			SetAlive(false);
-		}
-	}
+	m_pCurrentState->Update();
 
 	// アニメーション再生関数を呼び出す
 	m_pModel->SetCurrentAnimNo(m_AnimState);
@@ -206,24 +201,24 @@ void CEnemy_Boss::ChocoHit(CCBManager* HitChocoManager) {
 			BossDamage = 20.0f;
 			MaxDamage = 600.0f;
 			break;
-		//case HPBarNo::Two:
-		//	// 第二ゲージ。
-		//	// 単純計算4回。
-		//	BossDamage = 15.0f;
-		//	MaxDamage = 450.0f;
-		//	break;
-		//case HPBarNo::Three:
-		//	// 第三ゲージ。
-		//	// 単純計算3回。
-		//	BossDamage = 20.0f;
-		//	MaxDamage = 600.0f;
-		//	break;
-		//case HPBarNo::Last:
-		//	// 最終ゲージ。
-		//	// 単純計算5回。
-		//	BossDamage = 12.0f;
-		//	MaxDamage = 360.0f;
-		//	break;
+		case HPBarNo::Two:
+			// 第二ゲージ。
+			// 単純計算4回。
+			BossDamage = 15.0f;
+			MaxDamage = 450.0f;
+			break;
+		case HPBarNo::Three:
+			// 第三ゲージ。
+			// 単純計算3回。
+			BossDamage = 20.0f;
+			MaxDamage = 600.0f;
+			break;
+		case HPBarNo::Last:
+			// 最終ゲージ。
+			// 単純計算5回。
+			BossDamage = 12.0f;
+			MaxDamage = 360.0f;
+			break;
 		default:
 			BossDamage = 0.0f;
 			MaxDamage = 0.0f;
@@ -235,13 +230,14 @@ void CEnemy_Boss::ChocoHit(CCBManager* HitChocoManager) {
 
 		if (m_HP <= 0) {
 			if (m_State != BOSS_STATE::Death) {
-
-				// ボス死亡処理。
-				// 暫定処理。
-				m_HP = 0;
-				//SetAlive(false);
-				this->DivisionWallOpen();
-				ChangeState(BOSS_STATE::Death);
+				if (m_Player->GetGameState() != GAMEEND::ID::OVER) {
+					// ボス死亡処理。
+					// 暫定処理。
+					m_HP = 0;
+					//SetAlive(false);
+					this->DivisionWallOpen();
+					ChangeState(BOSS_STATE::Death);
+				}
 			}
 		}
 		else if (m_DamageCounter >= MaxDamage) {

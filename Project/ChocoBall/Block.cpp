@@ -126,6 +126,7 @@ void CBlock::Update()
 
 			// 崩すためにチョコ壁との衝突判定も開始。
 			m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
+			m_CollisionObject->BitMask_On(Collision::FilterGroup::Map);
 
 			// 親子の縁を切る。
 			this->RemoveChild();

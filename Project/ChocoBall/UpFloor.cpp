@@ -29,6 +29,7 @@ void CUpFloor::Initialize(D3DXVECTOR3 pos, D3DXQUATERNION rot, D3DXVECTOR3 scale
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Chocoball);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Player);
 	m_CollisionObject->BitMask_On(Collision::FilterGroup::Enemy);
+	m_CollisionObject->BitMask_On(Collision::FilterGroup::Gimmick);
 
 	m_player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 

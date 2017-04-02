@@ -98,6 +98,9 @@ void CChocoBall::EndDraw()
 
 void CChocoBall::Draw()
 {
+}
+
+void CChocoBall::DrawSimple() {
 	m_pRender->SetModelData(m_pModel);
 	m_pRender->Draw();
 }

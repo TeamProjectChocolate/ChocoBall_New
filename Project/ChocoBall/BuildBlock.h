@@ -67,6 +67,8 @@ public:
 	}
 	void SetPintoWorld(const D3DXMATRIX& mat)override{
 #ifdef NOT_DOF
+#else
+#ifdef NOT_INSTANCING
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
 				m_blocks[row][col].SetPintoWorld(mat);
@@ -75,9 +77,12 @@ public:
 #else
 		m_pModel->SetPintoWorld(mat);
 #endif
+#endif
 	}
 	void SetPintoPos(const D3DXVECTOR3& pos)override{
 #ifdef NOT_DOF
+#else
+#ifdef NOT_INSTANCING
 		for (short row = 0; row < BUILD_H; row++) {
 			for (short col = 0; col < BUILD_W; col++) {
 				m_blocks[row][col].SetPintoPos(pos);
@@ -85,6 +90,7 @@ public:
 		}
 #else
 		m_pModel->SetPintoPos(pos);
+#endif
 #endif
 	}
 

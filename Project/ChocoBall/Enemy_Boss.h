@@ -5,6 +5,7 @@
 #include "DivisionWall.h"
 #include "Barrier.h"
 #include "Audio.h"
+#include "Player.h"
 
 class CState;
 
@@ -134,6 +135,7 @@ private:
 
 	CAudio* m_pAudio = nullptr;
 	bool m_IsBreak = false;	// HPバーがブレイクしたか。
+	CPlayer* m_Player = nullptr;
 };
 
 #define Max_AnimNum 6

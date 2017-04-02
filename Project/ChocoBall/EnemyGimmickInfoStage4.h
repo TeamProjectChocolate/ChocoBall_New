@@ -61,9 +61,9 @@
 //gimmick_Chocoball_00
 {
 	D3DXVECTOR3(-14.60f, 20.21f, -23.64f),             //平行移動
-	D3DXQUATERNION(0.00f, -0.71f, 0.00f, -0.71f ),    //回転
-	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
-	D3DXVECTOR3(1.00f, 0.00f, 0.00f),             //Zの向きベクトル
+	D3DXQUATERNION(-0.26f, -0.66f, 0.26f, -0.66f ),    //回転
+	D3DXVECTOR3(1.00f, 0.60f, 4.23f ),            //拡大
+	D3DXVECTOR3(0.74f, -0.67f, 0.00f),             //Zの向きベクトル
 	999,//エネミータイプ
 	0,//ギミックタイプ
 	0.00f,//最大移動量

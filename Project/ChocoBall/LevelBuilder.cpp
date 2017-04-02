@@ -54,7 +54,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 
 		if (info.enemyType == EnemyType::EnemyType_LR){
 			//“G‚ð¶¬B
-			CEnemyLR* enemy = new CEnemyLR;
+			CEnemyLR* enemy = SINSTANCE(CObjectManager)->GenerationObject<CEnemyLR>(_T("Enemy"),OBJECT::PRIORTY::ENEMY, false);
 			enemy->SetStageID(m_IsStage);
 			enemy->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;
@@ -65,7 +65,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.enemyType == EnemyType::EnemyType_FB){
 			//“G‚ð¶¬B
-			CEnemyFB* enemyfb = new CEnemyFB;
+			CEnemyFB* enemyfb = SINSTANCE(CObjectManager)->GenerationObject<CEnemyFB>(_T("Enemy"), OBJECT::PRIORTY::ENEMY, false);
 			enemyfb->SetStageID(m_IsStage);
 			enemyfb->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;
@@ -76,7 +76,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.enemyType == EnemyType::EnemyType_JUMP){
 			//“G‚ð¶¬B
-			CEnemyjamp* enemyjamp = new CEnemyjamp;	
+			CEnemyjamp* enemyjamp = SINSTANCE(CObjectManager)->GenerationObject<CEnemyjamp>(_T("Enemy"), OBJECT::PRIORTY::ENEMY,false);
 			enemyjamp->SetStageID(m_IsStage);
 			enemyjamp->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;
@@ -87,7 +87,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 		}
 		else if (info.enemyType == EnemyType::EnemyType_BULLET){
 			//“G‚ð¶¬B
-			CEnemy* enemy = new CEnemy;
+			CEnemy* enemy = SINSTANCE(CObjectManager)->GenerationObject<CEnemy>(_T("Enemy"), OBJECT::PRIORTY::ENEMY, false);
 			enemy->SetStageID(m_IsStage);
 			enemy->Initialize();
 			info.pos.x = pInfo[i].pos.x * -1;

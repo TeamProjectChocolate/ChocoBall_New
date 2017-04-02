@@ -125,7 +125,15 @@ void CInstancingRender::Initialize(){
 
 void CInstancingRender::CreateMatrixBuffer(unsigned int MaxNum){
 	//ワールド行列用のバッファの作成。
-	if (m_MaxNum < MaxNum){
+	if (MaxNum > m_MaxNum){
+		if (m_WorldMatrixBuffer) {
+			m_WorldMatrixBuffer->Release();
+			m_WorldMatrixBuffer = nullptr;
+		}
+		if (m_RotationMatrixBuffer) {
+			m_WorldMatrixBuffer->Release();
+			m_RotationMatrixBuffer = nullptr;
+		}
 		(*graphicsDevice()).CreateVertexBuffer(m_BufferStride_World * MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
 		(*graphicsDevice()).CreateVertexBuffer(m_BufferStride_Rotation * MaxNum, 0, 0, D3DPOOL_MANAGED, &m_RotationMatrixBuffer, 0);
 		m_MaxNum = MaxNum;

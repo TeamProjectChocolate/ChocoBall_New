@@ -22,5 +22,4 @@ void CMainScene::Update(){
 
 void CMainScene::Draw(){
 	SINSTANCE(CStageManager)->Draw();
-	SINSTANCE(CObjectManager)->FindGameObject<CEnemyManager>(_T("EnemyManager"))->ExcuteDeleteObjects();
 }

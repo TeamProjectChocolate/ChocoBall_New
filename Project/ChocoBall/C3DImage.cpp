@@ -43,6 +43,7 @@
 
 
 void C3DImage::Initialize(){
+	D3DXMatrixIdentity(&m_World);	// 行列初期化
 	CModel::Initialize();
 }
 
@@ -89,7 +90,11 @@ void C3DImage::Update(const SH_ENGINE::TRANSFORM& transform){
 void C3DImage::AnimationUpdate(const SH_ENGINE::TRANSFORM& transform){
 	D3DXMATRIX Trans;	// 移動行列
 	D3DXMATRIX Scale;	// 拡大・縮小行列
-	//D3DXMatrixIdentity(&m_World);	// 行列初期化
+
+	D3DXMatrixIdentity(&m_Rota);	// 行列初期化
+	D3DXMatrixIdentity(&Scale);	// 行列初期化
+	D3DXMatrixIdentity(&Trans);	// 行列初期化
+	D3DXMatrixIdentity(&m_World);	// 行列初期化
 
 	D3DXMatrixRotationQuaternion(&m_Rota, &transform.angle);	// クォータニオンによる回転行列の作成
 	//m_Rota = m_World;

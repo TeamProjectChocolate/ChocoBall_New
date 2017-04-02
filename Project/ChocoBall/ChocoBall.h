@@ -16,6 +16,8 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	void DrawSimple();
+
 	void SetUpTechnique()override{
 #ifdef NOT_EM
 		m_pRender->SetUpTechnique("Boneless_Tex_Lim");

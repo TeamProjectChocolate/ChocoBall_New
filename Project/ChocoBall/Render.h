@@ -53,7 +53,7 @@ public:
 protected:
 	LPD3DXEFFECT m_pEffect;
 	CHAR m_pTechniqueName[MAX_FILENAME + 1];
-	CModel* m_pModel;
+	CModel* m_pModel = nullptr;
 	CLight* m_pLight = nullptr;
 	LPDIRECT3DTEXTURE9 m_pSampleTexture;	// 描画する前に最初に受け取るテクスチャ
 	D3DXVECTOR2 m_DepthFarNear;

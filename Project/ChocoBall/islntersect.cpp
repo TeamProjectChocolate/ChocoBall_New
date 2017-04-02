@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "islntersect.h"
 #include "ObjectManager.h"
+#include "Player.h"
 
 #define ORIGIN_CENTER	//定義で起点が足元。
 
@@ -107,7 +108,12 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 						//D3DXVec3Normalize(&t, &addPos);
 						//半径分押し戻す。
 						float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
-						t *= radius * 0.5f;
+						if (static_cast<CPlayer*>(m_CollisionObject->GetGameObject())->GetStageID() == STAGE_ID::BOSS) {
+							t *= radius * 0.5f;
+						}
+						else {
+							t *= radius;
+						}
 						addPos += t;
 						//続いて壁に沿って滑らせる。
 						//滑らせる方向を計算。
@@ -126,7 +132,9 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 					}
 				}
 				loopCount++;
-				if (loopCount <= 5) {
+				//if (loopCount <= 5) {
+				if (loopCount >= 5) {
+
 					// 無限ループにならないようある程度で処理を中断。
 					break;
 				}
@@ -239,7 +247,7 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 		start.setOrigin(btVector3(position->x, position->y + m_radius, position->z));
 #endif
 		D3DXVECTOR3 newPos;
-		SweepResultGround_Camera callback;
+		SweepResultGround_Camera callback(m_CollisionObject);
 		callback.startPos = *position;
 		if (fabsf(addPos.y) > 0.0001f) {
 			newPos = *position;
@@ -264,10 +272,10 @@ void CIsIntersect::IntersectCamera(D3DXVECTOR3* position,D3DXVECTOR3* moveSpeed)
 			D3DXVECTOR3 v = Circle - callback.hitPos;
 			x = D3DXVec3Length(&v);//物体の角とプレイヤーの間の横幅の距離が求まる。
 
-			float radius = m_CollisionObject->GetCollisionShape()->getLocalScaling().getX();
+			float radius = m_CollisionObject->GetCollisionShape()->getMargin();
 			offset = sqrt(radius * radius - x * x);//yの平方根を求める。
 
-			moveSpeed->y = 0.0f;
+			//moveSpeed->y = 0.0f;
 			addPos.y = callback.hitPos.y - position->y;
 #ifdef ORIGIN_CENTER
 			addPos.y += offset;

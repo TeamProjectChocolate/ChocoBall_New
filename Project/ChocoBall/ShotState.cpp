@@ -33,7 +33,7 @@ bool CShotState::Update() {
 			D3DXVECTOR3 pos = m_pObject->GetPos() + (BuletShotOffsetDir[idx]) * 3.0f;
 
 			// ‰ñ“]—Êİ’èB
-			float MaxAngle = 0.8f;
+			float MaxAngle = 0.7f;
 
 			// ’e‚ÌŒü‚«İ’èB
 			D3DXVECTOR3 Dir;

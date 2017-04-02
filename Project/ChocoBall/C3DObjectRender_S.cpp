@@ -30,6 +30,7 @@ void C3DObjectRender_S::Draw()
 {
 	DrawFrameSimple(m_pModel->GetImage_3D()->GetFrameRoot());
 	m_pLight = nullptr;
+	m_pModel = nullptr;
 }
 
 void C3DObjectRender_S::DrawFrameSimple(LPD3DXFRAME pFrame){

@@ -34,6 +34,8 @@ void C3DObjectRender::Draw(){
 	DrawFrame(m_pModel->GetImage_3D()->GetFrameRoot());
 	// レンダーは基本的に使いまわすため、専用ライトは描画終了後に削除。
 	m_pLight = nullptr;
+	// レンダーは基本的に使いまわすため、モデルは描画終了後に削除。
+	m_pModel = nullptr;
 }
 
 void C3DObjectRender::DrawFrame(LPD3DXFRAME pFrame){
@@ -78,7 +80,7 @@ void C3DObjectRender::AnimationDraw(ANIMATION::D3DXMESHCONTAINER_DERIVED* pMeshC
 	(*graphicsDevice()).SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	(*graphicsDevice()).SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-	pBoneComb = reinterpret_cast<LPD3DXBONECOMBINATION>(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
+	pBoneComb = static_cast<LPD3DXBONECOMBINATION>(pMeshContainer->pBoneCombinationBuf->GetBufferPointer());
 	for (unsigned int iattrib = 0; iattrib < pMeshContainer->NumAttributeGroups; iattrib++){
 		for (DWORD iPaletteEntry = 0; iPaletteEntry < pMeshContainer->NumPaletteEntries; ++iPaletteEntry){
 			DWORD iMatrixIndex = pBoneComb[iattrib].BoneId[iPaletteEntry];

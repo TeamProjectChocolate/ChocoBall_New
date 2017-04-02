@@ -11,7 +11,7 @@ CPlayerBullet::CPlayerBullet()
 
 CPlayerBullet::~CPlayerBullet()
 {
-
+	OutputDebugString("プレイヤーの弾デストラクタ。\n");
 }
 
 void CPlayerBullet::Initialize(){
@@ -25,9 +25,11 @@ void CPlayerBullet::Initialize(){
 
 void CPlayerBullet::Update(){
 	m_Bullet->Update();
-	BulletCollision();
 	if (m_Bullet->IsDelete()) {
 		SINSTANCE(CObjectManager)->DeleteGameObject(this);
+	}
+	else {
+		BulletCollision();
 	}
 
 }

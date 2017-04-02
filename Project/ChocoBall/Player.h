@@ -70,7 +70,7 @@ public:
 	{
 		return m_ShotFlg;
 	}
-	GAMEEND::ID GetGameState()
+	GAMEEND::ID GetGameState()const
 	{
 		return m_GameState;
 	}
@@ -152,6 +152,9 @@ public:
 	inline void SetActiveKeyState(bool flg) {
 		m_ActiveKeyState = flg;
 	}
+	inline void SetIsStop(bool flg){
+		m_IsStop = flg;
+	}
 private:
 	enum ANIMATION_STATE{ WAIT = 0, WALK,JUMP_START,JUMP_NOW,JUMP_END, DAMAGE};
 	enum JUMP_STATE{J_NULL,J_EINS,J_ZWEI,J_DREI};
@@ -232,6 +235,7 @@ private:
 	D3DXVECTOR3 m_Repulsion;	// 外部から自分に加わった力。
 
 	bool m_IsPossibleDeath = true;	// プレイヤーが死ねる状態か。
+	bool m_IsStop = false;
 private:
 	// ゲームステータス管理。
 	void StateManaged();

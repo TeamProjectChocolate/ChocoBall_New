@@ -22,7 +22,9 @@ void CCBManager::Initialize()
 	UseModel<C3DImage>();
 	m_pModel->SetFileName("image/ball.x");
 	CGameObject::Initialize();
-	InitInstancing(m_CBManagerNum * CHOCO_NUM, true);
+	//InitInstancing(m_CBManagerNum * CHOCO_NUM, true);
+	InitInstancing(m_CBManagerNum * CHOCO_NUM, false);
+
 	SINSTANCE(CShadowRender)->Entry(this);	// チョコボールはインスタンシング描画のため自身を登録する
 	m_pModel->m_alpha = 1.0f;
 	m_pModel->m_luminance = 0.0f;
@@ -31,6 +33,8 @@ void CCBManager::Initialize()
 	// 当たり判定を行うオブジェクトを登録。
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject <CPlayer>(_T("Player"));
 	m_pBoss = SINSTANCE(CObjectManager)->FindGameObject <CEnemy_Boss>(_T("BossEnemy"));
+
+	m_numCreate = 0;
 }
 
 void CCBManager::ActivateShadowRender(){
@@ -81,7 +85,9 @@ void CCBManager::CreateChocoBall() {
 		if (m_interval < m_timer) {
 			int createCount = 0;
 			while (true) {
-				if (m_numCreate >= CHOCO_NUM) {
+				//if (m_numCreate >= CHOCO_NUM) {
+				if (m_numCreate >= 1) {
+
 					// チョコボールの数が目標数に到達。
 					m_IsFirst = false;
 					break;
@@ -107,7 +113,7 @@ void CCBManager::CreateChocoBall() {
 				choco->Initialize(pos, Epos);
 				m_Choco.push_back(choco);
 #ifdef NOT_INSTANCING
-				SINSTANCE(CShadowRender)->Entry(ptr.get());
+				SINSTANCE(CShadowRender)->Entry(choco);
 #endif
 				createCount++;
 				m_numCreate++;
@@ -127,7 +133,7 @@ void CCBManager::Draw()
 				m_Choco[i]->BeginDraw();
 				isBeginDraw = true;
 			}
-			m_Choco[i]->Draw();
+			m_Choco[i]->DrawSimple();
 		}
 	}
 	if (isBeginDraw){
@@ -288,7 +294,7 @@ void CCBManager::NonActivate(){
 #ifdef NOT_INSTANCING
 	for (auto choco : m_Choco){
 		choco->SetAlive(false);
-		SINSTANCE(CShadowRender)->DeleteObjectImidieit(choco.get());
+		SINSTANCE(CShadowRender)->DeleteObjectImidieit(choco);
 	}
 #else
 	// 自分を削除する。

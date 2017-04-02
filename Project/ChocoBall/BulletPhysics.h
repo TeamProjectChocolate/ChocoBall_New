@@ -341,10 +341,6 @@ namespace {
 			//	return 0.0f;
 			//}
 
-			if ((colObj0Wrap->getCollisionObject()->getUserIndex() == static_cast<int>(Collision::Type::AttackWall)) || (colObj1Wrap->getCollisionObject()->getUserIndex() == static_cast<int>(Collision::Type::AttackWall))) {
-				OutputDebugString("動く壁。\n");
-			}
-
 			CCollisionInterface* UserPointer = static_cast<CCollisionInterface*>(colObj0Wrap->getCollisionObject()->getUserPointer());
 			if (UserPointer) {
 				UserPointer->OnTriggerStay(static_cast<CCollisionInterface*>(colObj1Wrap->getCollisionObject()->getUserPointer()));
@@ -551,8 +547,12 @@ namespace {
 	// カメラ用コールバック
 	struct SweepResultGround_Camera : public btCollisionWorld::ConvexResultCallback
 	{
-		SweepResultGround_Camera()
+		SweepResultGround_Camera(CCollisionInterface* userPointer)
 		{
+			if (userPointer) {
+				this->m_collisionFilterGroup = userPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+				this->m_collisionFilterMask = userPointer->GetCollisionObject()->getBroadphaseHandle()->m_collisionFilterMask;
+			}
 			isHit = false;
 			fMin = FLT_MAX;
 		}

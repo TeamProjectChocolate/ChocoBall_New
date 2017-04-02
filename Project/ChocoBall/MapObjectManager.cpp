@@ -117,7 +117,8 @@ void CMapObjectManager::Build() {
 			work->BitMask_On(Collision::FilterGroup::Chocoball);
 			work->BitMask_On(Collision::FilterGroup::Camera);
 			work->BitMask_On(Collision::FilterGroup::Enemy);
-
+			work->BitMask_On(Collision::FilterGroup::Gimmick);
+			
 			m_rigidBodys.push_back(work);
 		}
 	}

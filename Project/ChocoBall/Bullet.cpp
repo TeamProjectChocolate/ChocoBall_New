@@ -41,6 +41,7 @@ bool Bullet::IsDelete() {
 	float length = D3DXVec3Length(&D3DXVECTOR3(m_transform.position - m_StartPos));
 	if (length >= m_Range) {
 		// ’e‚ª”ò‹——£‚ğ’´‚¦‚½‚çB
+		SetAlive(false);
 		return true;
 	}
 	return false;

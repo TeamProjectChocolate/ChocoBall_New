@@ -110,20 +110,26 @@ public:
 
 	void SetPintoWorld(const D3DXMATRIX& mat)override{
 #ifdef NOT_DOF
-		for (short idx = 0; idx < CHOCO_NUM; idx++) {
-			m_Choco[idx]->SetPintoWorld(mat);
+#else
+#ifdef NOT_INSTANCING
+		for (auto choco:m_Choco) {
+			choco->SetPintoWorld(mat);
 		}
 #else
 		m_pModel->SetPintoWorld(mat);
 #endif
+#endif
 	}
 	void SetPintoPos(const D3DXVECTOR3& pos)override{
 #ifdef NOT_DOF
-		for (short idx = 0; idx < CHOCO_NUM; idx++) {
-			m_Choco[idx]->SetPintoPos(pos);
+#else
+#ifdef NOT_INSTANCING
+		for (auto choco : m_Choco) {
+			choco->SetPintoPos(pos);
 		}
 #else
 		m_pModel->SetPintoPos(pos);
+#endif
 #endif
 	}
 

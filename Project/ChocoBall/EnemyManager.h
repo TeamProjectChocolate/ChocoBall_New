@@ -2,6 +2,7 @@
 #include "EnemyBase.h"
 #include "GameObject.h"
 #include "ShadowRender.h"
+#include "ObjectManager.h"
 
 class CEnemyManager:public CGameObject
 {
@@ -20,29 +21,9 @@ public:
 	{
 		m_Enemys.push_back(enemy);
 	}
-	void DeleteEnemy(EnemyBase* enemy)
-	{
-		enemy->OnDestroy();
-		m_DeleteObjects.push_back(enemy);
+	void DeleteEnemy(EnemyBase* enemy) {
+		SINSTANCE(CObjectManager)->DeleteGameObject(enemy);
 	}
-
-	void ExcuteDeleteObjects(){
-		int size = m_DeleteObjects.size();
-		for (int idx = 0; idx < size; idx++){
-			for (auto itr = m_Enemys.begin(); itr != m_Enemys.end();){
-				if (m_DeleteObjects[idx] == *itr){
-					SAFE_DELETE(*itr);
-					itr = m_Enemys.erase(itr);
-					break;
-				}
-				else{
-					itr++;
-				}
-			}
-		}
-		m_DeleteObjects.clear();
-	}
-
 	const vector<EnemyBase*>& GetEnemys(){
 		return m_Enemys;
 	}
@@ -68,5 +49,4 @@ public:
 private:
 	vector<EnemyBase*> m_Enemys;
 	STAGE_ID m_StageID;
-	vector<EnemyBase*> m_DeleteObjects;
 };

@@ -202,111 +202,114 @@ void CPlayer::SetParent(MoveFloor* parent)
 
 void CPlayer::Update()
 {
-	m_CollisionObject->Activate();
-	// 毎フレームの初期化。
-	{
-		m_ShotFlg = false;
-		m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	}
+	if (!m_IsStop) {
 
-	//親がいるときの処理。
-	if (parent)
-	{
-		D3DXMATRIX mParentWorld = parent->GetModel()->m_World;
-		//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する。
-
-		D3DXVECTOR4 pos;
-		D3DXVec3Transform(&pos, &localPosition, &mParentWorld);
-		m_transform.position.x = pos.x;
-		m_transform.position.y = pos.y;
-		m_transform.position.z = pos.z;
-	}
-	// メインシーンの状態を管理する処理。
-	StateManaged();
-
-	if (m_GameState == GAMEEND::ID::CONTINUE)
-	{
-		// 当たり判定。
-		Collisions();
-
-		// キー判定。
-		if (m_ActiveKeyState){
-			KeyState();
-		}
-		else {
-			m_RunningCounter = 0.0f;
-			m_IsActive_Y = m_IsActive_X = false;
+		m_CollisionObject->Activate();
+		// 毎フレームの初期化。
+		{
+			m_ShotFlg = false;
+			m_moveSpeed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		}
 
-		// キー判定の結果と現在のフラグ状況から行動を選択。
-		MoveStateManaged();
+		//親がいるときの処理。
+		if (parent)
+		{
+			D3DXMATRIX mParentWorld = parent->GetModel()->m_World;
+			//親のワールド行列を乗算して、ローカル座標をワールド座標に変換する。
 
-		//ロックオン処理
-		//if (m_MoveFlg){
-		//ロックオン距離が調整できるまでは米アウト
-		//LockOn();
-		//}
-
-		if (m_ShotFlg){
-			BulletShot();
+			D3DXVECTOR4 pos;
+			D3DXVec3Transform(&pos, &localPosition, &mParentWorld);
+			m_transform.position.x = pos.x;
+			m_transform.position.y = pos.y;
+			m_transform.position.z = pos.z;
 		}
-	}
+		// メインシーンの状態を管理する処理。
+		StateManaged();
 
-	if (m_State != MOVE::STATE::Flow && m_State != MOVE::STATE::Fly) {
-		// 上下移動処理。
-		UpDownMove();
-		SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
-		bool IsJump = false;
-		if (m_JumpState == JUMP_STATE::J_ZWEI) {
-			IsJump = true;
-		}
-		//プレイヤーの位置情報更新。
-		if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
-			// キネマティック剛体ならこちらを通る。
-			//// 他のオブジェクトがプレイヤーに与える影響を処理。
-			//m_IsRepulsion.Repulsion(&m_moveSpeed);
+		if (m_GameState == GAMEEND::ID::CONTINUE)
+		{
+			// 当たり判定。
+			Collisions();
 
-			// 外部のコリジョンがプレイヤーに与える力を加算。
-			{
-				D3DXVECTOR3 work = m_moveSpeed;
-				//work.y = 0.0f;
-				if (D3DXVec3Length(&work) >= 0.01f) {
-					// プレイヤーが移動している場合、斥力に抵抗しているかを算出。
-					D3DXVECTOR3 Dir;
-					D3DXVec3Normalize(&Dir, &m_Repulsion);
-					// このブロックの力に対して真っ向から抵抗している力を算出。
-					float Power = D3DXVec3Dot(&-Dir, &work);
-					// 抵抗力分斥力に加算することで抵抗を無効にする。
-					m_moveSpeed += (Dir * Power);
-				}
-				m_moveSpeed += m_Repulsion;
-				m_Repulsion = Vector3::Zero; 
+			// キー判定。
+			if (m_ActiveKeyState) {
+				KeyState();
+			}
+			else {
+				m_RunningCounter = 0.0f;
+				m_IsActive_Y = m_IsActive_X = false;
 			}
 
-			// プレイヤーが移動した結果コリジョンに当たっている場合の処理。
-			m_IsIntersect.Intersect(&m_transform.position, m_moveSpeed, IsJump);
+			// キー判定の結果と現在のフラグ状況から行動を選択。
+			MoveStateManaged();
+
+			//ロックオン処理
+			//if (m_MoveFlg){
+			//ロックオン距離が調整できるまでは米アウト
+			//LockOn();
+			//}
+
+			if (m_ShotFlg) {
+				BulletShot();
+			}
 		}
-		else {
-			static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(m_moveSpeed * 100.0f);
+
+		if (m_State != MOVE::STATE::Flow && m_State != MOVE::STATE::Fly) {
+			// 上下移動処理。
+			UpDownMove();
+			SetRotation(D3DXVECTOR3(0.0f, 1.0f, 0.0f), m_currentAngleY);
+			bool IsJump = false;
+			if (m_JumpState == JUMP_STATE::J_ZWEI) {
+				IsJump = true;
+			}
+			//プレイヤーの位置情報更新。
+			if (static_cast<CRigidbody*>(m_CollisionObject.get())->GetIsKinematic()) {
+				// キネマティック剛体ならこちらを通る。
+				//// 他のオブジェクトがプレイヤーに与える影響を処理。
+				//m_IsRepulsion.Repulsion(&m_moveSpeed);
+
+				// 外部のコリジョンがプレイヤーに与える力を加算。
+				{
+					D3DXVECTOR3 work = m_moveSpeed;
+					//work.y = 0.0f;
+					if (D3DXVec3Length(&work) >= 0.01f) {
+						// プレイヤーが移動している場合、斥力に抵抗しているかを算出。
+						D3DXVECTOR3 Dir;
+						D3DXVec3Normalize(&Dir, &m_Repulsion);
+						// このブロックの力に対して真っ向から抵抗している力を算出。
+						float Power = D3DXVec3Dot(&-Dir, &work);
+						// 抵抗力分斥力に加算することで抵抗を無効にする。
+						m_moveSpeed += (Dir * Power);
+					}
+					m_moveSpeed += m_Repulsion;
+					m_Repulsion = Vector3::Zero;
+				}
+
+				// プレイヤーが移動した結果コリジョンに当たっている場合の処理。
+				m_IsIntersect.Intersect(&m_transform.position, m_moveSpeed, IsJump);
+			}
+			else {
+				static_cast<CRigidbody*>(m_CollisionObject.get())->ApplyForce(m_moveSpeed * 100.0f);
+			}
 		}
-	}
 
-	// アニメーション再生関数を呼び出す
-	m_pModel->SetCurrentAnimNo(m_AnimState);
-	m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), m_AnimInterpolation,true);
+		// アニメーション再生関数を呼び出す
+		m_pModel->SetCurrentAnimNo(m_AnimState);
+		m_pModel->GetAnimation()->Play(m_pModel->GetCurrentAnimNo(), m_AnimInterpolation, true);
 
-	// 影カメラのポジションをプレイヤーの真上に指定。
-	SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
-	SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(1.0f, /*2.0f*/5.0f, 0.0f));
-	//static_cast<CEM_Render*>(SINSTANCE(CRenderContext)->GetEMRender())->SetCameraPos(m_transform.position + -GetDirection() * 1.5f);
+		// 影カメラのポジションをプレイヤーの真上に指定。
+		SINSTANCE(CShadowRender)->SetObjectPos(m_transform.position);
+		SINSTANCE(CShadowRender)->SetShadowCameraPos(m_transform.position + D3DXVECTOR3(1.0f, /*2.0f*/5.0f, 0.0f));
+		//static_cast<CEM_Render*>(SINSTANCE(CRenderContext)->GetEMRender())->SetCameraPos(m_transform.position + -GetDirection() * 1.5f);
 
-	//if (m_GameState != GAMEEND::ID::CLEAR)
-	//{
+		//if (m_GameState != GAMEEND::ID::CLEAR)
+		//{
 		CGameObject::Update();
-	//}
+		//}
 
-	//// コリジョンの中心。
-	//TestEmitter->SetEmitPos(m_CollisionObject->GetPos());
+		//// コリジョンの中心。
+		//TestEmitter->SetEmitPos(m_CollisionObject->GetPos());
+	}
 }
 
 void CPlayer::Draw(){

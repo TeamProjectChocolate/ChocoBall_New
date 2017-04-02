@@ -17,7 +17,7 @@ public:
 		m_pRender->SetUpTechnique("Skin_Tex");
 	}
 	void EM_SetUpTechnique()override {
-		m_pEMSamplingRender->SetUpTechnique("Skin_Tex_Lim");
+		m_pEMSamplingRender->SetUpTechnique("Skin_Tex");
 	}
 
 private:
