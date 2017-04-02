@@ -155,6 +155,13 @@ public:
 	inline void SetIsStop(bool flg){
 		m_IsStop = flg;
 	}
+
+	inline void ConfigEndGame()
+	{
+		this->SetActiveKeyState(false);
+		this->SetIsStop(true);
+		m_pEmitter->SetEmitFlg(false);
+	}
 private:
 	enum ANIMATION_STATE{ WAIT = 0, WALK,JUMP_START,JUMP_NOW,JUMP_END, DAMAGE};
 	enum JUMP_STATE{J_NULL,J_EINS,J_ZWEI,J_DREI};

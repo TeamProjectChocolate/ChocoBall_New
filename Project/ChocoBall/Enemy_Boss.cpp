@@ -64,8 +64,6 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	m_pBarrier->Build(m_transform.position, 33.0f);
 	// 最初のステートに移行。
 	this->ChangeState(BOSS_STATE::Sleep);
-	//this->ChangeState(BOSS_STATE::Attack);
-	//this->ChangeState(BOSS_STATE::BMove);
 
 }
 
@@ -90,12 +88,9 @@ void CEnemy_Boss::Initialize() {
 	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++) {
 		m_pModel->GetAnimation()->SetAnimationEndtime(idx, BossAnimationTime[idx]);
 	}
-	//m_pModel->GetAnimation()->PlayAnimation(m_AnimState, 0.0f);
 	ConfigLight();
 	SetAlive(true);
 	m_HP = 7200.0f;
-	//m_HP = 1800.0f;
-	//m_HP = 10.0f;
 	m_pModel->SetAlpha(1.0f);
 
 	m_Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));

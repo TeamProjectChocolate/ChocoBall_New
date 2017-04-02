@@ -14,7 +14,7 @@ void CStageManager::Initialize()
 #ifdef TEISYUTU_YOU
 	ChangeStage(STAGE_ID::FIRST);
 #else
-	ChangeStage(STAGE_ID::FINAL);
+	ChangeStage(STAGE_ID::BOSS);
 #endif
 	SetNextStage();
 }
