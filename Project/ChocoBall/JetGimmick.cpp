@@ -51,7 +51,7 @@ void CJetGimmick::Update(){
 			}
 			m_JetCounter += 1.0f / 60.0f;
 		}
-		else if (!m_pEmitter->GetResidual()){
+		else if (!m_pEmitter->GetTailParticle()){
 			if (!m_IsPlay){
 				m_pAudio->StopCue(m_SoundEndName, true, this);
 				m_IsPlay = true;
@@ -70,7 +70,7 @@ void CJetGimmick::Update(){
 		m_JetFlg = false;
 		if (!m_IsPlay){
 			m_pAudio->StopCue(m_SoundName, true, this);	
-			if (!m_pEmitter->GetResidual()){
+			if (!m_pEmitter->GetTailParticle()){
 				m_pAudio->StopCue(m_SoundEndName, true, this);
 			}
 			m_IsPlay = true;

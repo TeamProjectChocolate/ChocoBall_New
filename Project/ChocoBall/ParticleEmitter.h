@@ -80,8 +80,8 @@ public:
 	const D3DXVECTOR3& GetTailPos()const{
 		return m_pTailParticle->GetPos();
 	}
-	bool GetResidual()const{
-		return m_Residual;
+	const CParticle* GetTailParticle() const{
+		return m_pTailParticle;
 	}
 	void SetStageID(STAGE_ID id){
 		m_Stage_ID = id;
@@ -136,7 +136,6 @@ private:
 	CCourceDef m_CourceDef;
 	CPlayer* m_pPlayer;
 	CParticle* m_pTailParticle = nullptr;		// 最後に生成したパーティクルのポインタ
-	bool m_Residual;			// 最後に生成したパーティクルが残留しているか
 	int m_CourceLange;			// プレイヤーとパーティクルの発生位置がどれくらい離れていれば発生させないか
 	float m_DeathTime;	// エミッターの寿命(SentenceOfDeath関数が呼ばれた直後からカウント)。
 	float m_DeathCounter;

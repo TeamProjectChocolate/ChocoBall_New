@@ -108,7 +108,7 @@ static SParticleEmitParameter Param_Porigon = {
 // 炎噴出
 static SParticleEmitParameter Param_FireGimmick = {
 	"image/PRT_Fire.png",	//テクスチャのファイル名
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 初速度。
+	D3DXVECTOR3(0.0f, 0.0f, 1.25f),		// 初速度。
 	4.0f,							// 寿命。単位は秒。
 	0.0f,							// 発生時間。単位は秒。
 	1,								// 1フレームに発生させる量
@@ -116,9 +116,9 @@ static SParticleEmitParameter Param_FireGimmick = {
 	0.8f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
-	D3DXVECTOR3(50.0f, 50.0f, 50.0f),		// 初期位置のランダム幅。
-	D3DXVECTOR3(3.0f, 3.0f, 3.0f),		// 初速度のランダム幅。
-	D3DXVECTOR3(3.0f, 3.0f, 3.0f),	// 速度の積分のときのランダム幅。
+	Vector3::Zero,		// 初期位置のランダム幅。
+	D3DXVECTOR3(0.3f, 0.3f, 0.3f),		// 初速度のランダム幅。
+	D3DXVECTOR3(3.0f, 4.0f, 1.0f),	// 速度の積分のときのランダム幅。
 	{	// UVテーブル。最大4まで保持できる。xが左上のu、yが左上のv、zが右下のu、wが右下のvになる。
 		D3DXVECTOR4(0.0f, 0.0f, 0.25f, 0.5f),
 		D3DXVECTOR4(0.25f, 0.0f, 0.5f, 0.5f),
@@ -126,7 +126,7 @@ static SParticleEmitParameter Param_FireGimmick = {
 		D3DXVECTOR4(0.75f, 0.0f, 1.0f, 0.5f),
 	},
 	4,									// UVテーブルのサイズ。
-	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 重力。
+	Vector3::Zero,		// 重力。
 	true,							// 死ぬときにフェードアウトする？
 	0.5f,							// フェードする時間。
 	1.0f,							// 初期アルファ値。

@@ -27,7 +27,6 @@ void CParticleEmitter::Initialize(){
 	m_CourceDef.SetStageID(m_Stage_ID);
 	m_CourceDef.Initialize();
 	m_pPlayer = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
-	m_Residual = false;
 	m_CourceLange = 0;
 	m_ParticleList.clear();
 }
@@ -55,9 +54,6 @@ void CParticleEmitter::Update(){
 			itr++;
 		}
 	}
-	if (m_pTailParticle != nullptr) {
-		m_Residual = false;
-	}
 }
 
 // パーティクル生成。
@@ -79,7 +75,6 @@ void CParticleEmitter::EmitParticle() {
 				m_timer = 0.0f;
 				m_ParticleList.push_back(p);
 				m_pTailParticle = p;
-				m_Residual = true;
 				m_count++;
 			}
 		}

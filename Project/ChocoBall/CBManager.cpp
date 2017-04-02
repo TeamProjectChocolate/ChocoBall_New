@@ -85,8 +85,7 @@ void CCBManager::CreateChocoBall() {
 		if (m_interval < m_timer) {
 			int createCount = 0;
 			while (true) {
-				//if (m_numCreate >= CHOCO_NUM) {
-				if (m_numCreate >= 1) {
+				if (m_numCreate >= CHOCO_NUM) {
 
 					// チョコボールの数が目標数に到達。
 					m_IsFirst = false;

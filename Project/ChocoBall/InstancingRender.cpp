@@ -131,7 +131,7 @@ void CInstancingRender::CreateMatrixBuffer(unsigned int MaxNum){
 			m_WorldMatrixBuffer = nullptr;
 		}
 		if (m_RotationMatrixBuffer) {
-			m_WorldMatrixBuffer->Release();
+			m_RotationMatrixBuffer->Release();
 			m_RotationMatrixBuffer = nullptr;
 		}
 		(*graphicsDevice()).CreateVertexBuffer(m_BufferStride_World * MaxNum, 0, 0, D3DPOOL_MANAGED, &m_WorldMatrixBuffer, 0);
