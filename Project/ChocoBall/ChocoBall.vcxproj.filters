@@ -462,7 +462,7 @@
       <Filter>Game\Enemy\Boss</Filter>
     </ClInclude>
     <ClInclude Include="DeathState.h">
-      <Filter>Game\Enemy\Boss</Filter>
+      <Filter>Game\Enemy\Boss\HFSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

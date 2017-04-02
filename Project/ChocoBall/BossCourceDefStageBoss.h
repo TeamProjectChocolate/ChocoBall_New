@@ -10,6 +10,18 @@
 	1, //CourceType
 	false, //IsEnd
 },
+//Boss_CourceDef (7)
+{
+	D3DXVECTOR3(-99.75f, 13.31f, -5.07f), //Start
+	D3DXVECTOR3(-94.58f, 16.25f, -11.28f), //End
+	D3DXVECTOR3(13.45f, 13.51f, 74.39f), //Range
+	D3DXVECTOR3(-91.74f, 19.05f, -17.59f), //RangePos
+	D3DXQUATERNION(0.00f, 0.93f, 0.19f, 0.32f), //Rotation
+	D3DXVECTOR3(0.05f, -0.13f, 0.99f), //ActionTargetDir
+	D3DXVECTOR3(-94.59f, 19.59f, -21.57f), //ActionPos
+	3, //CourceType
+	false, //IsEnd
+},
 //Boss_CourceDef (12)
 {
 	D3DXVECTOR3(-151.48f, 10.55f, -49.69f), //Start
@@ -20,6 +32,18 @@
 	D3DXVECTOR3(-0.92f, -0.03f, 0.40f), //ActionTargetDir
 	D3DXVECTOR3(-149.50f, 10.70f, -45.10f), //ActionPos
 	1, //CourceType
+	false, //IsEnd
+},
+//Boss_CourceDef (9)
+{
+	D3DXVECTOR3(-74.27f, 24.58f, -13.80f), //Start
+	D3DXVECTOR3(-65.95f, 25.66f, -11.81f), //End
+	D3DXVECTOR3(42.06f, 16.60f, 63.44f), //Range
+	D3DXVECTOR3(-57.67f, 28.17f, -25.75f), //RangePos
+	D3DXQUATERNION(-0.03f, 0.62f, 0.06f, 0.78f), //Rotation
+	D3DXVECTOR3(-0.71f, -0.05f, 0.70f), //ActionTargetDir
+	D3DXVECTOR3(-78.12f, 24.04f, -10.24f), //ActionPos
+	2, //CourceType
 	false, //IsEnd
 },
 //Boss_CourceDef (11)
@@ -56,30 +80,6 @@
 	D3DXVECTOR3(0.65f, 0.10f, -0.75f), //ActionTargetDir
 	D3DXVECTOR3(-118.17f, 9.64f, 16.25f), //ActionPos
 	0, //CourceType
-	false, //IsEnd
-},
-//Boss_CourceDef (7)
-{
-	D3DXVECTOR3(-99.75f, 13.31f, -5.07f), //Start
-	D3DXVECTOR3(-94.58f, 16.25f, -11.28f), //End
-	D3DXVECTOR3(13.45f, 13.51f, 74.39f), //Range
-	D3DXVECTOR3(-91.74f, 19.05f, -17.59f), //RangePos
-	D3DXQUATERNION(0.00f, 0.93f, 0.19f, 0.32f), //Rotation
-	D3DXVECTOR3(0.05f, -0.13f, 0.99f), //ActionTargetDir
-	D3DXVECTOR3(-94.59f, 19.59f, -21.57f), //ActionPos
-	3, //CourceType
-	false, //IsEnd
-},
-//Boss_CourceDef (9)
-{
-	D3DXVECTOR3(-74.27f, 24.58f, -13.80f), //Start
-	D3DXVECTOR3(-65.95f, 25.66f, -11.81f), //End
-	D3DXVECTOR3(42.06f, 16.60f, 63.44f), //Range
-	D3DXVECTOR3(-57.67f, 28.17f, -25.75f), //RangePos
-	D3DXQUATERNION(-0.03f, 0.62f, 0.06f, 0.78f), //Rotation
-	D3DXVECTOR3(-0.71f, -0.05f, 0.70f), //ActionTargetDir
-	D3DXVECTOR3(-78.12f, 24.04f, -10.24f), //ActionPos
-	2, //CourceType
 	false, //IsEnd
 },
 //Boss_CourceDef (5)
