@@ -37,7 +37,7 @@ void CDeathState::Entry() {
 	// カメラの位置情報を変更。
 	m_ClearCamera->SetPos(m_pObject->GetPos() + D3DXVECTOR3(10.0f, 4.0f, 14.0f)/*D3DXVECTOR3(10.0f, 8.0f, 14.0f)*/);
 	// カメラをボスに向ける。
-	m_ClearCamera->SetTarget(m_pObject->GetPos() + +D3DXVECTOR3(0.0f, -4.0f, 0.0f));
+	m_ClearCamera->SetTarget(m_pObject->GetPos() + +D3DXVECTOR3(0.0f, -6.0f, 0.0f));
 }
 
 bool CDeathState::Update() {
