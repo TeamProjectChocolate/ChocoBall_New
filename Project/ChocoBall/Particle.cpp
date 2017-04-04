@@ -14,6 +14,7 @@ CParticle::CParticle()
 	CParticle::CreatePrimitive();
 	m_applyFource = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	strcpy(m_pFileName,"image/test.png");
+	m_addScalingX = m_addScalingY = 0.0f;
 }
 
 CParticle::~CParticle()
@@ -28,15 +29,26 @@ void CParticle::Update(){
 	D3DXVECTOR3 addGravity = m_ParticleData.gravity;
 	addGravity *= m_deltaTime;
 	m_ParticleData.velocity += addGravity;
-	D3DXVECTOR3 force = m_applyFource;
-	force.x += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.x;
-	force.y += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.y;
-	force.z += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.z;
-	force *= m_deltaTime;
+
+	// 速度の積分値をランダムでばらす。
+	// ※きちんと機能しておらず、現在パラメータをいじっても変わらない。
+	// ※しかし気づいたのが締め切り当日で今から仕様変更は組み込めないため、次回の使用時に直すこととする。
+	{
+		D3DXVECTOR3 force = m_applyFource;
+		force.x += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.x;
+		force.y += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.y;
+		force.z += (static_cast<float>(m_random->GetRandDouble() - 0.5f) * 2.0f) * m_addVelocityRandomMargin.z;
+		force *= m_deltaTime;
+	}
+
 	D3DXVECTOR3 addPos = m_ParticleData.velocity;
 	addPos *= m_deltaTime;
 	m_applyFource = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_ParticleData.position += addPos;
+
+	// 拡縮値を徐々に更新。
+	m_width += m_addScalingX * m_deltaTime;
+	m_hight += m_addScalingY * m_deltaTime;
 }
 
 void CParticle::Draw(){
@@ -284,6 +296,9 @@ void CParticle::InitParticle(CRandom& random, CCamera& camera, const SParticleEm
 	// ※m_Primitiveは静的メンバのため、初期化時に板ポリを生成すると最後に生成したもので上書きされてしまう。
 	m_width = param->w;
 	m_hight = param->h;
+
+	m_addScalingX = param->addSize_X;
+	m_addScalingY = param->addSize_Y;
 
 	m_transform.scale = D3DXVECTOR3(m_width * rand, m_hight* rand, 1.0f);
 

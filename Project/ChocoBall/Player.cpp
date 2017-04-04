@@ -116,6 +116,7 @@ void CPlayer::Initialize()
 	
 	deadTimer = 0.0f;
 	m_pCamera = SINSTANCE(CObjectManager)->FindGameObject<CCourceCamera>(_T("Camera"));
+
 	CParticleEmitter* StartEmitter = CParticleEmitter::EmitterCreate(
 		_T("ParticleEmitterStart"),
 		PARTICLE_TYPE::STAR,
@@ -125,7 +126,9 @@ void CPlayer::Initialize()
 		true,
 		true
 		);
-	StartEmitter->SetCourceLange(2);
+
+	//StartEmitter->SetCourceLange(2);
+
 	//ƒWƒƒƒ“ƒv•’…’n‚Ì‰Œ
 	m_pEmitter = CParticleEmitter::EmitterCreate(
 		_T("ParticleEmitterSmoke"),

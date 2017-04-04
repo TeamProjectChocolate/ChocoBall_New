@@ -520,3 +520,9 @@
 	D3DXQUATERNION(0.01f, -0.62f, -0.30f, -0.72f ),    //回転
 	D3DXVECTOR3(0.97f, 4.86f, 8.17f ),            //拡大
 },
+//Wall_62
+{
+	D3DXVECTOR3(-72.58f, 27.43f, 9.03f),             //平行移動
+	D3DXQUATERNION(0.13f, -0.55f, 0.12f, -0.82f ),    //回転
+	D3DXVECTOR3(1.00f, 1.86f, 3.14f ),            //拡大
+},

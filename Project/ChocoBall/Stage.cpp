@@ -71,18 +71,6 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 		CParticleEmitter::EmitterCreate(_T("GoalParticle_Right"), PARTICLE_TYPE::STAR, block.endPosition + (workVec * 2.0f), m_pCamera->GetCamera(), m_Stage_ID, true, true);
 	}
 
-	// レベル生成。
-	// 敵やギミックを配置。
-	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), OBJECT::PRIORTY::EMITTER, false);
-	m_CLevelBuilder->SetIsStage(m_Stage_ID);
-	m_CLevelBuilder->Build(pAudio);
-
-	// プレイヤーをシャドウキャスターに設定。
-	SINSTANCE(CShadowRender)->Entry(m_pPlayer);
-
-	// 共通ライト設定。
-	this->ConfigLight();
-
 	m_pAudio = pAudio;
 	if (m_Stage_ID == STAGE_ID::BOSS) {
 		// ボス戦BGMはこっち。
@@ -95,6 +83,19 @@ void CStage::Initialize(CAudio* pAudio,STAGE_ID NowId)
 	else {
 		m_pAudio->PlayCue(Stage_BGM[m_Stage_ID], false, nullptr);	// 音楽再生
 	}
+
+	// レベル生成。
+	// 敵やギミックを配置。
+	m_CLevelBuilder = SINSTANCE(CObjectManager)->GenerationObject<CLevelBuilder>(_T("LevelBuilder"), OBJECT::PRIORTY::EMITTER, false);
+	m_CLevelBuilder->SetIsStage(m_Stage_ID);
+	m_CLevelBuilder->Build(pAudio);
+
+	// プレイヤーをシャドウキャスターに設定。
+	SINSTANCE(CShadowRender)->Entry(m_pPlayer);
+
+	// 共通ライト設定。
+	this->ConfigLight();
+
 	m_GameState = GAMEEND::ID::CONTINUE;
 	m_isGameContinue = true;
 }

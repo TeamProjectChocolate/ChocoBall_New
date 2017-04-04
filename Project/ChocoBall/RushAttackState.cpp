@@ -17,7 +17,9 @@ void CRushAttackState::Entry() {
 	m_IntervalTime = 1.0f;
 	m_AttackTime = 5.0f;
 	m_DamageIntervalTime = 1.5f;
+	m_AudioTimeCounter = m_AudioInterval = 0.3f;	// 初期値は再生開始時点の調整のためにインターバルを格納。
 	m_CreateCBNum = 2;
+	m_IsAudioStart = false;
 	m_IsFirst = true;
 	m_Count = 0;
 }
@@ -47,6 +49,9 @@ bool CRushAttackState::Update() {
 	}
 	else {
 		if (m_TimeCounter >= m_IntervalTime) {
+			// 音再生スタート。
+			// ※最初の一回のみ有効。
+			m_IsAudioStart = true;
 			// 攻撃処理。
 			D3DXVECTOR3 WallPos = m_pObject->GetPos();;
 			// チョコ壁を生成していく。
@@ -62,7 +67,7 @@ bool CRushAttackState::Update() {
 				WallPos.y += offsetY;
 
 				float Volum = BLOCK_W * (BUILD_W * 0.5f);
-				float OffsetX = Volum - (BLOCK_W  * 0.5f);	
+				float OffsetX = Volum - (BLOCK_W  * 0.5f);
 
 				// まずは出現位置が中心になるようにする。
 				WallPos -= m_pObject->GetTransform().right * Volum;
@@ -104,6 +109,16 @@ bool CRushAttackState::Update() {
 			}
 			m_Count++;
 			m_TimeCounter = 0.0f;
+		}
+
+		if (m_IsAudioStart) {
+			if (m_AudioTimeCounter >= m_AudioInterval) {
+				// 迫力が足りなかったため、音は小刻みにならす。
+				// チョコ壁を流す音。
+				m_pObject->GetBossAudio()->Play("FlowChocoWall", true, this);
+				m_AudioTimeCounter = 0.0f;
+			}
+			m_AudioTimeCounter += deltaTime;
 		}
 	}
 	return false;

@@ -254,6 +254,9 @@ public:
 	inline const D3DXVECTOR3& GetVelocity()const {
 		return m_Velocity;
 	}
+	inline void SetTransform(const SH_ENGINE::TRANSFORM& tr) {
+		m_transform = tr;
+	}
 	inline const SH_ENGINE::TRANSFORM& GetTransform()const {
 		return m_transform;
 	}

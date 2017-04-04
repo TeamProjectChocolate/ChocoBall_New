@@ -105,6 +105,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			info.pos.z = pInfo[i].pos.z * -1;
 			boss->SetInitPosition(info.pos);
 			boss->SetAudio(pAudio);
+			boss->SetBossAudio(SINSTANCE(CObjectManager)->FindGameObject<CGameAudio>(_T("BossAudio")));
 			boss->SetDivisionWall(&m_DivisionWalls);
 		}
 		else if (info.gimmickType == GimmickType_Chocoball){

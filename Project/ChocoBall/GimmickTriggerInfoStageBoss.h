@@ -2,7 +2,7 @@
 {
 	D3DXVECTOR3(-151.50f, 5.21f, -77.40f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.00f, 0.00f, 1.00f ),    //回転
-	D3DXVECTOR3(1.00f, 1.00f, 1.00f ),            //拡大
+	D3DXVECTOR3(15.01f, 25.84f, 1.00f ),            //拡大
 },
 //Trigger (1)
 {
@@ -12,7 +12,7 @@
 },
 //Trigger (2)
 {
-	D3DXVECTOR3(-123.70f, 7.80f, 12.20f),             //平行移動
+	D3DXVECTOR3(-128.82f, 7.80f, 7.14f),             //平行移動
 	D3DXQUATERNION(0.00f, 0.39f, 0.00f, 0.92f ),    //回転
 	D3DXVECTOR3(8.68f, 12.12f, 1.00f ),            //拡大
 },

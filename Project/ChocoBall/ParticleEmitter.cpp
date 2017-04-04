@@ -66,19 +66,25 @@ void CParticleEmitter::EmitParticle() {
 			return;
 		}
 	}
+
 	if (m_EmitFlg) {
 		if (m_timer >= m_param.intervalTime) {
+			if (!strcmp(m_ParticleName, "image/SleepTexture.png")) {
+				OutputDebugString("スリープ。\n");
+			}
 			for (int idx = 0; idx < m_param.EmitNum; idx++) {
 				CParticle* p = SINSTANCE(CObjectManager)->GenerationObject<CParticle>(static_cast<LPCSTR>(m_ParticleName), OBJECT::PRIORTY::PARTICLE_ALPHA, false);
 				// パーティクルを発生させる方向を上書きする。
 				p->InitParticle(m_random, *m_camera, &m_param, m_emitPosition, m_emitDirection);
-				m_timer = 0.0f;
 				m_ParticleList.push_back(p);
 				m_pTailParticle = p;
 				m_count++;
 			}
+			m_timer = 0.0f;
 		}
-		m_timer += 1.0f / 60.0f;
+		else {
+			m_timer += 1.0f / 60.0f;
+		}
 	}
 	else {
 		m_timer = 0.0f;

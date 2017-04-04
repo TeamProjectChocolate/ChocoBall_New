@@ -62,9 +62,12 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 	m_pBarrier = SINSTANCE(CObjectManager)->GenerationObject<CBarrier>(_T("Barrier"), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 	m_pBarrier->Initialize();
 	m_pBarrier->Build(m_transform.position, 33.0f);
+
+	// オーディオ取得。
+	m_pBossAudio = SINSTANCE(CObjectManager)->FindGameObject<CGameAudio>(_T("BossAudio"));
+
 	// 最初のステートに移行。
 	this->ChangeState(BOSS_STATE::Sleep);
-
 }
 
 void CEnemy_Boss::Initialize() {

@@ -11,6 +11,9 @@ void CShotAttackState::Entry() {
 	m_pObject->SetPlayingState(ANIMATION::PLAYING_STATE::REPEAT);
 
 	m_ShotState = Shot_State::Ready;
+	// ’e”­ŽË€”õ‚Ì–Â‚«º(ƒvƒŒƒCƒ„[‚Ö‚Ì‡})B
+	m_pObject->GetBossAudio()->Play("BossDamageVoice1", true, this);
+
 	ChangeLocalState(CEnemy_Boss::BOSS_STATE::Trans);
 	static_cast<CTransState*>(m_pCurrentLocalState)->SetMoveSpeed(0.125f);
 	static_cast<CTransState*>(m_pCurrentLocalState)->SetDirection(m_pObject->GetDirection() * -1);

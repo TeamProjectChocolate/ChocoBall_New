@@ -86,6 +86,9 @@ bool CDeathState::Update() {
 		break;
 	case DeathState::OnDynamic:
 		if (m_TimeCounter >= m_Interval) {
+			// ボス悲鳴再生。
+			m_pObject->GetBossAudio()->Play("BossDamageVoice3", false, this);
+
 			m_TimeCounter = 0.0f;
 
 			// 物理挙動に任せる。
@@ -96,7 +99,6 @@ bool CDeathState::Update() {
 		}
 		break;
 	case DeathState::Interval:
-
 		if (m_TimeCounter >= m_Interval) {
 			CPlayer* player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));
 			// ゲームクリアにする。
@@ -105,6 +107,9 @@ bool CDeathState::Update() {
 		}
 		break;
 	case DeathState::GameEnd:
+		// ボス悲鳴停止。
+		m_pObject->GetBossAudio()->Stop("BossDamageVoice3", false, this);
+
 		break;
 	}
 	m_TimeCounter += 1.0f / 60.0f;

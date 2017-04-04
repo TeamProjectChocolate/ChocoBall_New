@@ -60,6 +60,8 @@ private:
 	PARTICLE::DATA m_ParticleData;
 	float m_rotateZ;
 	D3DXVECTOR3 m_addVelocityRandomMargin;	// 速度の積分のときのランダム幅
+	float m_addScalingX;	// 拡縮の積分値(X)。
+	float m_addScalingY;	// 拡縮の積分値(Y)。
 	bool m_isFade;		// 死ぬときにフェードアウトするかのフラグ
 	float m_fadeTime;		// フェードの時間
 	PARTICLE::EMIT_STATE m_state;	// 状態

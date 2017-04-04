@@ -33,7 +33,7 @@ void CIsIntersect::Intersect(D3DXVECTOR3* position,const D3DXVECTOR3& moveSpeed,
 	m_isFirstCallback = true;
 	m_isHitGround = false;
 	m_Jumpflag = Jumpflag;
-	static float deltaTime = 1.0f / 60.0f;
+	static float deltaTime = 1.0f /60.0f;
 	static D3DXVECTOR3 gravity(0.0f, -40.0f, 0.0f);	//重力	
 	D3DXVECTOR3 addGravity = gravity;	
 	addGravity *= (deltaTime);			//0.16秒事に加速(1フレームの重力加速度)。

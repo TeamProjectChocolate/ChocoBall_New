@@ -23,6 +23,9 @@ bool CEscapeState::Update() {
 	switch (m_EStage) {
 	case Escape_Stage::Damage:
 		if ((m_TimeCounter / 0.01f) - (int)(m_TimeCounter / 0.01f) <= 0.001f) {
+			// ボスのやられ鳴き声再生。
+			m_pObject->GetBossAudio()->Play("BossVoice", false, this);
+
 			// ダメージを受けている表現。
 			if (m_pObject->GetAlpha() <= 0.0f) {
 				m_pObject->SetAlpha(1.0f);
@@ -32,6 +35,9 @@ bool CEscapeState::Update() {
 			}
 		}
 		if (m_TimeCounter >= m_IntervalTime/*m_pObject->GetAnimation()->GetIsOnceEnd()*/) {
+			// ボスのやられ鳴き声停止。
+			m_pObject->GetBossAudio()->Stop("BossVoice", false, this);
+
 			// 逃走アニメーションを再生し終わった。
 			vector<Cource::BOSS_COURCE_BLOCK*> now = m_pObject->GetNowCource();
 			this->ChangeLocalState(CEnemy_Boss::BOSS_STATE::Trans);

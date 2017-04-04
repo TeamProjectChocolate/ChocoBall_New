@@ -24,6 +24,9 @@ bool CShotState::Update() {
 	m_TimeCounter += 1.0f / 60.0f;
 	if (m_TimeCounter >= m_IntervalTime) {
 		for (int idx = 0; idx < 4; idx++) {
+			// ’e”­ŽË‰¹B
+			m_pObject->GetBossAudio()->Play("BossBullet",true , this);
+
 			CEnemyBullet* bullet = SINSTANCE(CObjectManager)->GenerationObject<CEnemyBullet>(_T("EnemyBaullet"), OBJECT::PRIORTY::OBJECT3D, false);
 			bullet->Initialize();
 

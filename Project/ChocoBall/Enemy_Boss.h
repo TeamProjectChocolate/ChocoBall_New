@@ -100,7 +100,12 @@ public:
 	inline bool GetIsBreak()const {
 		return m_IsBreak;
 	}
-
+	inline void SetBossAudio(CGameAudio* audio) {
+		m_pBossAudio = audio;
+	}
+	inline CGameAudio* GetBossAudio()const {
+		return m_pBossAudio;
+	}
 	void BreakEventCallBack();
 	void DivisionWallOpen();
 private:
@@ -134,6 +139,7 @@ private:
 	CBarrier* m_pBarrier = nullptr;
 
 	CAudio* m_pAudio = nullptr;
+	CGameAudio* m_pBossAudio = nullptr;	// ボス戦用BGM。
 	bool m_IsBreak = false;	// HPバーがブレイクしたか。
 	CPlayer* m_Player = nullptr;
 };

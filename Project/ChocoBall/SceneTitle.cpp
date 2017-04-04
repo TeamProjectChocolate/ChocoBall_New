@@ -24,11 +24,23 @@ void CSceneTitle::Initialize(){
 	//CTitleSelect* Continue = SINSTANCE(CObjectManager)->GenerationObject<CTitleSelect>(_T("continue"), PRIORTY::OBJECT2D_ALPHA, false);
 	//Continue->SetFileName(_T("image/TAI_EXIT.png"));
 	CTitleCursor* cursor = SINSTANCE(CObjectManager)->GenerationObject<CTitleCursor>(_T("Cursor"), OBJECT::PRIORTY::OBJECT2D, false);
+
+	CGameObject* PleaseAButton = SINSTANCE(CObjectManager)->GenerationObject<CGameObject>(_T("PleaseAButton"), OBJECT::PRIORTY::OBJECT2D, false);
+	PleaseAButton->UseModel<C2DImage>();
+	PleaseAButton->SetFileName(_T("image/PreaseButton.png"));
+	PleaseAButton->SetAlive(true);
+	PleaseAButton->SetAlpha(1.0f);
+
 	cursor->SetAudio(m_pAudio);
 	//num = SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("Number"), PRIORTY::OBJECT2D_ALPHA, false);
 
 	//StageNum = SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("StageNumber"), PRIORTY::OBJECT2D_ALPHA, false);
 	SINSTANCE(CObjectManager)->Intialize();
+	SH_ENGINE::TRANSFORM tr;
+	tr.Identity();
+	PleaseAButton->SetTransform(tr);
+	PleaseAButton->SetPos(D3DXVECTOR3(230.0f, 350.0f, 1.0f));
+
 	//num->SetPos(D3DXVECTOR3(230.0f, 350.0f, 1.0f));
 	//CIcon* obj = SINSTANCE(CObjectManager)->FindGameObject<CIcon>(_T("Clear_Icon"));
 	//obj->SetPos(D3DXVECTOR3(60.0f, 430.0f, 1.0f));

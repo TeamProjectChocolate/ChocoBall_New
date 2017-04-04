@@ -18,8 +18,10 @@ typedef struct SParticleEmitParameter{
 	int EmitNum;				// 1フレームに発生させる量
 	float w;					// パーティクルの幅
 	float h;					// パーティクルの高さ
-	float size_randMax;				// パーティクルサイズのランダム最大倍率
-	float size_randMin;				// パーティクルサイズのランダム最小倍率
+	float size_randMax;			// パーティクルサイズのランダム最大倍率
+	float size_randMin;			// パーティクルサイズのランダム最小倍率
+	float addSize_X;			// パーティクルの拡縮の積分値(X)	※拡縮を更新しない場合は0.0f、縮める場合はマイナス値を設定。
+	float addSize_Y;			// パーティクルの拡縮の積分値(Y)。	※拡縮を更新しない場合は0.0f、縮める場合はマイナス値を設定。
 	D3DXVECTOR3 initPositionRandomMargin;	// 初期位置のランダム幅
 	D3DXVECTOR3 initVelocityVelocityRandomMargin;	// 初速度のランダム幅
 	D3DXVECTOR3 addVelocityRandomMargin;			// 速度の積分のときのランダム幅
@@ -38,7 +40,7 @@ typedef struct SParticleEmitParameter{
 
 
 // 新しいパラメータを設定したらこの列挙体に追加すること
-enum PARTICLE_TYPE{ FIRE = 0, PORIGON, FIREGIMMICK, STAR, SMOKE, GUNPARTICLE, SOMKEGIMMICK ,CHOCOBALL_BURST};
+enum PARTICLE_TYPE{ FIRE = 0, PORIGON, FIREGIMMICK, STAR, SMOKE, GUNPARTICLE, SOMKEGIMMICK ,CHOCOBALL_BURST,SLEEP};
 
 
 // パーティクルのパラメータ
@@ -56,6 +58,8 @@ static SParticleEmitParameter Param_Fire = {
 	0.5f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.3f, 0.0f, 0.3f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.3f, 0.0f, 0.0f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.0f, 0.006f),	// 速度の積分のときのランダム幅。
@@ -86,6 +90,8 @@ static SParticleEmitParameter Param_Porigon = {
 	0.5f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.3f, 0.0f, 0.3f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.3f, 0.0f, 0.3f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.0f, 0.006f),	// 速度の積分のときのランダム幅。
@@ -116,6 +122,8 @@ static SParticleEmitParameter Param_FireGimmick = {
 	0.8f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	Vector3::Zero,		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.3f, 0.3f, 0.3f),		// 初速度のランダム幅。
 	D3DXVECTOR3(3.0f, 4.0f, 1.0f),	// 速度の積分のときのランダム幅。
@@ -146,6 +154,8 @@ static SParticleEmitParameter Param_Star = {
 	0.7f,							// パーティクルの高さ。
 	0.8f,							// パーティクルサイズのランダム最大倍率
 	0.3f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.1f, 0.0f, 0.1f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.5f, 0.5f, 0.5f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.4f, 0.4f, 0.4f),	// 速度の積分のときのランダム幅。
@@ -176,6 +186,8 @@ static SParticleEmitParameter Param_Smoke = {
 	0.7f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	0.5f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.1f, -0.1f, 0.1f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(1.0f, 0.001f, 1.0f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.0f, 0.006f),	// 速度の積分のときのランダム幅。
@@ -206,6 +218,8 @@ static SParticleEmitParameter Param_GunParticle = {
 	0.7f,							// パーティクルの高さ。
 	0.8f,							// パーティクルサイズのランダム最大倍率
 	0.3f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.1f, -0.1f, 0.1f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(1.0f, 0.001f, 1.0f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.0f, 0.006f),	// 速度の積分のときのランダム幅。
@@ -236,6 +250,8 @@ static SParticleEmitParameter Param_SmokeGimmick = {
 	0.6f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.1f, 0.1f, 0.0f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.0f, 0.0006f),	// 速度の積分のときのランダム幅。
@@ -266,6 +282,8 @@ static SParticleEmitParameter Param_Burst = {
 	0.5f,							// パーティクルの高さ。
 	1.0f,							// パーティクルサイズのランダム最大倍率
 	1.0f,							// パーティクルサイズのランダム最小倍率
+	0.0f,							// パーティクルの拡縮の積分値(X)。
+	0.0f,							// パーティクルの拡縮の積分値(Y)。
 	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 初期位置のランダム幅。
 	D3DXVECTOR3(0.3f, 0.3f, 0.3f),		// 初速度のランダム幅。
 	D3DXVECTOR3(0.006f, 0.006f, 0.006f),	// 速度の積分のときのランダム幅。
@@ -286,6 +304,39 @@ static SParticleEmitParameter Param_Burst = {
 };
 
 
+// 睡眠中。
+static SParticleEmitParameter Param_Sleep = {
+	"image/SleepTexture.png",	//テクスチャのファイル名
+	D3DXVECTOR3(1.0f, 2.0f, 0.0f),		// 初速度。
+	0.5f,							// 寿命。単位は秒。
+	0.15f,							// 発生時間。単位は秒。
+	1,								// 1フレームに発生させる量
+	1.5f,							// パーティクルの幅。
+	1.5f,							// パーティクルの高さ。
+	1.0f,							// パーティクルサイズのランダム最大倍率
+	1.0f,							// パーティクルサイズのランダム最小倍率
+	1.0f,							// パーティクルの拡縮の積分値(X)。
+	1.0f,							// パーティクルの拡縮の積分値(Y)。
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 初期位置のランダム幅。
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 初速度のランダム幅。
+	D3DXVECTOR3(0.000f, 0.000f, 0.000f),	// 速度の積分のときのランダム幅。
+	{	// UVテーブル。最大4まで保持できる。xが左上のu、yが左上のv、zが右下のu、wが右下のvになる。
+		D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f),
+		D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f),
+		D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f),
+		D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f),
+	},
+	4,									// UVテーブルのサイズ。
+	D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 重力。
+	true,							// 死ぬときにフェードアウトする？
+	0.5f,							// フェードする時間。
+	1.0f,							// 初期アルファ値。
+	true,							// ビルボード？
+	0.0f,							// 輝度。ブルームが有効になっているとこれを強くすると光が溢れます。
+	0,								// 半透明合成、1加算合成。
+};
+
+
 // パラメーター構造体のポインタ配列
 // ※パラメーターを追加したらここに追加した構造体のポインタを格納すること
 static SParticleEmitParameter* ParticleParamPT_Array[] = { 
@@ -297,4 +348,5 @@ static SParticleEmitParameter* ParticleParamPT_Array[] = {
 	&Param_GunParticle,
 	&Param_SmokeGimmick,
 	&Param_Burst,
+	&Param_Sleep
 };
