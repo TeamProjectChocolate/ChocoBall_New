@@ -3,6 +3,8 @@
 
 #include "ClearText.h"
 #include "C2DImage.h"
+#include "Infomation.h"
+
 
 CClearText::CClearText()
 {
@@ -16,7 +18,12 @@ CClearText::~CClearText()
 
 void CClearText::Initialize(){
 	UseModel<C2DImage>();
-	m_pModel->SetFileName("image/clear.png");
+	if (m_StageID == STAGE_ID::BOSS) {
+		m_pModel->SetFileName("image/BossClear.png");
+	}
+	else {
+		m_pModel->SetFileName("image/clear.png");
+	}
 	CGameObject::Initialize();
 	m_transform.position = D3DXVECTOR3(450.0f, 250.0f, 1.0f);
 	SetRotation(0.0f);

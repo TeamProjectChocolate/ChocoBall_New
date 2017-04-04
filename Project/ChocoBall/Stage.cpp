@@ -109,8 +109,9 @@ void CStage::Update()
 	if (m_isGameContinue){
 		if (m_GameState == GAMEEND::ID::CLEAR)
 		{
-			SINSTANCE(CObjectManager)->GenerationObject<CClearText>(_T("Clear"), OBJECT::PRIORTY::OBJECT2D_ALPHA, false);
-			SINSTANCE(CObjectManager)->FindGameObject<CClearText>(_T("Clear"))->Initialize();
+			CClearText* Clear = SINSTANCE(CObjectManager)->GenerationObject<CClearText>(_T("Clear"), OBJECT::PRIORTY::OBJECT2D_ALPHA, false);
+			Clear->SetStageID(m_Stage_ID);
+			Clear->Initialize();
 			CStageManager::m_ClearNum++;
 			//m_StageClearNum->SetValue(CStageManager::m_ClearNum);
 			m_isGameContinue = false;

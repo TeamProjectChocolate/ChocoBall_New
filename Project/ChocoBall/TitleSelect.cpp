@@ -27,10 +27,11 @@ void CTitleSelect::Initialize(){
 	dir = -1;
 	m_cursor = SINSTANCE(CObjectManager)->FindGameObject<CTitleCursor>(_T("Cursor"));
 	t = 1.0f;
+	m_FlashingSpeed = 0.015f;
 }
 
 void CTitleSelect::Update(){
-	if (m_transform.position.y == m_cursor->GetPos().y){
+	if (m_transform.position.y == m_cursor->GetPos().y || m_IsFlashing){
 		if (t >= 1.0f){
 			dir = -1;
 		}
@@ -38,7 +39,7 @@ void CTitleSelect::Update(){
 		{
 			dir = 1;
 		}
-		t += 0.015f * dir;
+		t += m_FlashingSpeed * dir;
 		m_pModel->m_alpha = t;
 	}
 	else{

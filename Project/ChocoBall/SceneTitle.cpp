@@ -25,21 +25,13 @@ void CSceneTitle::Initialize(){
 	//Continue->SetFileName(_T("image/TAI_EXIT.png"));
 	CTitleCursor* cursor = SINSTANCE(CObjectManager)->GenerationObject<CTitleCursor>(_T("Cursor"), OBJECT::PRIORTY::OBJECT2D, false);
 
-	CGameObject* PleaseAButton = SINSTANCE(CObjectManager)->GenerationObject<CGameObject>(_T("PleaseAButton"), OBJECT::PRIORTY::OBJECT2D, false);
-	PleaseAButton->UseModel<C2DImage>();
-	PleaseAButton->SetFileName(_T("image/PreaseButton.png"));
-	PleaseAButton->SetAlive(true);
-	PleaseAButton->SetAlpha(1.0f);
+	CTitleSelect* PleaseAButton = SINSTANCE(CObjectManager)->GenerationObject<CTitleSelect>(_T("NewGame"), OBJECT::PRIORTY::OBJECT2D_ALPHA, false);
 
 	cursor->SetAudio(m_pAudio);
 	//num = SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("Number"), PRIORTY::OBJECT2D_ALPHA, false);
 
 	//StageNum = SINSTANCE(CObjectManager)->GenerationObject<CNumber>(_T("StageNumber"), PRIORTY::OBJECT2D_ALPHA, false);
 	SINSTANCE(CObjectManager)->Intialize();
-	SH_ENGINE::TRANSFORM tr;
-	tr.Identity();
-	PleaseAButton->SetTransform(tr);
-	PleaseAButton->SetPos(D3DXVECTOR3(230.0f, 350.0f, 1.0f));
 
 	//num->SetPos(D3DXVECTOR3(230.0f, 350.0f, 1.0f));
 	//CIcon* obj = SINSTANCE(CObjectManager)->FindGameObject<CIcon>(_T("Clear_Icon"));
@@ -51,6 +43,13 @@ void CSceneTitle::Initialize(){
 
 	//SINSTANCE(CObjectManager)->FindGameObject<CIcon>(_T("Kill_Icon"));
 	//Continue->SetPos(D3DXVECTOR3(655.0f, 430.0f, 0.0f));//Exitのポジション
+	PleaseAButton->SetFileName(_T("image/PreaseButton.png"));
+	PleaseAButton->GetModel()->SetImage();
+	PleaseAButton->SetPos(D3DXVECTOR3(500.0f, 450.0f, 0.0f));//PleaseAButtonのポジション
+	PleaseAButton->SetScale(PleaseAButton->GetScale() + D3DXVECTOR3(0.0f,160.0f,0.0f));
+	// 点滅させる。
+	PleaseAButton->SetsFlashing(true);
+	PleaseAButton->SetFlashingSpeed(0.03);
 }
 
 void CSceneTitle::Update(){

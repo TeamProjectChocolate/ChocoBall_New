@@ -230,9 +230,8 @@ void CEnemy_Boss::ChocoHit(CCBManager* HitChocoManager) {
 			if (m_State != BOSS_STATE::Death) {
 				if (m_Player->GetGameState() != GAMEEND::ID::OVER) {
 					// ƒ{ƒXŽ€–Sˆ—B
-					// Žb’èˆ—B
+					m_pHPBar->SetAlive(false);
 					m_HP = 0;
-					//SetAlive(false);
 					this->DivisionWallOpen();
 					ChangeState(BOSS_STATE::Death);
 				}
