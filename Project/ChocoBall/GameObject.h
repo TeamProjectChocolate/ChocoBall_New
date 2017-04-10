@@ -188,7 +188,7 @@ public:
 	inline virtual D3DXVECTOR3* GetPosRef() {
 		return &m_transform.position;
 	}
-	virtual void SetScale(const D3DXVECTOR3 scale){
+	virtual void SetScale(const D3DXVECTOR3& scale){
 		m_transform.scale = scale;
 	}
 	virtual const D3DXVECTOR3& GetScale()const{

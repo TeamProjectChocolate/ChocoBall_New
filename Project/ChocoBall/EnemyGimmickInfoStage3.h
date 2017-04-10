@@ -90,10 +90,10 @@
 },
 //gimmick_Chocoball
 {
-	D3DXVECTOR3(-62.92f, 16.38f, -26.85f),             //平行移動
-	D3DXQUATERNION(0.00f, -0.38f, 0.00f, 0.92f ),    //回転
-	D3DXVECTOR3(4.84f, 1.00f, 0.12f ),            //拡大
-	D3DXVECTOR3(-0.71f, 0.00f, 0.71f),             //Zの向きベクトル
+	D3DXVECTOR3(-87.05f, 9.46f, -9.02f),             //平行移動
+	D3DXQUATERNION(-0.30f, -0.36f, -0.12f, 0.87f ),    //回転
+	D3DXVECTOR3(4.84f, 0.70f, 0.30f ),            //拡大
+	D3DXVECTOR3(-0.56f, 0.61f, 0.56f),             //Zの向きベクトル
 	999,//エネミータイプ
 	0,//ギミックタイプ
 	0.00f,//最大移動量

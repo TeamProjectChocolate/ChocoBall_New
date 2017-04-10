@@ -237,7 +237,7 @@ void CLevelBuilder::Build(CAudio* pAudio)
 			CDivisionWall* Wall = SINSTANCE(CObjectManager)->GenerationObject<CDivisionWall>(_T("DivisionWall"), OBJECT::PRIORTY::OBJECT3D_ALPHA, false);
 			Wall->Initialize();
 			D3DXQUATERNION rot(pInfo[i].rot.x, pInfo[i].rot.y, pInfo[i].rot.z, pInfo[i].rot.w);
-			Wall->Build(D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),rot);
+			Wall->Build(D3DXVECTOR3(-pInfo[i].pos.x, pInfo[i].pos.y, -pInfo[i].pos.z),rot,pInfo[i].scale);
 			m_DivisionWalls.push_back(Wall);
 		}
 		else if (info.gimmickType == GimmickType_BGM_Changer) {

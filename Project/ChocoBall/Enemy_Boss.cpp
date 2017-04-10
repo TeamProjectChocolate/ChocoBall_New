@@ -68,6 +68,8 @@ void CEnemy_Boss::SetInitPosition(const D3DXVECTOR3& pos)
 
 	// 最初のステートに移行。
 	this->ChangeState(BOSS_STATE::Sleep);
+	//this->ChangeState(BOSS_STATE::BMove);
+
 }
 
 void CEnemy_Boss::Initialize() {
@@ -94,6 +96,7 @@ void CEnemy_Boss::Initialize() {
 	ConfigLight();
 	SetAlive(true);
 	m_HP = 7200.0f;
+	//m_HP = 5400.0f;
 	m_pModel->SetAlpha(1.0f);
 
 	m_Player = SINSTANCE(CObjectManager)->FindGameObject<CPlayer>(_T("Player"));

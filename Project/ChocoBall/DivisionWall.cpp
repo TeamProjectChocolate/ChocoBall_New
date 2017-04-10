@@ -11,14 +11,15 @@ CDivisionWall::~CDivisionWall()
 {
 }
 
-void CDivisionWall::Build(const D3DXVECTOR3& pos, const D3DXQUATERNION& Rotation) {
+void CDivisionWall::Build(const D3DXVECTOR3& pos, const D3DXQUATERNION& Rotation,const D3DXVECTOR3& scale) {
 	m_transform.position = pos;
 	m_transform.angle = Rotation;
-	m_transform.scale = D3DXVECTOR3(6.0f, 6.0f, 1.0f);
+	m_OriginSize = D3DXVECTOR3(6.0f, 6.0f, 1.0f);
+	this->SetScale(scale);
 
 	// 剛体生成。
 	{
-		D3DXVECTOR3 size = D3DXVECTOR3(5.0f,6.0f,1.0f);
+		D3DXVECTOR3 size = m_transform.scale/* D3DXVECTOR3(5.0f,6.0f,1.0f)*/;
 		//この引数に渡すのはボックスhalfsizeなので、0.5倍する。
 		ActivateCollision(D3DXVECTOR3(0.0f, 0.0f, 0.0f), new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f)), Collision::Type::Wall,Collision::FilterGroup::Gimmick, false, 0.0f, true,true);
 		m_CollisionObject->BitMask_AllOff();

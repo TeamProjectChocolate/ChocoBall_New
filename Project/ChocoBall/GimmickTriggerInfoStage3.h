@@ -18,7 +18,7 @@
 },
 //GimmickTrigger
 {
-	D3DXVECTOR3(-75.08f, 11.96f, -17.26f),             //平行移動
+	D3DXVECTOR3(-80.01f, 8.57f, -12.31f),             //平行移動
 	D3DXQUATERNION(0.00f, -0.92f, 0.00f, 0.38f ),    //回転
 	D3DXVECTOR3(1.00f, 4.69f, 8.03f ),            //拡大
 },
