@@ -33,6 +33,13 @@ public:
 	//		 繰り返し再生するかのフラグ。
 	void Play(int, float, bool);
 
+	// 停止関数。
+	// 引数：	アニメーションインデックス。
+	void Stop(const unsigned int);
+
+	// 全アニメーション停止関数。
+	void StopAll();
+
 	// アニメーション再生速度を設定
 	void SetAnimSpeed(float speed);
 
@@ -75,22 +82,12 @@ public:
 	}
 private:
 	// 繰り返しアニメーション再生関数
-	// 引き数: int型 再生したいアニメーションのインデックス
-	void PlayAnimation(int);
+	// 引き数: int型 再生したいアニメーションのインデックス。
+	//		   const bool型 補間するかのフラグ。
+	//		   float型 補間時間。
+	//		   const bool型 一回のみ再生するかのフラグ。
+	void PlayAnimation(int animationSetIndex, const bool IsInterpolate, float interpolateTime, const bool IsPlayOnce);
 
-	// 一周分のみアニメーション再生関数
-	// 引き数: int型 再生したいアニメーションのインデックス
-	void PlayAnimation_Once(int);
-
-	// 繰り返しアニメーション再生関数
-	// 引き数: int型 再生したいアニメーションのインデックス
-	//		　 float型 補完時間
-	void PlayAnimation(int, float);
-
-	// 一周分のみアニメーション再生関数
-	// 引き数: int型 再生したいアニメーションのインデックス
-	//		　 float型 補完時間
-	void PlayAnimation_Once(int, float);
 private:
 	// アニメーション用メンバ変数
 	ID3DXAnimationController* m_pAnimController;	// アニメーションコントローラ

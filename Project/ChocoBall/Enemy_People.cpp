@@ -24,7 +24,7 @@ void CEnemy_People::Initialize() {
 	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++) {
 		m_pModel->GetAnimation()->SetAnimationEndtime(idx, EnemyAnimationTime[Enemy_ModelType::People][idx]);
 	}
-	m_pModel->GetAnimation()->Play(-1, 0.0f,true);
+	m_pModel->GetAnimation()->StopAll();
 	ConfigLight();
 
 	btSphereShape* shape = new btSphereShape(1.0f);
@@ -105,9 +105,12 @@ void CEnemy_People::RollingEnemy()
 	}
 }
 
+// 人型エネミーの専用ライト設定。
 void CEnemy_People::ConfigLight() {
+	// 雑魚エネミー共通処理。
 	EnemyBase::ConfigLight();
 
+	// 以降人型エネミーのライティング設定。
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(1.0f, 0.0f, 0.0f));

@@ -17,6 +17,10 @@ void CObjectManager::AddObject(CGameObject* Object, LPCSTR ObjectName, OBJECT::P
 	if (priorty > OBJECT::PRIORTY::MAX_PRIORTY){
 		priorty = OBJECT::PRIORTY::MAX_PRIORTY;
 	}
+	else if(priorty < 0) {
+		// 範囲外アクセス(-1以下)。
+		abort();
+	}
 	Object->SetCommon(common);
 	this->Add(Object,ObjectName,priorty);
 }

@@ -7,6 +7,7 @@
 
 class CEnemyManager;
 
+// 雑魚エネミー基底クラス。
 class EnemyBase : public CGameObject
 {
 public:

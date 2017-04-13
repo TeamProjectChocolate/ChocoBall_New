@@ -33,6 +33,7 @@ CEnemy_Boss::~CEnemy_Boss()
 
 void CEnemy_Boss::InitState() {
 	// ボスのステートをすべて登録していく。
+	// ※ステート内部での処理を円滑化するためにボスのポインタを設定。
 	m_States.push_back(unique_ptr<CState>(new CSleepState(this)));
 	m_States.push_back(unique_ptr<CState>(new CWaitState(this)));
 	m_States.push_back(unique_ptr<CState>(new CMoveState(this)));
@@ -269,10 +270,13 @@ void CEnemy_Boss::OnDestroy()
 
 void CEnemy_Boss::ConfigLight() {
 	if (!m_pLight) {
+		// 使用する専用ライトの種類を決定。
 		m_pLight = new CActreLight;
 	}
+	// GameObject共通処理。
 	CGameObject::ConfigLight();
 
+	// 以降ボスの専用ライト設定。
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(0, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(1, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 	static_cast<CActreLight*>(m_pLight)->SetOrigDiffuseLightDirection(2, D3DXVECTOR3(1.0f, 0.0f, 0.0f));

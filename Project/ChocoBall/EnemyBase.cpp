@@ -48,7 +48,9 @@ void EnemyBase::PlayerBulletHit(D3DXVECTOR3 moveDir)
 }
 
 void EnemyBase::ConfigLight() {
-	if (!m_pLight) {
+	if (!m_pLight) 
+	{
+		// 使用する専用ライトの種類を決定。
 		m_pLight = new CActreLight;
 	}
 	CGameObject::ConfigLight();

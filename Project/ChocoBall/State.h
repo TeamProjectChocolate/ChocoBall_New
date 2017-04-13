@@ -28,7 +28,7 @@ protected:
 		m_NowLocalState = next;
 	}
 protected:
-	CEnemy_Boss* m_pObject = nullptr;
+	CEnemy_Boss* m_pObject = nullptr;	// ボスのポインタ(ステート内部でボスを移動させる際などに使用)。
 	CEnemy_Boss::BOSS_STATE m_NowLocalState;
 	CState* m_pCurrentLocalState = nullptr;	// 現在のローカルステート。
 };

@@ -42,133 +42,176 @@ void CAnimation::BlendAnimation(int animationSetIndex){
 }
 #endif
 
-void CAnimation::PlayAnimation(int animationSetIndex){
-	if (animationSetIndex < m_numAnimSet){
-		if (m_pAnimController){
-			m_oldAnimationSetNo = m_currentAnimationSetNo;
-			m_currentAnimationSetNo = animationSetIndex;
-			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
-				return;
-			}
-			m_IsOnceEnd = false;
-			m_IsPlayOnce = false;
-			// 0番目以外のトラックは無効化する
-			for (int i = 1; i < m_numMaxTracks; i++){
-				m_pAnimController->SetTrackEnable(i, false);
-			}
-			m_currentTrackNo = 0;
-			m_pAnimController->SetTrackWeight(0, 1.0f);
-			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
-			m_pAnimController->SetTrackEnable(0, true);
-			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
-			m_pAnimController->SetTrackPosition(0, 0.0f);
-			m_localAnimationTime = 0.0;
-		}
-	}
-	else{
-		Assert(animationSetIndex < m_numAnimSet);
-	}
-}
-
 void CAnimation::Play(int animationSetIndex,bool IsPlayRepeat) {
-	if (IsPlayRepeat) {
-		PlayAnimation(animationSetIndex);
-	}
-	else {
-		PlayAnimation_Once(animationSetIndex);
+	PlayAnimation(animationSetIndex,false ,0.0f,!IsPlayRepeat);
+}
+
+void CAnimation::Play(int animationSetIndex, float interpolateTime, bool IsPlayRepeat) {
+	PlayAnimation(animationSetIndex, true, interpolateTime, !IsPlayRepeat);
+}
+
+void CAnimation::Stop(const unsigned int animationSetIndex) {
+	// 現在のトラックを無効にする。
+	m_pAnimController->SetTrackEnable(animationSetIndex, false);
+}
+
+void CAnimation::StopAll() {
+	// すべてのトラックを無効にする。
+	for (int i = 0; i < m_numMaxTracks; i++) {
+		m_pAnimController->SetTrackEnable(i, false);
 	}
 }
 
-void CAnimation::Play(int animationSetIndex, float interpolateTime,bool IsPlayRepeat) {
-	if (IsPlayRepeat) {
-		PlayAnimation(animationSetIndex, interpolateTime);
-	}
-	else{
-		PlayAnimation_Once(animationSetIndex, interpolateTime);
-	}
-}
 
-void CAnimation::PlayAnimation(int animationSetIndex, float interpolateTime){
+//void CAnimation::PlayAnimation(int animationSetIndex,const bool IsPlayOnce) {
+//	if (animationSetIndex < m_numAnimSet) {
+//		if (m_pAnimController) {
+//			m_oldAnimationSetNo = m_currentAnimationSetNo;
+//			m_currentAnimationSetNo = animationSetIndex;
+//			if (m_oldAnimationSetNo == m_currentAnimationSetNo) {
+//				// 同じアニメーションを繰り返し再生しようとしていた場合は無視。
+//				return;
+//			}
+//			m_IsOnceEnd = false;
+//
+//			// ループ再生しないかのフラグ。
+//			m_IsPlayOnce = IsPlayOnce;
+//
+//
+//			// 0番目以外のトラックは無効化する
+//			for (int i = 1; i < m_numMaxTracks; i++) {
+//				m_pAnimController->SetTrackEnable(i, false);
+//			}
+//			m_currentTrackNo = 0;
+//			m_pAnimController->SetTrackWeight(0, 1.0f);
+//			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
+//			m_pAnimController->SetTrackEnable(0, true);
+//			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
+//			m_pAnimController->SetTrackPosition(0, 0.0f);
+//			m_localAnimationTime = 0.0;
+//		}
+//	}
+//	else {
+//		Assert(animationSetIndex < m_numAnimSet);
+//	}
+//}
+
+void CAnimation::PlayAnimation(int animationSetIndex,const bool IsInterpolate, float interpolateTime,const bool IsPlayOnce){
+	if (animationSetIndex <= -1) {
+		abort();
+	}
+
 	if (animationSetIndex < m_numAnimSet){
 		if (m_pAnimController){
 			m_oldAnimationSetNo = m_currentAnimationSetNo;
 			m_currentAnimationSetNo = animationSetIndex;
 			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
-				return;
-			}
-			if (m_currentAnimationSetNo == -1){
+				// 同じアニメーションを繰り返し再生しようとしていた場合は無視。
 				return;
 			}
 			m_IsOnceEnd = false;
-			m_IsPlayOnce = false;
-			// 補間中フラグをtrueにする
-			m_isInterpolate = true;
-			this->m_interpolateTime = 0.0f;
-			m_interpolateEndTime = interpolateTime;
-			m_currentTrackNo = (m_currentTrackNo + 1) % m_numMaxTracks;
+
+			// 再生モードを指定。
+			m_IsPlayOnce = IsPlayOnce;
+
+			if (IsInterpolate) {
+				// 補間する。
+				// 補間中フラグをtrueにする。
+				m_isInterpolate = true;
+				m_interpolateEndTime = interpolateTime;
+
+				m_currentTrackNo = (m_currentTrackNo + 1) % m_numMaxTracks;
+				m_pAnimController->SetTrackEnable(m_currentTrackNo, true);
+				m_pAnimController->SetTrackPosition(m_currentTrackNo, 0.0f);
+			}
+			else {
+				// 補間しない。
+				// 補間中フラグをfalseにする。
+				m_isInterpolate = false;
+				// 0番目以外のトラックは無効化する
+				for (int i = 1; i < m_numMaxTracks; i++) {
+					m_pAnimController->SetTrackEnable(i, false);
+				}
+				m_currentTrackNo = 0;
+				m_pAnimController->SetTrackWeight(0, 1.0f);
+				m_pAnimController->SetTrackEnable(0, true);
+				m_pAnimController->SetTrackPosition(0, 0.0f);
+			}
+
 			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
-			m_pAnimController->SetTrackEnable(m_currentTrackNo, true);
 			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
-			m_pAnimController->SetTrackPosition(m_currentTrackNo, 0.0f);
 			m_localAnimationTime = 0.0;
 		}
 	}
 }
 
-void CAnimation::PlayAnimation_Once(int animationSetIndex){
-	if (animationSetIndex < m_numAnimSet){
-		if (m_pAnimController){
-			m_oldAnimationSetNo = m_currentAnimationSetNo;
-			m_currentAnimationSetNo = animationSetIndex;
-			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
-				return;
-			}
-			m_IsOnceEnd = false;
-			m_IsPlayOnce = true;
-			// 0番目以外のトラックは無効化する
-			for (int i = 1; i < m_numMaxTracks; i++){
-				m_pAnimController->SetTrackEnable(i, false);
-			}
-			m_currentTrackNo = 0;
-			m_pAnimController->SetTrackWeight(0, 1.0f);
-			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
-			m_pAnimController->SetTrackEnable(0, true);
-			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
-			m_pAnimController->SetTrackPosition(0, 0.0f);
-			m_localAnimationTime = 0.0;
-		}
-	}
-	else{
-		Assert(animationSetIndex < m_numAnimSet);
-	}
-}
-
-void CAnimation::PlayAnimation_Once(int animationSetIndex, float interpolateTime){
-	if (animationSetIndex < m_numAnimSet){
-		if (m_pAnimController){
-			m_oldAnimationSetNo = m_currentAnimationSetNo;
-			m_currentAnimationSetNo = animationSetIndex;
-			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
-				return;
-			}
-			if (m_currentAnimationSetNo == -1){
-				return;
-			}
-			m_IsOnceEnd = false;
-			m_IsPlayOnce = true;
-			// 補間中フラグをtrueにする
-			m_isInterpolate = true;
-			this->m_interpolateTime = 0.0f;
-			m_interpolateEndTime = interpolateTime;
-			m_currentTrackNo = (m_currentTrackNo + 1) % m_numMaxTracks;
-			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
-			m_pAnimController->SetTrackEnable(m_currentTrackNo, true);
-			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
-			m_pAnimController->SetTrackPosition(m_currentTrackNo, 0.0f);
-			m_localAnimationTime = 0.0;
-		}
-	}
-}
+//void CAnimation::PlayAnimation_Once(int animationSetIndex){
+//	if (animationSetIndex < m_numAnimSet){
+//		if (m_pAnimController){
+//			m_oldAnimationSetNo = m_currentAnimationSetNo;
+//			m_currentAnimationSetNo = animationSetIndex;
+//			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
+//				return;
+//			}
+//			if (m_currentAnimationSetNo <= -1) {
+//				return;
+//			}
+//			m_IsOnceEnd = false;
+//
+//
+//			m_IsPlayOnce = true;
+//
+//
+//			// 0番目以外のトラックは無効化する
+//			for (int i = 1; i < m_numMaxTracks; i++){
+//				m_pAnimController->SetTrackEnable(i, false);
+//			}
+//			m_currentTrackNo = 0;
+//			m_pAnimController->SetTrackWeight(0, 1.0f);
+//			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
+//			m_pAnimController->SetTrackEnable(0, true);
+//			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
+//			m_pAnimController->SetTrackPosition(0, 0.0f);
+//			m_localAnimationTime = 0.0;
+//		}
+//	}
+//	else{
+//		Assert(animationSetIndex < m_numAnimSet);
+//	}
+//}
+//
+//void CAnimation::PlayAnimation_Once(int animationSetIndex, float interpolateTime){
+//	if (animationSetIndex < m_numAnimSet){
+//		if (m_pAnimController){
+//			m_oldAnimationSetNo = m_currentAnimationSetNo;
+//			m_currentAnimationSetNo = animationSetIndex;
+//			if (m_oldAnimationSetNo == m_currentAnimationSetNo){
+//				return;
+//			}
+//			if (m_currentAnimationSetNo == -1){
+//				return;
+//			}
+//			m_IsOnceEnd = false;
+//
+//
+//			m_IsPlayOnce = true;
+//
+//
+//			// 補間中フラグをtrueにする
+//			m_isInterpolate = true;
+//
+//
+//			this->m_interpolateTime = 0.0f;
+//			m_interpolateEndTime = interpolateTime;
+//			m_currentTrackNo = (m_currentTrackNo + 1) % m_numMaxTracks;
+//			m_pAnimController->SetTrackAnimationSet(m_currentTrackNo, m_AnimationSets[m_currentAnimationSetNo]);
+//			m_pAnimController->SetTrackEnable(m_currentTrackNo, true);
+//			m_pAnimController->SetTrackSpeed(m_currentTrackNo, 1.0f);
+//			m_pAnimController->SetTrackPosition(m_currentTrackNo, 0.0f);
+//			m_localAnimationTime = 0.0;
+//		}
+//	}
+//}
 
 // アニメーション再生速度を設定
 void CAnimation::SetAnimSpeed(float speed)

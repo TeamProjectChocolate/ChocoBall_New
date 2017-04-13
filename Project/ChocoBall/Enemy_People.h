@@ -1,6 +1,7 @@
 #pragma once
 #include "EnemyBase.h"
 
+// 人型雑魚エネミークラス。
 class CEnemy_People :
 	public EnemyBase
 {

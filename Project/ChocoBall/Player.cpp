@@ -155,7 +155,7 @@ void CPlayer::Initialize()
 	for (int idx = 0; idx < m_pModel->GetAnimation()->GetNumAnimationSet(); idx++){
 		m_pModel->GetAnimation()->SetAnimationEndtime(idx, AnimationTime[idx]);
 	}
-	m_pModel->GetAnimation()->Play(-1,0.0f,false);
+	m_pModel->GetAnimation()->StopAll();
 	m_State = MOVE::STATE::Wait;
 	m_VibrationCounter = 0.0f;
 	m_VibrationInterval = 0.5f;

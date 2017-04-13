@@ -14,6 +14,9 @@ class CHadBar;
 class CChocoBall;
 class CCBManager;
 
+// ボスエネミークラス。
+// ※雑魚エネミーの基底クラスを継承せず、直接GameObjectを継承している点に注意。
+// ※雑魚エネミーとは完全に別物として扱われています。
 class CEnemy_Boss :
 	public CGameObject
 {
@@ -129,7 +132,7 @@ private:
 	bool m_IsUpdateCource = true;	// コースとの当たり判定を行うか。
 
 	float m_DamageCounter = 0.0f;
-	CState* m_pCurrentState = nullptr;
+	CState* m_pCurrentState = nullptr;	// 現在のボスのステート。
 	vector<unique_ptr<CState>> m_States;	// ボスのステートすべてを格納。
 
 	vector<CDivisionWall*>* m_Walls;
